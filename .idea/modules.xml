@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidGodEye.iml" filepath="$PROJECT_DIR$/AndroidGodEye.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-godeye/android-godeye.iml" filepath="$PROJECT_DIR$/android-godeye/android-godeye.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-godeye-monitor/android-godeye-monitor.iml" filepath="$PROJECT_DIR$/android-godeye-monitor/android-godeye-monitor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-godeye-monitor-no-op/android-godeye-monitor-no-op.iml" filepath="$PROJECT_DIR$/android-godeye-monitor-no-op/android-godeye-monitor-no-op.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-godeye-sample/android-godeye-sample.iml" filepath="$PROJECT_DIR$/android-godeye-sample/android-godeye-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-godeye-toolbox/android-godeye-toolbox.iml" filepath="$PROJECT_DIR$/android-godeye-toolbox/android-godeye-toolbox.iml" />
+    </modules>
+  </component>
+</project>

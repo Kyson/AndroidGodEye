@@ -1,0 +1,32 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0'
+    }
+}
+
+allprojects {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven { url "http://maven.release.ctripcorp.com/nexus/content/repositories/ibumobilerelease" }
+        google()
+        jcenter()
+    }
+    buildscript {
+        repositories {
+            maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+            google()
+            jcenter()
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
