@@ -40,7 +40,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "Leak detected");
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_START);
         LeakQueue.instance().createOrUpdateIfExsist(refrenceKey, map);
-        LeakDetector.emitLeak(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
+        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
     }
 
     private void onLeakDumpProgress(Intent intent) {
@@ -51,7 +51,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, progress);
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_PROGRESS);
         LeakQueue.instance().createOrUpdateIfExsist(refrenceKey, map);
-        LeakDetector.emitLeak(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
+        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
     }
 
     private void onLeakDumpRetry(Intent intent) {
@@ -61,7 +61,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "Retry waiting");
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_RETRY);
         LeakQueue.instance().createOrUpdateIfExsist(refrenceKey, map);
-        LeakDetector.emitLeak(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
+        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
     }
 
     private void onLeakDumpDone(Intent intent) {
@@ -83,7 +83,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
                 map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_DONE);
                 map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "done");
                 LeakQueue.instance().createOrUpdateIfExsist(refrenceKey, map);
-                LeakDetector.emitLeak(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
+                LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
             }
 
             @Override
@@ -96,7 +96,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
                 map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_DONE);
                 map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "leak null.");
                 LeakQueue.instance().createOrUpdateIfExsist(refrenceKey, map);
-                LeakDetector.emitLeak(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
+                LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
             }
         }).load();
     }

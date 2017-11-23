@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.internal.modules.startup;
 
-import cn.hikyson.godeye.internal.Producer;
+import cn.hikyson.godeye.internal.Eater;
 import cn.hikyson.godeye.internal.Consumer;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -9,7 +9,7 @@ import io.reactivex.ObservableOnSubscribe;
 /**
  * Created by kysonchao on 2017/11/23.
  */
-public class Startup implements Producer<StartupInfo>, Consumer<StartupInfo> {
+public class Startup implements Eater<StartupInfo>, Consumer<StartupInfo> {
 
     private ObservableEmitter<StartupInfo> mStartupInfoObservableEmitter;
 

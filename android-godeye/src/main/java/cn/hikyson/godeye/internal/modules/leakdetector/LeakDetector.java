@@ -14,6 +14,7 @@ import java.util.List;
 
 import cn.hikyson.godeye.internal.Install;
 import cn.hikyson.godeye.internal.Consumer;
+import cn.hikyson.godeye.internal.ProduceableConsumer;
 import cn.hikyson.godeye.utils.FileUtil;
 import cn.hikyson.godeye.utils.L;
 import io.reactivex.Observable;
@@ -23,7 +24,7 @@ import io.reactivex.ObservableOnSubscribe;
 /**
  * Created by kysonchao on 2017/11/23.
  */
-public class LeakDetector implements Install<Application>, Consumer<LeakQueue.LeakMemoryInfo> {
+public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> {
 
     private LeakDetector() {
     }
@@ -36,8 +37,7 @@ public class LeakDetector implements Install<Application>, Consumer<LeakQueue.Le
         return InstanceHolder.sINSTANCE;
     }
 
-    @Override
-    public void install(Context context, Application config) {
+    public void install(Application config) {
         mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(config);
         if (LeakCanary.isInAnalyzerProcess(config)) {
             return;
@@ -61,8 +61,7 @@ public class LeakDetector implements Install<Application>, Consumer<LeakQueue.Le
         LeakCanary.install(config);
     }
 
-    @Override
-    public void uninstall(Context context) throws Exception {
+    public void uninstall() {
         throw new UnsupportedOperationException("leak detector can not uninstall");
     }
 
@@ -84,22 +83,22 @@ public class LeakDetector implements Install<Application>, Consumer<LeakQueue.Le
         }
     }
 
-    private ObservableEmitter<LeakQueue.LeakMemoryInfo> mLeakMemoryInfoObservableEmitter;
-
-    @Override
-    public Observable<LeakQueue.LeakMemoryInfo> consume() {
-        return Observable.create(new ObservableOnSubscribe<LeakQueue.LeakMemoryInfo>() {
-            @Override
-            public void subscribe(ObservableEmitter<LeakQueue.LeakMemoryInfo> e) throws Exception {
-                mLeakMemoryInfoObservableEmitter = e;
-            }
-        });
-    }
-
-    public static void emitLeak(LeakQueue.LeakMemoryInfo leakMemoryInfo) {
-        final ObservableEmitter<LeakQueue.LeakMemoryInfo> emitter = instance().mLeakMemoryInfoObservableEmitter;
-        if (emitter != null && !emitter.isDisposed()) {
-            emitter.onNext(leakMemoryInfo);
-        }
-    }
+//    private ObservableEmitter<LeakQueue.LeakMemoryInfo> mLeakMemoryInfoObservableEmitter;
+//
+//    @Override
+//    public Observable<LeakQueue.LeakMemoryInfo> consume() {
+//        return Observable.create(new ObservableOnSubscribe<LeakQueue.LeakMemoryInfo>() {
+//            @Override
+//            public void subscribe(ObservableEmitter<LeakQueue.LeakMemoryInfo> e) throws Exception {
+//                mLeakMemoryInfoObservableEmitter = e;
+//            }
+//        });
+//    }
+//
+//    public static void emitLeak(LeakQueue.LeakMemoryInfo leakMemoryInfo) {
+//        final ObservableEmitter<LeakQueue.LeakMemoryInfo> emitter = instance().mLeakMemoryInfoObservableEmitter;
+//        if (emitter != null && !emitter.isDisposed()) {
+//            emitter.onNext(leakMemoryInfo);
+//        }
+//    }
 }

@@ -8,7 +8,7 @@ import android.content.Context;
  * Created by kysonchao on 2017/11/21.
  */
 public interface Install<T> {
-    void install(Context context, T config) throws Throwable;
+    void install(T config);
 
-    void uninstall(Context context) throws Throwable;
+    void uninstall();
 }

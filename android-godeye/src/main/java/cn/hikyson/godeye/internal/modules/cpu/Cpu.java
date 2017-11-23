@@ -1,12 +1,32 @@
 package cn.hikyson.godeye.internal.modules.cpu;
 
 
+import java.util.concurrent.TimeUnit;
+
 import cn.hikyson.godeye.internal.ProduceableConsumer;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by kysonchao on 2017/5/19.
  */
 public class Cpu extends ProduceableConsumer<CpuInfo> {
+    private CpuEngine mCpuEngine;
+
+    public Cpu(long intervalMillis, long sampleMillis) {
+        mCpuEngine = new CpuEngine(this, intervalMillis, sampleMillis);
+    }
+
+    public void work() {
+        mCpuEngine.work();
+    }
+
+    public void shutdown() {
+        mCpuEngine.shutdown();
+    }
+
 
 //    private static final long DEFAULT_SNAPSHOT_INTERVAL = 1000;
 //

@@ -2,7 +2,7 @@ package cn.hikyson.godeye;
 
 import cn.hikyson.godeye.internal.Consumer;
 import cn.hikyson.godeye.internal.Module;
-import cn.hikyson.godeye.internal.engines.Enginee;
+import cn.hikyson.godeye.internal.modules.CpuModule;
 import cn.hikyson.godeye.internal.modules.cpu.Cpu;
 import io.reactivex.Observable;
 
@@ -11,19 +11,18 @@ import io.reactivex.Observable;
  * Created by kysonchao on 2017/11/22.
  */
 public class GodEye {
-    private Cpu mCpu;
+    private CpuModule mCpuModule;
 
-    public void cpu(IntervalEnginee enginee){
-        if(mCpu == null){
-            mCpu = new Cpu();
+    public CpuModule cpu() {
+        if (mCpuModule == null) {
+            mCpuModule = new CpuModule();
         }
-
+        return mCpuModule;
     }
 
 
-
     public void install() {
-        Module<Cpu,Consumer> module = new Module<>(new Cpu(), new Consumer() {
+        Module<Cpu, Consumer> module = new Module<>(new Cpu(), new Consumer() {
             @Override
             public Observable work() {
                 return null;

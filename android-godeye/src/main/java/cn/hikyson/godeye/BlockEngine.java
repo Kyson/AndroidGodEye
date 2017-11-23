@@ -1,7 +1,7 @@
 package cn.hikyson.godeye;
 
 import cn.hikyson.godeye.internal.Consumer;
-import cn.hikyson.godeye.internal.Producer;
+import cn.hikyson.godeye.internal.Eater;
 import cn.hikyson.godeye.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.internal.modules.sm.Sm;
 import io.reactivex.Observable;
@@ -9,7 +9,7 @@ import io.reactivex.Observable;
 /**
  * Created by kysonchao on 2017/11/23.
  */
-public class BlockEngine implements Consumer<BlockInfo>, Producer<BlockInfo> {
+public class BlockEngine implements Consumer<BlockInfo>, Eater<BlockInfo> {
     private Sm mSm;
 
     @Override
