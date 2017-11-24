@@ -7,17 +7,12 @@ import cn.hikyson.godeye.utils.L;
  * Created by kysonchao on 2017/6/1.
  */
 public class SmConfig {
-    private static final int LONG_BLOCK_TIME = 2000;
-    private static final int SHORT_BLOCK_TIME = 500;
-    //800ms dump一次
-    private static final int DUMP_INTERVAL = 800;
-
     //长卡顿阀值
-    public int longBlockThreshold = LONG_BLOCK_TIME;
+    public int longBlockThreshold;
     //短卡顿阀值
-    public int shortBlockThreshold = SHORT_BLOCK_TIME;
+    public int shortBlockThreshold;
     //dump信息的间隔
-    public int dumpInterval = DUMP_INTERVAL;
+    public int dumpInterval;
 
     public SmConfig(int longBlockThreshold, int shortBlockThreshold, int dumpInterval) {
         if (shortBlockThreshold <= 0 || longBlockThreshold < shortBlockThreshold || dumpInterval <= 0) {

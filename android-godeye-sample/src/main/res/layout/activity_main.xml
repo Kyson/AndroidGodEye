@@ -16,6 +16,24 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="installAll"
+                    android:text="install all"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="uninstallAll"
+                    android:text="uninstall all"/>
+
+
+            </LinearLayout>
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,20 +49,8 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="installSM"
-                android:text="installSM"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="uninstallSM"
-                android:text="uninstallSM"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="blockWatch"
-                android:text="blockWatch"/>
+                android:onClick="testSM"
+                android:text="testSM"/>
 
             <EditText
                 android:id="@+id/activity_main_block_et"
@@ -61,8 +67,8 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="network"
-                android:text="network"/>
+                android:onClick="testNetwork"
+                android:text="testNetwork"/>
 
             <Button
                 android:layout_width="wrap_content"
@@ -73,20 +79,20 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="installLeak"
-                android:text="installLeak"/>
+                android:onClick="testLeak"
+                android:text="testLeak"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="testFps"
-                android:text="fps"/>
+                android:text="testFps"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="testTraffic"
-                android:text="traffic"/>
+                android:text="testTraffic"/>
 
 
             <Button

@@ -1,35 +1,38 @@
 package cn.hikyson.godeye.internal.modules.memory;
 
-import java.util.concurrent.Callable;
-
-import io.reactivex.Observable;
+import cn.hikyson.godeye.internal.Install;
+import cn.hikyson.godeye.internal.ProduceableConsumer;
+import cn.hikyson.godeye.utils.L;
 
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public class Heap implements Snapshotable<HeapInfo> {
-    /**
-     * 获取应用dalvik内存信息
-     * 耗时忽略不计
-     *
-     * @return dalvik堆内存KB
-     */
-    private static HeapInfo getAppHeapInfo() {
-        Runtime runtime = Runtime.getRuntime();
-        HeapInfo heapInfo = new HeapInfo();
-        heapInfo.freeMemKb = runtime.freeMemory() / 1024;
-        heapInfo.maxMemKb = Runtime.getRuntime().maxMemory() / 1024;
-        heapInfo.allocatedKb = (Runtime.getRuntime().totalMemory() - runtime.freeMemory()) / 1024;
-        return heapInfo;
+public class Heap extends ProduceableConsumer<HeapInfo> implements Install<Long> {
+    private HeapEngine mHeapEngine;
+
+    public synchronized void install() {
+        install(1000L);
     }
 
     @Override
-    public Observable<HeapInfo> snapshot() {
-        return Observable.fromCallable(new Callable<HeapInfo>() {
-            @Override
-            public HeapInfo call() throws Exception {
-                return getAppHeapInfo();
-            }
-        });
+    public synchronized void install(Long intervalMillis) {
+        if (mHeapEngine != null) {
+            L.d("heap already installed, ignore.");
+            return;
+        }
+        mHeapEngine = new HeapEngine(this, intervalMillis);
+        mHeapEngine.work();
+        L.d("heap installed.");
+    }
+
+    @Override
+    public synchronized void uninstall() {
+        if (mHeapEngine == null) {
+            L.d("heap already uninstalled, ignore.");
+            return;
+        }
+        mHeapEngine.shutdown();
+        mHeapEngine = null;
+        L.d("heap uninstalled.");
     }
 }

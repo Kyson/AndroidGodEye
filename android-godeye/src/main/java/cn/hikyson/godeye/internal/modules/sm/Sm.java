@@ -3,16 +3,16 @@ package cn.hikyson.godeye.internal.modules.sm;
 import android.content.Context;
 import android.support.annotation.WorkerThread;
 
+import cn.hikyson.godeye.internal.Install;
 import cn.hikyson.godeye.internal.ProduceableConsumer;
 import cn.hikyson.godeye.internal.modules.sm.core.BlockInterceptor;
 import cn.hikyson.godeye.internal.modules.sm.core.LongBlockInfo;
 import cn.hikyson.godeye.internal.modules.sm.core.ShortBlockInfo;
-import cn.hikyson.godeye.internal.modules.sm.core.SmConfig;
 import cn.hikyson.godeye.internal.modules.sm.core.SmCore;
 import cn.hikyson.godeye.utils.L;
 
 
-public final class Sm extends ProduceableConsumer<BlockInfo> {
+public final class Sm extends ProduceableConsumer<BlockInfo> implements Install<SmContext> {
 
     private SmCore mBlockCore;
     private boolean mInstalled = false;
@@ -28,13 +28,18 @@ public final class Sm extends ProduceableConsumer<BlockInfo> {
         return InstanceHoler.sINSTANCE;
     }
 
-    public synchronized void install(Context context, SmConfig smConfig) {
+    public synchronized void install(Context context) {
+        install(new SmContextImpl(context, 2000, 500, 800));
+    }
+
+    @Override
+    public synchronized void install(SmContext config) {
         if (mInstalled) {
-            L.d("SM has installed");
+            L.d("sm already installed, ignore.");
             return;
         }
         this.mInstalled = true;
-        this.mBlockCore = new SmCore(context, smConfig);
+        this.mBlockCore = new SmCore(config.context(), config.config());
         this.mBlockCore.addBlockInterceptor(new BlockInterceptor() {
             @Override
             public void onStart(Context context) {
@@ -57,15 +62,18 @@ public final class Sm extends ProduceableConsumer<BlockInfo> {
             }
         });
         mBlockCore.install();
+        L.d("sm installed");
     }
 
+    @Override
     public synchronized void uninstall() {
         if (!mInstalled) {
-            L.d("SM has uninstalled");
+            L.d("sm already uninstalled, ignore.");
             return;
         }
         mInstalled = false;
         mBlockCore.uninstall();
+        L.d("sm uninstalled");
     }
 
     public static SmCore core() {

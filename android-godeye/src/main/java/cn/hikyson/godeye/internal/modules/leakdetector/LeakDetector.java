@@ -1,7 +1,8 @@
 package cn.hikyson.godeye.internal.modules.leakdetector;
 
+import android.Manifest;
 import android.app.Application;
-import android.content.Context;
+import android.support.v4.content.PermissionChecker;
 
 import com.squareup.leakcanary.CanaryLog;
 import com.squareup.leakcanary.DefaultLeakDirectoryProvider;
@@ -13,18 +14,16 @@ import java.io.FilenameFilter;
 import java.util.List;
 
 import cn.hikyson.godeye.internal.Install;
-import cn.hikyson.godeye.internal.Consumer;
 import cn.hikyson.godeye.internal.ProduceableConsumer;
 import cn.hikyson.godeye.utils.FileUtil;
 import cn.hikyson.godeye.utils.L;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 
 /**
  * Created by kysonchao on 2017/11/23.
  */
-public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> {
+public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> implements Install<LeakContext> {
+
+    private boolean mInstalled;
 
     private LeakDetector() {
     }
@@ -37,11 +36,24 @@ public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> 
         return InstanceHolder.sINSTANCE;
     }
 
-    public void install(Application config) {
-        mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(config);
-        if (LeakCanary.isInAnalyzerProcess(config)) {
+    public synchronized void install(Application application) {
+        install(new LeakContextImpl(application));
+    }
+
+    @Override
+    public synchronized void install(LeakContext config) {
+        Application application = config.application();
+        if (LeakCanary.isInAnalyzerProcess(application)) {
+            throw new IllegalStateException("can not call install leak");
+        }
+        if (PermissionChecker.checkSelfPermission(config.application(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED) {
+            throw new IllegalStateException("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (mInstalled) {
             return;
         }
+        mInstalled = true;
+        mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(application);
         try {
             clearLeaks();
         } catch (FileUtil.FileException e) {
@@ -58,20 +70,22 @@ public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> 
                 L.e(String.format(s, objects) + "\n" + String.valueOf(throwable));
             }
         });
-        LeakCanary.install(config);
+        LeakCanary.install(application);
+        L.d("LeakCanary installed");
     }
 
-    public void uninstall() {
-        throw new UnsupportedOperationException("leak detector can not uninstall");
+    @Override
+    public synchronized void uninstall() {
+        throw new UnsupportedOperationException("leak detector can not uninstall!");
     }
 
     private LeakDirectoryProvider mLeakDirectoryProvider;
 
-    public static LeakDirectoryProvider getLeakDirectoryProvider() {
+    static LeakDirectoryProvider getLeakDirectoryProvider() {
         return instance().mLeakDirectoryProvider;
     }
 
-    public void clearLeaks() throws FileUtil.FileException {
+    private void clearLeaks() throws FileUtil.FileException {
         List<File> leakFiles = mLeakDirectoryProvider.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -82,23 +96,4 @@ public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> 
             FileUtil.deleteIfExists(f);
         }
     }
-
-//    private ObservableEmitter<LeakQueue.LeakMemoryInfo> mLeakMemoryInfoObservableEmitter;
-//
-//    @Override
-//    public Observable<LeakQueue.LeakMemoryInfo> consume() {
-//        return Observable.create(new ObservableOnSubscribe<LeakQueue.LeakMemoryInfo>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<LeakQueue.LeakMemoryInfo> e) throws Exception {
-//                mLeakMemoryInfoObservableEmitter = e;
-//            }
-//        });
-//    }
-//
-//    public static void emitLeak(LeakQueue.LeakMemoryInfo leakMemoryInfo) {
-//        final ObservableEmitter<LeakQueue.LeakMemoryInfo> emitter = instance().mLeakMemoryInfoObservableEmitter;
-//        if (emitter != null && !emitter.isDisposed()) {
-//            emitter.onNext(leakMemoryInfo);
-//        }
-//    }
 }

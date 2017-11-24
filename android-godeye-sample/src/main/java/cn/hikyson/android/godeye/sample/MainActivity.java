@@ -1,11 +1,16 @@
 package cn.hikyson.android.godeye.sample;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.PermissionChecker;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,89 +22,67 @@ import java.util.concurrent.Executors;
 import javax.net.ssl.HttpsURLConnection;
 
 import cn.hikyson.android.godeye.R;
-import cn.hikyson.godeye.internal.modules.battery.Battery;
+import cn.hikyson.godeye.GodEye;
 import cn.hikyson.godeye.internal.modules.battery.BatteryInfo;
-import cn.hikyson.godeye.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.internal.modules.cpu.CpuInfo;
-import cn.hikyson.godeye.internal.modules.fps.Fps;
 import cn.hikyson.godeye.internal.modules.fps.FpsInfo;
-import cn.hikyson.godeye.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.internal.modules.leakdetector.LeakQueue;
-import cn.hikyson.godeye.internal.modules.network.Network;
 import cn.hikyson.godeye.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.internal.modules.sm.BlockInfo;
-import cn.hikyson.godeye.internal.modules.sm.Sm;
-import cn.hikyson.godeye.internal.modules.sm.core.SmConfig;
-import cn.hikyson.godeye.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.internal.modules.traffic.TrafficInfo;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends Activity {
+    private GodEye mGodEye;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+        mGodEye = new GodEye();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED) {
+            Toast.makeText(this, "grant " + Manifest.permission.WRITE_EXTERNAL_STORAGE + " permission.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static class GodEyeDisposableObserver<T> extends DisposableObserver<T> {
+        private String mName;
+
+        public GodEyeDisposableObserver(String name) {
+            this.mName = name;
+        }
+
+        @Override
+        public void onNext(T t) {
+            Log.d("kyson", mName + " -> " + String.valueOf(t));
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.d("kyson", mName + " -> " + String.valueOf(e));
+        }
+
+        @Override
+        public void onComplete() {
+            Log.d("kyson", mName + " -> " + "onComplete");
+        }
     }
 
     public void testCpu(View view) {
-        new Cpu(1000).stream(this).observeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableObserver<CpuInfo>() {
-            @Override
-            public void onNext(CpuInfo cpuInfo) {
-                Log.d("kyson", String.valueOf(cpuInfo));
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("kyson", "onError:" + String.valueOf(e));
-            }
-
-            @Override
-            public void onComplete() {
-                Log.d("kyson", "onComplete");
-            }
-        });
+        mGodEye.cpu().consume().subscribe(new GodEyeDisposableObserver<CpuInfo>("cpu"));
     }
 
     public void testBattery(View view) {
-        new Battery().stream(this).observeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableObserver<BatteryInfo>() {
-            @Override
-            public void onNext(BatteryInfo batteryInfo) {
-                Log.d("kyson", String.valueOf(batteryInfo));
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("kyson", "onError:" + String.valueOf(e));
-            }
-
-            @Override
-            public void onComplete() {
-                Log.d("kyson", "onComplete");
-            }
-        });
+        mGodEye.battery().consume().subscribe(new GodEyeDisposableObserver<BatteryInfo>("battery"));
     }
 
-    public void installSM(View view) {
-        Sm.instance().install(MainActivity.this, new SmConfig());
-    }
-
-    public void uninstallSM(View view) {
-        Sm.instance().uninstall(MainActivity.this);
-    }
-
-    public void blockWatch(View view) {
-        Observable<BlockInfo> observable = Sm.instance().consume(MainActivity.this);
-        observable.subscribe(new Consumer<BlockInfo>() {
-            @Override
-            public void accept(BlockInfo blockInfo) throws Exception {
-                Log.d("kyson", String.valueOf(blockInfo));
-            }
-        });
+    public void testSM(View view) {
+        mGodEye.sm().consume().subscribe(new GodEyeDisposableObserver<BlockInfo>("sm"));
     }
 
     public void block(View view) {
@@ -111,20 +94,12 @@ public class MainActivity extends Activity {
         }
     }
 
-    private Network<RequestBaseInfo> network;
+    public void testLeak(View view) {
+        mGodEye.leakDetector().consume().subscribe(new GodEyeDisposableObserver<LeakQueue.LeakMemoryInfo>("leak"));
+    }
 
-    public void network(View view) {
-        if (network == null) {
-            network = new Network<RequestBaseInfo>();
-        }
-        RequestBaseInfo requestBaseInfo = new RequestBaseInfo(1000, 2000, 12312, "http://www.trip.com");
-        network.produce(requestBaseInfo);
-        network.consume(MainActivity.this).subscribe(new Consumer<RequestBaseInfo>() {
-            @Override
-            public void accept(RequestBaseInfo requestBaseInfo) throws Exception {
-                Log.d("kyson", String.valueOf(requestBaseInfo));
-            }
-        });
+    public void testNetwork(View view) {
+        mGodEye.network().consume().subscribe(new GodEyeDisposableObserver<RequestBaseInfo>("network"));
     }
 
     public void jumpToLeak(View view) {
@@ -132,35 +107,13 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    public void installLeak(View view) {
-        LeakDetector.instance().install(MainActivity.this, getApplication());
-        LeakDetector.instance().consume(MainActivity.this).subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
-            @Override
-            public void accept(LeakQueue.LeakMemoryInfo leakMemoryInfo) throws Exception {
-                Log.d("kyson", String.valueOf(leakMemoryInfo));
-            }
-        });
-    }
-
     public void testFps(View view) {
-        new Fps().stream(MainActivity.this).subscribe(new Consumer<FpsInfo>() {
-            @Override
-            public void accept(FpsInfo fpsInfo) throws Exception {
-                Log.d("kyson", String.valueOf(fpsInfo));
-            }
-        });
+        mGodEye.fps().consume().subscribe(new GodEyeDisposableObserver<FpsInfo>("fps"));
     }
-
 
     public void testTraffic(View view) {
-        new Traffic(1000).stream(MainActivity.this).subscribe(new Consumer<TrafficInfo>() {
-            @Override
-            public void accept(TrafficInfo trafficInfo) throws Exception {
-                Log.d("kyson", "traffic:" + String.valueOf(trafficInfo));
-            }
-        });
+        mGodEye.traffic().consume().subscribe(new GodEyeDisposableObserver<TrafficInfo>("traffic"));
     }
-
 
     public void testRequest(View view) {
         ExecutorService service = Executors.newSingleThreadExecutor();
@@ -195,5 +148,15 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public void installAll(View view) {
+        mGodEye.fps().install(this);
+//        mGodEye.cpu().install();
+//        mGodEye.installAll(getApplication());
+    }
+
+    public void uninstallAll(View view) {
+        mGodEye.uninstallAll();
     }
 }

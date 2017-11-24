@@ -2,6 +2,7 @@ package cn.hikyson.godeye.internal.modules.cpu;
 
 import java.util.concurrent.TimeUnit;
 
+import cn.hikyson.godeye.internal.Engine;
 import cn.hikyson.godeye.internal.Producer;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -12,7 +13,7 @@ import io.reactivex.functions.Function;
 /**
  * Created by kysonchao on 2017/11/23.
  */
-public class CpuEngine {
+public class CpuEngine implements Engine {
     private Producer<CpuInfo> mProducer;
     private long mIntervalMillis;
     private long mSampleMillis;
@@ -25,6 +26,7 @@ public class CpuEngine {
         mCompositeDisposable = new CompositeDisposable();
     }
 
+    @Override
     public void work() {
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).
                 concatMap(new Function<Long, ObservableSource<CpuInfo>>() {
@@ -40,6 +42,7 @@ public class CpuEngine {
         }));
     }
 
+    @Override
     public void shutdown() {
         mCompositeDisposable.dispose();
     }

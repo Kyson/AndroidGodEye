@@ -6,17 +6,12 @@ import android.os.Looper;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import cn.hikyson.godeye.internal.modules.cpu.CpuInfo;
-import cn.hikyson.godeye.internal.modules.memory.Heap;
-import cn.hikyson.godeye.internal.modules.memory.HeapInfo;
-import cn.hikyson.godeye.internal.modules.memory.Pss;
-import cn.hikyson.godeye.internal.modules.memory.PssInfo;
-import cn.hikyson.godeye.internal.modules.memory.Ram;
-import cn.hikyson.godeye.internal.modules.memory.RamInfo;
+import cn.hikyson.godeye.internal.modules.memory.MemoryUtil;
 import io.reactivex.Observable;
-import io.reactivex.functions.Function3;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.functions.Consumer;
 
 public final class SmCore {
 
@@ -65,19 +60,14 @@ public final class SmCore {
                         //这里短卡顿基本是dump不到数据的，因为dump延时一般都会比短卡顿时间久
                         final List<CpuInfo> cpuInfos = cpuSampler.getCpuRateInfo(eventStartTimeMilliis, eventEndTimeMillis);
                         final Map<Long, List<StackTraceElement>> threadStackEntries = stackSampler.getThreadStackEntries(eventStartTimeMilliis, eventEndTimeMillis);
-
-                        Observable<HeapInfo> heapInfoObservable = new Heap().stream(context);
-                        Observable<RamInfo> ramInfoObservable = new Ram().stream(context);
-                        Observable<PssInfo> pssInfoObservable = new Pss().stream(context);
-
-                        Observable.zip(heapInfoObservable, ramInfoObservable, pssInfoObservable, new Function3<HeapInfo, RamInfo, PssInfo, MemoryInfo>() {
+                        Observable.fromCallable(new Callable<MemoryInfo>() {
                             @Override
-                            public MemoryInfo apply(HeapInfo heapInfo, RamInfo ramInfo, PssInfo pssInfo) throws Exception {
-                                return new MemoryInfo(heapInfo, pssInfo, ramInfo);
+                            public MemoryInfo call() throws Exception {
+                                return new MemoryInfo(MemoryUtil.getAppHeapInfo(), MemoryUtil.getAppPssInfo(mContext), MemoryUtil.getRamInfo(mContext));
                             }
-                        }).subscribe(new DisposableObserver<MemoryInfo>() {
+                        }).subscribe(new Consumer<MemoryInfo>() {
                             @Override
-                            public void onNext(MemoryInfo memoryInfo) {
+                            public void accept(MemoryInfo memoryInfo) throws Exception {
                                 LongBlockInfo blockBaseinfo = LongBlockInfo.create(eventStartTimeMilliis, eventEndTimeMillis, threadBlockTimeMillis,
                                         blockTimeMillis, cpuBusy, cpuInfos, threadStackEntries, memoryInfo);
                                 if (!mInterceptorChain.isEmpty()) {
@@ -85,14 +75,6 @@ public final class SmCore {
                                         interceptor.onLongBlock(context, blockBaseinfo);
                                     }
                                 }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                            }
-
-                            @Override
-                            public void onComplete() {
                             }
                         });
                     }
