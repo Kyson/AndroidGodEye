@@ -19,6 +19,6 @@ public class FpsContextImpl implements FpsContext {
 
     @Override
     public long intervalMillis() {
-        return 1000;
+        return 2000;
     }
 }

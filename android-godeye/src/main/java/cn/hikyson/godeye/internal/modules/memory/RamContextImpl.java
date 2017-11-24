@@ -19,6 +19,6 @@ public class RamContextImpl implements RamContext {
 
     @Override
     public long intervalMillis() {
-        return 1000;
+        return 2000;
     }
 }

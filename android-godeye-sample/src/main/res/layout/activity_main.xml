@@ -8,98 +8,224 @@
     tools:context="cn.hikyson.android.godeye.sample.MainActivity">
 
     <ScrollView
+        android:id="@+id/activity_main_log_sc"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#505050"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/activity_main_log_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="13dp"
+            tools:text="sfsfasdfadsfafd\nasfdfaa\nfr"/>
+    </ScrollView>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:onClick="installAll"
                     android:text="install all"/>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="uninstallAll"
+                    android:text="uninstall all"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/activity_main_block_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="卡顿时间，毫秒"/>
+
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="uninstallAll"
-                    android:text="uninstall all"/>
+                    android:onClick="block"
+                    android:text="block"/>
 
 
             </LinearLayout>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="testCpu"
-                android:text="testCpu"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="testBattery"
-                android:text="testBattery"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="testSM"
-                android:text="testSM"/>
-
-            <EditText
-                android:id="@+id/activity_main_block_et"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="卡顿时间，毫秒"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="testRequest"
+                    android:text="产生流量"/>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="jumpToLeak"
+                    android:text="jumpToLeak"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="block"
-                android:text="block"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="testCpu"
+                    android:text="testCpu"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="uninstallCpu"
+                    android:text="uninstall"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="testNetwork"
-                android:text="testNetwork"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="testBattery"
+                    android:text="testBattery"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="uninstallBattery"
+                    android:text="uninstall"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="jumpToLeak"
-                android:text="jumpToLeak"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="testSM"
+                    android:text="testSM"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="uninstallSm"
+                    android:text="uninstall"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="testLeak"
-                android:text="testLeak"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="testNetwork"
+                    android:text="testNetwork"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="testFps"
-                android:text="testFps"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="testLeak"
+                    android:text="testLeak"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="uninstallLeak"
+                    android:text="uninstall"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="testTraffic"
-                android:text="testTraffic"/>
+                android:orientation="horizontal">
 
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="testFps"
+                    android:text="testFps"/>
 
-            <Button
-                android:layout_width="wrap_content"
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="uninstallFps"
+                    android:text="uninstall"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="testRequest"
-                android:text="request"/>
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="testTraffic"
+                    android:text="testTraffic"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="uninstallTraffic"
+                    android:text="uninstall"/>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

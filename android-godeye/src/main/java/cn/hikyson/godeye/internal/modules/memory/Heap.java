@@ -11,7 +11,7 @@ public class Heap extends ProduceableConsumer<HeapInfo> implements Install<Long>
     private HeapEngine mHeapEngine;
 
     public synchronized void install() {
-        install(1000L);
+        install(2000L);
     }
 
     @Override

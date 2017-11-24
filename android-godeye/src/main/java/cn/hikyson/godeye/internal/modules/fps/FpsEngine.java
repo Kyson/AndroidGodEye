@@ -5,6 +5,7 @@ import android.view.Choreographer;
 import android.view.Display;
 import android.view.WindowManager;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.internal.Engine;
@@ -18,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -38,17 +40,18 @@ public class FpsEngine implements Engine {
     @Override
     public void work() {
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).
-                concatMap(new Function<Long, ObservableSource<FpsInfo>>() {
+                        concatMap(new Function<Long, ObservableSource<FpsInfo>>() {
+                            @Override
+                            public ObservableSource<FpsInfo> apply(Long aLong) throws Exception {
+                                return create();
+                            }
+                        }).subscribe(new Consumer<FpsInfo>() {
                     @Override
-                    public ObservableSource<FpsInfo> apply(Long aLong) throws Exception {
-                        return create();
+                    public void accept(FpsInfo fpsInfo) throws Exception {
+                        mProducer.produce(fpsInfo);
                     }
-                }).subscribe(new Consumer<FpsInfo>() {
-            @Override
-            public void accept(FpsInfo food) throws Exception {
-                mProducer.produce(food);
-            }
-        }));
+                })
+        );
     }
 
     @Override
@@ -66,6 +69,7 @@ public class FpsEngine implements Engine {
                     @Override
                     public void doFrame(long frameTimeNanos) {
                         e.onNext(frameTimeNanos);
+                        e.onComplete();
                     }
                 });
             }
@@ -80,6 +84,7 @@ public class FpsEngine implements Engine {
                             public void doFrame(long frameTimeNanos) {
                                 long frameInterval = frameTimeNanos - startTimeNanos;//计算两帧的时间间隔
                                 e.onNext(new FpsInfo((float) (1000000000 / frameInterval), systemRate));
+                                e.onComplete();
                             }
                         });
                     }

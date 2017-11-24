@@ -10,9 +10,9 @@ public class L {
     private static final String DEFAULT_TAG = "AndroidGodEye";
 
     public interface LogProxy {
-        public void d(String tag, String msg);
+        public void d(String msg);
 
-        public void e(String tag, String msg);
+        public void e(String msg);
 
         void onRuntimeException(RuntimeException e);
     }
@@ -29,13 +29,13 @@ public class L {
             return new LogProxy() {
 
                 @Override
-                public void d(String tag, String msg) {
-                    Log.d(tag, msg);
+                public void d(String msg) {
+                    Log.d(DEFAULT_TAG, msg);
                 }
 
                 @Override
-                public void e(String tag, String msg) {
-                    Log.e(tag, msg);
+                public void e(String msg) {
+                    Log.e(DEFAULT_TAG, msg);
                 }
 
                 @Override
@@ -48,26 +48,12 @@ public class L {
     }
 
 
-    public static void d(String tag, String msg) {
-        if (TextUtils.isEmpty(tag)) {
-            tag = DEFAULT_TAG;
-        }
-        getLogProxy().d(tag, msg);
-    }
-
     public static void d(String msg) {
-        d("", msg);
-    }
-
-    public static void e(String tag, String msg) {
-        if (TextUtils.isEmpty(tag)) {
-            tag = DEFAULT_TAG;
-        }
-        getLogProxy().e(tag, msg);
+        getLogProxy().d(msg);
     }
 
     public static void e(String msg) {
-        e("", msg);
+        getLogProxy().e(msg);
     }
 
     public static void onRuntimeException(RuntimeException e) {
