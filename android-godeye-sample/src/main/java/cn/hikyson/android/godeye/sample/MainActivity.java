@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
-import android.util.Log;
-import android.util.MutableLong;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -33,6 +31,7 @@ import cn.hikyson.godeye.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.monitor.GodEyeMonitor;
 import cn.hikyson.godeye.utils.L;
 import io.reactivex.observers.DisposableObserver;
 
@@ -49,7 +48,7 @@ public class MainActivity extends Activity implements Loggable {
         mLogTv = findViewById(R.id.activity_main_log_tv);
         mLogScrollView = findViewById(R.id.activity_main_log_sc);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-        mGodEye = new GodEye();
+        mGodEye = GodEye.instance();
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -66,6 +65,8 @@ public class MainActivity extends Activity implements Loggable {
                 log("!!EXCEPTION: " + e.getLocalizedMessage());
             }
         });
+        installAll(null);
+        GodEyeMonitor.work(MainActivity.this);
     }
 
     @Override
@@ -89,6 +90,14 @@ public class MainActivity extends Activity implements Loggable {
         if (PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED) {
             Toast.makeText(this, "grant " + Manifest.permission.WRITE_EXTERNAL_STORAGE + " permission.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void installAll(View view) {
+        mGodEye.installAll(getApplication());
+    }
+
+    public void uninstallAll(View view) {
+        mGodEye.uninstallAll();
     }
 
     public void uninstallCpu(View view) {
@@ -214,13 +223,5 @@ public class MainActivity extends Activity implements Loggable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void installAll(View view) {
-        mGodEye.installAll(getApplication());
-    }
-
-    public void uninstallAll(View view) {
-        mGodEye.uninstallAll();
     }
 }

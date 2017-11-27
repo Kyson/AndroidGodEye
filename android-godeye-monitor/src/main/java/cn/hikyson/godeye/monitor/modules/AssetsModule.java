@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.net.Uri;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,14 +14,16 @@ import java.io.InputStream;
  */
 public class AssetsModule implements Module {
     private AssetManager mAssets;
+    private String mPreffix;
 
-    public AssetsModule(Context context) {
+    public AssetsModule(Context context, String preffix) {
+        mPreffix = preffix;
         mAssets = context.getResources().getAssets();
     }
 
     @Override
     public byte[] process(String path, Uri uri) throws Throwable {
-        String fileName = uri.getPath();
+        String fileName = mPreffix + "/" + uri.getPath();
         return loadContent(fileName, mAssets);
     }
 

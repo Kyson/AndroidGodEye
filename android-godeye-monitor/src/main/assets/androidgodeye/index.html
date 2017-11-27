@@ -17,8 +17,11 @@
 
 <div class="container">
     <div class="row clearfix">
+        <!--电池信息-->
         <div class="col-md-4 column">
-            <button type="button" class="btn btn-default">电池</button>
+            <object type="text/html" data="battery/battery.html" width="100%"
+                    height="100%">
+            </object>
         </div>
         <div class="col-md-4 column">
             <div class="row clearfix">
@@ -33,12 +36,16 @@
             </div>
         </div>
         <div class="col-md-4 column">
-            <button type="button" class="btn btn-default">Fps</button>
+            <object type="text/html" data="fps/fps.html" width="100%"
+                    height="100%">
+            </object>
         </div>
     </div>
     <div class="row clearfix">
         <div class="col-md-6 column">
-            <button type="button" class="btn btn-default">cpu</button>
+            <object type="text/html" data="cpu/cpu.html" width="500px"
+                    height="300px">
+            </object>
         </div>
         <div class="col-md-6 column">
             <button type="button" class="btn btn-default">heap</button>
@@ -46,7 +53,9 @@
     </div>
     <div class="row clearfix">
         <div class="col-md-6 column">
-            <button type="button" class="btn btn-default">traffic</button>
+            <object type="text/html" data="traffic/traffic.html" width="500px"
+                    height="300px">
+            </object>
         </div>
         <div class="col-md-6 column">
             <button type="button" class="btn btn-default">www.hikyson.cn</button>
@@ -54,7 +63,9 @@
     </div>
     <div class="row clearfix">
         <div class="col-md-12 column">
-            <button type="button" class="btn btn-default">leak</button>
+            <object type="text/html" data="leak/leak.html" width="100%"
+                    height="100%">
+            </object>
         </div>
     </div>
     <div class="row clearfix">
@@ -64,6 +75,8 @@
     </div>
     <div class="row clearfix">
         <div class="col-md-12 column">
+            <div data-include="header"></div>
+            <div data-include="footer"></div>
             <button type="button" class="btn btn-default">block</button>
         </div>
     </div>

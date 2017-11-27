@@ -44,12 +44,3 @@ pre {
 }
 
 /*json格式化 end*/
-
-td.details-control {
-    background: url('resources/arrow_down.png') no-repeat center center;
-    cursor: pointer;
-}
-
-tr.shown td.details-control {
-    background: url('resources/arrow_up.png') no-repeat center center;
-}

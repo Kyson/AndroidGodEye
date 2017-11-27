@@ -34,6 +34,17 @@ public class GodEye {
     private Startup mStartup;
     private Traffic mTraffic;
 
+    private GodEye() {
+    }
+
+    private static class InstanceHolder {
+        private static final GodEye sInstance = new GodEye();
+    }
+
+    public static GodEye instance() {
+        return InstanceHolder.sInstance;
+    }
+
     public void installAll(Application c) {
         Context context = c.getApplicationContext();
         cpu().install();

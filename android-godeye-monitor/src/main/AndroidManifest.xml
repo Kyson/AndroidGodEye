@@ -1,2 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="cn.hikyson.godeye"/>
+          package="cn.hikyson.godeye">
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+</manifest>

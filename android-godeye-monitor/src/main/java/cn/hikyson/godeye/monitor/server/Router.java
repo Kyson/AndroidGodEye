@@ -1,12 +1,23 @@
 package cn.hikyson.godeye.monitor.server;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.v4.util.ArrayMap;
 
-
 import java.util.Map;
 
+import cn.hikyson.godeye.monitor.modules.AssetsModule;
+import cn.hikyson.godeye.monitor.modules.BatteryModule;
+import cn.hikyson.godeye.monitor.modules.BlockModule;
+import cn.hikyson.godeye.monitor.modules.CpuModule;
+import cn.hikyson.godeye.monitor.modules.FpsModule;
+import cn.hikyson.godeye.monitor.modules.HeapModule;
+import cn.hikyson.godeye.monitor.modules.LeakMemoryModule;
 import cn.hikyson.godeye.monitor.modules.Module;
+import cn.hikyson.godeye.monitor.modules.NetworkModule;
+import cn.hikyson.godeye.monitor.modules.PssModule;
+import cn.hikyson.godeye.monitor.modules.StartUpModule;
+import cn.hikyson.godeye.monitor.modules.TrafficModule;
 
 /**
  * Created by kysonchao on 2017/9/3.
@@ -25,27 +36,30 @@ public class Router {
         return InstanceHolder.sInstance;
     }
 
-    public void init() {
+    public void init(Context context) {
         mRouteModules = new ArrayMap<>();
-        StartUpModule startUpModule = new StartUpModule();
-        AssetsModule assetsModule = new AssetsModule();
-        CommandModule commandModule = new CommandModule();
-        PageLoadModule pageLoadModule = new PageLoadModule();
-        SessionTickModule sessionTickModule = new SessionTickModule();
-        SessionEndModule sessionEndModule = new SessionEndModule();
-        FpsModule fpsModule = new FpsModule();
-        BlockModule blockModule = new BlockModule();
-        LeakMemoryModule LeakMemoryModule = new LeakMemoryModule();
-//        LeakMemoryStatusModule leakMemoryStautsModule = new LeakMemoryStatusModule();
-        mRouteModules.put("startup", startUpModule);
+        AssetsModule assetsModule = new AssetsModule(context,"androidgodeye");
         mRouteModules.put("assets", assetsModule);
-        mRouteModules.put("command", commandModule);
-        mRouteModules.put("pageLoad", pageLoadModule);
-        mRouteModules.put("sessionTick", sessionTickModule);
-        mRouteModules.put("sessionEnd", sessionEndModule);
-        mRouteModules.put("fps", fpsModule);
+        BatteryModule batteryModule = new BatteryModule();
+        mRouteModules.put("battery", batteryModule);
+        BlockModule blockModule = new BlockModule();
         mRouteModules.put("block", blockModule);
+        CpuModule cpuModule = new CpuModule();
+        mRouteModules.put("cpu", cpuModule);
+        FpsModule fpsModule = new FpsModule();
+        mRouteModules.put("fps", fpsModule);
+        HeapModule heapModule = new HeapModule();
+        mRouteModules.put("heap", heapModule);
+        LeakMemoryModule LeakMemoryModule = new LeakMemoryModule();
         mRouteModules.put("leakMemory", LeakMemoryModule);
+        NetworkModule networkModule = new NetworkModule();
+        mRouteModules.put("network", networkModule);
+        PssModule pssModule = new PssModule();
+        mRouteModules.put("pss", pssModule);
+        StartUpModule startUpModule = new StartUpModule();
+        mRouteModules.put("startup", startUpModule);
+        TrafficModule trafficModule = new TrafficModule();
+        mRouteModules.put("traffic", trafficModule);
     }
 
     public byte[] process(Uri uri) throws Throwable {

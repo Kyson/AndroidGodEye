@@ -5,7 +5,7 @@
 var fpsUtil = function () {
 
     function refreshFps(currentRate, fineRate) {
-        $("#fpsStatus").text(currentRate + "/" + fineRate);
+        $("#fps_status").text(currentRate + "/" + fineRate);
     }
 
     return {

@@ -1,19 +1,17 @@
 package cn.hikyson.godeye.monitor.modules;
 
-import android.net.Uri;
+import java.util.Collection;
 
-import com.ctrip.ibu.performance.debugmonitor.StotageQueue;
-
-import java.util.List;
+import cn.hikyson.godeye.internal.modules.leakdetector.LeakQueue;
+import cn.hikyson.godeye.monitor.driver.Pipe;
 
 /**
  * Created by kysonchao on 2017/9/29.
  */
-public class LeakMemoryModule implements Module {
+public class LeakMemoryModule extends BaseListModule<LeakQueue.LeakMemoryInfo> {
 
     @Override
-    public byte[] process(String path, Uri uri) throws Throwable {
-        List<StotageQueue.LeakMemoryItem> leakMemoryItems = StotageQueue.getLeakMemoryItems();
-        return new ResultWrapper<>(leakMemoryItems).toBytes();
+    Collection<LeakQueue.LeakMemoryInfo> popData() {
+        return Pipe.instance().popLeakMemoryInfos();
     }
 }
