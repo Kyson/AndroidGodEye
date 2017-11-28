@@ -1,6 +1,5 @@
 package cn.hikyson.godeye.internal.modules.startup;
 
-import cn.hikyson.godeye.internal.Install;
 import cn.hikyson.godeye.internal.ProduceableConsumer;
 
 /**

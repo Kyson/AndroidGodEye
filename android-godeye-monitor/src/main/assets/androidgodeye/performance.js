@@ -33,7 +33,7 @@ function refreshStartup() {
             result = JSON.parse(result);
             var startupResult;
             if (result.code === 1) {
-                startupResult = "启动类型: " + result.data.startUpType + " , 耗时：" + result.data.startUpTime + " ms"
+                startupResult = "启动类型: " + result.data.startupType + " , 耗时：" + result.data.startupTime + " ms"
             } else {
                 startupResult = "***"
             }

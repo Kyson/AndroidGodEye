@@ -8,11 +8,16 @@
     <link href="../bootstrap.min.css" rel="stylesheet">
     <script src="../requests.js"></script>
     <script src="../dark.js"></script>
+    <script src="../json.format.js"></script>
 </head>
 <body>
-<div id="cpu_chart" style="height:200px;width: auto">
+<div id="block_chart" style="height:500px;width: auto">
 </div>
-<script src="js/cpu.util.js"></script>
-<script src="js/cpu.js"></script>
+<div class="alert" id="block_detail_alert">
+    <button type="button" class="close" id="block_close_detail">&times;</button>
+    <pre id="block_detail"></pre>
+</div>
+<script src="js/block.util.js"></script>
+<script src="js/block.js"></script>
 </body>
 </html>

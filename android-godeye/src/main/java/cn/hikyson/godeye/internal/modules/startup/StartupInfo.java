@@ -1,28 +1,35 @@
 package cn.hikyson.godeye.internal.modules.startup;
 
+import android.support.annotation.StringDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by kysonchao on 2017/11/23.
  */
 public class StartupInfo {
-    //冷启动时间开始点
-    public long coldLaunchTimeMillis;
-    //热启动时间开始点
-    public long hotLaunchTimeMillis;
-    //启动完成时间点
-    public long endLaunchTimeMillis;
+    @Retention(RetentionPolicy.SOURCE)
+    @StringDef({StartUpType.COLD, StartUpType.HOT})
+    public @interface StartUpType {
+        public static final String COLD = "cold";
+        public static final String HOT = "hot";
+    }
 
-    public StartupInfo(long coldLaunchTimeMillis, long hotLaunchTimeMillis, long endLaunchTimeMillis) {
-        this.coldLaunchTimeMillis = coldLaunchTimeMillis;
-        this.hotLaunchTimeMillis = hotLaunchTimeMillis;
-        this.endLaunchTimeMillis = endLaunchTimeMillis;
+    public @StartUpType
+    String startupType;
+    public long startupTime;
+
+    public StartupInfo(String startupType, long startupTime) {
+        this.startupType = startupType;
+        this.startupTime = startupTime;
     }
 
     @Override
     public String toString() {
         return "StartupInfo{" +
-                "coldLaunchTimeMillis=" + coldLaunchTimeMillis +
-                ", hotLaunchTimeMillis=" + hotLaunchTimeMillis +
-                ", endLaunchTimeMillis=" + endLaunchTimeMillis +
+                "startupType='" + startupType + '\'' +
+                ", startupTime=" + startupTime +
                 '}';
     }
 }

@@ -80,18 +80,18 @@ var blockUtil = function () {
         blockChart.on('click', function (params) {
             var blockDetail = blockDetailInfos[params.dataIndex];
             if (blockDetail) {
-                $("#blockdetail").html(jsonFormat.syntaxHighlight(JSON.parse(blockDetail)));
-                $("#blockDetailAlert").show();
+                $("#block_detail").html(jsonFormat.syntaxHighlight(JSON.parse(blockDetail)));
+                $("#block_detail_alert").show();
             } else {
-                $("#blockdetail").html("无卡顿详情");
-                $("#blockDetailAlert").show();
+                $("#block_detail").html("无卡顿详情");
+                $("#block_detail_alert").show();
             }
         });
 
-        $("#closeBlockDetailAlert").click(function () {
-            $("#blockDetailAlert").hide();
+        $("#block_close_detail").click(function () {
+            $("#block_detail_alert").hide();
         });
-        $("#blockDetailAlert").hide();
+        $("#block_detail_alert").hide();
     }
 
     function refreshBlock(blockInfos) {
