@@ -193,7 +193,7 @@ public class MainActivity extends Activity implements Loggable {
 
     public void testRequest(View view) {
         ExecutorService service = Executors.newSingleThreadExecutor();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 5; i++) {
             service.submit(new Runnable() {
                 @Override
                 public void run() {
@@ -205,6 +205,7 @@ public class MainActivity extends Activity implements Loggable {
 
     private void request() {
         try {
+            long startTimeMillis = System.currentTimeMillis();
             URL url = new URL("https://www.trip.com/");
             //打开连接
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
@@ -218,7 +219,9 @@ public class MainActivity extends Activity implements Loggable {
                     baos.write(buffer, 0, len);
                     baos.flush();
                 }
-                baos.toString("utf-8");
+                String result = baos.toString("utf-8");
+                long endTimeMillis = System.currentTimeMillis();
+                GodEye.instance().network().produce(new RequestBaseInfo(startTimeMillis, endTimeMillis, result.getBytes().length, String.valueOf(url)));
             }
         } catch (IOException e) {
             e.printStackTrace();

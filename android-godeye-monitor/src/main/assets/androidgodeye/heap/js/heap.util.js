@@ -98,9 +98,9 @@ var heapUtil = function () {
             heapOptions.xAxis[0].data.shift();
             heapOptions.xAxis[0].data.push(axisData);
             heapOptions.series[0].data.shift();
-            heapOptions.series[0].data.push(heapInfo.allocated / 1024);
+            heapOptions.series[0].data.push(heapInfo.allocatedKb / 1024);
             heapOptions.series[1].data.shift();
-            heapOptions.series[1].data.push(heapInfo.freeMem / 1024);
+            heapOptions.series[1].data.push(heapInfo.freeMemKb / 1024);
         }
         heapChart.setOption(heapOptions);
     }
