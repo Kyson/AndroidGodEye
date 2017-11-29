@@ -16,6 +16,7 @@ import cn.hikyson.godeye.monitor.modules.LeakMemoryModule;
 import cn.hikyson.godeye.monitor.modules.Module;
 import cn.hikyson.godeye.monitor.modules.NetworkModule;
 import cn.hikyson.godeye.monitor.modules.PssModule;
+import cn.hikyson.godeye.monitor.modules.RamModule;
 import cn.hikyson.godeye.monitor.modules.StartUpModule;
 import cn.hikyson.godeye.monitor.modules.TrafficModule;
 
@@ -38,7 +39,7 @@ public class Router {
 
     public void init(Context context) {
         mRouteModules = new ArrayMap<>();
-        AssetsModule assetsModule = new AssetsModule(context,"androidgodeye");
+        AssetsModule assetsModule = new AssetsModule(context, "androidgodeye");
         mRouteModules.put("assets", assetsModule);
         BatteryModule batteryModule = new BatteryModule();
         mRouteModules.put("battery", batteryModule);
@@ -56,6 +57,8 @@ public class Router {
         mRouteModules.put("network", networkModule);
         PssModule pssModule = new PssModule();
         mRouteModules.put("pss", pssModule);
+        RamModule ramModule = new RamModule();
+        mRouteModules.put("ram", ramModule);
         StartUpModule startUpModule = new StartUpModule();
         mRouteModules.put("startup", startUpModule);
         TrafficModule trafficModule = new TrafficModule();

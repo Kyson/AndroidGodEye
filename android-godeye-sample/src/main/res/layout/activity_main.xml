@@ -36,6 +36,19 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <EditText
+                android:id="@+id/activity_main_test_temp_et"
+                android:layout_width="match_parent"
+                android:text="trip.com"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="testTmp"
+                android:text="testTmp"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

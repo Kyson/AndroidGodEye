@@ -10,6 +10,8 @@ import cn.hikyson.godeye.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.internal.modules.memory.HeapInfo;
+import cn.hikyson.godeye.internal.modules.memory.PssInfo;
+import cn.hikyson.godeye.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.internal.modules.startup.StartupInfo;
@@ -150,16 +152,25 @@ public class Pipe {
         return mStartupInfo;
     }
 
-    private PssModule.RamWithPssInfo mRamWithPssInfo;
+    private RamInfo mRamInfo;
 
-    public void pushRamWithPssInfo(PssModule.RamWithPssInfo ramWithPssInfo) {
-        mRamWithPssInfo = ramWithPssInfo;
+    public void pushRamInfo(RamInfo ramInfo) {
+        mRamInfo = ramInfo;
     }
 
-    public PssModule.RamWithPssInfo popRamWithPssInfo() {
-        return mRamWithPssInfo;
+    public RamInfo popRamInfo() {
+        return mRamInfo;
     }
 
+    private PssInfo mPssInfo;
+
+    public void pushPssInfo(PssInfo pssInfo) {
+        mPssInfo = pssInfo;
+    }
+
+    public PssInfo popPssInfo() {
+        return mPssInfo;
+    }
 
     private List<HeapInfo> mHeapInfos = new ArrayList<>();
     private final Object mLockForHeapInfo = new Object();

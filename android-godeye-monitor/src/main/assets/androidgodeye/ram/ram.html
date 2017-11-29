@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../jquery.min.js"></script>
+    <script src="../bootstrap.min.js"></script>
+    <link href="../bootstrap.min.css" rel="stylesheet">
+    <link href="css/ram.css" rel="stylesheet">
+    <script src="../requests.js"></script>
+</head>
+<body>
+
+<div class="ramtotal" id="ram_total">
+    <div class="ram_allocated" id="ram_allocated"></div>
+    <div class="ram_allocated_text" id="ram_allocated_text"></div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<div class="span12">
+    <div id="ram_low_status" class="redcircle" style="display:inline-block"></div>
+    <span>低内存阀值：</span><span id="ram_low_memory"></span>
+</div>
+<script src="js/ram.js"></script>
+</body>
+</html>

@@ -3,6 +3,7 @@ package cn.hikyson.android.godeye.sample;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -122,6 +123,14 @@ public class MainActivity extends Activity implements Loggable {
 
     public void uninstallTraffic(View view) {
         mGodEye.traffic().uninstall();
+    }
+
+    public void testTmp(View view) {
+        final String url = String.valueOf(((EditText) this.findViewById(R.id.activity_main_test_temp_et)).getText());
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri content_url = Uri.parse(url);
+        intent.setData(content_url);
+        startActivity(intent);
     }
 
     public static class GodEyeDisposableObserver<T> extends DisposableObserver<T> {

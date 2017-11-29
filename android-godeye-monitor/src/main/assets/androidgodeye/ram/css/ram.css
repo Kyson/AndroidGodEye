@@ -1,0 +1,43 @@
+.ramtotal {
+    float: left;
+    height: 36px;
+    width: 200px;
+    background: #999999;
+    position: absolute;
+    left: 0px;
+}
+
+.ramtotal .ram_allocated {
+    float: left;
+    height: 36px;
+    background: #73BF00;
+    display: block;
+    position: absolute;
+}
+
+.ramtotal .ram_allocated_text {
+    float: left;
+    color: #73BF00;
+    position: absolute;
+    font-size: 15px;
+    top: 45px;
+    left: 20%;
+}
+
+.redcircle {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+
+.greencircle {
+    width: 10px;
+    height: 10px;
+    background-color: green;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+}

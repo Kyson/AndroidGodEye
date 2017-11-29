@@ -12,9 +12,6 @@ import cn.hikyson.godeye.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.internal.modules.traffic.TrafficInfo;
-import cn.hikyson.godeye.monitor.modules.PssModule;
-import io.reactivex.Observable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -81,17 +78,16 @@ public class Watcher {
                 mPipe.pushStartupInfo(startupInfo);
             }
         });
-        Observable<RamInfo> ramInfoObservable = godEye.ram().consume();
-        Observable<PssInfo> pssInfoObservable = godEye.pss().consume();
-        Observable.zip(ramInfoObservable, pssInfoObservable, new BiFunction<RamInfo, PssInfo, PssModule.RamWithPssInfo>() {
+        godEye.ram().consume().subscribe(new Consumer<RamInfo>() {
             @Override
-            public PssModule.RamWithPssInfo apply(RamInfo ramInfo, PssInfo pssInfo) throws Exception {
-                return new PssModule.RamWithPssInfo(ramInfo, pssInfo);
+            public void accept(RamInfo ramInfo) throws Exception {
+                mPipe.pushRamInfo(ramInfo);
             }
-        }).subscribe(new Consumer<PssModule.RamWithPssInfo>() {
+        });
+        godEye.pss().consume().subscribe(new Consumer<PssInfo>() {
             @Override
-            public void accept(PssModule.RamWithPssInfo ramWithPssInfo) throws Exception {
-                mPipe.pushRamWithPssInfo(ramWithPssInfo);
+            public void accept(PssInfo pssInfo) throws Exception {
+                mPipe.pushPssInfo(pssInfo);
             }
         });
         godEye.heap().consume().subscribe(new Consumer<HeapInfo>() {
@@ -100,7 +96,5 @@ public class Watcher {
                 mPipe.pushHeapInfo(heapInfo);
             }
         });
-
-
     }
 }

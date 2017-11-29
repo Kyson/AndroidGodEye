@@ -1,20 +1,3 @@
-.redcircle {
-    width: 10px;
-    height: 10px;
-    background-color: red;
-    border-radius: 50%;
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-}
-
-.greencircle {
-    width: 10px;
-    height: 10px;
-    background-color: green;
-    border-radius: 50%;
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-}
 
 /*json格式化 begin*/
 pre {
