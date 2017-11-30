@@ -2,36 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9336ced0-3427-4386-9abe-030202c994fa" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/bootstrap.min.css" afterPath="$PROJECT_DIR$/androidgodeye/resources/bootstrap.min.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/bootstrap.min.js" afterPath="$PROJECT_DIR$/androidgodeye/resources/bootstrap.min.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/dark.js" afterPath="$PROJECT_DIR$/androidgodeye/resources/dark.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/datatables.css" afterPath="$PROJECT_DIR$/androidgodeye/resources/datatables.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/datatables.js" afterPath="$PROJECT_DIR$/androidgodeye/resources/datatables.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/datatables.min.css" afterPath="$PROJECT_DIR$/androidgodeye/resources/datatables.min.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/datatables.min.js" afterPath="$PROJECT_DIR$/androidgodeye/resources/datatables.min.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/echarts.common.min.js" afterPath="$PROJECT_DIR$/androidgodeye/resources/echarts.common.min.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/echarts.js" afterPath="$PROJECT_DIR$/androidgodeye/resources/echarts.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/index3.html" afterPath="$PROJECT_DIR$/androidgodeye/deprecated/index3.html" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/jquery.min.js" afterPath="$PROJECT_DIR$/androidgodeye/resources/jquery.min.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/json.format.js" afterPath="$PROJECT_DIR$/androidgodeye/resources/json.format.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/pageload.js" afterPath="$PROJECT_DIR$/androidgodeye/deprecated/pageload.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/performance.css" afterPath="$PROJECT_DIR$/androidgodeye/resources/json.format.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/performance.js" afterPath="$PROJECT_DIR$/androidgodeye/deprecated/performance.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/pss.js" afterPath="$PROJECT_DIR$/androidgodeye/deprecated/pss.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/ram.js" afterPath="$PROJECT_DIR$/androidgodeye/deprecated/ram.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/requests.js" afterPath="$PROJECT_DIR$/androidgodeye/resources/requests.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/androidgodeye/session.sm.js" afterPath="$PROJECT_DIR$/androidgodeye/deprecated/session.sm.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/androidgodeye/appinfo/appinfo.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/androidgodeye/appinfo/js/appinfo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/modules/AppInfoModule.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../../../../android-godeye-sample/src/main/java/cn/hikyson/android/godeye/sample/SampleApp.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/modules/CommandModule.java" afterPath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/deprecated/CommandModule.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/modules/PageLoadModule.java" afterPath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/deprecated/PageLoadModule.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/modules/SessionEndModule.java" afterPath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/deprecated/SessionEndModule.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/modules/SessionTickModule.java" afterPath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/deprecated/SessionTickModule.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/battery/battery.html" afterPath="$PROJECT_DIR$/androidgodeye/battery/battery.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/block/block.html" afterPath="$PROJECT_DIR$/androidgodeye/block/block.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/cpu/cpu.html" afterPath="$PROJECT_DIR$/androidgodeye/cpu/cpu.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/battery/css/battery.css" afterPath="$PROJECT_DIR$/androidgodeye/battery/css/battery.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/fps/fps.html" afterPath="$PROJECT_DIR$/androidgodeye/fps/fps.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/heap/heap.html" afterPath="$PROJECT_DIR$/androidgodeye/heap/heap.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/leak/leak.html" afterPath="$PROJECT_DIR$/androidgodeye/leak/leak.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/network/network.html" afterPath="$PROJECT_DIR$/androidgodeye/network/network.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/fps/js/fps.js" afterPath="$PROJECT_DIR$/androidgodeye/fps/js/fps.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/index.html" afterPath="$PROJECT_DIR$/androidgodeye/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/pss/css/pss.css" afterPath="$PROJECT_DIR$/androidgodeye/pss/css/pss.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/pss/js/pss.js" afterPath="$PROJECT_DIR$/androidgodeye/pss/js/pss.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/pss/pss.html" afterPath="$PROJECT_DIR$/androidgodeye/pss/pss.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/ram/css/ram.css" afterPath="$PROJECT_DIR$/androidgodeye/ram/css/ram.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/ram/ram.html" afterPath="$PROJECT_DIR$/androidgodeye/ram/ram.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/startup/startup.html" afterPath="$PROJECT_DIR$/androidgodeye/startup/startup.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/androidgodeye/traffic/traffic.html" afterPath="$PROJECT_DIR$/androidgodeye/traffic/traffic.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/GodEyeMonitor.java" afterPath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/GodEyeMonitor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/server/Router.java" afterPath="$PROJECT_DIR$/../java/cn/hikyson/godeye/monitor/server/Router.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../../android-godeye-sample/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/../../../../android-godeye-sample/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../../android-godeye-sample/src/main/java/cn/hikyson/android/godeye/sample/MainActivity.java" afterPath="$PROJECT_DIR$/../../../../android-godeye-sample/src/main/java/cn/hikyson/android/godeye/sample/MainActivity.java" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -47,11 +41,94 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/androidgodeye/index.html">
+      <file leaf-file-name="battery.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/androidgodeye/battery/battery.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+            <state relative-caret-position="255">
+              <caret line="17" column="24" lean-forward="false" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
+              <folding>
+                <element signature="n#style#0;n#span#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#2;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#2;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#3;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#3;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#4;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#4;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#5;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#5;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#6;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#6;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#7;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#7;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#8;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#8;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="battery.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/androidgodeye/battery/css/battery.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="1" lean-forward="false" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pss.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/androidgodeye/pss/pss.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="20" lean-forward="false" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pss.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/androidgodeye/pss/js/pss.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="607">
+              <caret line="46" column="44" lean-forward="true" selection-start-line="46" selection-start-column="44" selection-end-line="46" selection-end-column="44" />
+              <folding>
+                <element signature="e#0#46#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pss.css" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/androidgodeye/pss/css/pss.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="23" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ram.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/androidgodeye/ram/ram.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="17" column="25" lean-forward="true" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ram.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/androidgodeye/ram/css/ram.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="1" lean-forward="false" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -62,8 +139,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="CSS File" />
+        <option value="HTML File" />
         <option value="JavaScript File" />
       </list>
     </option>
@@ -78,6 +155,7 @@
       <find>closeBlockDetailAlert</find>
       <find>blockdetail</find>
       <find>blockDetailInfos</find>
+      <find>top</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -86,8 +164,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/homeHeader.html" />
-        <option value="$PROJECT_DIR$/module1/test.html" />
         <option value="$PROJECT_DIR$/module1/homeHeader.html" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/index2.html" />
@@ -95,15 +171,11 @@
         <option value="$PROJECT_DIR$/battery/battery.html" />
         <option value="$PROJECT_DIR$/androidgodeye/index2.html" />
         <option value="$PROJECT_DIR$/androidgodeye/requests.js" />
-        <option value="$PROJECT_DIR$/androidgodeye/battery/css/battery.css" />
-        <option value="$PROJECT_DIR$/androidgodeye/battery/battery.html" />
         <option value="$PROJECT_DIR$/androidgodeye/battery/js/battery.js" />
         <option value="$PROJECT_DIR$/androidgodeye/cpu/js/cpu.util.js" />
         <option value="$PROJECT_DIR$/androidgodeye/cpu/js/cpu.js" />
         <option value="$PROJECT_DIR$/androidgodeye/traffic/js/traffc.js" />
         <option value="$PROJECT_DIR$/androidgodeye/fps/js/fps.util.js" />
-        <option value="$PROJECT_DIR$/androidgodeye/fps/js/fps.js" />
-        <option value="$PROJECT_DIR$/androidgodeye/fps/fps.html" />
         <option value="$PROJECT_DIR$/androidgodeye/leak/js/leak.memory.js" />
         <option value="$PROJECT_DIR$/androidgodeye/leak/leak.css" />
         <option value="$PROJECT_DIR$/androidgodeye/leak/leak.html" />
@@ -113,7 +185,6 @@
         <option value="$PROJECT_DIR$/androidgodeye/traffic/traffic.html" />
         <option value="$PROJECT_DIR$/androidgodeye/block/block.html" />
         <option value="$PROJECT_DIR$/androidgodeye/block/js/block.util.js" />
-        <option value="$PROJECT_DIR$/androidgodeye/startup/startup.html" />
         <option value="$PROJECT_DIR$/androidgodeye/startup/js/startup.js" />
         <option value="$PROJECT_DIR$/androidgodeye/pss/pss.css" />
         <option value="$PROJECT_DIR$/androidgodeye/network/network.html" />
@@ -123,20 +194,27 @@
         <option value="$PROJECT_DIR$/androidgodeye/heap/js/heap.js" />
         <option value="$PROJECT_DIR$/androidgodeye/heap/js/heap.util.js" />
         <option value="$PROJECT_DIR$/androidgodeye/ram/ram.js" />
-        <option value="$PROJECT_DIR$/androidgodeye/pss/pss.html" />
-        <option value="$PROJECT_DIR$/androidgodeye/pss/js/pss.js" />
-        <option value="$PROJECT_DIR$/androidgodeye/pss/css/pss.css" />
         <option value="$PROJECT_DIR$/androidgodeye/performance.css" />
         <option value="$PROJECT_DIR$/androidgodeye/ram/js/ram.js" />
-        <option value="$PROJECT_DIR$/androidgodeye/ram/css/ram.css" />
-        <option value="$PROJECT_DIR$/androidgodeye/ram/ram.html" />
         <option value="$PROJECT_DIR$/androidgodeye/performance.js" />
-        <option value="$PROJECT_DIR$/androidgodeye/index.html" />
         <option value="$PROJECT_DIR$/androidgodeye/pageload.js" />
         <option value="$PROJECT_DIR$/androidgodeye/index3.html" />
         <option value="$PROJECT_DIR$/androidgodeye/pss.js" />
         <option value="$PROJECT_DIR$/androidgodeye/ram.js" />
         <option value="$PROJECT_DIR$/androidgodeye/session.sm.js" />
+        <option value="$PROJECT_DIR$/androidgodeye/appinfo/js/appinfo.js" />
+        <option value="$PROJECT_DIR$/androidgodeye/appinfo/appinfo.html" />
+        <option value="$PROJECT_DIR$/androidgodeye/startup/startup.html" />
+        <option value="$PROJECT_DIR$/androidgodeye/fps/js/fps.js" />
+        <option value="$PROJECT_DIR$/androidgodeye/battery/battery.html" />
+        <option value="$PROJECT_DIR$/androidgodeye/index.html" />
+        <option value="$PROJECT_DIR$/androidgodeye/fps/fps.html" />
+        <option value="$PROJECT_DIR$/androidgodeye/battery/css/battery.css" />
+        <option value="$PROJECT_DIR$/androidgodeye/ram/ram.html" />
+        <option value="$PROJECT_DIR$/androidgodeye/ram/css/ram.css" />
+        <option value="$PROJECT_DIR$/androidgodeye/pss/pss.html" />
+        <option value="$PROJECT_DIR$/androidgodeye/pss/js/pss.js" />
+        <option value="$PROJECT_DIR$/androidgodeye/pss/css/pss.css" />
       </list>
     </option>
   </component>
@@ -148,7 +226,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-1920" />
-    <option name="y" value="-173" />
+    <option name="y" value="-130" />
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
@@ -170,6 +248,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -187,9 +266,48 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="androidgodeye" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="androidgodeye" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pss" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -316,17 +434,18 @@
       <workItem from="1511838962038" duration="4167000" />
       <workItem from="1511878729509" duration="1752000" />
       <workItem from="1511941860067" duration="8502000" />
+      <workItem from="1512027002079" duration="7613000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27709000" />
+    <option name="totallyTimeSpent" value="35322000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1920" y="-173" width="1920" height="1080" extended-state="0" />
+    <frame x="-1920" y="-130" width="1920" height="1080" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15060559" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13691416" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Debug Logs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
@@ -358,14 +477,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/androidgodeye/module1/homeHeader.html" />
-    <entry file="file://$PROJECT_DIR$/androidgodeye/resources/echarts.common.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/androidgodeye/module1/test.html" />
     <entry file="file://$PROJECT_DIR$/battery/battery.js" />
     <entry file="file://$PROJECT_DIR$/battery/assets/bat_full.png" />
@@ -375,27 +486,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="832">
           <caret line="121" column="8" lean-forward="false" selection-start-line="121" selection-start-column="8" selection-end-line="121" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/fps/fps.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="6" lean-forward="true" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/fps/js/fps.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="13" lean-forward="false" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/fps/js/fps.util.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -424,7 +514,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="277">
           <caret line="77" column="10" lean-forward="true" selection-start-line="77" selection-start-column="10" selection-end-line="77" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -432,7 +521,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="23" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -447,23 +535,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="16" column="1" lean-forward="true" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#46#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/startup/startup.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="15" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/battery/css/battery.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="24" lean-forward="true" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -471,7 +542,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="21" column="10" lean-forward="true" selection-start-line="21" selection-start-column="10" selection-end-line="21" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -480,16 +550,6 @@
         <state relative-caret-position="45">
           <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="23" selection-end-column="1" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/network/network.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="24" lean-forward="false" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -514,7 +574,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="690">
           <caret line="46" column="27" lean-forward="false" selection-start-line="46" selection-start-column="27" selection-end-line="46" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -530,7 +589,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="17" selection-end-column="7" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -538,7 +596,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="21" column="25" lean-forward="false" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -546,7 +603,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1395">
           <caret line="93" column="37" lean-forward="false" selection-start-line="93" selection-start-column="37" selection-end-line="93" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -554,59 +610,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="12" column="19" lean-forward="false" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/battery/js/battery.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="10" column="20" lean-forward="true" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#46#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/pss/js/pss.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="22" column="28" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="65" selection-end-column="1" />
-          <folding>
-            <element signature="e#0#46#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/pss/css/pss.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="24" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/battery/battery.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="19" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/pss/pss.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="6" lean-forward="false" selection-start-line="20" selection-start-column="6" selection-end-line="20" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/ram/css/ram.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="9" lean-forward="true" selection-start-line="6" selection-start-column="9" selection-end-line="6" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -620,29 +623,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/ram/ram.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="4" lean-forward="true" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="4" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/block/block.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="29" lean-forward="false" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/androidgodeye/resources/json.format.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
           <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -650,23 +634,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="13" column="22" lean-forward="false" selection-start-line="13" selection-start-column="22" selection-end-line="13" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/androidgodeye/deprecated/index3.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="467">
-          <caret line="77" column="0" lean-forward="true" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-          <folding>
-            <marker date="1511952137716" expanded="false" signature="2950:2970" ph="..." />
-            <marker date="1511952137716" expanded="false" signature="4797:4810" ph="..." />
-            <marker date="1511952137716" expanded="false" signature="4978:4991" ph="..." />
-            <marker date="1511952137716" expanded="false" signature="5158:5171" ph="..." />
-            <marker date="1511952137716" expanded="false" signature="5342:5355" ph="..." />
-            <marker date="1511952137716" expanded="false" signature="5524:5537" ph="..." />
-            <marker date="1511952137716" expanded="false" signature="5938:5951" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -682,7 +649,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
           <caret line="30" column="31" lean-forward="true" selection-start-line="30" selection-start-column="31" selection-end-line="30" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -690,7 +656,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="502">
           <caret line="268" column="2" lean-forward="true" selection-start-line="268" selection-start-column="2" selection-end-line="268" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -698,7 +663,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="952">
           <caret line="85" column="20" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -706,9 +670,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
           <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -724,16 +685,193 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="16" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/deprecated/index3.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="22" column="35" lean-forward="false" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="35" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <marker date="1511952137716" expanded="false" signature="2950:2970" ph="..." />
+            <marker date="1511952137716" expanded="false" signature="4797:4810" ph="..." />
+            <marker date="1511952137716" expanded="false" signature="4978:4991" ph="..." />
+            <marker date="1511952137716" expanded="false" signature="5158:5171" ph="..." />
+            <marker date="1511952137716" expanded="false" signature="5342:5355" ph="..." />
+            <marker date="1511952137716" expanded="false" signature="5524:5537" ph="..." />
+            <marker date="1511952137716" expanded="false" signature="5938:5951" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/appinfo/js/appinfo.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="19" column="15" lean-forward="false" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#46#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/battery/js/battery.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
+          <folding>
+            <element signature="e#0#46#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/fps/js/fps.util.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="60" lean-forward="true" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/fps/js/fps.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="20" lean-forward="true" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/block/block.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="29" lean-forward="true" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/network/network.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="55" lean-forward="false" selection-start-line="12" selection-start-column="51" selection-end-line="12" selection-end-column="55" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/appinfo/appinfo.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="33" lean-forward="true" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/androidgodeye/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+        <state relative-caret-position="274">
+          <caret line="38" column="59" lean-forward="true" selection-start-line="38" selection-start-column="59" selection-end-line="38" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/fps/fps.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="7" lean-forward="true" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
+          <folding>
+            <element signature="n#style#0;n#h2#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/startup/startup.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="7" lean-forward="true" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/battery/battery.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="24" lean-forward="false" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#2;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#2;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#3;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#3;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#4;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#4;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#5;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#5;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#6;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#6;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#7;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#7;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#8;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#8;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/ram/ram.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="25" lean-forward="true" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#div#1;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/ram/css/ram.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="1" lean-forward="false" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/battery/css/battery.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="1" lean-forward="false" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/pss/js/pss.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="607">
+          <caret line="46" column="44" lean-forward="true" selection-start-line="46" selection-start-column="44" selection-end-line="46" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#46#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/pss/pss.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="20" lean-forward="false" selection-start-line="18" selection-start-column="20" selection-end-line="18" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/androidgodeye/pss/css/pss.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="23" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
           <folding />
         </state>
       </provider>

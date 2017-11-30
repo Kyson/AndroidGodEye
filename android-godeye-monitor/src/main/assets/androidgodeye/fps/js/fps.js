@@ -13,10 +13,14 @@ function refresh() {
     requestUtil.getData("/fps", function (data) {
         refreshView(data);
     }, function () {
-
+        refreshView(null);
     });
 }
 
 function refreshView(data) {
-    fpsUtil.refreshFps(data.currentFps, data.systemFps)
+    if (data) {
+        fpsUtil.refreshFps(data.currentFps, data.systemFps)
+    } else {
+        $("#fps_status").text("**/**");
+    }
 }

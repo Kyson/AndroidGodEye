@@ -50,6 +50,8 @@ public class MainActivity extends Activity implements Loggable {
         mLogScrollView = findViewById(R.id.activity_main_log_sc);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
         mGodEye = GodEye.instance();
+        mGodEye.installAll(getApplication());
+        GodEyeMonitor.work(MainActivity.this);
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -66,8 +68,6 @@ public class MainActivity extends Activity implements Loggable {
                 log("!!EXCEPTION: " + e.getLocalizedMessage());
             }
         });
-        installAll(null);
-        GodEyeMonitor.work(MainActivity.this);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class MainActivity extends Activity implements Loggable {
                     public void run() {
                         mLogScrollView.fullScroll(ScrollView.FOCUS_DOWN);
                     }
-                }, 500);
+                }, 300);
             }
         });
     }

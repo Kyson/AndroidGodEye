@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 
 import cn.hikyson.godeye.monitor.driver.Watcher;
+import cn.hikyson.godeye.monitor.modules.AppInfoModule;
 import cn.hikyson.godeye.monitor.server.ClientServer;
 import cn.hikyson.godeye.monitor.server.Router;
 import cn.hikyson.godeye.utils.L;
@@ -13,21 +14,38 @@ import cn.hikyson.godeye.utils.L;
  * Created by kysonchao on 2017/11/27.
  */
 public class GodEyeMonitor {
-    private static boolean hasInit = false;
+    private static boolean sIsWorking = false;
     private static final int PORT = 5389;
     private static ClientServer sClientServer;
 
+    /**
+     * 注入应用基本信息的代理，不能在页面之类的地方实现非静态proxy，以免内存泄漏
+     *
+     * @param appInfoProxy
+     */
+    public static void injectAppInfoProxy(AppInfoModule.AppInfo.AppInfoProxy appInfoProxy) {
+        AppInfoModule.AppInfo.injectAppInfoProxy(appInfoProxy);
+    }
+
+    /**
+     * monitor开始工作
+     *
+     * @param context
+     */
     public static synchronized void work(Context context) {
-        if (hasInit) {
+        if (sIsWorking) {
             return;
         }
-        hasInit = true;
+        sIsWorking = true;
         Context applicationContext = context.getApplicationContext();
         new Watcher().watchAll();
         Router.get().init(applicationContext);
         initServer(applicationContext);
     }
 
+    /**
+     * monitor停止工作
+     */
     public static synchronized void shutDown() {
         if (sClientServer != null) {
             sClientServer.stop();
@@ -35,6 +53,7 @@ public class GodEyeMonitor {
         }
         //TODO KYSON watch cancel
         // Watcher
+        sIsWorking = false;
     }
 
     private static void initServer(Context context) {

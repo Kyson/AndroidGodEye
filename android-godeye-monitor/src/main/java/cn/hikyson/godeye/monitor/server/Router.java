@@ -6,6 +6,7 @@ import android.support.v4.util.ArrayMap;
 
 import java.util.Map;
 
+import cn.hikyson.godeye.monitor.modules.AppInfoModule;
 import cn.hikyson.godeye.monitor.modules.AssetsModule;
 import cn.hikyson.godeye.monitor.modules.BatteryModule;
 import cn.hikyson.godeye.monitor.modules.BlockModule;
@@ -41,6 +42,8 @@ public class Router {
         mRouteModules = new ArrayMap<>();
         AssetsModule assetsModule = new AssetsModule(context, "androidgodeye");
         mRouteModules.put("assets", assetsModule);
+        AppInfoModule appInfoModule = new AppInfoModule();
+        mRouteModules.put("appinfo", appInfoModule);
         BatteryModule batteryModule = new BatteryModule();
         mRouteModules.put("battery", batteryModule);
         BlockModule blockModule = new BlockModule();

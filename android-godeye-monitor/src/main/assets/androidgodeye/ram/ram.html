@@ -5,22 +5,26 @@
     <script src="../resources/jquery.min.js"></script>
     <script src="../resources/bootstrap.min.js"></script>
     <link href="../resources/bootstrap.min.css" rel="stylesheet">
-    <link href="css/ram.css" rel="stylesheet">
     <script src="../resources/requests.js"></script>
+    <link href="css/ram.css" rel="stylesheet">
 </head>
 <body>
 
-<div class="ramtotal" id="ram_total">
-    <div class="ram_allocated" id="ram_allocated"></div>
-    <div class="ram_allocated_text" id="ram_allocated_text"></div>
-</div>
-<br>
-<br>
-<br>
-<br>
-<div class="span12">
-    <div id="ram_low_status" class="redcircle" style="display:inline-block"></div>
-    <span>低内存阀值：</span><span id="ram_low_memory"></span>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h6>RAM</h6>
+    </div>
+    <div class="panel-body">
+        <div class="ramtotal" id="ram_total">
+            <div class="ram_allocated" id="ram_allocated"></div>
+            <div class="ram_allocated_text" id="ram_allocated_text"></div>
+        </div>
+        <br><br><br><br>
+        <div class="span12">
+            <div id="ram_low_status" class="redcircle" style="display:inline-block"></div>
+            <span style="color: #ffffff">低内存阀值： </span><span style="color: #ffffff" id="ram_low_memory"></span>
+        </div>
+    </div>
 </div>
 <script src="js/ram.js"></script>
 </body>
