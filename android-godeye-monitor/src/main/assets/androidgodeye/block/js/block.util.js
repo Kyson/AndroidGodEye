@@ -12,11 +12,11 @@ var blockUtil = function () {
         blockChart = echarts.init(chartContainer, 'dark');
         blockDetailInfos = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""];
         blockOptions = {
-            title: {
-                text: 'Block',
-                left: "center",
-                top: '3%'
-            },
+            // title: {
+            //     text: 'Block',
+            //     left: "center",
+            //     top: '3%'
+            // },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -46,10 +46,10 @@ var blockUtil = function () {
                 }
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                top: '15%',
+                left: '4%',
+                right: '3%',
+                bottom: '4%',
+                top: '5%',
                 containLabel: true
             },
             xAxis: [
@@ -65,7 +65,7 @@ var blockUtil = function () {
                     name: "卡顿(ms)",
                     nameLocation: 'middle',
                     nameRotate: 90,
-                    nameGap: 35
+                    nameGap: 45
                 }
             ],
             series: [
@@ -79,19 +79,13 @@ var blockUtil = function () {
         blockChart.setOption(blockOptions);
         blockChart.on('click', function (params) {
             var blockDetail = blockDetailInfos[params.dataIndex];
+            $('#block_detail_modal').modal('show');
             if (blockDetail) {
                 $("#block_detail").html(jsonFormat.syntaxHighlight(JSON.parse(blockDetail)));
-                $("#block_detail_alert").show();
             } else {
                 $("#block_detail").html("无卡顿详情");
-                $("#block_detail_alert").show();
             }
         });
-
-        $("#block_close_detail").click(function () {
-            $("#block_detail_alert").hide();
-        });
-        $("#block_detail_alert").hide();
     }
 
     function refreshBlock(blockInfos) {

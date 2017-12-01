@@ -11,14 +11,14 @@ var cpuUtil = function () {
         cpuChart = echarts.init(chartContainer, 'dark');
 
         cpuOptions = {
-            title: {
-                text: 'CPU',
-                left: "center",
-                top: '2%'
-            },
+            // title: {
+            //     text: 'CPU',
+            //     left: "center",
+            //     top: '2%'
+            // },
             legend: {
                 data: ['总体使用率', 'APP使用率', '用户进程使用率', '系统进程使用率'],
-                top: '10%'
+                top: '2%'
             },
             tooltip: {
                 trigger: 'axis',
@@ -49,10 +49,10 @@ var cpuUtil = function () {
                 }
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                top: '20%',
+                left: '6%',
+                right: '5%',
+                bottom: '5%',
+                top: '15%',
                 containLabel: true
             },
             xAxis: [

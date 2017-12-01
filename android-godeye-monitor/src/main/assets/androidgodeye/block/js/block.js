@@ -4,7 +4,7 @@
 'use strict';
 $(document).ready(function () {
     blockUtil.setup(document.getElementById('block_chart'));
-    setInterval(refresh, interval)
+    setInterval(refresh, interval);
 });
 
 var interval = 2000;

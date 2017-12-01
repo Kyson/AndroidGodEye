@@ -11,14 +11,14 @@ var trafficUtil = function () {
         trafficChart = echarts.init(chartContainer, 'dark');
 
         trafficOptions = {
-            title: {
-                text: 'TRAFFIC',
-                left: "center",
-                top: '2%'
-            },
+            // title: {
+            //     text: 'TRAFFIC',
+            //     left: "center",
+            //     top: '2%'
+            // },
             legend: {
                 data: ['设备下载速度', '设备上传速度', '应用下载速度', '应用上传速度'],
-                top: '10%'
+                top: '2%'
             },
             tooltip: {
                 trigger: 'axis',
@@ -49,10 +49,10 @@ var trafficUtil = function () {
                 }
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                top: '20%',
+                left: '6%',
+                right: '5%',
+                bottom: '5%',
+                top: '15%',
                 containLabel: true
             },
             xAxis: [

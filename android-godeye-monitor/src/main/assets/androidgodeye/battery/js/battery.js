@@ -34,13 +34,13 @@ function refreshView(data) {
         $("#battery_line").animate({
             width: 0 + "%"
         }, 300);
-        $("#battery_level").text("-");
-        $("#battery_status").text("-");
-        $("#battery_plugged").text("-");
-        $("#battery_present").text("-");
-        $("#battery_health").text("-");
-        $("#battery_voltage").text("-");
-        $("#battery_temperature").text("-");
-        $("#battery_technology").text("-");
+        $("#battery_level").text("**");
+        $("#battery_status").text("**");
+        $("#battery_plugged").text("**");
+        $("#battery_present").text("**");
+        $("#battery_health").text("**");
+        $("#battery_voltage").text("**");
+        $("#battery_temperature").text("**");
+        $("#battery_technology").text("**");
     }
 }

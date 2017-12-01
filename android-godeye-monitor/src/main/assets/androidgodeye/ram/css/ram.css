@@ -3,7 +3,7 @@
     height: 36px;
     width: 200px;
     background: #999999;
-    position: absolute;
+    position: relative;
 }
 
 .ramtotal .ram_allocated {

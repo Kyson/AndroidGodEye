@@ -12,32 +12,37 @@
 </head>
 <body>
 
-<div class="col-md-10">
-    <span id="leak_refresh_status"></span>
-</div>
-<div class="col-md-1">
-    <button type="button" class="btn btn-default pull-right" id="leak_start_leak">开始检测</button>
-</div>
-<div class="col-md-1">
-    <button type="button" class="btn btn-default pull-right" id="leak_stop_leak">暂停检测</button>
-</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h6>Leak Memory Detector</h6>
+    </div>
+    <div class="panel-body">
 
-<br>
-<br>
-<br>
+        <div class="col-md-10">
+            <span id="leak_refresh_status"></span>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-default pull-right" id="leak_start_leak">开始检测</button>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-default pull-right" id="leak_stop_leak">暂停检测</button>
+        </div>
 
-<table id="leak_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
-    <thead>
-    <tr>
-        <th></th>
-        <th>Key</th>
-        <th>时间</th>
-        <th>对象</th>
-        <th>状态</th>
-    </tr>
-    </thead>
-</table>
+        <br><br><br>
 
+        <table id="leak_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Key</th>
+                <th>时间</th>
+                <th>对象</th>
+                <th>状态</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
 <script src="js/leak.memory.js"></script>
 </body>
 </html>

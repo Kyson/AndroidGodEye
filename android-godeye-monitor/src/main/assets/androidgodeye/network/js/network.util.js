@@ -10,11 +10,11 @@ var networkUtil = function () {
     function setup(chartContainer) {
         networkChart = echarts.init(chartContainer, 'dark');
         networkOptions = {
-            title: {
-                text: 'Network',
-                left: "center",
-                top: '3%'
-            },
+            // title: {
+            //     text: 'Network',
+            //     left: "center",
+            //     top: '3%'
+            // },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
@@ -44,10 +44,10 @@ var networkUtil = function () {
                 }
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                top: '15%',
+                left: '4%',
+                right: '3%',
+                bottom: '4%',
+                top: '5%',
                 containLabel: true
             },
             xAxis: [
@@ -63,12 +63,12 @@ var networkUtil = function () {
                     name: "请求(ms)",
                     nameLocation: 'middle',
                     nameRotate: 90,
-                    nameGap: 35
+                    nameGap: 45
                 }
             ],
             series: [
                 {
-                    name: 'block',
+                    name: 'request',
                     type: 'bar',
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }

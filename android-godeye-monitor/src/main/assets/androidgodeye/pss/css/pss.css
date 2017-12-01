@@ -1,75 +1,75 @@
 .psstotal {
     /*!*float: top;*!*/
-    /*width: 128px;*/
-    /*height: 200px;*/
-    /*background: #999999;*/
-    /*!*position: absolute;*!*/
+    width: 45px;
+    height: 200px;
+    background: #999999;
+    position: relative;
 }
 
 .psstotal .pss_dalvik {
     /*float: top;*/
-    width: 128px;
+    width: 45px;
     background: #73BF00;
     display: block;
-    /*position: absolute;*/
+    position: absolute;
 }
 
 .psstotal .pss_dalvik_text {
     /*float: top;*/
     color: #73BF00;
-    /*position: absolute;*/
+    position: absolute;
     font-size: 15px;
-    /*top: 15%;*/
-    /*left: 45px;*/
+    top: 10%;
+    left: 60px;
 }
 
 .psstotal .pss_native {
     /*float: top;*/
-    width: 128px;
+    width: 45px;
     background: #4F9D9D;
     display: block;
-    /*position: absolute;*/
+    position: absolute;
 }
 
 .psstotal .pss_native_text {
     /*float: top;*/
     color: #4F9D9D;
-    /*position: absolute;*/
+    position: absolute;
     font-size: 15px;
-    /*top: 35%;*/
-    /*left: 45px;*/
+    top: 35%;
+    left: 60px;
 }
 
 .psstotal .pss_other {
     /*float: top;*/
-    width: 128px;
+    width: 45px;
     background: #D26900;
     display: block;
-    /*position: absolute;*/
+    position: absolute;
 }
 
 .psstotal .pss_other_text {
     /*float: top;*/
     color: #D26900;
-    /*position: absolute;*/
+    position: absolute;
     font-size: 15px;
-    /*top: 55%;*/
-    /*left: 45px;*/
+    top: 55%;
+    left: 60px;
 }
 
 .psstotal .pss_unknown {
     /*float: top;*/
-    width: 128px;
+    width: 45px;
     background: #7373B9;
     display: block;
-    /*position: absolute;*/
+    position: absolute;
 }
 
 .psstotal .pss_unknown_text {
     /*float: top;*/
     color: #7373B9;
-    /*position: absolute;*/
+    position: absolute;
     font-size: 15px;
-    /*top: 75%;*/
-    /*left: 45px;*/
+    top: 80%;
+    left: 60px;
 }

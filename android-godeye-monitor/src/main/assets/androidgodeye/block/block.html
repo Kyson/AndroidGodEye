@@ -11,12 +11,35 @@
     <script src="../resources/json.format.js"></script>
 </head>
 <body>
-<div id="block_chart" style="height:500px;width: auto">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h6>Block</h6>
+    </div>
+    <div class="panel-body">
+        <div id="block_chart" style="height:400px;width: 100%">
+        </div>
+    </div>
 </div>
-<div class="alert" id="block_detail_alert">
-    <button type="button" class="close" id="block_close_detail">&times;</button>
-    <pre id="block_detail"></pre>
+
+<div class="modal fade" id="block_detail_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    卡顿详情
+                </h4>
+            </div>
+            <div class="modal-body">
+                <pre id="block_detail"></pre>
+            </div>
+        </div>
+    </div>
 </div>
+
 <script src="js/block.util.js"></script>
 <script src="js/block.js"></script>
 </body>

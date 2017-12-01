@@ -38,19 +38,19 @@ function refreshView(pssInfo) {
         otherText = (pssInfo.otherPssKb / 1024).toFixed(1) + "m";
         unknownText = ((pssInfo.totalPssKb - pssInfo.dalvikPssKb - pssInfo.nativePssKb - pssInfo.otherPssKb) / 1024).toFixed(1) + "m";
 
-        // $('#pss_dalvik_line').css('top', "0%");
+        $('#pss_dalvik_line').css('top', "0%");
         $("#pss_dalvik_line").animate({
             height: dalvikProgress + "%"
         }, 300, function () {
-            // $('#pss_native_line').css('top', dalvikProgress + "%");
+            $('#pss_native_line').css('top', dalvikProgress + "%");
             $("#pss_native_line").animate({
                 height: nativeProgress + "%"
             }, 300, function () {
-                // $('#pss_other_line').css('top', (dalvikProgress + nativeProgress) + "%");
+                $('#pss_other_line').css('top', (dalvikProgress + nativeProgress) + "%");
                 $("#pss_other_line").animate({
                     height: otherProgress + "%"
                 }, 300, function () {
-                    // $('#pss_unknown_line').css('top', (dalvikProgress + nativeProgress + otherProgress) + "%");
+                    $('#pss_unknown_line').css('top', (dalvikProgress + nativeProgress + otherProgress) + "%");
                     $("#pss_unknown_line").animate({
                         height: unknownProgress + "%"
                     }, 300);
@@ -58,9 +58,9 @@ function refreshView(pssInfo) {
             });
         });
     }
-    $('#pss_dalvik_text').text("dalvik:" + dalvikText);
-    $('#pss_native_text').text("native:" + nativeText);
-    $('#pss_other_text').text("other:" + otherText);
-    $('#pss_unknown_text').text("unknown:" + unknownText);
+    $('#pss_dalvik_text').html("dalvik:&nbsp;" + dalvikText);
+    $('#pss_native_text').html("native:&nbsp;" + nativeText);
+    $('#pss_other_text').html("other:&nbsp;" + otherText);
+    $('#pss_unknown_text').html("unknown:&nbsp;" + unknownText);
 
 }

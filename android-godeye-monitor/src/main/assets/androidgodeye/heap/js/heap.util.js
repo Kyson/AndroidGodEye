@@ -11,14 +11,14 @@ var heapUtil = function () {
         heapChart = echarts.init(chartContainer, 'dark');
 
         heapOptions = {
-            title: {
-                text: 'HEAP',
-                left: "center",
-                top: '2%'
-            },
+            // title: {
+            //     text: 'HEAP',
+            //     left: "center",
+            //     top: '2%'
+            // },
             legend: {
                 data: ['已分配', 'Free'],
-                top: '10%'
+                top: '2%'
             },
             tooltip: {
                 trigger: 'axis',
@@ -49,10 +49,10 @@ var heapUtil = function () {
                 }
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                top: '20%',
+                left: '6%',
+                right: '5%',
+                bottom: '5%',
+                top: '15%',
                 containLabel: true
             },
             xAxis: [
