@@ -15,8 +15,9 @@ import cn.hikyson.godeye.utils.L;
  */
 public class GodEyeMonitor {
     private static boolean sIsWorking = false;
-    private static final int PORT = 5389;
+    private static final int DEFAULT_PORT = 5390;
     private static ClientServer sClientServer;
+    private static Watcher sWatcher;
 
     /**
      * 注入应用基本信息的代理，不能在页面之类的地方实现非静态proxy，以免内存泄漏
@@ -27,20 +28,25 @@ public class GodEyeMonitor {
         AppInfoModule.AppInfo.injectAppInfoProxy(appInfoProxy);
     }
 
+    public static synchronized void work(Context context) {
+        work(context, DEFAULT_PORT);
+    }
+
     /**
      * monitor开始工作
      *
      * @param context
      */
-    public static synchronized void work(Context context) {
+    public static synchronized void work(Context context, int port) {
         if (sIsWorking) {
             return;
         }
         sIsWorking = true;
         Context applicationContext = context.getApplicationContext();
-        new Watcher().watchAll();
+        sWatcher = new Watcher();
+        sWatcher.observeAll();
         Router.get().init(applicationContext);
-        initServer(applicationContext);
+        initServer(applicationContext, port);
     }
 
     /**
@@ -51,15 +57,17 @@ public class GodEyeMonitor {
             sClientServer.stop();
             sClientServer = null;
         }
-        //TODO KYSON watch cancel
-        // Watcher
+        if (sWatcher != null) {
+            sWatcher.cancelAllObserve();
+            sWatcher = null;
+        }
         sIsWorking = false;
     }
 
-    private static void initServer(Context context) {
-        sClientServer = new ClientServer(PORT);
+    private static void initServer(Context context, int port) {
+        sClientServer = new ClientServer(port);
         sClientServer.start();
-        L.d(getAddressLog(context, PORT));
+        L.d(getAddressLog(context, port));
         L.d("Leak dump files are in /storage/download/leakcanary-" + context.getPackageName());
     }
 

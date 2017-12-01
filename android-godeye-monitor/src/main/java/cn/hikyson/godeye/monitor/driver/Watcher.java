@@ -12,6 +12,7 @@ import cn.hikyson.godeye.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.internal.modules.traffic.TrafficInfo;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -20,81 +21,87 @@ import io.reactivex.functions.Consumer;
  */
 public class Watcher {
     private Pipe mPipe;
+    private CompositeDisposable mCompositeDisposable;
 
     public Watcher() {
         mPipe = Pipe.instance();
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     /**
      * 监听所有的数据
      */
-    public void watchAll() {
+    public void observeAll() {
         GodEye godEye = GodEye.instance();
-        godEye.battery().consume().subscribe(new Consumer<BatteryInfo>() {
+        mCompositeDisposable.add(godEye.battery().consume().subscribe(new Consumer<BatteryInfo>() {
             @Override
             public void accept(BatteryInfo batteryInfo) throws Exception {
                 mPipe.pushBatteryInfo(batteryInfo);
             }
-        });
-        godEye.cpu().consume().subscribe(new Consumer<CpuInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.cpu().consume().subscribe(new Consumer<CpuInfo>() {
             @Override
             public void accept(CpuInfo cpuInfo) throws Exception {
                 mPipe.pushCpuInfo(cpuInfo);
             }
-        });
-        godEye.traffic().consume().subscribe(new Consumer<TrafficInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.traffic().consume().subscribe(new Consumer<TrafficInfo>() {
             @Override
             public void accept(TrafficInfo trafficInfo) throws Exception {
                 mPipe.pushTrafficInfo(trafficInfo);
             }
-        });
-        godEye.fps().consume().subscribe(new Consumer<FpsInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.fps().consume().subscribe(new Consumer<FpsInfo>() {
             @Override
             public void accept(FpsInfo fpsInfo) throws Exception {
                 mPipe.pushFpsInfo(fpsInfo);
             }
-        });
-        godEye.leakDetector().consume().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.leakDetector().consume().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
             @Override
             public void accept(LeakQueue.LeakMemoryInfo leakMemoryInfo) throws Exception {
                 mPipe.pushLeakMemoryInfos(leakMemoryInfo);
             }
-        });
-        godEye.sm().consume().subscribe(new Consumer<BlockInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.sm().consume().subscribe(new Consumer<BlockInfo>() {
             @Override
             public void accept(BlockInfo blockInfo) throws Exception {
                 mPipe.pushBlockInfos(blockInfo);
             }
-        });
-        godEye.network().consume().subscribe(new Consumer<RequestBaseInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.network().consume().subscribe(new Consumer<RequestBaseInfo>() {
             @Override
             public void accept(RequestBaseInfo requestBaseInfo) throws Exception {
                 mPipe.pushRequestBaseInfos(requestBaseInfo);
             }
-        });
-        godEye.startup().consume().subscribe(new Consumer<StartupInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.startup().consume().subscribe(new Consumer<StartupInfo>() {
             @Override
             public void accept(StartupInfo startupInfo) throws Exception {
                 mPipe.pushStartupInfo(startupInfo);
             }
-        });
-        godEye.ram().consume().subscribe(new Consumer<RamInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.ram().consume().subscribe(new Consumer<RamInfo>() {
             @Override
             public void accept(RamInfo ramInfo) throws Exception {
                 mPipe.pushRamInfo(ramInfo);
             }
-        });
-        godEye.pss().consume().subscribe(new Consumer<PssInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.pss().consume().subscribe(new Consumer<PssInfo>() {
             @Override
             public void accept(PssInfo pssInfo) throws Exception {
                 mPipe.pushPssInfo(pssInfo);
             }
-        });
-        godEye.heap().consume().subscribe(new Consumer<HeapInfo>() {
+        }));
+        mCompositeDisposable.add(godEye.heap().consume().subscribe(new Consumer<HeapInfo>() {
             @Override
             public void accept(HeapInfo heapInfo) throws Exception {
                 mPipe.pushHeapInfo(heapInfo);
             }
-        });
+        }));
+    }
+
+    public void cancelAllObserve() {
+        mCompositeDisposable.dispose();
     }
 }
