@@ -9,14 +9,14 @@
 .psstotal .pss_dalvik {
     /*float: top;*/
     width: 45px;
-    background: #73BF00;
+    background: #35AA53;
     display: block;
     position: absolute;
 }
 
 .psstotal .pss_dalvik_text {
     /*float: top;*/
-    color: #73BF00;
+    color: #35AA53;
     position: absolute;
     font-size: 15px;
     top: 10%;
@@ -26,14 +26,14 @@
 .psstotal .pss_native {
     /*float: top;*/
     width: 45px;
-    background: #4F9D9D;
+    background: #FBBD06;
     display: block;
     position: absolute;
 }
 
 .psstotal .pss_native_text {
     /*float: top;*/
-    color: #4F9D9D;
+    color: #FBBD06;
     position: absolute;
     font-size: 15px;
     top: 35%;
@@ -43,14 +43,14 @@
 .psstotal .pss_other {
     /*float: top;*/
     width: 45px;
-    background: #D26900;
+    background: #4586F3;
     display: block;
     position: absolute;
 }
 
 .psstotal .pss_other_text {
     /*float: top;*/
-    color: #D26900;
+    color: #4586F3;
     position: absolute;
     font-size: 15px;
     top: 55%;
@@ -60,14 +60,14 @@
 .psstotal .pss_unknown {
     /*float: top;*/
     width: 45px;
-    background: #7373B9;
+    background: #EB4334;
     display: block;
     position: absolute;
 }
 
 .psstotal .pss_unknown_text {
     /*float: top;*/
-    color: #7373B9;
+    color: #EB4334;
     position: absolute;
     font-size: 15px;
     top: 80%;

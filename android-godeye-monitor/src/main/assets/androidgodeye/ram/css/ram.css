@@ -9,14 +9,14 @@
 .ramtotal .ram_allocated {
     float: left;
     height: 36px;
-    background: #73BF00;
+    background: #35AA53;
     display: block;
     position: absolute;
 }
 
 .ramtotal .ram_allocated_text {
     float: left;
-    color: #73BF00;
+    color: #35AA53;
     position: absolute;
     font-size: 15px;
     top: 45px;
@@ -26,7 +26,7 @@
 .redcircle {
     width: 10px;
     height: 10px;
-    background-color: red;
+    background-color: #EB4334;
     border-radius: 50%;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
@@ -35,7 +35,7 @@
 .greencircle {
     width: 10px;
     height: 10px;
-    background-color: green;
+    background-color: #35AA53;
     border-radius: 50%;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;

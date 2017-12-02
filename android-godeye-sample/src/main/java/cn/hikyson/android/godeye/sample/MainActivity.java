@@ -2,12 +2,14 @@ package cn.hikyson.android.godeye.sample;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.PermissionChecker;
+import android.support.v4.util.ArrayMap;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -18,12 +20,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import cn.hikyson.android.godeye.BuildConfig;
 import cn.hikyson.android.godeye.R;
+import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.GodEye;
 import cn.hikyson.godeye.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.internal.modules.cpu.CpuInfo;
@@ -33,24 +38,49 @@ import cn.hikyson.godeye.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
+import cn.hikyson.godeye.monitor.modules.AppInfoModule;
 import cn.hikyson.godeye.utils.L;
 import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends Activity implements Loggable {
     private static final String TAG = "AndroidGodEye";
-    private GodEye mGodEye;
     private TextView mLogTv;
     private ScrollView mLogScrollView;
+
+    private static class AppInfoProxyImpl implements AppInfoModule.AppInfo.AppInfoProxy {
+        private Context mContext;
+
+
+        public AppInfoProxyImpl(Context context) {
+            mContext = context.getApplicationContext();
+        }
+
+        @Override
+        public AppInfoModule.AppInfo getAppInfo() {
+            Map<String, Object> map = new ArrayMap<>();
+            map.put("versionName", BuildConfig.VERSION_NAME);
+            map.put("versionCode", BuildConfig.VERSION_CODE);
+            map.put("buildType", BuildConfig.BUILD_TYPE);
+            map.put("debuggable", BuildConfig.DEBUG);
+            map.put("channel", "Channel_XX");
+            map.put("clientid", "ClientId");
+            map.put("deviceid", "DeviceId");
+            map.put("uid", "0x0001");
+            map.put("email", "kysonchao@gmail.com");
+            return new AppInfoModule.AppInfo(mContext, map);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        StartupTracer.get().onHomeCreate();
         mLogTv = findViewById(R.id.activity_main_log_tv);
         mLogScrollView = findViewById(R.id.activity_main_log_sc);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-        mGodEye = GodEye.instance();
-        mGodEye.installAll(getApplication());
+        GodEye.instance().installAll(getApplication());
+        GodEyeMonitor.injectAppInfoProxy(new AppInfoProxyImpl(this));
         GodEyeMonitor.work(MainActivity.this);
         L.setProxy(new L.LogProxy() {
             @Override
@@ -94,35 +124,35 @@ public class MainActivity extends Activity implements Loggable {
     }
 
     public void installAll(View view) {
-        mGodEye.installAll(getApplication());
+        GodEye.instance().installAll(getApplication());
     }
 
     public void uninstallAll(View view) {
-        mGodEye.uninstallAll();
+        GodEye.instance().uninstallAll();
     }
 
     public void uninstallCpu(View view) {
-        mGodEye.cpu().uninstall();
+        GodEye.instance().cpu().uninstall();
     }
 
     public void uninstallBattery(View view) {
-        mGodEye.battery().uninstall();
+        GodEye.instance().battery().uninstall();
     }
 
     public void uninstallSm(View view) {
-        mGodEye.sm().uninstall();
+        GodEye.instance().sm().uninstall();
     }
 
     public void uninstallLeak(View view) {
-        mGodEye.leakDetector().uninstall();
+        GodEye.instance().leakDetector().uninstall();
     }
 
     public void uninstallFps(View view) {
-        mGodEye.fps().uninstall();
+        GodEye.instance().fps().uninstall();
     }
 
     public void uninstallTraffic(View view) {
-        mGodEye.traffic().uninstall();
+        GodEye.instance().traffic().uninstall();
     }
 
     public void testTmp(View view) {
@@ -159,32 +189,50 @@ public class MainActivity extends Activity implements Loggable {
     }
 
     public void testCpu(View view) {
-        mGodEye.cpu().consume().subscribe(new GodEyeDisposableObserver<CpuInfo>("cpu", this));
+        GodEye.instance().cpu().consume().subscribe(new GodEyeDisposableObserver<CpuInfo>("cpu", this));
     }
 
     public void testBattery(View view) {
-        mGodEye.battery().consume().subscribe(new GodEyeDisposableObserver<BatteryInfo>("battery", this));
+        GodEye.instance().battery().consume().subscribe(new GodEyeDisposableObserver<BatteryInfo>("battery", this));
     }
 
     public void testSM(View view) {
-        mGodEye.sm().consume().subscribe(new GodEyeDisposableObserver<BlockInfo>("sm", this));
+        GodEye.instance().sm().consume().subscribe(new GodEyeDisposableObserver<BlockInfo>("sm", this));
     }
 
     public void block(View view) {
-        try {
-            EditText editText = findViewById(R.id.activity_main_block_et);
-            final long blockTime = Long.parseLong(String.valueOf(editText.getText()));
-            Thread.sleep(blockTime);
-        } catch (Throwable e) {
-        }
+        EditText editText = findViewById(R.id.activity_main_block_et);
+        final int blockTime = Integer.parseInt(String.valueOf(editText.getText()));
+//        final long blockTime = Long.parseLong(String.valueOf(editText.getText()));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < blockTime; i++) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep((long) (Math.random() * 3000 + 500));
+                            } catch (Throwable e) {
+                            }
+                        }
+                    });
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        }).start();
+
     }
 
     public void testLeak(View view) {
-        mGodEye.leakDetector().consume().subscribe(new GodEyeDisposableObserver<LeakQueue.LeakMemoryInfo>("leak", this));
+        GodEye.instance().leakDetector().consume().subscribe(new GodEyeDisposableObserver<LeakQueue.LeakMemoryInfo>("leak", this));
     }
 
     public void testNetwork(View view) {
-        mGodEye.network().consume().subscribe(new GodEyeDisposableObserver<RequestBaseInfo>("network", this));
+        GodEye.instance().network().consume().subscribe(new GodEyeDisposableObserver<RequestBaseInfo>("network", this));
     }
 
     public void jumpToLeak(View view) {
@@ -193,11 +241,11 @@ public class MainActivity extends Activity implements Loggable {
     }
 
     public void testFps(View view) {
-        mGodEye.fps().consume().subscribe(new GodEyeDisposableObserver<FpsInfo>("fps", this));
+        GodEye.instance().fps().consume().subscribe(new GodEyeDisposableObserver<FpsInfo>("fps", this));
     }
 
     public void testTraffic(View view) {
-        mGodEye.traffic().consume().subscribe(new GodEyeDisposableObserver<TrafficInfo>("traffic", this));
+        GodEye.instance().traffic().consume().subscribe(new GodEyeDisposableObserver<TrafficInfo>("traffic", this));
     }
 
     public void testRequest(View view) {

@@ -1,4 +1,4 @@
-package cn.hikyson.android_godeye_toolbox;
+package cn.hikyson.android;
 
 import org.junit.Test;
 

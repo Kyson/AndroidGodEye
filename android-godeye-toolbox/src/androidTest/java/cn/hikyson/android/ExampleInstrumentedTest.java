@@ -1,4 +1,4 @@
-package cn.hikyson.android_godeye_toolbox;
+package cn.hikyson.android;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

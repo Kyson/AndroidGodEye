@@ -12,16 +12,19 @@ function refresh() {
     requestUtil.getData("/startup", function (data) {
         refreshView(data);
     }, function () {
-
+        refreshView(null);
     });
 }
 
 function refreshView(startupInfo) {
-    var startupResult;
-    if (result.code === 1) {
-        startupResult = "启动类型: " + startupInfo.startupType + " , 耗时：" + startupInfo.startupTime + " ms"
+    var startupType;
+    var startupTime;
+    if (startupInfo) {
+        startupType = startupInfo.startupType;
+        startupTime = startupInfo.startupTime;
     } else {
-        startupResult = "***"
+        startupType = "**";
+        startupTime = "**";
     }
-    $("#startup_detail").text(startupResult);
+    $("#startup_detail").html("启动类型&nbsp;&nbsp;" + startupType + "&nbsp;,&nbsp;耗时&nbsp;&nbsp;" + startupTime + "&nbsp;ms");
 }
