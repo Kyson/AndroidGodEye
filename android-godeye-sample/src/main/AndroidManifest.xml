@@ -17,7 +17,9 @@
         </activity>
         <activity android:name=".sample.LeakActivity">
         </activity>
-        <activity android:name=".sample.SplashActivity">
+        <activity
+            android:name=".sample.SplashActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
