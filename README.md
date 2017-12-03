@@ -1,6 +1,6 @@
 # AndroidGodEye
 
-![http://photo.tech.hikyson.cn/android_god_eye_logo.png](http://photo.tech.hikyson.cn/android_god_eye_logo.png)
+![godeye](http://photo.tech.hikyson.cn/android_god_eye_logo.png)
 
 ## 这是什么？
 
@@ -44,4 +44,37 @@ GodEye.instance().uninstallAll(getApplication());
 ### 0x02 Debug面板安装
 
 GodEyeMonitor类是AndroidGodEye的Debug监控面板的主要类，用来开始或者停止Debug面板的监控。
+
+开始监控：
+
+```java
+GodEyeMonitor.work(context)
+```
+
+结束监控：
+
+```java
+GodEyeMonitor.shutDown()
+```
+
+### 0x03 完成
+
+手机与pc连接同一网段，在pc浏览器中访问 手机ip+端口 即可看到Debug面板!
+
+> 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard ...' 中包含了访问地址。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
