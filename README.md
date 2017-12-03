@@ -71,8 +71,11 @@ GodEyeMonitor.shutDown()
 
 ## Debug开发者面板
 
-<p align="left">
-	<iframe height=290 width=510 src='https://player.youku.com/embed/XMzIwMTgyOTI5Mg==' frameborder=0 'allowfullscreen'></iframe>
+###### Click  ↓  to preview
+<p>
+<a href="https://player.youku.com/embed/XMzIwMTgyOTI5Mg==">
+<img border="0" src="ART/android_god_eye_play.png" width="128" height="128" />
+</a>
 </p>
 
 ![android_godeye_part1](ART/android_godeye_part1.png)
