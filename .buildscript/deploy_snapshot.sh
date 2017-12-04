@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 SLUG="Kyson/AndroidGodEye"
 JDK="oraclejdk8"
 BRANCH="master"

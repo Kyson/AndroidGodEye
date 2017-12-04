@@ -33,3 +33,5 @@ dependencies {
     implementation(name: 'leakcanary-android-1.5.4-rc4', ext: 'aar')
     implementation "com.squareup.haha:haha:2.0.3"
 }
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
