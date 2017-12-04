@@ -26,20 +26,18 @@ import java.util.concurrent.Executors;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import cn.hikyson.android.godeye.BuildConfig;
-import cn.hikyson.android.godeye.R;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
-import cn.hikyson.godeye.GodEye;
-import cn.hikyson.godeye.internal.modules.battery.BatteryInfo;
-import cn.hikyson.godeye.internal.modules.cpu.CpuInfo;
-import cn.hikyson.godeye.internal.modules.fps.FpsInfo;
-import cn.hikyson.godeye.internal.modules.leakdetector.LeakQueue;
-import cn.hikyson.godeye.internal.modules.network.RequestBaseInfo;
-import cn.hikyson.godeye.internal.modules.sm.BlockInfo;
-import cn.hikyson.godeye.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
+import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
+import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
+import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
+import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
+import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
 import cn.hikyson.godeye.monitor.modules.AppInfoModule;
-import cn.hikyson.godeye.utils.L;
+import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends Activity implements Loggable {

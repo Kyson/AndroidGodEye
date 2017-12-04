@@ -3,8 +3,8 @@ package cn.hikyson.android.godeye.toolbox;
 import android.os.Looper;
 import android.os.MessageQueue;
 
-import cn.hikyson.godeye.GodEye;
-import cn.hikyson.godeye.internal.modules.startup.StartupInfo;
+import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 
 /**
  * Created by kysonchao on 2017/12/2.

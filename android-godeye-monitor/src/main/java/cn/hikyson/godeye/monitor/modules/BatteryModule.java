@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.monitor.modules;
 
-import cn.hikyson.godeye.internal.modules.battery.BatteryInfo;
+import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.monitor.driver.Pipe;
 
 /**

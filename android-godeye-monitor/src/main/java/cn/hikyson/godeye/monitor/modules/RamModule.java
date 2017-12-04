@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.monitor.modules;
 
-import cn.hikyson.godeye.internal.modules.memory.RamInfo;
+import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.monitor.driver.Pipe;
 
 /**

@@ -8,7 +8,7 @@ import cn.hikyson.godeye.monitor.driver.Watcher;
 import cn.hikyson.godeye.monitor.modules.AppInfoModule;
 import cn.hikyson.godeye.monitor.server.ClientServer;
 import cn.hikyson.godeye.monitor.server.Router;
-import cn.hikyson.godeye.utils.L;
+import cn.hikyson.godeye.core.utils.L;
 
 /**
  * Created by kysonchao on 2017/11/27.

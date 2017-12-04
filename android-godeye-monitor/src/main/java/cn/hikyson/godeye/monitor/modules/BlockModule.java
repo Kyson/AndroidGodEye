@@ -3,7 +3,7 @@ package cn.hikyson.godeye.monitor.modules;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import cn.hikyson.godeye.internal.modules.sm.BlockInfo;
+import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.monitor.driver.Pipe;
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
 

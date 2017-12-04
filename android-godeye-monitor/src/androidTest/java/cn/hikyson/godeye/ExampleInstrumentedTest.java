@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("cn.hikyson.android_godeye_monitor.test", appContext.getPackageName());
+        assertEquals("cn.hikyson.godeye.monitor.test", appContext.getPackageName());
     }
 }

@@ -11,7 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.URLDecoder;
 
-import cn.hikyson.godeye.utils.IoUtil;
+import cn.hikyson.godeye.core.utils.IoUtil;
 
 public class RequestHandler {
 

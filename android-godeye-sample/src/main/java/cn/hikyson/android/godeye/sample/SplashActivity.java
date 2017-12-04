@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import cn.hikyson.android.godeye.R;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 
 public class SplashActivity extends Activity {

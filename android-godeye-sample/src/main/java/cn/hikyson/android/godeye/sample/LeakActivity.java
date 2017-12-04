@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
-import cn.hikyson.android.godeye.R;
-
 public class LeakActivity extends Activity {
 
     @Override

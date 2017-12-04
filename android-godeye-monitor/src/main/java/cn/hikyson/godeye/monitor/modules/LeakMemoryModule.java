@@ -2,7 +2,7 @@ package cn.hikyson.godeye.monitor.modules;
 
 import java.util.Collection;
 
-import cn.hikyson.godeye.internal.modules.leakdetector.LeakQueue;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.monitor.driver.Pipe;
 
 /**

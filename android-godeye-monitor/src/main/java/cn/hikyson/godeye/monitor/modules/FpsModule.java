@@ -1,8 +1,6 @@
 package cn.hikyson.godeye.monitor.modules;
 
-import android.net.Uri;
-
-import cn.hikyson.godeye.internal.modules.fps.FpsInfo;
+import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.monitor.driver.Pipe;
 
 /**

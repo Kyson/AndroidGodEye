@@ -2,7 +2,7 @@ package cn.hikyson.godeye.monitor.modules;
 
 import java.util.Collection;
 
-import cn.hikyson.godeye.internal.modules.cpu.CpuInfo;
+import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.monitor.driver.Pipe;
 
 /**

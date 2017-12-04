@@ -1,6 +1,8 @@
 package cn.hikyson.android.godeye.sample;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 
@@ -13,5 +15,11 @@ public class SampleApp extends Application {
     public void onCreate() {
         super.onCreate();
         StartupTracer.get().onApplicationCreate();
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }
