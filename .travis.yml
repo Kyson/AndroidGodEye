@@ -14,7 +14,9 @@ after_success:
   - echo "after_success"
 
 jdk:
-  - oraclejdk7
+  - oraclejdk8
+
+
 
 notifications:
   email: false
