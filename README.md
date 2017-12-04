@@ -85,7 +85,7 @@ GodEyeMonitor.shutDown()
 
 - Github: [Kyson](https://github.com/Kyson)
 - Weibo: [hikyson](https://weibo.com/hikyson)
-- Blog: [hikyson.cn](https://tech.hikyson.cn/)
+- Blog: [tech.hikyson.cn](https://tech.hikyson.cn/)
 
 
 
