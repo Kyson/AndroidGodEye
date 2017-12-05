@@ -38,7 +38,7 @@ deploy:
     provider: releases
     api_key: de440bc54ec27ad4f5c418a8efdbe5e305248c0b
     file_glob: true
-    file: *.tar.gz
+    file: ./*
     skip_cleanup: true
     on:
         tags: true
