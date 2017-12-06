@@ -4,11 +4,6 @@ import android.Manifest;
 import android.app.Application;
 import android.support.v4.content.PermissionChecker;
 
-import com.squareup.leakcanary.CanaryLog;
-import com.squareup.leakcanary.DefaultLeakDirectoryProvider;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.LeakDirectoryProvider;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.List;
