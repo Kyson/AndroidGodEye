@@ -1,13 +1,13 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-Properties properties = new Properties()
-InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
-properties.load(inputStream)
-
-ext {
-    SONATYPE_NEXUS_USERNAME = properties.getProperty('SONATYPE_NEXUS_USERNAME')
-    SONATYPE_NEXUS_PASSWORD = properties.getProperty('SONATYPE_NEXUS_PASSWORD')
+File localProperties = project.rootProject.file('local.properties');
+if (localProperties.exists()) {
+    InputStream inputStream = localProperties.newDataInputStream()
+    Properties properties = new Properties()
+    properties.load(inputStream)
+    gradle.ext.SONATYPE_NEXUS_USERNAME = properties.getProperty('SONATYPE_NEXUS_USERNAME')
+    gradle.ext.SONATYPE_NEXUS_PASSWORD = properties.getProperty('SONATYPE_NEXUS_PASSWORD')
 }
 
 def isReleaseBuild() {
@@ -25,12 +25,14 @@ def getSnapshotRepositoryUrl() {
 }
 
 def getRepositoryUsername() {
-    String userName = hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : "";
+    String userName = hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : gradle.ext.SONATYPE_NEXUS_USERNAME;
+    print "userName:" + userName;
     return userName;
 }
 
 def getRepositoryPassword() {
-    String pwd = hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : ""
+    String pwd = hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : gradle.ext.SONATYPE_NEXUS_PASSWORD
+    print "pwd:" + pwd;
     return pwd;
 }
 
