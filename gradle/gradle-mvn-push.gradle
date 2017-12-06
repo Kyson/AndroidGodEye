@@ -8,6 +8,9 @@ if (localProperties.exists()) {
     properties.load(inputStream)
     gradle.ext.SONATYPE_NEXUS_USERNAME = properties.getProperty('SONATYPE_NEXUS_USERNAME')
     gradle.ext.SONATYPE_NEXUS_PASSWORD = properties.getProperty('SONATYPE_NEXUS_PASSWORD')
+} else {
+    gradle.ext.SONATYPE_NEXUS_USERNAME = ""
+    gradle.ext.SONATYPE_NEXUS_PASSWORD = ""
 }
 
 def isReleaseBuild() {
@@ -26,13 +29,11 @@ def getSnapshotRepositoryUrl() {
 
 def getRepositoryUsername() {
     String userName = hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : gradle.ext.SONATYPE_NEXUS_USERNAME;
-    print "userName:" + userName;
     return userName;
 }
 
 def getRepositoryPassword() {
     String pwd = hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : gradle.ext.SONATYPE_NEXUS_PASSWORD
-    print "pwd:" + pwd;
     return pwd;
 }
 
