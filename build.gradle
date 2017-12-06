@@ -21,13 +21,13 @@ allprojects {
         flatDir {
             dirs("${libs_dir}")
         }
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+//        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         google()
         jcenter()
     }
     buildscript {
         repositories {
-            maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+//            maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
             google()
             jcenter()
         }
