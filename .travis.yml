@@ -26,9 +26,6 @@ script:
 notifications:
     email: false
 
-after_success:
-    - .buildscript/deploy_snapshot.sh
-
 before_deploy:
       - git config --local user.name "Kyson"
       - git config --local user.email "kysonchao@gmail.com"
