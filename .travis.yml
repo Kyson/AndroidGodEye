@@ -25,18 +25,3 @@ script:
 
 notifications:
     email: false
-
-before_deploy:
-      - git config --local user.name "Kyson"
-      - git config --local user.email "kysonchao@gmail.com"
-      - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
-
-deploy:
-    provider: releases
-    api_key: "$GITHUB_APIKEY"
-    file_glob: true
-    file: ./*
-    skip_cleanup: true
-    on:
-        tags: true
-        branch: master
