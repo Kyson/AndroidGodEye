@@ -54,7 +54,7 @@ public class LeakQueue {
         //泄漏的对象
         public String leakObjectName = "";
         //到gcroot的最短路径
-        public List<String> pathToGcRoot = new ArrayList<>();
+        public List pathToGcRoot = new ArrayList<>();
         //泄漏字节
         public long leakMemoryBytes = 0L;
 
@@ -143,7 +143,7 @@ public class LeakQueue {
         Object leakObjName = detailMap.get(LeakMemoryInfo.Fields.LEAK_OBJ_NAME);
         leakMemoryInfo.leakObjectName = leakObjName == null ? "" : String.valueOf(leakObjName);
         Object pathToRoot = detailMap.get(LeakMemoryInfo.Fields.PATH_TO_ROOT);
-        leakMemoryInfo.pathToGcRoot = pathToRoot == null ? new ArrayList<String>() : (List<String>) pathToRoot;
+        leakMemoryInfo.pathToGcRoot = pathToRoot == null ? new ArrayList<String>() : (List) pathToRoot;
         Object leakMemoryBytes = detailMap.get(LeakMemoryInfo.Fields.LEAK_MEMORY_BYTES);
         leakMemoryInfo.leakMemoryBytes = leakMemoryBytes == null ? 0L : (long) leakMemoryBytes;
         return leakMemoryInfo;
