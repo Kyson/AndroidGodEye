@@ -5,6 +5,8 @@
 <h1 align="center">AndroidGodEye</h1>
 <p align="center">
 <a href="https://travis-ci.org/Kyson/AndroidGodEye" target="_blank"><img src="https://travis-ci.org/Kyson/AndroidGodEye.svg?branch=master"></img></a>
+<a href="https://jitpack.io/#Kyson/AndroidGodEye" target="_blank"><img src="https://jitpack.io/v/Kyson/AndroidGodEye.svg"></img></a>
+
 </p>
 <br />
 
