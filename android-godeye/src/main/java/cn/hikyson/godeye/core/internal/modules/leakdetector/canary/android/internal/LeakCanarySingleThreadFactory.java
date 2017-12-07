@@ -22,14 +22,14 @@ import java.util.concurrent.ThreadFactory;
  */
 final class LeakCanarySingleThreadFactory implements ThreadFactory {
 
-  private final String threadName;
+    private final String threadName;
 
-  LeakCanarySingleThreadFactory(String threadName) {
-    this.threadName = "LeakCanary-" + threadName;
-  }
+    LeakCanarySingleThreadFactory(String threadName) {
+        this.threadName = "LeakCanary-" + threadName;
+    }
 
-  @Override
-  public Thread newThread(Runnable runnable) {
-    return new Thread(runnable, threadName);
-  }
+    @Override
+    public Thread newThread(Runnable runnable) {
+        return new Thread(runnable, threadName);
+    }
 }

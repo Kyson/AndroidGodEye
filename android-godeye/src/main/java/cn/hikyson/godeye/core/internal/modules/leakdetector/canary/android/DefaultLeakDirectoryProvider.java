@@ -16,11 +16,8 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android;
 
 import android.annotation.TargetApi;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Environment;
-
-import com.squareup.leakcanary.internal.RequestStoragePermissionActivity;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -37,7 +34,6 @@ import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.M;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 import static com.squareup.leakcanary.HeapDumper.RETRY_LATER;
-import static com.squareup.leakcanary.internal.LeakCanaryInternals.showNotification;
 
 public final class DefaultLeakDirectoryProvider implements LeakDirectoryProvider {
 
@@ -168,19 +164,19 @@ public final class DefaultLeakDirectoryProvider implements LeakDirectoryProvider
         return writeExternalStorageGranted;
     }
 
-    private void requestWritePermissionNotification() {
-        if (permissionNotificationDisplayed) {
-            return;
-        }
-        permissionNotificationDisplayed = true;
-
-        PendingIntent pendingIntent = RequestStoragePermissionActivity.createPendingIntent(context);
-        String contentTitle = context.getString(R.string.leak_canary_permission_notification_title);
-        CharSequence packageName = context.getPackageName();
-        String contentText =
-                context.getString(R.string.leak_canary_permission_notification_text, packageName);
-        showNotification(context, contentTitle, contentText, pendingIntent, 0xDEAFBEEF);
-    }
+//    private void requestWritePermissionNotification() {
+//        if (permissionNotificationDisplayed) {
+//            return;
+//        }
+//        permissionNotificationDisplayed = true;
+//
+//        PendingIntent pendingIntent = RequestStoragePermissionActivity.createPendingIntent(context);
+//        String contentTitle = context.getString(R.string.leak_canary_permission_notification_title);
+//        CharSequence packageName = context.getPackageName();
+//        String contentText =
+//                context.getString(R.string.leak_canary_permission_notification_text, packageName);
+//        showNotification(context, contentTitle, contentText, pendingIntent, 0xDEAFBEEF);
+//    }
 
     private File externalStorageDirectory() {
         File downloadsDirectory = Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS);

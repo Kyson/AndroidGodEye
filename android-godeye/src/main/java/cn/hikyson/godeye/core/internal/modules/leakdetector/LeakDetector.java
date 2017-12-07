@@ -10,6 +10,10 @@ import java.util.List;
 
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableConsumer;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.CanaryLog;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.DefaultLeakDirectoryProvider;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.LeakCanary;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.LeakDirectoryProvider;
 import cn.hikyson.godeye.core.utils.FileUtil;
 import cn.hikyson.godeye.core.utils.L;
 

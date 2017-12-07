@@ -22,6 +22,7 @@ import com.squareup.leakcanary.HeapDump;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal.HeapAnalyzerService;
 
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal.LeakCanaryInternals.setEnabled;
+import static com.squareup.leakcanary.Preconditions.checkNotNull;
 
 public final class ServiceHeapDumpListener implements HeapDump.Listener {
 

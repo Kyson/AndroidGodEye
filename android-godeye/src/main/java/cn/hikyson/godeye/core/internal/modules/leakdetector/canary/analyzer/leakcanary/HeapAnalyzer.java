@@ -42,10 +42,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult.failure;
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult.leakDetected;
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult.noLeak;
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HahaHelper.asString;
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HahaHelper.classInstanceValues;
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HahaHelper.extendsThread;
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HahaHelper.fieldToString;
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HahaHelper.fieldValue;
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HahaHelper.hasField;
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.LeakTraceElement.Holder.ARRAY;
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.LeakTraceElement.Holder.CLASS;
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.LeakTraceElement.Holder.OBJECT;
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.LeakTraceElement.Holder.THREAD;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 /**
@@ -262,10 +271,10 @@ public final class HeapAnalyzer {
         }
     }
 
-    private LeakTrace buildLeakTrace(com.squareup.leakcanary.LeakNode leakingNode) {
+    private LeakTrace buildLeakTrace(LeakNode leakingNode) {
         List<LeakTraceElement> elements = new ArrayList<>();
         // We iterate from the leak to the GC root
-        com.squareup.leakcanary.LeakNode node = new com.squareup.leakcanary.LeakNode(null, null, leakingNode, null, null);
+        LeakNode node = new LeakNode(null, null, leakingNode, null, null);
         while (node != null) {
             LeakTraceElement element = buildLeakElement(node);
             if (element != null) {
@@ -276,7 +285,7 @@ public final class HeapAnalyzer {
         return new LeakTrace(elements);
     }
 
-    private LeakTraceElement buildLeakElement(com.squareup.leakcanary.LeakNode node) {
+    private LeakTraceElement buildLeakElement(LeakNode node) {
         if (node.parent == null) {
             // Ignore any root node.
             return null;
@@ -304,7 +313,7 @@ public final class HeapAnalyzer {
             ClassObj classObj = holder.getClassObj();
             if (extendsThread(classObj)) {
                 holderType = THREAD;
-                String threadName = threadName(holder);
+                String threadName = HahaHelper.threadName(holder);
                 extra = "(named '" + threadName + "')";
             } else if (className.matches(ANONYMOUS_CLASS_NAME_PATTERN)) {
                 String parentClassName = classObj.getSuperClassObj().getClassName();

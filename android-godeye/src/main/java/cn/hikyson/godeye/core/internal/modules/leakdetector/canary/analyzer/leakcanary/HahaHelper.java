@@ -21,6 +21,7 @@ import com.squareup.haha.perflib.ClassObj;
 import com.squareup.haha.perflib.Field;
 import com.squareup.haha.perflib.Instance;
 import com.squareup.haha.perflib.Type;
+import com.squareup.leakcanary.Preconditions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.squareup.leakcanary.Preconditions.checkNotNull;
 import static java.util.Arrays.asList;
 
 public final class HahaHelper {
@@ -80,7 +82,7 @@ public final class HahaHelper {
     List<ClassInstance.FieldValue> values = classInstanceValues(instance);
 
     Integer count = fieldValue(values, "count");
-    Preconditions.checkNotNull(count, "count");
+    checkNotNull(count, "count");
     if (count == 0) {
       return "";
     }

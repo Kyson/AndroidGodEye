@@ -1,5 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary;
 
+import com.squareup.leakcanary.KeyedWeakReference;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

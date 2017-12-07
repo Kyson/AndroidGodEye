@@ -2,7 +2,6 @@
 
 buildscript {
     repositories {
-//        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         google()
         jcenter()
     }
@@ -11,23 +10,13 @@ buildscript {
     }
 }
 
-ext{
-    root_dir = project(":").projectDir
-//    libs_dir = "${root_dir}${File.separator}libs"
-}
-
 allprojects {
     repositories {
-//        flatDir {
-//            dirs("${libs_dir}")
-//        }
-//        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         google()
         jcenter()
     }
     buildscript {
         repositories {
-//            maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
             google()
             jcenter()
         }

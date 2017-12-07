@@ -31,7 +31,6 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.outpu
 
 import static android.text.format.Formatter.formatShortFileSize;
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal.LeakCanaryInternals.isInServiceProcess;
-import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal.LeakCanaryInternals.setEnabled;
 
 public final class LeakCanary {
 

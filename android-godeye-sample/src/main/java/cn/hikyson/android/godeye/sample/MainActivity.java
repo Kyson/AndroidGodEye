@@ -1,20 +1,15 @@
 package cn.hikyson.android.godeye.sample;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.PermissionChecker;
 import android.support.v4.util.ArrayMap;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,9 +30,9 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
 import cn.hikyson.godeye.monitor.modules.AppInfoModule;
-import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends Activity implements Loggable {
@@ -47,7 +42,6 @@ public class MainActivity extends Activity implements Loggable {
 
     private static class AppInfoProxyImpl implements AppInfoModule.AppInfo.AppInfoProxy {
         private Context mContext;
-
 
         public AppInfoProxyImpl(Context context) {
             mContext = context.getApplicationContext();
@@ -76,7 +70,6 @@ public class MainActivity extends Activity implements Loggable {
         StartupTracer.get().onHomeCreate();
         mLogTv = findViewById(R.id.activity_main_log_tv);
         mLogScrollView = findViewById(R.id.activity_main_log_sc);
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
         GodEye.instance().installAll(getApplication());
         GodEyeMonitor.injectAppInfoProxy(new AppInfoProxyImpl(this));
         GodEyeMonitor.work(MainActivity.this);
@@ -112,13 +105,6 @@ public class MainActivity extends Activity implements Loggable {
                 }, 300);
             }
         });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (PermissionChecker.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED) {
-            Toast.makeText(this, "grant " + Manifest.permission.WRITE_EXTERNAL_STORAGE + " permission.", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void installAll(View view) {

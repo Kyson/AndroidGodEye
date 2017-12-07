@@ -19,9 +19,10 @@ import android.content.Context;
 import android.os.Debug;
 
 import com.squareup.leakcanary.HeapDumper;
-import com.squareup.leakcanary.output.OutputLeakService;
 
 import java.io.File;
+
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.output.OutputLeakService;
 
 public final class AndroidHeapDumper implements HeapDumper {
 

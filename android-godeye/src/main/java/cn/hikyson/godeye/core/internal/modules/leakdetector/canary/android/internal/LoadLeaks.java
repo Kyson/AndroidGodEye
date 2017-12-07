@@ -3,11 +3,7 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.inte
 import android.os.Handler;
 import android.os.Looper;
 
-import com.squareup.leakcanary.AnalysisResult;
-import com.squareup.leakcanary.CanaryLog;
 import com.squareup.leakcanary.HeapDump;
-import com.squareup.leakcanary.LeakDirectoryProvider;
-import com.squareup.leakcanary.LeakTraceElement;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +16,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import static com.squareup.leakcanary.internal.LeakCanaryInternals.newSingleThreadExecutor;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.LeakTraceElement;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.CanaryLog;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.LeakDirectoryProvider;
+
+import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal.LeakCanaryInternals.newSingleThreadExecutor;
 
 /**
  * Created by kysonchao on 2017/9/30.
@@ -46,13 +47,25 @@ public class LoadLeaks implements Runnable {
         this.mOnLeakCallback = onLeakCallback;
     }
 
+    static class Leak {
+        final HeapDump heapDump;
+        final AnalysisResult result;
+        final File resultFile;
+
+        Leak(HeapDump heapDump, AnalysisResult result, File resultFile) {
+            this.heapDump = heapDump;
+            this.result = result;
+            this.resultFile = resultFile;
+        }
+    }
+
     public void load() {
         backgroundExecutor.execute(this);
     }
 
     @Override
     public void run() {
-        final List<DisplayLeakActivity.Leak> leaks = new ArrayList<>();
+        final List<Leak> leaks = new ArrayList<>();
         List<File> files = leakDirectoryProvider.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
@@ -66,7 +79,7 @@ public class LoadLeaks implements Runnable {
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 HeapDump heapDump = (HeapDump) ois.readObject();
                 AnalysisResult result = (AnalysisResult) ois.readObject();
-                leaks.add(new DisplayLeakActivity.Leak(heapDump, result, resultFile));
+                leaks.add(new Leak(heapDump, result, resultFile));
             } catch (IOException | ClassNotFoundException e) {
                 // Likely a change in the serializable result class.
                 // Let's remove the files, we can't read them anymore.
@@ -86,9 +99,9 @@ public class LoadLeaks implements Runnable {
                 }
             }
         }
-        Collections.sort(leaks, new Comparator<DisplayLeakActivity.Leak>() {
+        Collections.sort(leaks, new Comparator<Leak>() {
             @Override
-            public int compare(DisplayLeakActivity.Leak lhs, DisplayLeakActivity.Leak rhs) {
+            public int compare(Leak lhs, Leak rhs) {
                 return Long.valueOf(rhs.resultFile.lastModified())
                         .compareTo(lhs.resultFile.lastModified());
             }
@@ -100,7 +113,7 @@ public class LoadLeaks implements Runnable {
                     mOnLeakCallback.onLeakNull("leaks file is empty");
                     return;
                 }
-                final DisplayLeakActivity.Leak visibleLeak = getVisibleLeak(leaks, mReferenceKey);
+                final Leak visibleLeak = getVisibleLeak(leaks, mReferenceKey);
                 if (visibleLeak == null) {
                     mOnLeakCallback.onLeakNull("visibleLeak is null");
                     return;
@@ -124,11 +137,11 @@ public class LoadLeaks implements Runnable {
         });
     }
 
-    private DisplayLeakActivity.Leak getVisibleLeak(List<DisplayLeakActivity.Leak> leaks, String leakRefKey) {
+    private Leak getVisibleLeak(List<Leak> leaks, String leakRefKey) {
         if (leaks == null) {
             return null;
         }
-        for (DisplayLeakActivity.Leak leak : leaks) {
+        for (Leak leak : leaks) {
             if (leak.heapDump.referenceKey.equals(leakRefKey)) {
                 return leak;
             }

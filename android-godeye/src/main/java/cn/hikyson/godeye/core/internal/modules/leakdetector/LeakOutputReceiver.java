@@ -5,16 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.util.ArrayMap;
 
-import com.squareup.leakcanary.AnalysisResult;
-import com.squareup.leakcanary.HeapAnalyzer;
 import com.squareup.leakcanary.HeapDump;
-import com.squareup.leakcanary.internal.LoadLeaks;
-import com.squareup.leakcanary.output.OutputLeakService;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HeapAnalyzer;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal.LoadLeaks;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.output.OutputLeakService;
 import cn.hikyson.godeye.core.utils.L;
 
 public class LeakOutputReceiver extends BroadcastReceiver {

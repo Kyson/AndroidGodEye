@@ -1,3 +1,5 @@
+package cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal;
+
 ///*
 // * Copyright (C) 2015 Square, Inc.
 // *
@@ -423,17 +425,7 @@
 //        }
 //    }
 //
-//    static class Leak {
-//        final HeapDump heapDump;
-//        final AnalysisResult result;
-//        final File resultFile;
-//
-//        Leak(HeapDump heapDump, AnalysisResult result, File resultFile) {
-//            this.heapDump = heapDump;
-//            this.result = result;
-//            this.resultFile = resultFile;
-//        }
-//    }
+
 //
 //    public static class LoadLeaks implements Runnable {
 //
