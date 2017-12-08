@@ -1,8 +1,11 @@
 package cn.hikyson.godeye.monitor;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.net.wifi.WifiManager;
+
+import java.util.Map;
 
 import cn.hikyson.godeye.monitor.driver.Watcher;
 import cn.hikyson.godeye.monitor.modules.AppInfoModule;
@@ -19,13 +22,17 @@ public class GodEyeMonitor {
     private static ClientServer sClientServer;
     private static Watcher sWatcher;
 
+    public interface AppInfoConext {
+        Context getContext();
+
+        Map<String, Object> getAppInfo();
+    }
+
     /**
-     * 注入应用基本信息的代理，不能在页面之类的地方实现非静态proxy，以免内存泄漏
-     *
-     * @param appInfoProxy
+     * @param appInfoConext
      */
-    public static void injectAppInfoProxy(AppInfoModule.AppInfo.AppInfoProxy appInfoProxy) {
-        AppInfoModule.AppInfo.injectAppInfoProxy(appInfoProxy);
+    public static synchronized void injectAppInfoConext(AppInfoConext appInfoConext) {
+        AppInfoModule.injectAppInfoConext(appInfoConext);
     }
 
     public static synchronized void work(Context context) {
@@ -34,14 +41,15 @@ public class GodEyeMonitor {
 
     /**
      * monitor开始工作
-     *
-     * @param context
      */
     public static synchronized void work(Context context, int port) {
         if (sIsWorking) {
             return;
         }
         sIsWorking = true;
+        if (context == null) {
+            throw new IllegalStateException("context can not be null.");
+        }
         Context applicationContext = context.getApplicationContext();
         sWatcher = new Watcher();
         sWatcher.observeAll();
@@ -74,7 +82,7 @@ public class GodEyeMonitor {
     private static String getAddressLog(Context context, int port) {
         @SuppressLint("WifiManagerPotentialLeak")
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+        int ipAddress = wifiManager != null ? wifiManager.getConnectionInfo().getIpAddress() : 0;
         @SuppressLint("DefaultLocale") final String formattedIpAddress = String.format("%d.%d.%d.%d",
                 (ipAddress & 0xff),
                 (ipAddress >> 8 & 0xff),

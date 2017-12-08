@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "Deploy snapshot starting..."
 SLUG="Kyson/AndroidGodEye"
 JDK="oraclejdk8"
 BRANCH="master"
@@ -14,8 +15,14 @@ elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
   echo "Skipping snapshot deployment: was pull request."
 elif [ "$TRAVIS_BRANCH" != "$BRANCH" ]; then
   echo "Skipping snapshot deployment: wrong branch. Expected '$BRANCH' but was '$TRAVIS_BRANCH'."
+elif [ "$TRAVIS_TAG" == "" ]; then
+  echo "Skipping snapshot deployment: no tag found."
 else
+  pwd
+  echo "VERSION_NAME=$TRAVIS_TAG" > ../VERSION
   echo "Deploying snapshot..."
   ./gradlew clean uploadArchives
   echo "Snapshot deployed!"
 fi
+
+echo "Deploy snapshot done."

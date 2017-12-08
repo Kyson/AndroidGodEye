@@ -24,4 +24,8 @@ script:
     - ./gradlew clean build
 
 notifications:
-    email: false
+    email:
+        - tech@hikyson.cn
+
+after_success:
+    - chmod 777 .buildscript/deploy_snapshot.sh && .buildscript/deploy_snapshot.sh

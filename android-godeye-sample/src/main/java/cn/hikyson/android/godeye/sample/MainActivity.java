@@ -1,6 +1,7 @@
 package cn.hikyson.android.godeye.sample;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -40,7 +41,8 @@ public class MainActivity extends Activity implements Loggable {
     private TextView mLogTv;
     private ScrollView mLogScrollView;
 
-    private static class AppInfoProxyImpl implements AppInfoModule.AppInfo.AppInfoProxy {
+
+    private static class AppInfoProxyImpl implements GodEyeMonitor.AppInfoConext {
         private Context mContext;
 
         public AppInfoProxyImpl(Context context) {
@@ -48,18 +50,21 @@ public class MainActivity extends Activity implements Loggable {
         }
 
         @Override
-        public AppInfoModule.AppInfo getAppInfo() {
+        public Context getContext() {
+            return mContext;
+        }
+
+        @Override
+        public Map<String, Object> getAppInfo() {
             Map<String, Object> map = new ArrayMap<>();
-            map.put("versionName", BuildConfig.VERSION_NAME);
-            map.put("versionCode", BuildConfig.VERSION_CODE);
-            map.put("buildType", BuildConfig.BUILD_TYPE);
-            map.put("debuggable", BuildConfig.DEBUG);
-            map.put("channel", "Channel_XX");
-            map.put("clientid", "ClientId");
-            map.put("deviceid", "DeviceId");
-            map.put("uid", "0x0001");
-            map.put("email", "kysonchao@gmail.com");
-            return new AppInfoModule.AppInfo(mContext, map);
+            map.put("VersionName", BuildConfig.VERSION_NAME);
+            map.put("VersionCode", BuildConfig.VERSION_CODE);
+            map.put("BuildType", BuildConfig.BUILD_TYPE);
+            map.put("Debuggable", BuildConfig.DEBUG);
+            map.put("Email", "kysonchao@gmail.com");
+            map.put("ProjectUrl", "https://github.com/Kyson/AndroidGodEye");
+            map.put("Blog", "tech.hikyson.cn");
+            return map;
         }
     }
 
@@ -67,12 +72,12 @@ public class MainActivity extends Activity implements Loggable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        StartupTracer.get().onHomeCreate();
         mLogTv = findViewById(R.id.activity_main_log_tv);
         mLogScrollView = findViewById(R.id.activity_main_log_sc);
+        StartupTracer.get().onHomeCreate();
         GodEye.instance().installAll(getApplication());
-        GodEyeMonitor.injectAppInfoProxy(new AppInfoProxyImpl(this));
-        GodEyeMonitor.work(MainActivity.this);
+        GodEyeMonitor.work(this);
+        GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl(this));
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -89,6 +94,13 @@ public class MainActivity extends Activity implements Loggable {
                 log("!!EXCEPTION: " + e.getLocalizedMessage());
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        GodEye.instance().uninstallAll();
+        GodEyeMonitor.shutDown();
     }
 
     @Override
