@@ -17,14 +17,8 @@ elif [ "$TRAVIS_BRANCH" != "$BRANCH" ]; then
 elif [ "$TRAVIS_TAG" == "" ]; then
   echo "Skipping snapshot deployment: no tag found."
 else
-//TODO KYSON IMPL
-  echo "$TRAVIS_TAG" > VERSION.txt
+  echo "VERSION_NAME=$TRAVIS_TAG" > ../VERSION
   echo "Deploying snapshot..."
   ./gradlew clean uploadArchives
   echo "Snapshot deployed!"
-  echo "Git tagging..."
-  git config --local user.name "Kyson"
-  git config --local user.email "kysonchao@gmail.com"
-  git tag
-  echo "Git tagged!"
 fi

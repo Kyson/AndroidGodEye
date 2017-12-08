@@ -1,18 +1,6 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-File localProperties = project.rootProject.file('local.properties');
-if (localProperties.exists()) {
-    InputStream inputStream = localProperties.newDataInputStream()
-    Properties properties = new Properties()
-    properties.load(inputStream)
-    gradle.ext.SONATYPE_NEXUS_USERNAME = properties.getProperty('SONATYPE_NEXUS_USERNAME')
-    gradle.ext.SONATYPE_NEXUS_PASSWORD = properties.getProperty('SONATYPE_NEXUS_PASSWORD')
-} else {
-    gradle.ext.SONATYPE_NEXUS_USERNAME = ""
-    gradle.ext.SONATYPE_NEXUS_PASSWORD = ""
-}
-
 def isReleaseBuild() {
     return VERSION_NAME.contains("SNAPSHOT") == false
 }
@@ -28,13 +16,46 @@ def getSnapshotRepositoryUrl() {
 }
 
 def getRepositoryUsername() {
-    String userName = hasProperty('SONATYPE_NEXUS_USERNAME') ? SONATYPE_NEXUS_USERNAME : gradle.ext.SONATYPE_NEXUS_USERNAME;
-    return userName;
+    if (hasProperty('SONATYPE_NEXUS_USERNAME')) {
+        return SONATYPE_NEXUS_USERNAME;
+    }
+    File localProperties = project.rootProject.file('local.properties');
+    if (localProperties.exists()) {
+        InputStream inputStream = localProperties.newDataInputStream()
+        Properties properties = new Properties()
+        properties.load(inputStream)
+        return properties.getProperty('SONATYPE_NEXUS_USERNAME')
+    }
+    return "";
 }
 
 def getRepositoryPassword() {
-    String pwd = hasProperty('SONATYPE_NEXUS_PASSWORD') ? SONATYPE_NEXUS_PASSWORD : gradle.ext.SONATYPE_NEXUS_PASSWORD
-    return pwd;
+    if (hasProperty('SONATYPE_NEXUS_PASSWORD')) {
+        return SONATYPE_NEXUS_PASSWORD;
+    }
+    File localProperties = project.rootProject.file('local.properties');
+    if (localProperties.exists()) {
+        InputStream inputStream = localProperties.newDataInputStream()
+        Properties properties = new Properties()
+        properties.load(inputStream)
+        return properties.getProperty('SONATYPE_NEXUS_PASSWORD')
+    }
+    return "";
+}
+
+def getVersionName() {
+    File versionFile = project.rootProject.file('VERSION');
+    String versionName;
+    if (versionFile.exists()) {
+        InputStream inputStream = versionFile.newDataInputStream()
+        Properties properties = new Properties()
+        properties.load(inputStream)
+        versionName = properties.getProperty('VERSION_NAME')
+    }
+    if (versionName == null || versionName.length() == 0) {
+        throw new IllegalStateException("can not find version name!")
+    }
+    return versionName
 }
 
 afterEvaluate { project ->
@@ -45,7 +66,7 @@ afterEvaluate { project ->
 
                 pom.groupId = GROUP
                 pom.artifactId = POM_ARTIFACT_ID
-                pom.version = VERSION_NAME
+                pom.version = getVersionName()
 
                 repository(url: getReleaseRepositoryUrl()) {
                     authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
