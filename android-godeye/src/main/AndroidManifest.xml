@@ -2,7 +2,6 @@
           package="cn.hikyson.godeye.core">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application>
         <receiver
             android:name=".internal.modules.leakdetector.LeakOutputReceiver"

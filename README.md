@@ -27,13 +27,22 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android数据指标（�
 
 ## 快速开始
 
-### 0x00 引入依赖
+### STEP1
 
-gradle依赖
+引入依赖，使用gradle
 
-### 0x01 模块安装
+```
+dependencies {
+  compile 'cn.hikyson.godeye:godeye-core:1.0-SNAPSHOT'
+  compile 'cn.hikyson.godeye:godeye-monitor:1.0-SNAPSHOT'
+  compile 'cn.hikyson.godeye:godeye-monitor-no-op:1.0-SNAPSHOT'
+  compile 'cn.hikyson.godeye:godeye-toolbox:1.0-SNAPSHOT'
+}
+```
 
-GodEye类是AndroidGodEye的核心类，所有模块由它提供。
+### STEP2
+
+模块安装，GodEye类是AndroidGodEye的核心类，所有模块由它提供。
 
 在应用入口安装所有模块：
 
@@ -51,9 +60,9 @@ GodEye.instance().uninstallAll(getApplication());
 
 > 开发者也可以根据自己的需求安装模块,注意：network和startup模块不需要安装和卸载,leak detector不需要卸载
 
-### 0x02 Debug面板安装
+### STEP3
 
-GodEyeMonitor类是AndroidGodEye的Debug监控面板的主要类，用来开始或者停止Debug面板的监控。
+Debug面板安装，GodEyeMonitor类是AndroidGodEye的Debug监控面板的主要类，用来开始或者停止Debug面板的监控。
 
 开始监控：
 
@@ -67,7 +76,9 @@ GodEyeMonitor.work(context)
 GodEyeMonitor.shutDown()
 ```
 
-### 0x03 完成
+### STEP4
+
+完成！开始使用：
 
 手机与pc连接同一网段，在pc浏览器中访问 手机ip+端口 即可看到Debug面板!
 
@@ -82,7 +93,12 @@ GodEyeMonitor.shutDown()
 </a>
 </p>
 
+### 基本信息展示
+
 ![android_godeye_part1](ART/android_godeye_part1.png)
+
+### 内存泄漏展示
+
 ![android_godeye_part5](ART/android_godeye_part5.png)
 
 ## 关于我
