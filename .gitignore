@@ -53,3 +53,6 @@ google-services.json
 freeline.py
 freeline/
 freeline_project_description.json
+
+# VERSION FOR MAVEN
+VERSION
