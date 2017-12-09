@@ -15,6 +15,7 @@
  */
 package cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -33,11 +34,21 @@ import static android.text.format.Formatter.formatShortFileSize;
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal.LeakCanaryInternals.isInServiceProcess;
 
 public final class LeakCanary {
+    @SuppressLint("StaticFieldLeak")
+    private static ActivityRefWatcher sActivityRefWatcher;
 
-    public static RefWatcher install(Application application) {
-        return LeakCanary.refWatcher(application).listenerServiceClass(OutputLeakService.class)
+    public static void install(Application application) {
+        uninstall();
+        sActivityRefWatcher = LeakCanary.refWatcher(application).listenerServiceClass(OutputLeakService.class)
                 .excludedRefs(AndroidExcludedRefs.createAppDefaults().build())
                 .buildAndInstall();
+    }
+
+    public static void uninstall() {
+        if (sActivityRefWatcher != null) {
+            sActivityRefWatcher.stopWatchingActivities();
+            sActivityRefWatcher = null;
+        }
     }
 
     /**
@@ -46,20 +57,6 @@ public final class LeakCanary {
     public static AndroidRefWatcherBuilder refWatcher(Context context) {
         return new AndroidRefWatcherBuilder(context);
     }
-
-//    public static void enableDisplayLeakActivity(Context context) {
-//        setEnabled(context, DisplayLeakActivity.class, true);
-//    }
-
-//    /**
-//     * If you build a {@link RefWatcher} with a {@link AndroidHeapDumper} that has a custom {@link
-//     * LeakDirectoryProvider}, then you should also call this method to make sure the activity in
-//     * charge of displaying leaks can find those on the file system.
-//     */
-//    public static void setDisplayLeakActivityDirectoryProvider(
-//            LeakDirectoryProvider leakDirectoryProvider) {
-//        DisplayLeakActivity.setLeakDirectoryProvider(leakDirectoryProvider);
-//    }
 
     /**
      * Returns a string representation of the result of a heap analysis.

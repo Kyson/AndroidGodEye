@@ -22,8 +22,6 @@ import cn.hikyson.godeye.core.utils.L;
  */
 public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> implements Install<LeakContext> {
 
-    private boolean mInstalled;
-
     private LeakDetector() {
     }
 
@@ -48,10 +46,7 @@ public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> 
         if (PermissionChecker.checkSelfPermission(config.application(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED) {
             throw new IllegalStateException("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
-        if (mInstalled) {
-            return;
-        }
-        mInstalled = true;
+        uninstall();
         mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(application);
         try {
             clearLeaks();
@@ -75,7 +70,9 @@ public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> 
 
     @Override
     public synchronized void uninstall() {
-        throw new UnsupportedOperationException("leak detector can not uninstall!");
+        mLeakDirectoryProvider = null;
+        LeakCanary.uninstall();
+        L.d("LeakCanary uninstalled");
     }
 
     private LeakDirectoryProvider mLeakDirectoryProvider;
