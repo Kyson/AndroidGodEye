@@ -11,7 +11,7 @@
 <br/>
 
 <p>
-<a href="README.md">README_en</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="README.md">README_en</a>&nbsp;&nbsp;&nbsp;
 <a href="README_zh.md">README_zh</a>
 </p>
 
@@ -51,7 +51,7 @@ dependencies {
 Install modules , GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
-GodEye.instance().installAll(getApplication());
+GodEye.instance().installAll(getApplication())
 ```
 
 > Recommended to be installed in application.
@@ -61,18 +61,22 @@ GodEye.instance().installAll(getApplication());
 Uninstall modules when you don't need it:
 
 ```java
-GodEye.instance().uninstallAll();
+GodEye.instance().uninstallAll()
 ```
 
 if you don't need all modules , you can install separately, such as "cpu":
 
-`GodEye.instance().cpu().install()`
+```java
+GodEye.instance().cpu().install()
+```
 
 > Note that network and startup module don't need install and uninstall.
 
 When install finished, GodEye begin produce performance data, generally you can call consume of modules to get these datas, for example：
 
-`GodEye.instance().cpu().consume().subscribe(new GodEyeDisposableObserver<CpuInfo>("cpu", this))`
+```java
+GodEye.instance().cpu().consume().subscribe()
+```
 
 > Just like we will mention later,Debug Monitor is one of these consumers.
 
