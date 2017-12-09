@@ -19,7 +19,7 @@
 
 ## 概览
 
-![android_godeye_summary](ART/android_godeye_summary.png)
+![android_godeye_summary](ART/android_god_eye_summary.png)
 
 AndroidGodEye是一个可以在PC浏览器中实时监控Android数据指标（比如性能指标，但是不局限于性能）的工具。
 

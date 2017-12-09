@@ -19,7 +19,7 @@
 
 ## Overview
 
-![android_godeye_summary](ART/android_godeye_summary.png)
+![android_godeye_summary](ART/android_god_eye_summary.png)
 
 AndroidGodEye is a performance monitor tool for Android , but not limited to performance data.
 
