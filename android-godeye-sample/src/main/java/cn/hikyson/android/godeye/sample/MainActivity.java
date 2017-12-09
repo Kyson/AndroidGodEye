@@ -1,27 +1,26 @@
 package cn.hikyson.android.godeye.sample;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.util.ArrayMap;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
@@ -33,51 +32,77 @@ import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
-import cn.hikyson.godeye.monitor.modules.AppInfoModule;
-import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends Activity implements Loggable {
     private static final String TAG = "AndroidGodEye";
-    private TextView mLogTv;
-    private ScrollView mLogScrollView;
-
-
-    private static class AppInfoProxyImpl implements GodEyeMonitor.AppInfoConext {
-        private Context mContext;
-
-        public AppInfoProxyImpl(Context context) {
-            mContext = context.getApplicationContext();
-        }
-
-        @Override
-        public Context getContext() {
-            return mContext;
-        }
-
-        @Override
-        public Map<String, Object> getAppInfo() {
-            Map<String, Object> map = new ArrayMap<>();
-            map.put("VersionName", BuildConfig.VERSION_NAME);
-            map.put("VersionCode", BuildConfig.VERSION_CODE);
-            map.put("BuildType", BuildConfig.BUILD_TYPE);
-            map.put("Debuggable", BuildConfig.DEBUG);
-            map.put("Email", "kysonchao@gmail.com");
-            map.put("ProjectUrl", "https://github.com/Kyson/AndroidGodEye");
-            map.put("Blog", "tech.hikyson.cn");
-            return map;
-        }
-    }
+    @BindView(R.id.activity_main_logview)
+    LogView mActivityMainLogview;
+    @BindView(R.id.activity_main_cpu)
+    CheckBox mActivityMainCpu;
+    @BindView(R.id.activity_main_battery)
+    CheckBox mActivityMainBattery;
+    @BindView(R.id.activity_main_fps)
+    CheckBox mActivityMainFps;
+    @BindView(R.id.activity_main_leak)
+    CheckBox mActivityMainLeak;
+    @BindView(R.id.activity_main_heap)
+    CheckBox mActivityMainHeap;
+    @BindView(R.id.activity_main_pss)
+    CheckBox mActivityMainPss;
+    @BindView(R.id.activity_main_ram)
+    CheckBox mActivityMainRam;
+    @BindView(R.id.activity_main_sm)
+    CheckBox mActivityMainSm;
+    @BindView(R.id.activity_main_traffic)
+    CheckBox mActivityMainTraffic;
+    @BindView(R.id.activity_main_all)
+    Button mActivityMainAll;
+    @BindView(R.id.activity_main_cancel_all)
+    Button mActivityMainCancelAll;
+    @BindView(R.id.activity_main_install)
+    Button mActivityMainInstall;
+    @BindView(R.id.activity_main_uninstall)
+    Button mActivityMainUninstall;
+    @BindView(R.id.activity_main_monitor_work)
+    Button mActivityMainMonitorWork;
+    @BindView(R.id.activity_main_monitor_shutdown)
+    Button mActivityMainMonitorShutdown;
+    @BindView(R.id.activity_main_consumer_cpu)
+    Button mActivityMainConsumerCpu;
+    @BindView(R.id.activity_main_consumer_battery)
+    Button mActivityMainConsumerBattery;
+    @BindView(R.id.activity_main_consumer_fps)
+    Button mActivityMainConsumerFps;
+    @BindView(R.id.activity_main_consumer_leak)
+    Button mActivityMainConsumerLeak;
+    @BindView(R.id.activity_main_consumer_heap)
+    Button mActivityMainConsumerHeap;
+    @BindView(R.id.activity_main_consumer_pss)
+    Button mActivityMainConsumerPss;
+    @BindView(R.id.activity_main_consumer_ram)
+    Button mActivityMainConsumerRam;
+    @BindView(R.id.activity_main_consumer_network)
+    Button mActivityMainConsumerNetwork;
+    @BindView(R.id.activity_main_consumer_sm)
+    Button mActivityMainConsumerSm;
+    @BindView(R.id.activity_main_consumer_startup)
+    Button mActivityMainConsumerStartup;
+    @BindView(R.id.activity_main_consumer_traffic)
+    Button mActivityMainConsumerTraffic;
+    @BindView(R.id.activity_main_block_et)
+    EditText mActivityMainBlockEt;
+    @BindView(R.id.activity_main_make_block)
+    Button mActivityMainMakeBlock;
+    @BindView(R.id.activity_main_make_request)
+    Button mActivityMainMakeRequest;
+    @BindView(R.id.activity_main_make_leak)
+    Button mActivityMainMakeLeak;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mLogTv = findViewById(R.id.activity_main_log_tv);
-        mLogScrollView = findViewById(R.id.activity_main_log_sc);
-        StartupTracer.get().onHomeCreate();
-        GodEye.instance().installAll(getApplication());
-        GodEyeMonitor.work(this);
-        GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl(this));
+        ButterKnife.bind(this, this);
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -94,6 +119,11 @@ public class MainActivity extends Activity implements Loggable {
                 log("!!EXCEPTION: " + e.getLocalizedMessage());
             }
         });
+        StartupTracer.get().onHomeCreate();
+
+        GodEyeMonitor.work(this);
+        GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl(this));
+
     }
 
     @Override
@@ -101,22 +131,6 @@ public class MainActivity extends Activity implements Loggable {
         super.onDestroy();
         GodEye.instance().uninstallAll();
         GodEyeMonitor.shutDown();
-    }
-
-    @Override
-    public void log(final String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mLogTv.append(msg + "\n");
-                mLogScrollView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mLogScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                }, 300);
-            }
-        });
     }
 
     public void installAll(View view) {
@@ -159,30 +173,6 @@ public class MainActivity extends Activity implements Loggable {
         startActivity(intent);
     }
 
-    public static class GodEyeDisposableObserver<T> extends DisposableObserver<T> {
-        private String mName;
-        private Loggable mLoggable;
-
-        public GodEyeDisposableObserver(String name, Loggable loggable) {
-            this.mName = name;
-            this.mLoggable = loggable;
-        }
-
-        @Override
-        public void onNext(T t) {
-            mLoggable.log("DEBUG: " + mName + " , " + String.valueOf(t));
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            mLoggable.log("!ERROR: " + mName + " , " + String.valueOf(e));
-        }
-
-        @Override
-        public void onComplete() {
-            mLoggable.log("DEBUG: " + mName + " , onComplete.");
-        }
-    }
 
     public void testCpu(View view) {
         GodEye.instance().cpu().consume().subscribe(new GodEyeDisposableObserver<CpuInfo>("cpu", this));
@@ -220,7 +210,6 @@ public class MainActivity extends Activity implements Loggable {
                 }
             }
         }).start();
-
     }
 
     public void testLeak(View view) {
@@ -280,4 +269,101 @@ public class MainActivity extends Activity implements Loggable {
             e.printStackTrace();
         }
     }
+
+    @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install, R.id.activity_main_uninstall, R.id.activity_main_monitor_work, R.id.activity_main_monitor_shutdown, R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps, R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss, R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm, R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_block_et, R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.activity_main_all:
+                if(mActivityMainCpu.isChecked()){
+                    GodEye.instance().cpu().install();
+                }
+                if(mActivityMainBattery.isChecked()){
+                    GodEye.instance().battery().install(this);
+                }
+                if(mActivityMainFps.isChecked()){
+                    GodEye.instance().fps().install(this);
+                }
+                if(mActivityMainLeak.isChecked()){
+                    GodEye.instance().leakDetector().install(getApplication());
+                }
+
+                    <CheckBox
+                android:id="@+id/activity_main_leak"
+
+
+                    <CheckBox
+                android:id="@+id/activity_main_heap"
+
+
+                    <CheckBox
+                android:id="@+id/activity_main_pss"
+
+
+                    <CheckBox
+                android:id="@+id/activity_main_ram"
+
+
+                    <CheckBox
+                android:id="@+id/activity_main_sm"
+
+
+                    <CheckBox
+                android:id="@+id/activity_main_traffic"
+
+
+
+
+                GodEye.instance().installAll(getApplication());
+                break;
+            case R.id.activity_main_cancel_all:
+                break;
+            case R.id.activity_main_install:
+                break;
+            case R.id.activity_main_uninstall:
+                break;
+            case R.id.activity_main_monitor_work:
+                break;
+            case R.id.activity_main_monitor_shutdown:
+                break;
+            case R.id.activity_main_consumer_cpu:
+                break;
+            case R.id.activity_main_consumer_battery:
+                break;
+            case R.id.activity_main_consumer_fps:
+                break;
+            case R.id.activity_main_consumer_leak:
+                break;
+            case R.id.activity_main_consumer_heap:
+                break;
+            case R.id.activity_main_consumer_pss:
+                break;
+            case R.id.activity_main_consumer_ram:
+                break;
+            case R.id.activity_main_consumer_network:
+                break;
+            case R.id.activity_main_consumer_sm:
+                break;
+            case R.id.activity_main_consumer_startup:
+                break;
+            case R.id.activity_main_consumer_traffic:
+                break;
+            case R.id.activity_main_block_et:
+                break;
+            case R.id.activity_main_make_block:
+                break;
+            case R.id.activity_main_make_request:
+                break;
+            case R.id.activity_main_make_leak:
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    @Override
+    public void log(String msg) {
+        mActivityMainLogview.log(msg);
+    }
+
 }
