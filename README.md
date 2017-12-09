@@ -8,7 +8,12 @@
 <a href="https://jitpack.io/#Kyson/AndroidGodEye" target="_blank"><img src="https://jitpack.io/v/Kyson/AndroidGodEye.svg"></img></a>
 
 </p>
-<br />
+<br/>
+
+<p>
+<a href="READNE.md">READNE_en</a>
+<a href="READNE_zh.md">READNE_zh</a>
+</p>
 
 > Android developer lack of monitoring of performance data,especially in production environment. so we need "AndroidGodEye".
 
