@@ -52,18 +52,25 @@ dependencies {
 GodEye.instance().installAll(getApplication());
 ```
 
-> 如果不想要所有的模块，你也可以自己安装想要的模块，比如`GodEye.instance().cpu().install()`
-> 安装完之后相应的模块就开始输出数据了，一般来说可以使用模块的consume方法进行消费，比如cpu模块：
-> `GodEye.instance().cpu().consume().subscribe(new GodEyeDisposableObserver<CpuInfo>("cpu", this))`
-> Debug Monitor也是通过消费这些数据进行展示，当然，你可以自己消费数据进行展示或者上报。
+> 推荐在application中进行安装
 
-在不需要的时候可以卸载所有模块：
+#### 可选部分
+
+不需要的时候卸载所有模块：
 
 ```java
 GodEye.instance().uninstallAll();
 ```
 
-> 开发者也可以根据自己的需求安装模块,注意：network和startup模块不需要安装和卸载.
+如果不想要所有的模块，你也可以自己安装想要的模块，比如`GodEye.instance().cpu().install()`
+
+> 注意：network和startup模块不需要安装和卸载
+
+安装完之后相应的模块就开始输出数据了，一般来说可以使用模块的consume方法进行消费，比如cpu模块：
+
+`GodEye.instance().cpu().consume().subscribe(new GodEyeDisposableObserver<CpuInfo>("cpu", this))`
+
+> 就像我们之后会提到的Debug Monitor，也是通过消费这些数据进行展示的
 
 ### STEP3
 
@@ -87,24 +94,33 @@ GodEyeMonitor.shutDown()
 
 手机与pc连接同一网段，在pc浏览器中访问 手机ip+端口 即可看到Debug面板!
 
-> 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard ...' 中包含了访问地址。
+> 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...' 中包含了访问地址。
 
 ## Debug开发者面板
 
 ###### 点击下面预览↓
+
 <p>
-<a href="https://player.youku.com/embed/XMzIwMTgyOTI5Mg==">
+<a href="https://player.youku.com/embed/XMzIwMTgyOTI5Mg==" target:"_blank">
 <img border="0" src="ART/android_god_eye_play.png" width="128" height="128" />
 </a>
 </p>
 
-### 基本信息展示
+### 第一部分
+
+基本信息展示
 
 ![android_godeye_part1](ART/android_godeye_part1.png)
 
-### 内存泄漏展示
+### 第二部分
+
+内存泄漏展示
 
 ![android_godeye_part5](ART/android_godeye_part5.png)
+
+### 更多部分
+
+还有更多...
 
 ## 许可协议
 

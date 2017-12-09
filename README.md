@@ -43,23 +43,33 @@ dependencies {
 
 ### Step2
 
-Install modules , GodEye class is entrance for this step, all module is provided by it.
+Install modules , GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
 GodEye.instance().installAll(getApplication());
 ```
 
-> if you don't need all modules , you can install separately yourself:`GodEye.instance().cpu().install()`
-> Note that network and startup module don't need install and uninstall.
-> When install finished, GodEye begin produce performance data, generally you can call consume of modules to get these datas, for example：
-> `GodEye.instance().cpu().consume().subscribe(new GodEyeDisposableObserver<CpuInfo>("cpu", this))`
-> Just like we will mention later,Debug Monitor is one of all consumers.
+> Recommended to be installed in application.
+
+#### Optional
 
 Uninstall modules when you don't need it:
 
 ```java
 GodEye.instance().uninstallAll();
 ```
+
+if you don't need all modules , you can install separately, such as "cpu":
+
+`GodEye.instance().cpu().install()`
+
+> Note that network and startup module don't need install and uninstall.
+
+When install finished, GodEye begin produce performance data, generally you can call consume of modules to get these datas, for example：
+
+`GodEye.instance().cpu().consume().subscribe(new GodEyeDisposableObserver<CpuInfo>("cpu", this))`
+
+> Just like we will mention later,Debug Monitor is one of these consumers.
 
 ### Step3
 
@@ -82,30 +92,39 @@ GodEyeMonitor.shutDown()
 You're good to go!
 
 Make sure your android device and pc are on the same network segment, and open browser on pc,
-open `device ip + port`, now enjoy it!
+open `Android device ip : Port`, now enjoy it!
 
-> Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context)`, log is like:'Open AndroidGodEye dashboard [ http://10.32.240.21:5390" ] in your browser...'.
+> Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context)`, log is like:'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...'.
 
 ## Debug Monitor
 
 ###### Click  ↓  to preview
+
 <p>
-<a href="https://player.youku.com/embed/XMzIwMTgyOTI5Mg==">
+<a href="https://player.youku.com/embed/XMzIwMTgyOTI5Mg==" target:"_blank">
 <img border="0" src="ART/android_god_eye_play.png" width="128" height="128" />
 </a>
 </p>
 
-### Part1:Basic info 
+### Part1
+
+Basic info 
 
 ![android_godeye_part1](ART/android_godeye_part1.png)
 
-### Part2:Leak Memory Detector
+### Part2
+
+Leak Memory Detector
 
 ![android_godeye_part5](ART/android_godeye_part5.png)
 
+### Part more
+
+And more...
+
 ## License
 
-AndroidGodEye under Apache2.0.
+AndroidGodEye is under Apache2.0.
 
 ## About Me
 
