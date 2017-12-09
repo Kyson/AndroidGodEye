@@ -19,6 +19,8 @@
 
 ## 概览
 
+![android_godeye_summary](ART/android_godeye_summary.png)
+
 AndroidGodEye是一个可以在PC浏览器中实时监控Android数据指标（比如性能指标，但是不局限于性能）的工具。
 
 系统分为三部分：
@@ -113,19 +115,17 @@ GodEyeMonitor.shutDown()
 </a>
 </p>
 
-### 第一部分
+### 卡顿检测
 
-基本信息展示
+![android_god_eye_block](ART/android_god_eye_block.gif)
 
-![android_godeye_part1](ART/android_godeye_part1.png)
+### 内存泄漏检测
 
-### 第二部分
+![android_god_eye_leak](ART/android_god_eye_leak.gif)
 
-内存泄漏展示
+### 更多模块
 
-![android_godeye_part5](ART/android_godeye_part5.png)
-
-### 更多部分
+![android_god_eye_cpuheaptraffic](ART/android_god_eye_cpuheaptraffic.gif)
 
 还有更多...
 

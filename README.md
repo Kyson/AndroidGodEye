@@ -19,6 +19,8 @@
 
 ## Overview
 
+![android_godeye_summary](ART/android_godeye_summary.png)
+
 AndroidGodEye is a performance monitor tool for Android , but not limited to performance data.
 
 It is divided into 3 parts:
@@ -64,7 +66,7 @@ Uninstall modules when you don't need it:
 GodEye.instance().uninstallAll()
 ```
 
-if you don't need all modules , you can install separately, such as "cpu":
+If you don't need all modules , you can install separately, such as "cpu":
 
 ```java
 GodEye.instance().cpu().install()
@@ -115,21 +117,19 @@ open `Android device ip : Port`, now enjoy it!
 </a>
 </p>
 
-### Part1
+### Block Detector
 
-Basic info 
+![android_god_eye_block](ART/android_god_eye_block.gif)
 
-![android_godeye_part1](ART/android_godeye_part1.png)
+### Leak Memory Detector
 
-### Part2
+![android_god_eye_leak](ART/android_god_eye_leak.gif)
 
-Leak Memory Detector
+### More
 
-![android_godeye_part5](ART/android_godeye_part5.png)
+![android_god_eye_cpuheaptraffic](ART/android_god_eye_cpuheaptraffic.gif)
 
-### Part more
-
-And more...
+and more...
 
 ## License
 
