@@ -129,6 +129,12 @@ GodEyeMonitor.shutDown()
 
 还有更多...
 
+## 框架
+
+下图可以更清楚地解释AndroidGodEye是如何工作的：
+
+![android_god_eye_framework](ART/android_god_eye_framework.jpeg)
+
 ## 许可协议
 
 AndroidGodEye使用 Apache2.0 许可协议。

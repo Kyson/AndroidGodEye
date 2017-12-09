@@ -53,7 +53,8 @@ def getVersionName() {
         versionName = properties.getProperty('VERSION_NAME')
     }
     if (versionName == null || versionName.length() == 0) {
-        throw new IllegalStateException("can not find version name!")
+        print "can not find version name! if local build ,ignore this waring."
+        versionName = ""
     }
     return versionName
 }

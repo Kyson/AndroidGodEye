@@ -131,6 +131,12 @@ open `Android device ip : Port`, now enjoy it!
 
 and more...
 
+## Framework
+
+How does AndroidGodEye work？As below:
+
+![android_god_eye_framework](ART/android_god_eye_framework.jpeg)
+
 ## License
 
 AndroidGodEye is under Apache2.0.
