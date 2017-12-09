@@ -25,71 +25,67 @@ import static com.squareup.leakcanary.Preconditions.checkNotNull;
 
 public final class ActivityRefWatcher {
 
-  /** @deprecated Use {@link #install(Application, RefWatcher)}. */
-  @Deprecated
-  public static void installOnIcsPlus(Application application, RefWatcher refWatcher) {
-    install(application, refWatcher);
-  }
+    public static ActivityRefWatcher install(Application application, RefWatcher refWatcher) {
+        ActivityRefWatcher activityRefWatcher = new ActivityRefWatcher(application, refWatcher);
+        activityRefWatcher.watchActivities();
+        return activityRefWatcher;
+    }
 
-  public static void install(Application application, RefWatcher refWatcher) {
-    new ActivityRefWatcher(application, refWatcher).watchActivities();
-  }
+    private final Application.ActivityLifecycleCallbacks lifecycleCallbacks =
+            new Application.ActivityLifecycleCallbacks() {
+                @Override
+                public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                }
 
-  private final Application.ActivityLifecycleCallbacks lifecycleCallbacks =
-      new Application.ActivityLifecycleCallbacks() {
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        }
+                @Override
+                public void onActivityStarted(Activity activity) {
+                }
 
-        @Override
-        public void onActivityStarted(Activity activity) {
-        }
+                @Override
+                public void onActivityResumed(Activity activity) {
+                }
 
-        @Override
-        public void onActivityResumed(Activity activity) {
-        }
+                @Override
+                public void onActivityPaused(Activity activity) {
+                }
 
-        @Override
-        public void onActivityPaused(Activity activity) {
-        }
+                @Override
+                public void onActivityStopped(Activity activity) {
+                }
 
-        @Override
-        public void onActivityStopped(Activity activity) {
-        }
+                @Override
+                public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+                }
 
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-        }
+                @Override
+                public void onActivityDestroyed(Activity activity) {
+                    ActivityRefWatcher.this.onActivityDestroyed(activity);
+                }
+            };
 
-        @Override
-        public void onActivityDestroyed(Activity activity) {
-          ActivityRefWatcher.this.onActivityDestroyed(activity);
-        }
-      };
+    private final Application application;
+    private final RefWatcher refWatcher;
 
-  private final Application application;
-  private final RefWatcher refWatcher;
+    /**
+     * Constructs an {@link ActivityRefWatcher} that will make sure the activities are not leaking
+     * after they have been destroyed.
+     */
+    public ActivityRefWatcher(Application application, RefWatcher refWatcher) {
+        this.application = checkNotNull(application, "application");
+        this.refWatcher = checkNotNull(refWatcher, "refWatcher");
+    }
 
-  /**
-   * Constructs an {@link ActivityRefWatcher} that will make sure the activities are not leaking
-   * after they have been destroyed.
-   */
-  public ActivityRefWatcher(Application application, RefWatcher refWatcher) {
-    this.application = checkNotNull(application, "application");
-    this.refWatcher = checkNotNull(refWatcher, "refWatcher");
-  }
+    void onActivityDestroyed(Activity activity) {
+        refWatcher.watch(activity);
+    }
 
-  void onActivityDestroyed(Activity activity) {
-    refWatcher.watch(activity);
-  }
+    public void watchActivities() {
+        // Make sure you don't get installed twice.
+        stopWatchingActivities();
+        application.registerActivityLifecycleCallbacks(lifecycleCallbacks);
+    }
 
-  public void watchActivities() {
-    // Make sure you don't get installed twice.
-    stopWatchingActivities();
-    application.registerActivityLifecycleCallbacks(lifecycleCallbacks);
-  }
-
-  public void stopWatchingActivities() {
-    application.unregisterActivityLifecycleCallbacks(lifecycleCallbacks);
-  }
+    public void stopWatchingActivities() {
+        application.unregisterActivityLifecycleCallbacks(lifecycleCallbacks);
+    }
 }
