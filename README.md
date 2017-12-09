@@ -11,8 +11,8 @@
 <br/>
 
 <p>
-<a href="READNE.md">READNE_en</a>
-<a href="READNE_zh.md">READNE_zh</a>
+<a href="README.md">README_en</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="README_zh.md">README_zh</a>
 </p>
 
 > Android developer lack of monitoring of performance data,especially in production environment. so we need "AndroidGodEye".

@@ -11,8 +11,8 @@
 <br/>
 
 <p>
-<a href="READNE.md">READNE_en</a>
-<a href="READNE_zh.md">READNE_zh</a>
+<a href="README.md">README_en</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="README_zh.md">README_zh</a>
 </p>
 
 > Android开发者在性能检测方面的工具一直比较匮乏，仅有的一些工具，比如Android Device Monitor，使用起来也有些繁琐，使用起来对开发者有一定的要求。而线上的App监控更无从谈起。所以需要有一个系统能够提供Debug和Release阶段全方位的监控，更深入地了解对App运行时的状态。
