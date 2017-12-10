@@ -55,6 +55,7 @@ public class GodEyeMonitor {
         sWatcher.observeAll();
         Router.get().init(applicationContext);
         initServer(applicationContext, port);
+        L.d("GodEye monitor is working...");
     }
 
     /**
@@ -70,6 +71,7 @@ public class GodEyeMonitor {
             sWatcher = null;
         }
         sIsWorking = false;
+        L.d("GodEye monitor stopped.");
     }
 
     private static void initServer(Context context, int port) {
