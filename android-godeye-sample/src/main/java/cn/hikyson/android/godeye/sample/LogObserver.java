@@ -1,12 +1,14 @@
 package cn.hikyson.android.godeye.sample;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by kysonchao on 2017/12/9.
  */
 
-public class LogObserver<T> extends DisposableObserver<T> {
+public class LogObserver<T> implements Consumer<T> {
     private String mName;
     private Loggable mLoggable;
 
@@ -16,17 +18,7 @@ public class LogObserver<T> extends DisposableObserver<T> {
     }
 
     @Override
-    public void onNext(T t) {
+    public void accept(T t) throws Exception {
         mLoggable.log("DEBUG: " + mName + " , " + String.valueOf(t));
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        mLoggable.log("!ERROR: " + mName + " , " + String.valueOf(e));
-    }
-
-    @Override
-    public void onComplete() {
-        mLoggable.log("DEBUG: " + mName + " , onComplete.");
     }
 }
