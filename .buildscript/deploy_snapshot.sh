@@ -19,7 +19,8 @@ elif [ "$TRAVIS_TAG" == "" ]; then
   echo "Skipping snapshot deployment: no tag found."
 else
   pwd
-  echo "VERSION_NAME=$TRAVIS_TAG" > ../VERSION
+  echo "VERSION_NAME=$TRAVIS_TAG" > VERSION
+  ll
   echo "Deploying snapshot..."
   ./gradlew clean uploadArchives
   echo "Snapshot deployed!"
