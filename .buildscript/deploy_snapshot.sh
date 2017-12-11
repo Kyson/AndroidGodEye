@@ -20,7 +20,7 @@ elif [ "$TRAVIS_TAG" == "" ]; then
 else
   pwd
   echo "VERSION_NAME=$TRAVIS_TAG" > VERSION
-  ll
+  ls
   echo "Deploying snapshot..."
   ./gradlew clean uploadArchives
   echo "Snapshot deployed!"
