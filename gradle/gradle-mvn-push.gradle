@@ -16,31 +16,37 @@ def getSnapshotRepositoryUrl() {
 }
 
 def getRepositoryUsername() {
+    String userName = ""
     if (hasProperty('SONATYPE_NEXUS_USERNAME')) {
-        return SONATYPE_NEXUS_USERNAME;
+        userName = SONATYPE_NEXUS_USERNAME;
+    } else {
+        File localProperties = project.rootProject.file('local.properties');
+        if (localProperties.exists()) {
+            InputStream inputStream = localProperties.newDataInputStream()
+            Properties properties = new Properties()
+            properties.load(inputStream)
+            userName = properties.getProperty('SONATYPE_NEXUS_USERNAME')
+        }
     }
-    File localProperties = project.rootProject.file('local.properties');
-    if (localProperties.exists()) {
-        InputStream inputStream = localProperties.newDataInputStream()
-        Properties properties = new Properties()
-        properties.load(inputStream)
-        return properties.getProperty('SONATYPE_NEXUS_USERNAME')
-    }
-    return "";
+    print "SONATYPE_NEXUS_USERNAME:" + userName
+    return userName;
 }
 
 def getRepositoryPassword() {
+    String pwd = ""
     if (hasProperty('SONATYPE_NEXUS_PASSWORD')) {
-        return SONATYPE_NEXUS_PASSWORD;
+        pwd = SONATYPE_NEXUS_PASSWORD;
+    } else {
+        File localProperties = project.rootProject.file('local.properties');
+        if (localProperties.exists()) {
+            InputStream inputStream = localProperties.newDataInputStream()
+            Properties properties = new Properties()
+            properties.load(inputStream)
+            pwd = properties.getProperty('SONATYPE_NEXUS_PASSWORD')
+        }
     }
-    File localProperties = project.rootProject.file('local.properties');
-    if (localProperties.exists()) {
-        InputStream inputStream = localProperties.newDataInputStream()
-        Properties properties = new Properties()
-        properties.load(inputStream)
-        return properties.getProperty('SONATYPE_NEXUS_PASSWORD')
-    }
-    return "";
+    print "SONATYPE_NEXUS_PASSWORD:" + pwd
+    return pwd;
 }
 
 def getVersionName() {
