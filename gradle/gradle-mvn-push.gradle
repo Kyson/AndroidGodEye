@@ -17,8 +17,8 @@ def getSnapshotRepositoryUrl() {
 
 def getRepositoryUsername() {
     String userName = ""
-    if (hasProperty('SONATYPE_NEXUS_USERNAME')) {
-        userName = SONATYPE_NEXUS_USERNAME;
+    if (System.env.SONATYPE_NEXUS_USERNAME != null && String.valueOf(System.env.SONATYPE_NEXUS_USERNAME).length() > 0) {
+        userName = System.env.SONATYPE_NEXUS_USERNAME;
     } else {
         File localProperties = project.rootProject.file('local.properties');
         if (localProperties.exists()) {
@@ -34,8 +34,8 @@ def getRepositoryUsername() {
 
 def getRepositoryPassword() {
     String pwd = ""
-    if (hasProperty('SONATYPE_NEXUS_PASSWORD')) {
-        pwd = SONATYPE_NEXUS_PASSWORD;
+    if (System.env.SONATYPE_NEXUS_PASSWORD != null && String.valueOf(System.env.SONATYPE_NEXUS_PASSWORD).length() > 0) {
+        pwd = String.valueOf(System.env.SONATYPE_NEXUS_PASSWORD);
     } else {
         File localProperties = project.rootProject.file('local.properties');
         if (localProperties.exists()) {
@@ -45,7 +45,7 @@ def getRepositoryPassword() {
             pwd = properties.getProperty('SONATYPE_NEXUS_PASSWORD')
         }
     }
-    print "SONATYPE_NEXUS_PASSWORD:" + pwd
+//    print "SONATYPE_NEXUS_PASSWORD:" + pwd
     return pwd;
 }
 
