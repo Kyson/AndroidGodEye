@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Deploy snapshot starting..."
+echo "[MVN] Deploy snapshot starting..."
 SLUG="Kyson/AndroidGodEye"
 JDK="oraclejdk8"
 # BRANCH="master"
@@ -8,22 +8,21 @@ JDK="oraclejdk8"
 set -e
 
 if [ "$TRAVIS_REPO_SLUG" != "$SLUG" ]; then
-  echo "Skipping snapshot deployment: wrong repository. Expected '$SLUG' but was '$TRAVIS_REPO_SLUG'."
+  echo "[MVN] Skipping snapshot deployment: wrong repository. Expected '$SLUG' but was '$TRAVIS_REPO_SLUG'."
 elif [ "$TRAVIS_JDK_VERSION" != "$JDK" ]; then
-  echo "Skipping snapshot deployment: wrong JDK. Expected '$JDK' but was '$TRAVIS_JDK_VERSION'."
+  echo "[MVN] Skipping snapshot deployment: wrong JDK. Expected '$JDK' but was '$TRAVIS_JDK_VERSION'."
 elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-  echo "Skipping snapshot deployment: was pull request."
+  echo "[MVN] Skipping snapshot deployment: was pull request."
 # elif [ "$TRAVIS_BRANCH" != "$BRANCH" ]; then
-#   echo "Skipping snapshot deployment: wrong branch. Expected '$BRANCH' but was '$TRAVIS_BRANCH'."
+#   echo "[MVN] Skipping snapshot deployment: wrong branch. Expected '$BRANCH' but was '$TRAVIS_BRANCH'."
 elif [ "$TRAVIS_TAG" == "" ]; then
-  echo "Skipping snapshot deployment: no tag found."
+  echo "[MVN] Skipping snapshot deployment: no tag found."
 else
-  pwd
+  echo "[MVN] Writing VERSION..."
   echo "VERSION_NAME=$TRAVIS_TAG" > VERSION
-  ls
-  echo "Deploying snapshot..."
+  echo "[MVN] Deploying snapshot..."
   ./gradlew clean uploadArchives
-  echo "Snapshot deployed!"
+  echo "[MVN] Snapshot deployed!"
 fi
 
-echo "Deploy snapshot done."
+echo "[MVN] Deploy snapshot done."
