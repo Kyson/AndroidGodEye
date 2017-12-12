@@ -21,36 +21,20 @@ def getRepositoryUsername() {
         userName = SONATYPE_NEXUS_USERNAME
     } else if (System.getenv('SONATYPE_NEXUS_USERNAME') != null) {
         userName = System.getenv('SONATYPE_NEXUS_USERNAME')
-    } else {
-        File localProperties = project.rootProject.file('local.properties');
-        if (localProperties.exists()) {
-            InputStream inputStream = localProperties.newDataInputStream()
-            Properties properties = new Properties()
-            properties.load(inputStream)
-            userName = properties.getProperty('SONATYPE_NEXUS_USERNAME')
-        }
     }
     println("[MVN] SONATYPE_NEXUS_USERNAME: " + userName)
     return userName;
 }
 
 def getRepositoryPassword() {
-    String pwd = ""
+    String password = ""
     if (hasProperty('SONATYPE_NEXUS_PASSWORD')) {
-        pwd = SONATYPE_NEXUS_PASSWORD
+        password = SONATYPE_NEXUS_PASSWORD
     } else if (System.getenv('SONATYPE_NEXUS_PASSWORD') != null) {
-        pwd = System.getenv('SONATYPE_NEXUS_PASSWORD')
-    } else {
-        File localProperties = project.rootProject.file('local.properties');
-        if (localProperties.exists()) {
-            InputStream inputStream = localProperties.newDataInputStream()
-            Properties properties = new Properties()
-            properties.load(inputStream)
-            pwd = properties.getProperty('SONATYPE_NEXUS_PASSWORD')
-        }
+        password = System.getenv('SONATYPE_NEXUS_PASSWORD')
     }
     println("[MVN] SONATYPE_NEXUS_PASSWORD: SECRET")
-    return pwd;
+    return password;
 }
 
 def getVersionName() {
