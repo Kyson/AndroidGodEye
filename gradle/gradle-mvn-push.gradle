@@ -17,9 +17,6 @@ def getSnapshotRepositoryUrl() {
 
 def getRepositoryUsername() {
     String userName = ""
-//    if (System.env.SONATYPE_NEXUS_USERNAME != null && String.valueOf(System.env.SONATYPE_NEXUS_USERNAME).length() > 0) {
-//        userName = System.env.SONATYPE_NEXUS_USERNAME;
-//    }
     if (hasProperty('SONATYPE_NEXUS_USERNAME')) {
         userName = SONATYPE_NEXUS_USERNAME
     } else if (System.getenv('SONATYPE_NEXUS_USERNAME') != null) {
@@ -33,15 +30,12 @@ def getRepositoryUsername() {
             userName = properties.getProperty('SONATYPE_NEXUS_USERNAME')
         }
     }
-    print "SONATYPE_NEXUS_USERNAME:" + userName
+    println("[MVN] SONATYPE_NEXUS_USERNAME: " + userName)
     return userName;
 }
 
 def getRepositoryPassword() {
     String pwd = ""
-//    if (System.env.SONATYPE_NEXUS_PASSWORD != null && String.valueOf(System.env.SONATYPE_NEXUS_PASSWORD).length() > 0) {
-//        pwd = String.valueOf(System.env.SONATYPE_NEXUS_PASSWORD);
-//    }
     if (hasProperty('SONATYPE_NEXUS_PASSWORD')) {
         pwd = SONATYPE_NEXUS_PASSWORD
     } else if (System.getenv('SONATYPE_NEXUS_PASSWORD') != null) {
@@ -55,7 +49,7 @@ def getRepositoryPassword() {
             pwd = properties.getProperty('SONATYPE_NEXUS_PASSWORD')
         }
     }
-    print "SONATYPE_NEXUS_PASSWORD:" + pwd
+    println("[MVN] SONATYPE_NEXUS_PASSWORD: SECRET")
     return pwd;
 }
 
@@ -69,8 +63,10 @@ def getVersionName() {
         versionName = properties.getProperty('VERSION_NAME')
     }
     if (versionName == null || versionName.length() == 0) {
-        print "can not find version name! if local build ,ignore this waring."
+        println("[MVN] Can not find version name! If local build , ignore this waring.")
         versionName = ""
+    } else {
+        println("[MVN] VERSION_NAME: " + versionName)
     }
     return versionName
 }
