@@ -17,7 +17,7 @@ elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
 #   echo "[MVN] Skipping snapshot deployment: wrong branch. Expected '$BRANCH' but was '$TRAVIS_BRANCH'."
 elif [ "$TRAVIS_TAG" == "" ]; then
   echo "[MVN] Skipping snapshot deployment: no tag found."
-elif [ "$TRAVIS_TAG" != *"SNAPSHOT"* ]; then
+elif [ "$TRAVIS_TAG" !=～ "SNAPSHOT" ]; then
   echo "[MVN] Skipping snapshot deployment: no SNAPSHOT tag found."
 else
   echo "[MVN] Writing VERSION..."
