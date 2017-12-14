@@ -19,7 +19,7 @@
 
 ## Overview
 
-![android_godeye_summary](ART/android_god_eye_summary.png)
+![android_godeye_connect](ART/android_god_eye_connect.jpg)
 
 AndroidGodEye is a performance monitor tool for Android , but not limited to performance data.
 
@@ -116,6 +116,10 @@ open `Android device ip : Port`, now enjoy it!
 <img border="0" src="ART/android_god_eye_play.png" width="128" height="128" />
 </a>
 </p>
+
+### Base info
+
+![android_godeye_summary](ART/android_god_eye_summary.png)
 
 ### Block Detector
 
