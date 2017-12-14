@@ -14,7 +14,7 @@ elif [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
   echo "[MVN] Skipping snapshot deployment: was pull request."
 elif [ "$TRAVIS_TAG" == "" ]; then
   echo "[MVN] Skipping snapshot deployment: no tag found."
-elif [ "$TRAVIS_TAG" =～ "SNAPSHOT" ]; then
+elif [[ "$TRAVIS_TAG" =~ "SNAPSHOT" ]]; then
   echo "[MVN] Writing VERSION..."
   echo "VERSION_NAME=$TRAVIS_TAG" > VERSION
   echo "[MVN] Deploying snapshot..."
