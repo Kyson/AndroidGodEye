@@ -1,13 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.memory;
 
 import cn.hikyson.godeye.core.internal.Install;
-import cn.hikyson.godeye.core.internal.ProduceableConsumer;
+import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public class Heap extends ProduceableConsumer<HeapInfo> implements Install<Long> {
+public class Heap extends ProduceableSubject<HeapInfo> implements Install<Long> {
     private HeapEngine mHeapEngine;
 
     public synchronized void install() {

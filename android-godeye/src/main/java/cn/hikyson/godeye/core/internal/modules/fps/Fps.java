@@ -2,15 +2,14 @@ package cn.hikyson.godeye.core.internal.modules.fps;
 
 import android.content.Context;
 
-import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Install;
-import cn.hikyson.godeye.core.internal.ProduceableConsumer;
+import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public class Fps extends ProduceableConsumer<FpsInfo> implements Install<FpsContext> {
+public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsContext> {
     private FpsEngine mFpsEngine;
 
     public synchronized void install(Context context) {

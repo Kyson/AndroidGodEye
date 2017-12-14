@@ -18,7 +18,7 @@ import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 
 /**
  * 入口
- * install -> module.consume() -> uninstall
+ * install -> module.subject() -> uninstall
  * Created by kysonchao on 2017/11/22.
  */
 public class GodEye {

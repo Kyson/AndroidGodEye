@@ -5,6 +5,6 @@ import io.reactivex.Observable;
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public interface Consumer<T> {
-    Observable<T> consume();
+public interface SubjectSupport<T> {
+    Observable<T> subject();
 }

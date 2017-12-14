@@ -2,7 +2,6 @@ package cn.hikyson.android.godeye.sample;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,8 +12,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -24,7 +21,6 @@ import butterknife.OnClick;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
-import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
@@ -37,8 +33,6 @@ import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.subjects.PublishSubject;
 
 public class MainActivity extends Activity implements Loggable {
     private static final String TAG = "AndroidGodEye";
@@ -168,37 +162,37 @@ public class MainActivity extends Activity implements Loggable {
                 GodEyeMonitor.shutDown();
                 break;
             case R.id.activity_main_consumer_cpu:
-                mCompositeDisposable.add(GodEye.instance().cpu().consume().subscribe(new LogObserver<>("cpu", this)));
+                mCompositeDisposable.add(GodEye.instance().cpu().subject().subscribe(new LogObserver<>("cpu", this)));
                 break;
             case R.id.activity_main_consumer_battery:
-                mCompositeDisposable.add(GodEye.instance().battery().consume().subscribe(new LogObserver<BatteryInfo>("battery", this)));
+                mCompositeDisposable.add(GodEye.instance().battery().subject().subscribe(new LogObserver<BatteryInfo>("battery", this)));
                 break;
             case R.id.activity_main_consumer_fps:
-                mCompositeDisposable.add(GodEye.instance().fps().consume().subscribe(new LogObserver<FpsInfo>("fps", this)));
+                mCompositeDisposable.add(GodEye.instance().fps().subject().subscribe(new LogObserver<FpsInfo>("fps", this)));
                 break;
             case R.id.activity_main_consumer_leak:
-                mCompositeDisposable.add(GodEye.instance().leakDetector().consume().subscribe(new LogObserver<LeakQueue.LeakMemoryInfo>("leak", this)));
+                mCompositeDisposable.add(GodEye.instance().leakDetector().subject().subscribe(new LogObserver<LeakQueue.LeakMemoryInfo>("leak", this)));
                 break;
             case R.id.activity_main_consumer_heap:
-                mCompositeDisposable.add(GodEye.instance().heap().consume().subscribe(new LogObserver<HeapInfo>("heap", this)));
+                mCompositeDisposable.add(GodEye.instance().heap().subject().subscribe(new LogObserver<HeapInfo>("heap", this)));
                 break;
             case R.id.activity_main_consumer_pss:
-                mCompositeDisposable.add(GodEye.instance().pss().consume().subscribe(new LogObserver<PssInfo>("pss", this)));
+                mCompositeDisposable.add(GodEye.instance().pss().subject().subscribe(new LogObserver<PssInfo>("pss", this)));
                 break;
             case R.id.activity_main_consumer_ram:
-                mCompositeDisposable.add(GodEye.instance().ram().consume().subscribe(new LogObserver<RamInfo>("ram", this)));
+                mCompositeDisposable.add(GodEye.instance().ram().subject().subscribe(new LogObserver<RamInfo>("ram", this)));
                 break;
             case R.id.activity_main_consumer_network:
-                mCompositeDisposable.add(GodEye.instance().network().consume().subscribe(new LogObserver<RequestBaseInfo>("network", this)));
+                mCompositeDisposable.add(GodEye.instance().network().subject().subscribe(new LogObserver<RequestBaseInfo>("network", this)));
                 break;
             case R.id.activity_main_consumer_sm:
-                mCompositeDisposable.add(GodEye.instance().sm().consume().subscribe(new LogObserver<BlockInfo>("sm", this)));
+                mCompositeDisposable.add(GodEye.instance().sm().subject().subscribe(new LogObserver<BlockInfo>("sm", this)));
                 break;
             case R.id.activity_main_consumer_startup:
-                mCompositeDisposable.add(GodEye.instance().startup().consume().subscribe(new LogObserver<StartupInfo>("startup", this)));
+                mCompositeDisposable.add(GodEye.instance().startup().subject().subscribe(new LogObserver<StartupInfo>("startup", this)));
                 break;
             case R.id.activity_main_consumer_traffic:
-                mCompositeDisposable.add(GodEye.instance().traffic().consume().subscribe(new LogObserver<TrafficInfo>("traffic", this)));
+                mCompositeDisposable.add(GodEye.instance().traffic().subject().subscribe(new LogObserver<TrafficInfo>("traffic", this)));
                 break;
             case R.id.activity_main_make_block:
                 block();

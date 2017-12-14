@@ -3,13 +3,13 @@ package cn.hikyson.godeye.core.internal.modules.memory;
 import android.content.Context;
 
 import cn.hikyson.godeye.core.internal.Install;
-import cn.hikyson.godeye.core.internal.ProduceableConsumer;
+import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public class Ram extends ProduceableConsumer<RamInfo> implements Install<RamContext> {
+public class Ram extends ProduceableSubject<RamInfo> implements Install<RamContext> {
     private RamEngine mRamEngine;
 
     public synchronized void install(Context context) {

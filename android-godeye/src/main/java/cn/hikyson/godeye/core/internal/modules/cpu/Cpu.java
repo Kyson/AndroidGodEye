@@ -2,13 +2,13 @@ package cn.hikyson.godeye.core.internal.modules.cpu;
 
 
 import cn.hikyson.godeye.core.internal.Install;
-import cn.hikyson.godeye.core.internal.ProduceableConsumer;
+import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
  * Created by kysonchao on 2017/5/19.
  */
-public class Cpu extends ProduceableConsumer<CpuInfo> implements Install<CpuContext> {
+public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuContext> {
     private CpuEngine mCpuEngine;
 
     public synchronized void install() {

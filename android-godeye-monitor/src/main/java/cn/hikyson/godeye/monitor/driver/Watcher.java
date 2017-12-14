@@ -33,67 +33,67 @@ public class Watcher {
      */
     public void observeAll() {
         GodEye godEye = GodEye.instance();
-        mCompositeDisposable.add(godEye.battery().consume().subscribe(new Consumer<BatteryInfo>() {
+        mCompositeDisposable.add(godEye.battery().subject().subscribe(new Consumer<BatteryInfo>() {
             @Override
             public void accept(BatteryInfo batteryInfo) throws Exception {
                 mPipe.pushBatteryInfo(batteryInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.cpu().consume().subscribe(new Consumer<CpuInfo>() {
+        mCompositeDisposable.add(godEye.cpu().subject().subscribe(new Consumer<CpuInfo>() {
             @Override
             public void accept(CpuInfo cpuInfo) throws Exception {
                 mPipe.pushCpuInfo(cpuInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.traffic().consume().subscribe(new Consumer<TrafficInfo>() {
+        mCompositeDisposable.add(godEye.traffic().subject().subscribe(new Consumer<TrafficInfo>() {
             @Override
             public void accept(TrafficInfo trafficInfo) throws Exception {
                 mPipe.pushTrafficInfo(trafficInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.fps().consume().subscribe(new Consumer<FpsInfo>() {
+        mCompositeDisposable.add(godEye.fps().subject().subscribe(new Consumer<FpsInfo>() {
             @Override
             public void accept(FpsInfo fpsInfo) throws Exception {
                 mPipe.pushFpsInfo(fpsInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.leakDetector().consume().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
+        mCompositeDisposable.add(godEye.leakDetector().subject().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
             @Override
             public void accept(LeakQueue.LeakMemoryInfo leakMemoryInfo) throws Exception {
                 mPipe.pushLeakMemoryInfos(leakMemoryInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.sm().consume().subscribe(new Consumer<BlockInfo>() {
+        mCompositeDisposable.add(godEye.sm().subject().subscribe(new Consumer<BlockInfo>() {
             @Override
             public void accept(BlockInfo blockInfo) throws Exception {
                 mPipe.pushBlockInfos(blockInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.network().consume().subscribe(new Consumer<RequestBaseInfo>() {
+        mCompositeDisposable.add(godEye.network().subject().subscribe(new Consumer<RequestBaseInfo>() {
             @Override
             public void accept(RequestBaseInfo requestBaseInfo) throws Exception {
                 mPipe.pushRequestBaseInfos(requestBaseInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.startup().consume().subscribe(new Consumer<StartupInfo>() {
+        mCompositeDisposable.add(godEye.startup().subject().subscribe(new Consumer<StartupInfo>() {
             @Override
             public void accept(StartupInfo startupInfo) throws Exception {
                 mPipe.pushStartupInfo(startupInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.ram().consume().subscribe(new Consumer<RamInfo>() {
+        mCompositeDisposable.add(godEye.ram().subject().subscribe(new Consumer<RamInfo>() {
             @Override
             public void accept(RamInfo ramInfo) throws Exception {
                 mPipe.pushRamInfo(ramInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.pss().consume().subscribe(new Consumer<PssInfo>() {
+        mCompositeDisposable.add(godEye.pss().subject().subscribe(new Consumer<PssInfo>() {
             @Override
             public void accept(PssInfo pssInfo) throws Exception {
                 mPipe.pushPssInfo(pssInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.heap().consume().subscribe(new Consumer<HeapInfo>() {
+        mCompositeDisposable.add(godEye.heap().subject().subscribe(new Consumer<HeapInfo>() {
             @Override
             public void accept(HeapInfo heapInfo) throws Exception {
                 mPipe.pushHeapInfo(heapInfo);

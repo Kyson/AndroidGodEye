@@ -1,14 +1,14 @@
 package cn.hikyson.godeye.core.internal.modules.traffic;
 
 import cn.hikyson.godeye.core.internal.Install;
-import cn.hikyson.godeye.core.internal.ProduceableConsumer;
+import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
  * 流量信息获取
  * Created by kysonchao on 2017/5/22.
  */
-public class Traffic extends ProduceableConsumer<TrafficInfo> implements Install<TrafficContext> {
+public class Traffic extends ProduceableSubject<TrafficInfo> implements Install<TrafficContext> {
     private TrafficEngine mTrafficEngine;
 
     public synchronized void install() {

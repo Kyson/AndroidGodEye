@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.WorkerThread;
 
 import cn.hikyson.godeye.core.internal.Install;
-import cn.hikyson.godeye.core.internal.ProduceableConsumer;
+import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.internal.modules.sm.core.BlockInterceptor;
 import cn.hikyson.godeye.core.internal.modules.sm.core.LongBlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.core.ShortBlockInfo;
@@ -12,7 +12,7 @@ import cn.hikyson.godeye.core.internal.modules.sm.core.SmCore;
 import cn.hikyson.godeye.core.utils.L;
 
 
-public final class Sm extends ProduceableConsumer<BlockInfo> implements Install<SmContext> {
+public final class Sm extends ProduceableSubject<BlockInfo> implements Install<SmContext> {
 
     private SmCore mBlockCore;
     private boolean mInstalled = false;

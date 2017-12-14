@@ -9,7 +9,7 @@ import java.io.FilenameFilter;
 import java.util.List;
 
 import cn.hikyson.godeye.core.internal.Install;
-import cn.hikyson.godeye.core.internal.ProduceableConsumer;
+import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.CanaryLog;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.DefaultLeakDirectoryProvider;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.LeakCanary;
@@ -20,7 +20,7 @@ import cn.hikyson.godeye.core.utils.L;
 /**
  * Created by kysonchao on 2017/11/23.
  */
-public class LeakDetector extends ProduceableConsumer<LeakQueue.LeakMemoryInfo> implements Install<LeakContext> {
+public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> implements Install<LeakContext> {
 
     private LeakDetector() {
     }
