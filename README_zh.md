@@ -105,6 +105,9 @@ GodEyeMonitor.shutDown()
 
 > 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...' 中包含了访问地址。
 
+
+**好吧，如果你懒得自己编译这个项目的话，你也可以先下载 [APK](https://fir.im/5k67) 看看效果。**
+
 ## Debug开发者面板
 
 ###### 点击下面预览↓
