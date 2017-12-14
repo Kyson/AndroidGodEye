@@ -77,7 +77,7 @@ GodEye.instance().cpu().install()
 When install finished, GodEye begin produce performance data, generally you can call consume of modules to get these datas, for example：
 
 ```java
-GodEye.instance().cpu().consume().subscribe()
+GodEye.instance().cpu().subject().subscribe()
 ```
 
 > Just like we will mention later,Debug Monitor is one of these consumers.
