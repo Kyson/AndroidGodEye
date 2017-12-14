@@ -76,7 +76,7 @@ GodEye.instance().uninstallAll();
 安装完之后相应的模块就开始输出数据了，一般来说可以使用模块的consume方法进行消费，比如cpu模块：
 
 ```java
-GodEye.instance().cpu().consume().subscribe()
+GodEye.instance().cpu().subject().subscribe()
 ```
 
 > 就像我们之后会提到的Debug Monitor，也是通过消费这些数据进行展示的
