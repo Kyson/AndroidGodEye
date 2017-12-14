@@ -21,7 +21,7 @@
 
 ![android_godeye_connect](ART/android_god_eye_connect.jpg)
 
-AndroidGodEye is a performance monitor tool for Android , but not limited to performance data.
+AndroidGodEye is a performance monitor tool for Android(not limited to performance data) , you can easily monitor the performance of your app in real time in pc browser.
 
 It is divided into 3 parts:
 

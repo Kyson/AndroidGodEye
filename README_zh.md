@@ -21,7 +21,7 @@
 
 ![android_godeye_connect](ART/android_god_eye_connect.jpg)
 
-AndroidGodEye是一个可以在PC浏览器中实时监控Android数据指标（比如性能指标，但是不局限于性能）的工具。
+AndroidGodEye是一个可以在PC浏览器中实时监控Android数据指标（比如性能指标，但是不局限于性能）的工具，你可以通过wifi连接手机和pc，通过pc浏览器实时监控手机性能。
 
 系统分为三部分：
 
