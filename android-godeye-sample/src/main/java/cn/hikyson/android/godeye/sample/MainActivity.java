@@ -213,28 +213,33 @@ public class MainActivity extends Activity implements Loggable {
 
 
     private void request() {
-        try {
-            long startTimeMillis = System.currentTimeMillis();
-            URL url = new URL("https://www.trip.com/");
-            //打开连接
-            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-            if (200 == urlConnection.getResponseCode()) {
-                //得到输入流
-                InputStream is = urlConnection.getInputStream();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int len = 0;
-                while (-1 != (len = is.read(buffer))) {
-                    baos.write(buffer, 0, len);
-                    baos.flush();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    long startTimeMillis = System.currentTimeMillis();
+                    URL url = new URL("https://www.trip.com/");
+                    //打开连接
+                    HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+                    if (200 == urlConnection.getResponseCode()) {
+                        //得到输入流
+                        InputStream is = urlConnection.getInputStream();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[1024];
+                        int len = 0;
+                        while (-1 != (len = is.read(buffer))) {
+                            baos.write(buffer, 0, len);
+                            baos.flush();
+                        }
+                        String result = baos.toString("utf-8");
+                        long endTimeMillis = System.currentTimeMillis();
+                        GodEye.instance().network().produce(new RequestBaseInfo(startTimeMillis, endTimeMillis, result.getBytes().length, String.valueOf(url)));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                String result = baos.toString("utf-8");
-                long endTimeMillis = System.currentTimeMillis();
-                GodEye.instance().network().produce(new RequestBaseInfo(startTimeMillis, endTimeMillis, result.getBytes().length, String.valueOf(url)));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     private void block() {
