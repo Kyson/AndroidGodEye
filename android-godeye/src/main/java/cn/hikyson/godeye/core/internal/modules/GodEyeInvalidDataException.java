@@ -19,8 +19,4 @@ public class GodEyeInvalidDataException extends RuntimeException {
     public GodEyeInvalidDataException(Throwable cause) {
         super(cause);
     }
-
-    public GodEyeInvalidDataException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }
