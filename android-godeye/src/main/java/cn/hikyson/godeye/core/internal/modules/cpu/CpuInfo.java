@@ -16,8 +16,6 @@ import java.util.Locale;
  * Copyright: Ctrip
  */
 public class CpuInfo implements Serializable {
-    public static final CpuInfo INVALID = new CpuInfo();
-
     // 总的cpu使用率(user + system+io+其他)
     public double totalUseRatio;
     // app的cpu使用率

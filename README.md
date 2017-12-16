@@ -5,8 +5,9 @@
 <h1 align="center">AndroidGodEye</h1>
 <p align="center">
 <a href="https://travis-ci.org/Kyson/AndroidGodEye" target="_blank"><img src="https://travis-ci.org/Kyson/AndroidGodEye.svg?branch=master"></img></a>
+<a href="https://oss.sonatype.org/content/repositories/releases/cn/hikyson/godeye/godeye-core/" target="_blank"><img src="https://img.shields.io/maven-central/v/cn.hikyson.godeye/godeye-core.svg"></img></a>
 <a href="https://jitpack.io/#Kyson/AndroidGodEye" target="_blank"><img src="https://jitpack.io/v/Kyson/AndroidGodEye.svg"></img></a>
-
+<a href="LICENSE" target="_blank"><img src="http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat"></img></a>
 </p>
 <br/>
 

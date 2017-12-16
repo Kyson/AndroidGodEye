@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
+import cn.hikyson.godeye.core.internal.modules.GodEyeInvalidDataException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
@@ -82,7 +83,7 @@ public class BatteryEngine implements Engine {
         try {
             Intent batteryInfoIntent = context.registerReceiver(null, BatteryIntentFilterHolder.BATTERY_INTENT_FILTER);
             if (batteryInfoIntent == null) {
-                return BatteryInfo.INVALID;
+                throw new GodEyeInvalidDataException("can not registerReceiver for battery");
             }
             BatteryInfo batteryInfo = new BatteryInfo();
             batteryInfo.status = batteryInfoIntent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager
@@ -98,7 +99,7 @@ public class BatteryEngine implements Engine {
             batteryInfo.technology = batteryInfoIntent.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY);
             return batteryInfo;
         } catch (Throwable e) {
-            return BatteryInfo.INVALID;
+            throw new GodEyeInvalidDataException(e);
         }
     }
 }

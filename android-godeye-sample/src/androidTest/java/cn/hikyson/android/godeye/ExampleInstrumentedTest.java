@@ -7,6 +7,9 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import cn.hikyson.android.godeye.sample.SampleApp;
+import cn.hikyson.godeye.core.GodEye;
+
 import static org.junit.Assert.*;
 
 /**
@@ -20,7 +23,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
         assertEquals("cn.hikyson.android.godeye.sample", appContext.getPackageName());
     }
 }

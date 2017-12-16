@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
+import cn.hikyson.godeye.core.internal.modules.GodEyeInvalidDataException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
@@ -53,12 +54,9 @@ public class CpuEngine implements Engine {
             @Override
             public CpuInfo apply(Long aLong) throws Exception {
                 CpuSnapshot endSnapshot = CpuSnapshot.snapshot();
-                if (startSnapshot == CpuSnapshot.INVALID || endSnapshot == CpuSnapshot.INVALID) {
-                    return CpuInfo.INVALID;
-                }
                 float totalTime = (endSnapshot.total - startSnapshot.total) * 1.0f;
                 if (totalTime <= 0) {
-                    return CpuInfo.INVALID;
+                    throw new GodEyeInvalidDataException("totalTime must greater than 0");
                 }
                 long idleTime = endSnapshot.idle - startSnapshot.idle;
                 double totalRatio = (totalTime - idleTime) / totalTime;
@@ -67,7 +65,7 @@ public class CpuEngine implements Engine {
                 double systemRatio = (endSnapshot.system - startSnapshot.system) / totalTime;
                 double ioWaitRatio = (endSnapshot.ioWait - startSnapshot.ioWait) / totalTime;
                 if (!isValidRatios(totalRatio, appRatio, userRatio, systemRatio, ioWaitRatio)) {
-                    return CpuInfo.INVALID;
+                    throw new GodEyeInvalidDataException("not valid ratio");
                 }
                 return new CpuInfo(totalRatio, appRatio, userRatio, systemRatio, ioWaitRatio);
             }

@@ -1,11 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.cpu;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
+import cn.hikyson.godeye.core.internal.modules.GodEyeInvalidDataException;
 import cn.hikyson.godeye.core.utils.IoUtil;
 
 /**
@@ -15,7 +17,6 @@ import cn.hikyson.godeye.core.utils.IoUtil;
  * Created by kysonchao on 2017/5/22.
  */
 public class CpuSnapshot {
-    public static final CpuSnapshot INVALID = new CpuSnapshot();
     public long user = 0;
     public long system = 0;
     public long idle = 0;
@@ -43,7 +44,7 @@ public class CpuSnapshot {
      * @return invalid如果发生了异常
      */
     @WorkerThread
-    public synchronized static CpuSnapshot snapshot() {
+    public synchronized static @NonNull CpuSnapshot snapshot() {
         BufferedReader cpuReader = null;
         BufferedReader pidReader = null;
         try {
@@ -63,7 +64,7 @@ public class CpuSnapshot {
             //从系统启动开始，花在各种处理上的apu时间
             return parse(cpuRate, pidCpuRate);
         } catch (Throwable throwable) {
-            return INVALID;
+            throw new GodEyeInvalidDataException(throwable);
         } finally {
             IoUtil.closeSilently(cpuReader);
             IoUtil.closeSilently(pidReader);
