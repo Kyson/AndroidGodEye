@@ -42,8 +42,7 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android数据指标（�
 ```
 dependencies {
   implementation 'cn.hikyson.godeye:godeye-core:VERSION_NAME'
-  debugImplementation 'cn.hikyson.godeye:godeye-monitor:VERSION_NAME'
-  releaseImplementation 'cn.hikyson.godeye:godeye-monitor-no-op:VERSION_NAME'
+  implementation 'cn.hikyson.godeye:godeye-monitor:VERSION_NAME'
   implementation 'cn.hikyson.godeye:godeye-toolbox:VERSION_NAME'
 }
 ```
