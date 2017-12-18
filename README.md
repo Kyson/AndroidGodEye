@@ -41,7 +41,8 @@ In your build.gradle:
 ```
 dependencies {
   implementation 'cn.hikyson.godeye:godeye-core:VERSION_NAME'
-  implementation 'cn.hikyson.godeye:godeye-monitor:VERSION_NAME'
+  debugImplementation 'cn.hikyson.godeye:godeye-monitor:VERSION_NAME'
+  releaseImplementation 'cn.hikyson.godeye:godeye-monitor-no-op:VERSION_NAME'
   implementation 'cn.hikyson.godeye:godeye-toolbox:VERSION_NAME'
 }
 ```
