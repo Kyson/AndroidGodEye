@@ -43,4 +43,12 @@ public class StacktraceUtil {
         }
         return stackList;
     }
+
+    public static List<String> getStack(StackTraceElement... stackTraceElements) {
+        List<String> stackList = new ArrayList<>();
+        for (StackTraceElement traceElement : stackTraceElements) {
+            stackList.add(String.valueOf(traceElement));
+        }
+        return stackList;
+    }
 }

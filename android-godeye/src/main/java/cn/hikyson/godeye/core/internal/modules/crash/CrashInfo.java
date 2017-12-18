@@ -1,27 +1,46 @@
 package cn.hikyson.godeye.core.internal.modules.crash;
 
+import java.io.Serializable;
+import java.util.List;
+
 import cn.hikyson.godeye.core.utils.StacktraceUtil;
+
 
 /**
  * Created by kysonchao on 2017/12/18.
  */
-public class CrashInfo {
-    public Thread thread;
-    public Throwable throwable;
+public class CrashInfo implements Serializable {
+    public String threadName;
+    public String threadState;
+    public String threadGroupName;
+    public boolean threadIsDaemon;
+    public boolean threadIsAlive;
+    public boolean threadIsInterrupted;
+    public String throwableMessage;
+    public List<String> throwableStacktrace;
 
     public CrashInfo(Thread thread, Throwable throwable) {
-        this.thread = thread;
-        this.throwable = throwable;
-        throwable.getStackTrace();
-        throwable.getLocalizedMessage();
-//        StacktraceUtil.convertToStackString();
+        threadName = thread.getName();
+        threadState = String.valueOf(thread.getState());
+        threadGroupName = String.valueOf(thread.getThreadGroup().getName());
+        threadIsDaemon = thread.isDaemon();
+        threadIsAlive = thread.isAlive();
+        threadIsInterrupted = thread.isInterrupted();
+        throwableMessage = throwable.getLocalizedMessage();
+        throwableStacktrace = StacktraceUtil.getStack(throwable.getStackTrace());
     }
 
     @Override
     public String toString() {
         return "CrashInfo{" +
-                "thread=" + thread +
-                ", throwable=" + throwable +
+                "threadName='" + threadName + '\'' +
+                ", threadState='" + threadState + '\'' +
+                ", threadGroupName='" + threadGroupName + '\'' +
+                ", threadIsDaemon=" + threadIsDaemon +
+                ", threadIsAlive=" + threadIsAlive +
+                ", threadIsInterrupted=" + threadIsInterrupted +
+                ", throwableMessage='" + throwableMessage + '\'' +
+                ", throwableStacktrace=" + throwableStacktrace +
                 '}';
     }
 }
