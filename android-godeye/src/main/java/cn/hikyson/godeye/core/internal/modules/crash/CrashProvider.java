@@ -6,7 +6,7 @@ import java.util.List;
  * Created by kysonchao on 2017/12/18.
  */
 public interface CrashProvider {
-    public void storeCrash(CrashInfo crashInfo) throws Throwable;
+    void storeCrash(CrashInfo crashInfo) throws Throwable;
 
-    public List<CrashInfo> restoreCrash() throws Throwable;
+    List<CrashInfo> restoreCrash() throws Throwable;
 }

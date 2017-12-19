@@ -5,6 +5,7 @@ import java.util.List;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.Preconditions;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 
@@ -18,6 +19,7 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
     @Override
     public synchronized void install(CrashProvider crashProvider) {
         if (!mInstalled) {
+            Preconditions.checkNotNull(crashProvider);
             mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
             Thread.setDefaultUncaughtExceptionHandler(new CrashHandler(this, crashProvider, mDefaultHandler));
             mInstalled = true;

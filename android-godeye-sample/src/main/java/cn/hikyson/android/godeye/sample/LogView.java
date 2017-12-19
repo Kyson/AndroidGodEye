@@ -4,6 +4,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -14,6 +18,7 @@ import android.widget.TextView;
 public class LogView extends ScrollView implements Loggable {
     private TextView mLogTv;
     private Handler mMainHandler;
+    private CheckBox mFollowTv;
 
     public LogView(Context context) {
         this(context, null);
@@ -27,7 +32,15 @@ public class LogView extends ScrollView implements Loggable {
     private void init() {
         inflate(getContext(), R.layout.view_log_layout, this);
         mLogTv = this.findViewById(R.id.view_log_layout_log_tv);
+        mFollowTv = this.findViewById(R.id.view_log_layout_follow);
+        TextView clearTv = this.findViewById(R.id.view_log_layout_clear);
         mMainHandler = new Handler(Looper.getMainLooper());
+        clearTv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLogTv.setText("");
+            }
+        });
     }
 
     @Override
@@ -36,12 +49,14 @@ public class LogView extends ScrollView implements Loggable {
             @Override
             public void run() {
                 mLogTv.append(msg + "\n");
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                }, 250);
+                if (mFollowTv.isChecked()) {
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fullScroll(ScrollView.FOCUS_DOWN);
+                        }
+                    }, 250);
+                }
             }
         });
     }

@@ -3,20 +3,13 @@ package cn.hikyson.android.godeye.toolbox;
 import android.content.Context;
 import android.os.Environment;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileSystemException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -32,11 +25,11 @@ public class CrashFileProvider implements CrashProvider {
     private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
 
     private Context mContext;
-    private Gson mGson;
+    private Serializer mSerializer;
 
-    public CrashFileProvider(Context context) {
+    public CrashFileProvider(Context context, Serializer serializer) {
         mContext = context.getApplicationContext();
-        mGson = new GsonBuilder().create();
+        mSerializer = serializer;
     }
 
     @Override
@@ -45,7 +38,7 @@ public class CrashFileProvider implements CrashProvider {
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(file);
-            fileWriter.write(mGson.toJson(crashInfo));
+            fileWriter.write(mSerializer.serialize(crashInfo));
         } catch (IOException e) {
         } finally {
             IoUtil.closeSilently(fileWriter);
@@ -54,18 +47,13 @@ public class CrashFileProvider implements CrashProvider {
 
     @Override
     public synchronized List<CrashInfo> restoreCrash() throws IOException {
-        File[] crashFiles = makeSureCrashDir(mContext).listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                return !filename.endsWith(SUFFIX);
-            }
-        });
+        File[] crashFiles = makeSureCrashDir(mContext).listFiles(mCrashFilenameFilter);
         List<CrashInfo> crashInfos = new ArrayList<>();
         for (File crashFile : crashFiles) {
             FileReader reader = null;
             try {
                 reader = new FileReader(crashFile);
-                crashInfos.add(mGson.fromJson(reader, CrashInfo.class));
+                crashInfos.add(mSerializer.deserialize(reader, CrashInfo.class));
             } catch (IOException e) {
             } finally {
                 IoUtil.closeSilently(reader);
@@ -75,18 +63,20 @@ public class CrashFileProvider implements CrashProvider {
     }
 
     public synchronized void clearCrash() throws IOException {
-        File[] crashFiles = makeSureCrashDir(mContext).listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                return !filename.endsWith(SUFFIX);
-            }
-        });
+        File[] crashFiles = makeSureCrashDir(mContext).listFiles(mCrashFilenameFilter);
         for (File crashFile : crashFiles) {
             boolean deleteResult = crashFile.delete();
         }
     }
 
     private static final String SUFFIX = ".crash";
+
+    private FilenameFilter mCrashFilenameFilter = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String filename) {
+            return filename.endsWith(SUFFIX);
+        }
+    };
 
     private static String getStoreFileName() {
         return FORMATTER.format(new Date(System.currentTimeMillis())) + SUFFIX;
