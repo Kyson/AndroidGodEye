@@ -6,6 +6,8 @@ import android.content.Context;
 
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
+import cn.hikyson.godeye.core.internal.modules.crash.Crash;
+import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.memory.Heap;
@@ -33,6 +35,7 @@ public class GodEye {
     private Sm mSm;
     private Startup mStartup;
     private Traffic mTraffic;
+    private Crash mCrash;
 
     private GodEye() {
     }
@@ -45,7 +48,7 @@ public class GodEye {
         return InstanceHolder.sInstance;
     }
 
-    public void installAll(Application c) {
+    public void installAll(Application c, CrashProvider crashProvider) {
         Context context = c.getApplicationContext();
         cpu().install();
         battery().install(context);
@@ -58,6 +61,7 @@ public class GodEye {
         sm().install(context);
         // startup().install(null);
         traffic().install();
+        crash().install(crashProvider);
     }
 
     public void uninstallAll() {
@@ -72,6 +76,14 @@ public class GodEye {
         sm().uninstall();
         // startup().install(null);
         traffic().uninstall();
+        crash().uninstall();
+    }
+
+    public Crash crash() {
+        if (mCrash == null) {
+            mCrash = new Crash();
+        }
+        return mCrash;
     }
 
     public Cpu cpu() {

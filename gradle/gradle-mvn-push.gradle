@@ -2,7 +2,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 def isReleaseBuild() {
-    return getVersionName().contains("SNAPSHOT") == false
+    return VERSION_NAME.contains("SNAPSHOT") == false
 }
 
 def getReleaseRepositoryUrl() {
@@ -37,24 +37,6 @@ def getRepositoryPassword() {
     return password;
 }
 
-def getVersionName() {
-    File versionFile = project.rootProject.file('VERSION');
-    String versionName;
-    if (versionFile.exists()) {
-        InputStream inputStream = versionFile.newDataInputStream()
-        Properties properties = new Properties()
-        properties.load(inputStream)
-        versionName = properties.getProperty('VERSION_NAME')
-    }
-    if (versionName == null || versionName.length() == 0) {
-        println("[MVN] Can not find version name! If local build , ignore this waring.")
-        versionName = ""
-    } else {
-        println("[MVN] VERSION_NAME: " + versionName)
-    }
-    return versionName
-}
-
 afterEvaluate { project ->
     uploadArchives {
         repositories {
@@ -63,7 +45,7 @@ afterEvaluate { project ->
 
                 pom.groupId = GROUP
                 pom.artifactId = POM_ARTIFACT_ID
-                pom.version = getVersionName()
+                pom.version = VERSION_NAME
 
                 repository(url: getReleaseRepositoryUrl()) {
                     authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())

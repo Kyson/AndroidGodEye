@@ -6,21 +6,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.hikyson.android.godeye.toolbox.CrashFileProvider;
+import cn.hikyson.android.godeye.toolbox.Serializer;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
+import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
@@ -32,6 +38,7 @@ import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
+import cn.hikyson.godeye.monitor.utils.GsonUtil;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends Activity implements Loggable {
@@ -56,6 +63,8 @@ public class MainActivity extends Activity implements Loggable {
     CheckBox mActivityMainSm;
     @BindView(R.id.activity_main_traffic)
     CheckBox mActivityMainTraffic;
+    @BindView(R.id.activity_main_crash)
+    CheckBox mActivityMainCrash;
     @BindView(R.id.activity_main_all)
     Button mActivityMainAll;
     @BindView(R.id.activity_main_cancel_all)
@@ -90,6 +99,8 @@ public class MainActivity extends Activity implements Loggable {
     Button mActivityMainConsumerStartup;
     @BindView(R.id.activity_main_consumer_traffic)
     Button mActivityMainConsumerTraffic;
+    @BindView(R.id.activity_main_consumer_crash)
+    Button mActivityMainConsumerCrash;
     @BindView(R.id.activity_main_block_et)
     EditText mActivityMainBlockEt;
     @BindView(R.id.activity_main_make_block)
@@ -100,6 +111,10 @@ public class MainActivity extends Activity implements Loggable {
     Button mActivityMainMakeLeak;
     @BindView(R.id.activity_main_consumer_cancel_watch)
     Button mActivityMainCancelWatch;
+    @BindView(R.id.activity_main_make_follow)
+    CheckBox mActivityMainFollow;
+    @BindView(R.id.activity_main_make_clear)
+    Button mActivityMainClear;
 
     CheckBox[] installableCbs;
     private CompositeDisposable mCompositeDisposable;
@@ -110,7 +125,7 @@ public class MainActivity extends Activity implements Loggable {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
-        installableCbs = new CheckBox[9];
+        installableCbs = new CheckBox[10];
         installableCbs[0] = mActivityMainCpu;
         installableCbs[1] = mActivityMainBattery;
         installableCbs[2] = mActivityMainFps;
@@ -120,6 +135,7 @@ public class MainActivity extends Activity implements Loggable {
         installableCbs[6] = mActivityMainRam;
         installableCbs[7] = mActivityMainSm;
         installableCbs[8] = mActivityMainTraffic;
+        installableCbs[9] = mActivityMainCrash;
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -138,9 +154,15 @@ public class MainActivity extends Activity implements Loggable {
         });
         StartupTracer.get().onHomeCreate();
         GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl(this));
+        mActivityMainFollow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mActivityMainLogview.follow(isChecked);
+            }
+        });
     }
 
-    @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install, R.id.activity_main_uninstall, R.id.activity_main_monitor_work, R.id.activity_main_monitor_shutdown, R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps, R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss, R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm, R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_consumer_cancel_watch})
+    @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install, R.id.activity_main_uninstall, R.id.activity_main_monitor_work, R.id.activity_main_monitor_shutdown, R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps, R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss, R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm, R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash, R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_main_all:
@@ -194,6 +216,9 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_consumer_traffic:
                 mCompositeDisposable.add(GodEye.instance().traffic().subject().subscribe(new LogObserver<TrafficInfo>("traffic", this)));
                 break;
+            case R.id.activity_main_consumer_crash:
+                mCompositeDisposable.add(GodEye.instance().crash().subject().subscribe(new LogObserver<List<CrashInfo>>("crash", this)));
+                break;
             case R.id.activity_main_make_block:
                 block();
                 break;
@@ -203,8 +228,13 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_make_leak:
                 jumpToLeak();
                 break;
+            case R.id.activity_main_make_crash:
+                throw new RuntimeException("this is a crash made by AndroidGodEye");
             case R.id.activity_main_consumer_cancel_watch:
                 mCompositeDisposable.clear();
+                break;
+            case R.id.activity_main_make_clear:
+                mActivityMainLogview.clear();
                 break;
             default:
                 break;
@@ -302,6 +332,19 @@ public class MainActivity extends Activity implements Loggable {
         if (mActivityMainTraffic.isChecked()) {
             GodEye.instance().traffic().install();
         }
+        if (mActivityMainCrash.isChecked()) {
+            GodEye.instance().crash().install(new CrashFileProvider(this, new Serializer() {
+                @Override
+                public String serialize(Object o) {
+                    return GsonUtil.toJson(o);
+                }
+
+                @Override
+                public <T> T deserialize(Reader reader, Class<T> clz) {
+                    return GsonUtil.fromJson(reader, clz);
+                }
+            }));
+        }
     }
 
     private void onClickUninstall() {
@@ -331,6 +374,9 @@ public class MainActivity extends Activity implements Loggable {
         }
         if (mActivityMainTraffic.isChecked()) {
             GodEye.instance().traffic().uninstall();
+        }
+        if (mActivityMainCrash.isChecked()) {
+            GodEye.instance().crash().uninstall();
         }
     }
 

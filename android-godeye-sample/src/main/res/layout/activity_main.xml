@@ -101,6 +101,12 @@
                         android:layout_height="wrap_content"
                         android:text="traffic"/>
 
+                    <CheckBox
+                        android:id="@+id/activity_main_crash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="crash"/>
+
                 </LinearLayout>
 
             </HorizontalScrollView>
@@ -298,13 +304,19 @@
                     android:text="traffic"/>
 
                 <Button
-                    android:id="@+id/activity_main_consumer_cancel_watch"
+                    android:id="@+id/activity_main_consumer_crash"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="CancelConsume"
-                    android:textSize="11dp"/>
+                    android:text="crash"/>
+
             </LinearLayout>
+
+            <Button
+                android:id="@+id/activity_main_consumer_cancel_watch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancel All Consumer"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -352,6 +364,39 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="To Leak Activity"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/activity_main_make_crash"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Crash!!!"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/activity_main_make_follow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Log Follow"/>
+
+                <Button
+                    android:id="@+id/activity_main_make_clear"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Log Clear"/>
             </LinearLayout>
 
         </LinearLayout>

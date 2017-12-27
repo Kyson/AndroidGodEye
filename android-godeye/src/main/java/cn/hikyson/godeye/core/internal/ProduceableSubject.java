@@ -11,7 +11,11 @@ public class ProduceableSubject<T> implements SubjectSupport<T>, Producer<T> {
     private Subject<T> mSubject;
 
     public ProduceableSubject() {
-        mSubject = PublishSubject.create();
+        mSubject = createSubject();
+    }
+
+    protected Subject<T> createSubject() {
+        return PublishSubject.create();
     }
 
     @Override
