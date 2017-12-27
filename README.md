@@ -30,7 +30,7 @@ It is divided into 3 parts:
 2. Debug Monitor provide a panel to show these performance datas.
 3. Toolbox make developers easy to use this library.
 
-Currently, AndroidGodEye prodive 11 modules, such as cpu, heap, block, leak memory and so on.
+AndroidGodEye prodive several modules, such as cpu, heap, block, leak memory and so on.
 
 ## Quickstart
 
@@ -138,6 +138,23 @@ open `Android device ip : Port`, now enjoy it!
 ![android_god_eye_cpuheaptraffic](ART/android_god_eye_cpuheaptraffic.gif)
 
 and more...
+
+## Modules
+
+|Module Name|Need Install|Engine|Data produce time|
+|-----|------|-------|----------|
+|cpu|yes|internal|interval|
+|battery|yes|internal|interval|
+|fps|yes|internal|interval|
+|leakDetector|yes|internal|happen|
+|heap|yes|internal|interval|
+|pss|yes|internal|interval|
+|ram|yes|internal|interval|
+|network|no|external|-|
+|sm|yes|internal|happen|
+|startup|no|external|-|
+|traffic|yes|external|interval|
+|crash|yes|external|after install,one time|
 
 ## Framework
 

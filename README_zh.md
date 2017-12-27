@@ -30,7 +30,7 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android数据指标（�
 2. Debug Monitor部分，提供Debug阶段开发者面板
 3. Toolbox 快速接入工具集，给开发者提供各种便捷接入的工具
 
-目前，AndroidGodEye提供了11种监控模块，比如cpu、内存、卡顿、内存泄漏等等，并且提供了Debug阶段的Monitor看板实时展示这
+AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存泄漏等等，并且提供了Debug阶段的Monitor看板实时展示这
 些数据。而且提供了api供开发者在release阶段进行数据上报。
 
 ## 快速开始
@@ -136,6 +136,24 @@ GodEyeMonitor.shutDown()
 ![android_god_eye_cpuheaptraffic](ART/android_god_eye_cpuheaptraffic.gif)
 
 还有更多...
+
+## 模块详情
+
+|模块名|需要安装|数据引擎|数据生产时机|
+|-----|------|-------|----------|
+|cpu|是|内置|定时|
+|battery|是|内置|定时|
+|fps|是|内置|定时|
+|leakDetector|是|内置|发生时|
+|heap|是|内置|定时|
+|pss|是|内置|定时|
+|ram|是|内置|定时|
+|network|否|外部驱动|-|
+|sm|是|内置|发生时|
+|startup|否|外部驱动|-|
+|traffic|是|外部驱动|定时|
+|crash|是|外部驱动|安装后，一次性|
+
 
 ## 框架
 
