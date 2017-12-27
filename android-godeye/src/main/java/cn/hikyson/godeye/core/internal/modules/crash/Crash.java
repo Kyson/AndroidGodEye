@@ -38,7 +38,6 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
         } else {
             L.d("crash already uninstalled , ignore");
         }
-
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import java.io.ByteArrayOutputStream;
@@ -110,6 +111,10 @@ public class MainActivity extends Activity implements Loggable {
     Button mActivityMainMakeLeak;
     @BindView(R.id.activity_main_consumer_cancel_watch)
     Button mActivityMainCancelWatch;
+    @BindView(R.id.activity_main_make_follow)
+    CheckBox mActivityMainFollow;
+    @BindView(R.id.activity_main_make_clear)
+    Button mActivityMainClear;
 
     CheckBox[] installableCbs;
     private CompositeDisposable mCompositeDisposable;
@@ -149,9 +154,15 @@ public class MainActivity extends Activity implements Loggable {
         });
         StartupTracer.get().onHomeCreate();
         GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl(this));
+        mActivityMainFollow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mActivityMainLogview.follow(isChecked);
+            }
+        });
     }
 
-    @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install, R.id.activity_main_uninstall, R.id.activity_main_monitor_work, R.id.activity_main_monitor_shutdown, R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps, R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss, R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm, R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash, R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch})
+    @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install, R.id.activity_main_uninstall, R.id.activity_main_monitor_work, R.id.activity_main_monitor_shutdown, R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps, R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss, R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm, R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash, R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_main_all:
@@ -221,6 +232,9 @@ public class MainActivity extends Activity implements Loggable {
                 throw new RuntimeException("this is a crash made by AndroidGodEye");
             case R.id.activity_main_consumer_cancel_watch:
                 mCompositeDisposable.clear();
+                break;
+            case R.id.activity_main_make_clear:
+                mActivityMainLogview.clear();
                 break;
             default:
                 break;

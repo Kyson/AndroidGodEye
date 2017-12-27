@@ -18,7 +18,7 @@ import android.widget.TextView;
 public class LogView extends ScrollView implements Loggable {
     private TextView mLogTv;
     private Handler mMainHandler;
-    private CheckBox mFollowTv;
+    private boolean mIsFollow;
 
     public LogView(Context context) {
         this(context, null);
@@ -32,15 +32,7 @@ public class LogView extends ScrollView implements Loggable {
     private void init() {
         inflate(getContext(), R.layout.view_log_layout, this);
         mLogTv = this.findViewById(R.id.view_log_layout_log_tv);
-        mFollowTv = this.findViewById(R.id.view_log_layout_follow);
-        TextView clearTv = this.findViewById(R.id.view_log_layout_clear);
         mMainHandler = new Handler(Looper.getMainLooper());
-        clearTv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLogTv.setText("");
-            }
-        });
     }
 
     @Override
@@ -49,7 +41,7 @@ public class LogView extends ScrollView implements Loggable {
             @Override
             public void run() {
                 mLogTv.append(msg + "\n");
-                if (mFollowTv.isChecked()) {
+                if (mIsFollow) {
                     postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -59,5 +51,21 @@ public class LogView extends ScrollView implements Loggable {
                 }
             }
         });
+    }
+
+    public void clear() {
+        mLogTv.setText("");
+    }
+
+    public void follow(boolean follow) {
+        mIsFollow = follow;
+        if (mIsFollow) {
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            }, 250);
+        }
     }
 }
