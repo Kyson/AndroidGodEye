@@ -27,6 +27,8 @@ import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
+import cn.hikyson.godeye.core.internal.modules.deadlock.ThreadDumper;
+import cn.hikyson.godeye.core.internal.modules.deadlock.ThreadInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
@@ -162,7 +164,15 @@ public class MainActivity extends Activity implements Loggable {
         });
     }
 
-    @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install, R.id.activity_main_uninstall, R.id.activity_main_monitor_work, R.id.activity_main_monitor_shutdown, R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps, R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss, R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm, R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash, R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear})
+    @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install,
+            R.id.activity_main_uninstall, R.id.activity_main_monitor_work, R.id.activity_main_monitor_shutdown,
+            R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps,
+            R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss,
+            R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm,
+            R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash,
+            R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak,
+            R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear,
+            R.id.activity_main_make_deadlock})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_main_all:
@@ -230,6 +240,22 @@ public class MainActivity extends Activity implements Loggable {
                 break;
             case R.id.activity_main_make_crash:
                 throw new RuntimeException("this is a crash made by AndroidGodEye");
+            case R.id.activity_main_make_deadlock:
+                DeadLockMaker.make(this);
+
+                mActivityMainClear.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        log(String.valueOf(ThreadInfo.convert(ThreadDumper.dump(new ThreadDumper.ThreadFilter() {
+                            @Override
+                            public boolean filter(Thread thread) {
+                                return true;
+                            }
+                        }))));
+                    }
+                }, 5000);
+
+                break;
             case R.id.activity_main_consumer_cancel_watch:
                 mCompositeDisposable.clear();
                 break;

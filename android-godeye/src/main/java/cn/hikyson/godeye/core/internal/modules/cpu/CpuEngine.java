@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
-import cn.hikyson.godeye.core.internal.modules.GodEyeInvalidDataException;
+import cn.hikyson.godeye.core.internal.exception.GodEyeInvalidDataException;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;

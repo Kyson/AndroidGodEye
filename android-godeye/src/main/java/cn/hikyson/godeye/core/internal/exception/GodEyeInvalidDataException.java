@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.core.internal.modules;
+package cn.hikyson.godeye.core.internal.exception;
 
 /**
  * 无效数据的异常
