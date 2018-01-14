@@ -1,6 +1,7 @@
-package cn.hikyson.godeye.core.internal.modules.deadlock;
+package cn.hikyson.godeye.core.internal.modules.thread;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public class ThreadInfo {
     public int priority;
     public boolean isAlive;
     public boolean isInterrupted;
+    public StackTraceElement[] stackTraceElements;
 
     public ThreadInfo(Thread thread) {
         this.name = thread.getName();
@@ -24,6 +26,7 @@ public class ThreadInfo {
         this.id = thread.getId();
         this.isAlive = thread.isAlive();
         this.isInterrupted = thread.isInterrupted();
+        this.stackTraceElements = thread.getStackTrace();
     }
 
     @Override
@@ -36,6 +39,7 @@ public class ThreadInfo {
                 ", priority=" + priority +
                 ", isAlive=" + isAlive +
                 ", isInterrupted=" + isInterrupted +
+                ", stackTraceElements=" + Arrays.toString(stackTraceElements) +
                 '}';
     }
 
