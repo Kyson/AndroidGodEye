@@ -16,6 +16,10 @@ import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
+import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
+import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLock;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 
 /**
@@ -36,6 +40,8 @@ public class GodEye {
     private Startup mStartup;
     private Traffic mTraffic;
     private Crash mCrash;
+    private ThreadDump mThreadDump;
+    private DeadLock mDeadLock;
 
     private GodEye() {
     }
@@ -49,6 +55,10 @@ public class GodEye {
     }
 
     public void installAll(Application c, CrashProvider crashProvider) {
+        installAll(c, crashProvider, new ExcludeSystemThreadFilter());
+    }
+
+    public void installAll(Application c, CrashProvider crashProvider, ThreadFilter deadLockThreadFilter) {
         Context context = c.getApplicationContext();
         cpu().install();
         battery().install(context);
@@ -62,6 +72,8 @@ public class GodEye {
         // startup().install(null);
         traffic().install();
         crash().install(crashProvider);
+        threadDump().install();
+        deadLock().install(threadDump().subject(), deadLockThreadFilter);
     }
 
     public void uninstallAll() {
@@ -77,13 +89,8 @@ public class GodEye {
         // startup().install(null);
         traffic().uninstall();
         crash().uninstall();
-    }
-
-    public Crash crash() {
-        if (mCrash == null) {
-            mCrash = new Crash();
-        }
-        return mCrash;
+        threadDump().uninstall();
+        deadLock().uninstall();
     }
 
     public Cpu cpu() {
@@ -161,5 +168,26 @@ public class GodEye {
             mTraffic = new Traffic();
         }
         return mTraffic;
+    }
+
+    public Crash crash() {
+        if (mCrash == null) {
+            mCrash = new Crash();
+        }
+        return mCrash;
+    }
+
+    public ThreadDump threadDump() {
+        if (mThreadDump == null) {
+            mThreadDump = new ThreadDump();
+        }
+        return mThreadDump;
+    }
+
+    public DeadLock deadLock() {
+        if (mDeadLock == null) {
+            mDeadLock = new DeadLock();
+        }
+        return mDeadLock;
     }
 }

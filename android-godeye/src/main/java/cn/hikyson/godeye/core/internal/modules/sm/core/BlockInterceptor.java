@@ -5,10 +5,8 @@ import android.support.annotation.WorkerThread;
 
 
 public interface BlockInterceptor {
-    //TODO KYSON 暴露出去
     void onStart(Context context);
 
-    //TODO KYSON 暴露出去
     void onStop(Context context);
 
     /**

@@ -7,7 +7,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
-import cn.hikyson.godeye.core.internal.modules.GodEyeInvalidDataException;
+import cn.hikyson.godeye.core.internal.exception.GodEyeInvalidDataException;
 import cn.hikyson.godeye.core.utils.IoUtil;
 
 /**

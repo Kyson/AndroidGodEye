@@ -5,15 +5,15 @@
 <h1 align="center">AndroidGodEye</h1>
 <p align="center">
 <a href="https://travis-ci.org/Kyson/AndroidGodEye" target="_blank"><img src="https://travis-ci.org/Kyson/AndroidGodEye.svg?branch=master"></img></a>
-<a href="https://oss.sonatype.org/content/repositories/releases/cn/hikyson/godeye/godeye-core/" target="_blank"><img src="https://img.shields.io/maven-central/v/cn.hikyson.godeye/godeye-core-brightgreen.svg"></img></a>
+<a href="https://oss.sonatype.org/content/repositories/releases/cn/hikyson/godeye/godeye-core/" target="_blank"><img src="https://img.shields.io/maven-central/v/cn.hikyson.godeye/godeye-core.svg"></img></a>
 <a href="https://jitpack.io/#Kyson/AndroidGodEye" target="_blank"><img src="https://jitpack.io/v/Kyson/AndroidGodEye.svg"></img></a>
 <a href="LICENSE" target="_blank"><img src="http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat"></img></a>
 </p>
 <br/>
 
 <p>
-<a href="README.md">README_en</a>&nbsp;&nbsp;&nbsp;
-<a href="README_zh.md">README_zh</a>
+<a href="English README.md">README_en</a>&nbsp;&nbsp;&nbsp;
+<a href="中文 README_zh.md">README_zh</a>
 </p>
 
 > Android开发者在性能检测方面的工具一直比较匮乏，仅有的一些工具，比如Android Device Monitor，使用起来也有些繁琐，使用起来对开发者有一定的要求。而线上的App监控更无从谈起。所以需要有一个系统能够提供Debug和Release阶段全方位的监控，更深入地了解对App运行时的状态。
@@ -153,6 +153,8 @@ GodEyeMonitor.shutDown()
 |startup|否|外部驱动|-|
 |traffic|是|外部驱动|定时|
 |crash|是|外部驱动|安装后，一次性|
+|thread dump|是|内置|定时|
+|deadlock|是|内置|定时并发生时|
 
 
 ## 框架

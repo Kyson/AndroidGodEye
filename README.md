@@ -12,8 +12,8 @@
 <br/>
 
 <p>
-<a href="README.md">README_en</a>&nbsp;&nbsp;&nbsp;
-<a href="README_zh.md">README_zh</a>
+<a href="English README.md">README_en</a>&nbsp;&nbsp;&nbsp;
+<a href="中文 README_zh.md">README_zh</a>
 </p>
 
 > Android developer lack of monitoring of performance data,especially in production environment. so we need "AndroidGodEye".
@@ -155,6 +155,8 @@ and more...
 |startup|no|external|-|
 |traffic|yes|external|interval|
 |crash|yes|external|after install,one time|
+|thread dump|yes|internal|interval|
+|deadlock|yes|internal|interval&happen|
 
 ## Framework
 
