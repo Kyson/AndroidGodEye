@@ -16,8 +16,9 @@ import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
+import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
-import cn.hikyson.godeye.core.internal.modules.thread.ThreadEngine;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLock;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 
@@ -54,16 +55,10 @@ public class GodEye {
     }
 
     public void installAll(Application c, CrashProvider crashProvider) {
-        ThreadEngine.ThreadFilter defaultThreadFilter = new ThreadEngine.ThreadFilter() {
-            @Override
-            public boolean filter(Thread thread) {
-                return true;
-            }
-        };
-        installAll(c, crashProvider, defaultThreadFilter);
+        installAll(c, crashProvider, new ExcludeSystemThreadFilter());
     }
 
-    public void installAll(Application c, CrashProvider crashProvider, ThreadEngine.ThreadFilter deadLockThreadFilter) {
+    public void installAll(Application c, CrashProvider crashProvider, ThreadFilter deadLockThreadFilter) {
         Context context = c.getApplicationContext();
         cpu().install();
         battery().install(context);

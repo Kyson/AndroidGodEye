@@ -27,7 +27,6 @@ import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
-import cn.hikyson.godeye.core.internal.modules.thread.ThreadInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
@@ -66,6 +65,10 @@ public class MainActivity extends Activity implements Loggable {
     CheckBox mActivityMainTraffic;
     @BindView(R.id.activity_main_crash)
     CheckBox mActivityMainCrash;
+    @BindView(R.id.activity_main_thread)
+    CheckBox mActivityMainThread;
+    @BindView(R.id.activity_main_deadlock)
+    CheckBox mActivityMainDeadLock;
     @BindView(R.id.activity_main_all)
     Button mActivityMainAll;
     @BindView(R.id.activity_main_cancel_all)
@@ -169,6 +172,7 @@ public class MainActivity extends Activity implements Loggable {
             R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss,
             R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm,
             R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash,
+            R.id.activity_main_consumer_thread, R.id.activity_main_consumer_deadlock,
             R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak,
             R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear,
             R.id.activity_main_make_deadlock})
@@ -228,6 +232,12 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_consumer_crash:
                 mCompositeDisposable.add(GodEye.instance().crash().subject().subscribe(new LogObserver<List<CrashInfo>>("crash", this)));
                 break;
+            case R.id.activity_main_consumer_thread:
+                mCompositeDisposable.add(GodEye.instance().threadDump().subject().subscribe(new LogObserver<List<Thread>>("thread", this)));
+                break;
+            case R.id.activity_main_consumer_deadlock:
+                mCompositeDisposable.add(GodEye.instance().deadLock().subject().subscribe(new LogObserver<List<Thread>>("deadlock", this)));
+                break;
             case R.id.activity_main_make_block:
                 block();
                 break;
@@ -240,20 +250,8 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_make_crash:
                 throw new RuntimeException("this is a crash made by AndroidGodEye");
             case R.id.activity_main_make_deadlock:
-                DeadLockMaker.make(this);
-
-                mActivityMainClear.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        log(String.valueOf(ThreadInfo.convert(ThreadDumper.dump(new ThreadDumper.ThreadFilter() {
-                            @Override
-                            public boolean filter(Thread thread) {
-                                return true;
-                            }
-                        }))));
-                    }
-                }, 5000);
-
+                DeadLockMaker.makeBlock(this);
+                DeadLockMaker.makeNormal();
                 break;
             case R.id.activity_main_consumer_cancel_watch:
                 mCompositeDisposable.clear();
@@ -370,6 +368,12 @@ public class MainActivity extends Activity implements Loggable {
                 }
             }));
         }
+        if (mActivityMainThread.isChecked()) {
+            GodEye.instance().threadDump().install();
+        }
+        if (mActivityMainDeadLock.isChecked()) {
+            GodEye.instance().deadLock().install(GodEye.instance().threadDump().subject());
+        }
     }
 
     private void onClickUninstall() {
@@ -402,6 +406,12 @@ public class MainActivity extends Activity implements Loggable {
         }
         if (mActivityMainCrash.isChecked()) {
             GodEye.instance().crash().uninstall();
+        }
+        if (mActivityMainThread.isChecked()) {
+            GodEye.instance().threadDump().uninstall();
+        }
+        if (mActivityMainDeadLock.isChecked()) {
+            GodEye.instance().deadLock().uninstall();
         }
     }
 

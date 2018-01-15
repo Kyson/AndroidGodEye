@@ -2,10 +2,13 @@ package cn.hikyson.godeye.core.internal.modules.thread.deadlock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
-import cn.hikyson.godeye.core.internal.modules.thread.ThreadEngine;
+import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
+import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -14,22 +17,30 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * 检测线程死锁
+ * deadlock模块依赖于threaddump模块，所以如果要安装的话需要先安装threaddump模块
  * Created by kysonchao on 2018/1/12.
  */
 public class DeadLock extends ProduceableSubject<List<Thread>> implements Install<DeadLockContext> {
     private CompositeDisposable mCompositeDisposable;
 
-    public void install(Observable<List<Thread>> listSubject, ThreadEngine.ThreadFilter threadFilter) {
+    public void install(Observable<List<Thread>> listSubject) {
+        install(new DeadLockContextImpl(listSubject, new ExcludeSystemThreadFilter()));
+    }
+
+    public void install(Observable<List<Thread>> listSubject, ThreadFilter threadFilter) {
         install(new DeadLockContextImpl(listSubject, threadFilter));
     }
 
     @Override
     public void install(final DeadLockContext config) {
-        if (mCompositeDisposable == null || mCompositeDisposable.isDisposed()) {
-            mCompositeDisposable = new CompositeDisposable();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
+            L.d("deadlock already installed, ignore.");
+            return;
         }
+        L.d("deadlock installed.");
+        mCompositeDisposable = new CompositeDisposable();
         final DeadLockDetector deadLockDetector = new DeadLockDetector();
-        mCompositeDisposable.add(config.threadInfoSubject().map(new Function<List<Thread>, List<Thread>>() {
+        mCompositeDisposable.add(config.threadInfoSubject().sample(config.intervalMillis(), TimeUnit.MILLISECONDS).map(new Function<List<Thread>, List<Thread>>() {
             @Override
             public List<Thread> apply(List<Thread> threadInfos) throws Exception {
                 List<Thread> results = new ArrayList<>();
@@ -63,6 +74,6 @@ public class DeadLock extends ProduceableSubject<List<Thread>> implements Instal
             }
             mCompositeDisposable = null;
         }
-
+        L.d("deadlock uninstalled.");
     }
 }

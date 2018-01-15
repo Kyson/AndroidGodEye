@@ -86,8 +86,4 @@ public class ThreadEngine implements Engine {
         }
         return threadList;
     }
-
-    public interface ThreadFilter {
-        boolean filter(Thread thread);
-    }
 }

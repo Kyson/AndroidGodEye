@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class DeadLockMaker {
 
-    public static void make(final Loggable loggable) {
+    public static void makeBlock(final Loggable loggable) {
         final Object lock1 = new Object();
         final Object lock2 = new Object();
         final Thread thread = new Thread(new Runnable() {
@@ -50,7 +50,24 @@ public class DeadLockMaker {
         thread2.start();
     }
 
-    public static void make2(final Loggable loggable) {
+    public static void makeNormal() {
+        for (int i = 0; i < 5; i++) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(30000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.setName("android-god-eye-" + i);
+            thread.start();
+        }
+    }
+
+    public static void makeWait(final Loggable loggable) {
         final CountDownLatch lock1 = new CountDownLatch(1);
         final CountDownLatch lock2 = new CountDownLatch(1);
         final Thread thread = new Thread(new Runnable() {

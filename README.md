@@ -155,6 +155,8 @@ and more...
 |startup|no|external|-|
 |traffic|yes|external|interval|
 |crash|yes|external|after install,one time|
+|thread dump|yes|internal|interval|
+|deadlock|yes|internal|interval&happen|
 
 ## Framework
 

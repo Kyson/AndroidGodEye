@@ -7,5 +7,5 @@ public interface ThreadContext {
 
     long intervalMillis();
 
-    ThreadEngine.ThreadFilter threadFilter();
+    ThreadFilter threadFilter();
 }

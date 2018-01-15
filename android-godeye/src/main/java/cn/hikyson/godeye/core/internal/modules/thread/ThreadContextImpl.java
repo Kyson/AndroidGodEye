@@ -11,12 +11,7 @@ public class ThreadContextImpl implements ThreadContext {
     }
 
     @Override
-    public ThreadEngine.ThreadFilter threadFilter() {
-        return new ThreadEngine.ThreadFilter() {
-            @Override
-            public boolean filter(Thread thread) {
-                return true;
-            }
-        };
+    public ThreadFilter threadFilter() {
+        return new ExcludeSystemThreadFilter();
     }
 }

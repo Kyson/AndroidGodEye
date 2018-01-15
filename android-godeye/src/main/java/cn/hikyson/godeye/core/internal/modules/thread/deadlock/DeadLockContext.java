@@ -2,7 +2,7 @@ package cn.hikyson.godeye.core.internal.modules.thread.deadlock;
 
 import java.util.List;
 
-import cn.hikyson.godeye.core.internal.modules.thread.ThreadEngine;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import io.reactivex.Observable;
 
 /**
@@ -13,5 +13,5 @@ public interface DeadLockContext {
 
     Observable<List<Thread>> threadInfoSubject();
 
-    ThreadEngine.ThreadFilter threadFilter();
+    ThreadFilter threadFilter();
 }

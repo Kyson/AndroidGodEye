@@ -188,7 +188,6 @@ public class Pipe {
         }
     }
 
-
     private static <T> Collection<T> cloneList(Collection<T> originList) {
         List<T> dest = new ArrayList<>();
         if (originList == null || originList.isEmpty()) {

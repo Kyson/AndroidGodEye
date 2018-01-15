@@ -107,6 +107,18 @@
                         android:layout_height="wrap_content"
                         android:text="crash"/>
 
+                    <CheckBox
+                        android:id="@+id/activity_main_thread"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="thread"/>
+
+                    <CheckBox
+                        android:id="@+id/activity_main_deadlock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="deadlock"/>
+
                 </LinearLayout>
 
             </HorizontalScrollView>
@@ -309,6 +321,27 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="crash"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/activity_main_consumer_thread"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="thread"/>
+
+                <Button
+                    android:id="@+id/activity_main_consumer_deadlock"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="deadlock"/>
 
             </LinearLayout>
 

@@ -7,6 +7,9 @@ import java.util.List;
  * Created by kysonchao on 2018/1/14.
  */
 public class DeadLockDetector {
+
+
+
     //TODO KYSON 存储多个时间的线程列表，用于间隔检测
     private long mLastDetectTime;
     private List<Thread> mLastThreadInfos;
@@ -35,6 +38,13 @@ public class DeadLockDetector {
         return blockThreads;
     }
 
+    /**
+     * 两个线程是否相同且卡在同一堆栈代码
+     *
+     * @param lti
+     * @param rti
+     * @return
+     */
     private boolean isBlockAtOneLine(Thread lti, Thread rti) {
         if (lti.getId() != rti.getId()) {
             return false;
@@ -45,11 +55,23 @@ public class DeadLockDetector {
             StackTraceElement[] rElements = rti.getStackTrace();
             if (lElements != null && lElements.length > 0
                     && rElements != null && rElements.length > 0
-                    && lElements[0].equals(rElements[0])) {
+                    && isArrayEqual(lElements, rElements)) {
                 return true;
             }
         }
         return false;
     }
 
+    private boolean isArrayEqual(Object[] l, Object[] r) {
+        if (l.length != r.length) {
+            return false;
+        }
+        final int size = l.length;
+        for (int i = 0; i < size; i++) {
+            if (!l[i].equals(r[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
