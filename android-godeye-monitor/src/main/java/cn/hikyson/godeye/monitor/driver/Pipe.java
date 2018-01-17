@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
@@ -16,7 +17,7 @@ import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
-import cn.hikyson.godeye.monitor.modules.ThreadModule;
+import cn.hikyson.godeye.monitor.modules.ThreadInfo;
 
 /**
  * 数据管道，用于将引擎生产的数据输送到monitor
@@ -188,24 +189,37 @@ public class Pipe {
         }
     }
 
+    private List<ThreadInfo> mThreadInfos = new ArrayList<>();
 
-    private List<ThreadModule.ThreadInfo> mThreadInfos = new ArrayList<>();
     private final Object mLockForThreadInfo = new Object();
 
-    public void pushThreadInfo(List<ThreadModule.ThreadInfo> threadInfos) {
+    public void pushThreadInfo(List<ThreadInfo> threadInfos) {
         synchronized (mLockForThreadInfo) {
             mThreadInfos = threadInfos;
         }
     }
 
-    public Collection<ThreadModule.ThreadInfo> popThreadInfo() {
-        synchronized (mLockForThreadInfo) {
-            final Collection<ThreadModule.ThreadInfo> threadInfos = cloneList(mThreadInfos);
-            mThreadInfos.clear();
-            return threadInfos;
+    private List<Long> mDeadLocks = new ArrayList<>();
+
+    public void pushDeadLocks(List<Long> deadLocks) {
+        if (deadLocks != null) {
+            mDeadLocks = deadLocks;
         }
     }
 
+    public Collection<ThreadInfo> popThreadInfo() {
+        synchronized (mLockForThreadInfo) {
+            final Collection<ThreadInfo> threadInfos = cloneList(mThreadInfos);
+            for (ThreadInfo threadInfo : threadInfos) {
+                if (mDeadLocks.contains(threadInfo.id)) {
+                    threadInfo.deadlock = "DeadLock";
+                } else {
+                    threadInfo.deadlock = "";
+                }
+            }
+            return threadInfos;
+        }
+    }
 
     private static <T> Collection<T> cloneList(Collection<T> originList) {
         List<T> dest = new ArrayList<>();

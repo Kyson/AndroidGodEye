@@ -11,7 +11,7 @@ $(document).ready(function () {
     $.fn.dataTable.ext.errMode = 'none';
     var threadTableSelector = $('#thread_table');
     threadTableSelector.DataTable({
-        "ajax": "/leakMemory",
+        "ajax": "/thread",
         "paging": false,
         "bSort": false,
         "scrollY": "400px",
@@ -23,10 +23,14 @@ $(document).ready(function () {
                 "data": null,
                 "defaultContent": ''
             },
-            {"data": "referenceKey"},
-            {"data": "leakTime"},
-            {"data": "leakObjectName"},
-            {"data": "statusSummary"}
+            {"data": "id"},
+            {"data": "name"},
+            {"data": "state"},
+            {"data": "deadlock"},
+            {"data": "priority"},
+            {"data": "deamon"},
+            {"data": "isAlive"},
+            {"data": "isInterrupted"}
         ],
         "order": [[1, 'asc']]
     });
@@ -38,7 +42,7 @@ $(document).ready(function () {
             row.child.hide();
             tr.removeClass('shown');
         } else {
-            row.child(formatLeakStack(row.data())).show();
+            row.child(formatStackTraces(row.data())).show();
             tr.addClass('shown');
         }
     });
@@ -60,7 +64,7 @@ function startRefreshThreadTable() {
     if (!refreshStatus) {
         refreshStatus = true;
         $('#thread_refresh_status').text("refreshing...");
-        refreshThreadTableId = setInterval(refreshLeakTable, interval);
+        refreshThreadTableId = setInterval(refreshThreadTable, interval);
     }
 }
 
@@ -72,18 +76,18 @@ function stopRefreshThreadTable() {
     }
 }
 
-function refreshLeakTable() {
+function refreshThreadTable() {
     $('#thread_table').DataTable().ajax.reload();
 }
 
 
-function formatLeakStack(d) {
-    var leakStack = "";
-    for (var j = 0; j < d.pathToGcRoot.length; j++) {
-        var path = d.pathToGcRoot[j];
-        leakStack += path + "</br>"
+function formatStackTraces(d) {
+    var stacktraces = "";
+    for (var j = 0; j < d.stackTraceElements.length; j++) {
+        var stacktrace = d.stackTraceElements[j];
+        stacktraces += stacktrace + "</br>"
     }
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-        '<tr><td>' + leakStack + '</td></tr>' +
+        '<tr><td>' + stacktraces + '</td></tr>' +
         '</table>';
 }
