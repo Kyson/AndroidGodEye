@@ -1,5 +1,7 @@
 package cn.hikyson.godeye.monitor.driver;
 
+import java.util.List;
+
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
@@ -12,8 +14,10 @@ import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.monitor.modules.ThreadModule;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * monitor数据引擎，用于生产各项数据
@@ -97,6 +101,17 @@ public class Watcher {
             @Override
             public void accept(HeapInfo heapInfo) throws Exception {
                 mPipe.pushHeapInfo(heapInfo);
+            }
+        }));
+        mCompositeDisposable.add(godEye.threadDump().subject().map(new Function<List<Thread>, List<ThreadModule.ThreadInfo>>() {
+            @Override
+            public List<ThreadModule.ThreadInfo> apply(List<Thread> threads) throws Exception {
+                return ThreadModule.ThreadInfo.convert(threads);
+            }
+        }).subscribe(new Consumer<List<ThreadModule.ThreadInfo>>() {
+            @Override
+            public void accept(List<ThreadModule.ThreadInfo> threads) throws Exception {
+                mPipe.pushThreadInfo(threads);
             }
         }));
     }

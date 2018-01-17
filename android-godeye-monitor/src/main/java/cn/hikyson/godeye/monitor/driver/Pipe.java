@@ -16,6 +16,7 @@ import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.monitor.modules.ThreadModule;
 
 /**
  * 数据管道，用于将引擎生产的数据输送到monitor
@@ -122,7 +123,6 @@ public class Pipe {
         }
     }
 
-
     private List<RequestBaseInfo> mRequestBaseInfos = new ArrayList<>();
     private final Object mLockForRequest = new Object();
 
@@ -187,6 +187,25 @@ public class Pipe {
             return heapInfos;
         }
     }
+
+
+    private List<ThreadModule.ThreadInfo> mThreadInfos = new ArrayList<>();
+    private final Object mLockForThreadInfo = new Object();
+
+    public void pushThreadInfo(List<ThreadModule.ThreadInfo> threadInfos) {
+        synchronized (mLockForThreadInfo) {
+            mThreadInfos = threadInfos;
+        }
+    }
+
+    public Collection<ThreadModule.ThreadInfo> popThreadInfo() {
+        synchronized (mLockForThreadInfo) {
+            final Collection<ThreadModule.ThreadInfo> threadInfos = cloneList(mThreadInfos);
+            mThreadInfos.clear();
+            return threadInfos;
+        }
+    }
+
 
     private static <T> Collection<T> cloneList(Collection<T> originList) {
         List<T> dest = new ArrayList<>();
