@@ -19,6 +19,7 @@ import cn.hikyson.godeye.monitor.modules.NetworkModule;
 import cn.hikyson.godeye.monitor.modules.PssModule;
 import cn.hikyson.godeye.monitor.modules.RamModule;
 import cn.hikyson.godeye.monitor.modules.StartUpModule;
+import cn.hikyson.godeye.monitor.modules.ThreadModule;
 import cn.hikyson.godeye.monitor.modules.TrafficModule;
 
 /**
@@ -66,6 +67,8 @@ public class Router {
         mRouteModules.put("startup", startUpModule);
         TrafficModule trafficModule = new TrafficModule();
         mRouteModules.put("traffic", trafficModule);
+        ThreadModule threadModule = new ThreadModule();
+        mRouteModules.put("thread", threadModule);
     }
 
     public byte[] process(Uri uri) throws Throwable {

@@ -12,8 +12,8 @@
 <br/>
 
 <p>
-<a href="English README.md">README_en</a>&nbsp;&nbsp;&nbsp;
-<a href="中文 README_zh.md">README_zh</a>
+<a href="README_en">English README.md</a>&nbsp;&nbsp;&nbsp;
+<a href="README_zh">中文 README_zh.md</a>
 </p>
 
 > Android developer lack of monitoring of performance data,especially in production environment. so we need "AndroidGodEye".
@@ -54,7 +54,7 @@ dependencies {
 Install modules , GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
-GodEye.instance().installAll(getApplication())
+GodEye.instance().installAll(getApplication(),new CrashFileProvider())
 ```
 
 > Recommended to be installed in application.

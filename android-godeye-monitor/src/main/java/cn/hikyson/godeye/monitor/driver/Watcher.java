@@ -1,5 +1,8 @@
 package cn.hikyson.godeye.monitor.driver;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
@@ -12,8 +15,10 @@ import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.monitor.modules.ThreadInfo;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * monitor数据引擎，用于生产各项数据
@@ -97,6 +102,35 @@ public class Watcher {
             @Override
             public void accept(HeapInfo heapInfo) throws Exception {
                 mPipe.pushHeapInfo(heapInfo);
+            }
+        }));
+        mCompositeDisposable.add(godEye.threadDump().subject().map(new Function<List<Thread>, List<ThreadInfo>>() {
+            @Override
+            public List<ThreadInfo> apply(List<Thread> threads) throws Exception {
+                return ThreadInfo.convert(threads);
+            }
+        }).subscribe(new Consumer<List<ThreadInfo>>() {
+            @Override
+            public void accept(List<ThreadInfo> threads) throws Exception {
+                mPipe.pushThreadInfo(threads);
+            }
+        }));
+        mCompositeDisposable.add(godEye.deadLock().subject().map(new Function<List<Thread>, List<Long>>() {
+            @Override
+            public List<Long> apply(List<Thread> threads) throws Exception {
+                List<Long> threadIds = new ArrayList<>();
+                for (Thread thread : threads) {
+                    if (thread == null) {
+                        continue;
+                    }
+                    threadIds.add(thread.getId());
+                }
+                return threadIds;
+            }
+        }).subscribe(new Consumer<List<Long>>() {
+            @Override
+            public void accept(List<Long> threads) throws Exception {
+                mPipe.pushDeadLocks(threads);
             }
         }));
     }

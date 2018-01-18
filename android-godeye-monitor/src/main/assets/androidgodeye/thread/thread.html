@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../resources/jquery.min.js"></script>
+    <script src="../resources/bootstrap.min.js"></script>
+    <link href="../resources/bootstrap.min.css" rel="stylesheet">
+    <script src="../resources/requests.js"></script>
+    <link rel="stylesheet" type="text/css" href="../resources/datatables.min.css"/>
+    <script type="text/javascript" src="../resources/datatables.min.js"></script>
+    <link href="css/thread.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h6>Thread Dump</h6>
+    </div>
+    <div class="panel-body">
+
+        <div class="col-md-10">
+            <span id="thread_refresh_status"></span>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-default pull-right" id="thread_start_dump">开始检测</button>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-default pull-right" id="thread_stop_dump">暂停检测</button>
+        </div>
+
+        <br><br><br>
+
+        <table id="thread_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>名称</th>
+                <th>状态</th>
+                <th>死锁</th>
+                <th>priority</th>
+                <th>deamon</th>
+                <th>isAlive</th>
+                <th>isInterrupted</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<script src="js/thread.dump.js"></script>
+</body>
+</html>

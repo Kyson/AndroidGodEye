@@ -1,32 +1,45 @@
-package cn.hikyson.godeye.core.internal.modules.thread;
+package cn.hikyson.godeye.monitor.modules;
+
+import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import cn.hikyson.godeye.core.utils.StacktraceUtil;
+
 /**
- * 线程信息
- * Created by kysonchao on 2018/1/12.
+ * Created by kysonchao on 2018/1/17.
  */
 public class ThreadInfo {
+    @Expose
     public long id;
+    @Expose
     public String name;
-    public Thread.State state;
+    @Expose
+    public String state;
+    @Expose
     public boolean deamon;
+    @Expose
     public int priority;
+    @Expose
     public boolean isAlive;
+    @Expose
     public boolean isInterrupted;
-    public StackTraceElement[] stackTraceElements;
+    @Expose
+    public List<String> stackTraceElements;
+    @Expose
+    public String deadlock;
+
 
     public ThreadInfo(Thread thread) {
         this.name = thread.getName();
-        this.state = thread.getState();
+        this.state = String.valueOf(thread.getState());
         this.deamon = thread.isDaemon();
         this.priority = thread.getPriority();
         this.id = thread.getId();
         this.isAlive = thread.isAlive();
         this.isInterrupted = thread.isInterrupted();
-        this.stackTraceElements = thread.getStackTrace();
+        this.stackTraceElements = StacktraceUtil.getStack(thread.getStackTrace());
     }
 
     @Override
@@ -39,7 +52,7 @@ public class ThreadInfo {
                 ", priority=" + priority +
                 ", isAlive=" + isAlive +
                 ", isInterrupted=" + isInterrupted +
-                ", stackTraceElements=" + Arrays.toString(stackTraceElements) +
+                ", stackTraceElements=" + stackTraceElements +
                 '}';
     }
 
