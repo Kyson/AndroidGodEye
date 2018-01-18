@@ -12,7 +12,7 @@
 <br/>
 
 <p>
-<a href="README_en.md">English README.md</a>&nbsp;&nbsp;&nbsp;
+<a href="README.md">English README.md</a>&nbsp;&nbsp;&nbsp;
 <a href="README_zh.md">中文 README_zh.md</a>
 </p>
 
