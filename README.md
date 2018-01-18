@@ -12,8 +12,8 @@
 <br/>
 
 <p>
-<a href="README_en">English README.md</a>&nbsp;&nbsp;&nbsp;
-<a href="README_zh">中文 README_zh.md</a>
+<a href="README_en.md">English README.md</a>&nbsp;&nbsp;&nbsp;
+<a href="README_zh.md">中文 README_zh.md</a>
 </p>
 
 > Android developer lack of monitoring of performance data,especially in production environment. so we need "AndroidGodEye".
