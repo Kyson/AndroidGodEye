@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
+import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
@@ -219,6 +219,16 @@ public class Pipe {
             }
             return threadInfos;
         }
+    }
+
+    private CrashInfo mCrashInfo;
+
+    public void pushCrashInfo(CrashInfo crashInfo) {
+        mCrashInfo = crashInfo;
+    }
+
+    public CrashInfo popCrashInfo() {
+        return mCrashInfo;
     }
 
     private static <T> Collection<T> cloneList(Collection<T> originList) {

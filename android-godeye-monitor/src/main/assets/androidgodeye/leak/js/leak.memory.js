@@ -14,8 +14,8 @@ $(document).ready(function () {
         "ajax": "/leakMemory",
         "paging": false,
         "bSort": false,
-        "scrollY": "400px",
-        "scrollCollapse": true,
+        // "scrollY": "400px",
+        // "scrollCollapse": true,
         "columns": [
             {
                 "className": 'details-control',

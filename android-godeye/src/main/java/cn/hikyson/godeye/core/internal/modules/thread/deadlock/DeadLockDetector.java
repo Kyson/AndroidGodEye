@@ -7,10 +7,6 @@ import java.util.List;
  * Created by kysonchao on 2018/1/14.
  */
 public class DeadLockDetector {
-
-
-
-    //TODO KYSON 存储多个时间的线程列表，用于间隔检测
     private long mLastDetectTime;
     private List<Thread> mLastThreadInfos;
 

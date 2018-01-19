@@ -11,6 +11,7 @@ import cn.hikyson.godeye.monitor.modules.AssetsModule;
 import cn.hikyson.godeye.monitor.modules.BatteryModule;
 import cn.hikyson.godeye.monitor.modules.BlockModule;
 import cn.hikyson.godeye.monitor.modules.CpuModule;
+import cn.hikyson.godeye.monitor.modules.CrashModule;
 import cn.hikyson.godeye.monitor.modules.FpsModule;
 import cn.hikyson.godeye.monitor.modules.HeapModule;
 import cn.hikyson.godeye.monitor.modules.LeakMemoryModule;
@@ -69,6 +70,8 @@ public class Router {
         mRouteModules.put("traffic", trafficModule);
         ThreadModule threadModule = new ThreadModule();
         mRouteModules.put("thread", threadModule);
+        CrashModule crashModule = new CrashModule();
+        mRouteModules.put("crash", crashModule);
     }
 
     public byte[] process(Uri uri) throws Throwable {

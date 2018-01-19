@@ -1,15 +1,18 @@
 package cn.hikyson.godeye.core.internal.modules.fps;
 
 import android.content.Context;
+import android.os.Looper;
 import android.view.Choreographer;
 import android.view.Display;
 import android.view.WindowManager;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -58,30 +61,22 @@ public class FpsEngine implements Engine {
     }
 
     private Observable<FpsInfo> create() {
-        final float systemRate = getRefreshRate(mContext);
-        final Choreographer choreographer = Choreographer.getInstance();
-        return Observable.create(new ObservableOnSubscribe<Long>() {
+        return Observable.create(new ObservableOnSubscribe<FpsInfo>() {
             @Override
-            public void subscribe(final ObservableEmitter<Long> e) throws Exception {
+            public void subscribe(final ObservableEmitter<FpsInfo> e) throws Exception {
+                ThreadUtil.ensureMainThread("fps");
+                final float systemRate = getRefreshRate(mContext);
+                final Choreographer choreographer = Choreographer.getInstance();
                 choreographer.postFrameCallback(new Choreographer.FrameCallback() {
                     @Override
                     public void doFrame(long frameTimeNanos) {
-                        e.onNext(frameTimeNanos);
-                        e.onComplete();
-                    }
-                });
-            }
-        }).concatMap(new Function<Long, ObservableSource<FpsInfo>>() {
-            @Override
-            public ObservableSource<FpsInfo> apply(final Long startTimeNanos) throws Exception {
-                return Observable.create(new ObservableOnSubscribe<FpsInfo>() {
-                    @Override
-                    public void subscribe(final ObservableEmitter<FpsInfo> e) throws Exception {
+                        final long startTimeNanos = frameTimeNanos;
                         choreographer.postFrameCallback(new Choreographer.FrameCallback() {
                             @Override
                             public void doFrame(long frameTimeNanos) {
                                 long frameInterval = frameTimeNanos - startTimeNanos;//计算两帧的时间间隔
-                                e.onNext(new FpsInfo((float) (1000000000 / frameInterval), systemRate));
+                                float fps = (float) (1000000000 / frameInterval);
+                                e.onNext(new FpsInfo(Math.min(fps, systemRate), systemRate));
                                 e.onComplete();
                             }
                         });

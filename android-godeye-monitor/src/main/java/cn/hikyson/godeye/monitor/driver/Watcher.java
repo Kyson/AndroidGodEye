@@ -1,11 +1,14 @@
 package cn.hikyson.godeye.monitor.driver;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
+import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
@@ -131,6 +134,33 @@ public class Watcher {
             @Override
             public void accept(List<Long> threads) throws Exception {
                 mPipe.pushDeadLocks(threads);
+            }
+        }));
+        mCompositeDisposable.add(godEye.crash().subject().map(new Function<List<CrashInfo>, CrashInfo>() {
+            @Override
+            public CrashInfo apply(List<CrashInfo> crashInfos) throws Exception {
+                //获取最近的一次崩溃
+                if (crashInfos == null || crashInfos.isEmpty()) {
+                    return null;
+                }
+                Collections.sort(crashInfos, new Comparator<CrashInfo>() {
+                    @Override
+                    public int compare(CrashInfo o1, CrashInfo o2) {
+                        if (o1.timestampMillis < o2.timestampMillis) {
+                            return 1;
+                        }
+                        if (o1.timestampMillis > o2.timestampMillis) {
+                            return -1;
+                        }
+                        return 0;
+                    }
+                });
+                return crashInfos.get(0);
+            }
+        }).subscribe(new Consumer<CrashInfo>() {
+            @Override
+            public void accept(CrashInfo crashInfo) throws Exception {
+                mPipe.pushCrashInfo(crashInfo);
             }
         }));
     }

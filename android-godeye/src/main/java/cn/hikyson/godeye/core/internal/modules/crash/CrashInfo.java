@@ -10,6 +10,7 @@ import cn.hikyson.godeye.core.utils.StacktraceUtil;
  * Created by kysonchao on 2017/12/18.
  */
 public class CrashInfo implements Serializable {
+    public long timestampMillis;
     public String threadName;
     public String threadState;
     public String threadGroupName;
@@ -19,21 +20,23 @@ public class CrashInfo implements Serializable {
     public String throwableMessage;
     public List<String> throwableStacktrace;
 
-    public CrashInfo(Thread thread, Throwable throwable) {
-        threadName = thread.getName();
-        threadState = String.valueOf(thread.getState());
-        threadGroupName = String.valueOf(thread.getThreadGroup().getName());
-        threadIsDaemon = thread.isDaemon();
-        threadIsAlive = thread.isAlive();
-        threadIsInterrupted = thread.isInterrupted();
-        throwableMessage = throwable.getLocalizedMessage();
-        throwableStacktrace = StacktraceUtil.getStack(throwable.getStackTrace());
+    public CrashInfo(long timestampMillis, Thread thread, Throwable throwable) {
+        this.timestampMillis = timestampMillis;
+        this.threadName = thread.getName();
+        this.threadState = String.valueOf(thread.getState());
+        this.threadGroupName = String.valueOf(thread.getThreadGroup().getName());
+        this.threadIsDaemon = thread.isDaemon();
+        this.threadIsAlive = thread.isAlive();
+        this.threadIsInterrupted = thread.isInterrupted();
+        this.throwableMessage = throwable.getLocalizedMessage();
+        this.throwableStacktrace = StacktraceUtil.getStack(throwable.getStackTrace());
     }
 
     @Override
     public String toString() {
         return "CrashInfo{" +
-                "threadName='" + threadName + '\'' +
+                "timestampMillis=" + timestampMillis +
+                ", threadName='" + threadName + '\'' +
                 ", threadState='" + threadState + '\'' +
                 ", threadGroupName='" + threadGroupName + '\'' +
                 ", threadIsDaemon=" + threadIsDaemon +

@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.internal.exception.GodEyeInvalidDataException;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
@@ -33,6 +34,7 @@ public class CpuEngine implements Engine {
                 concatMap(new Function<Long, ObservableSource<CpuInfo>>() {
                     @Override
                     public ObservableSource<CpuInfo> apply(Long aLong) throws Exception {
+                        ThreadUtil.ensureWorkThread("cpu");
                         return create();
                     }
                 }).subscribe(new Consumer<CpuInfo>() {
