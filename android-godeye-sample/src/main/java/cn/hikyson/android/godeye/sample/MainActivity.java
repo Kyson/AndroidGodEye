@@ -12,7 +12,6 @@ import android.widget.EditText;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.URL;
 import java.util.List;
 
@@ -21,9 +20,8 @@ import javax.net.ssl.HttpsURLConnection;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.hikyson.android.godeye.toolbox.CrashFileProvider;
-import cn.hikyson.android.godeye.toolbox.Serializer;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
+import cn.hikyson.android.godeye.toolbox.crash.CrashFileProvider;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
@@ -38,7 +36,6 @@ import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
-import cn.hikyson.godeye.monitor.utils.GsonUtil;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends Activity implements Loggable {
@@ -129,7 +126,7 @@ public class MainActivity extends Activity implements Loggable {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
-        installableCbs = new CheckBox[10];
+        installableCbs = new CheckBox[12];
         installableCbs[0] = mActivityMainCpu;
         installableCbs[1] = mActivityMainBattery;
         installableCbs[2] = mActivityMainFps;
@@ -140,6 +137,8 @@ public class MainActivity extends Activity implements Loggable {
         installableCbs[7] = mActivityMainSm;
         installableCbs[8] = mActivityMainTraffic;
         installableCbs[9] = mActivityMainCrash;
+        installableCbs[10] = mActivityMainThread;
+        installableCbs[11] = mActivityMainDeadLock;
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -356,17 +355,7 @@ public class MainActivity extends Activity implements Loggable {
             GodEye.instance().traffic().install();
         }
         if (mActivityMainCrash.isChecked()) {
-            GodEye.instance().crash().install(new CrashFileProvider(this, new Serializer() {
-                @Override
-                public String serialize(Object o) {
-                    return GsonUtil.toJson(o);
-                }
-
-                @Override
-                public <T> T deserialize(Reader reader, Class<T> clz) {
-                    return GsonUtil.fromJson(reader, clz);
-                }
-            }));
+            GodEye.instance().crash().install(new CrashFileProvider(this));
         }
         if (mActivityMainThread.isChecked()) {
             GodEye.instance().threadDump().install();
