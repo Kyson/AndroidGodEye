@@ -102,7 +102,9 @@ GodEyeMonitor.shutDown()
 
 完成！开始使用：
 
-手机与pc连接同一网段，在pc浏览器中访问 手机ip+端口 即可看到Debug面板!
+手机与pc连接同一网段，在pc浏览器中访问`手机ip+端口`。或者如果你是用USB连接的话，执行`adb forward tcp:5390 tcp:5390`，然后pc浏览器中访问`http://localhost:5390/`。
+
+即可看到Debug面板!
 
 > 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...' 中包含了访问地址。
 
