@@ -20,6 +20,7 @@ import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLock;
+import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadlockDefaultThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 
 /**
@@ -55,7 +56,7 @@ public class GodEye {
     }
 
     public void installAll(Application c, CrashProvider crashProvider) {
-        installAll(c, crashProvider, new ExcludeSystemThreadFilter());
+        installAll(c, crashProvider, new DeadlockDefaultThreadFilter());
     }
 
     public void installAll(Application c, CrashProvider crashProvider, ThreadFilter deadLockThreadFilter) {
