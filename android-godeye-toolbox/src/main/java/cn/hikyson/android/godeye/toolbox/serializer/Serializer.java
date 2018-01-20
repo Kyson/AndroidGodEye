@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.toolbox;
+package cn.hikyson.android.godeye.toolbox.serializer;
 
 import java.io.Reader;
 

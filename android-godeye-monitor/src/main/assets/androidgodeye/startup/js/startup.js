@@ -3,10 +3,11 @@
  */
 'use strict';
 $(document).ready(function () {
+    refresh();
     setInterval(refresh, interval)
 });
 
-var interval = 2000;
+var interval = 5000;
 
 function refresh() {
     requestUtil.getData("/startup", function (data) {

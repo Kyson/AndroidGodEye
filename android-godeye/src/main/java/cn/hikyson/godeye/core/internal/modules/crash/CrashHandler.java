@@ -3,6 +3,7 @@ package cn.hikyson.godeye.core.internal.modules.crash;
 import java.util.List;
 
 import cn.hikyson.godeye.core.internal.Producer;
+import cn.hikyson.godeye.core.utils.L;
 
 /**
  * Created by kysonchao on 2017/12/18.
@@ -19,6 +20,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 producer.produce(mCrashProvider.restoreCrash());
             }
         } catch (Throwable throwable) {
+            L.e(String.valueOf(throwable));
         }
     }
 
@@ -26,9 +28,10 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable ex) {
         try {
             if (mCrashProvider != null) {
-                mCrashProvider.storeCrash(new CrashInfo(thread, ex));
+                mCrashProvider.storeCrash(new CrashInfo(System.currentTimeMillis(), thread, ex));
             }
         } catch (Throwable throwable) {
+            L.e(String.valueOf(throwable));
         }
         mDefaultHandler.uncaughtException(thread, ex);
     }

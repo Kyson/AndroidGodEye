@@ -24,7 +24,7 @@ public class DeadLock extends ProduceableSubject<List<Thread>> implements Instal
     private CompositeDisposable mCompositeDisposable;
 
     public void install(Observable<List<Thread>> listSubject) {
-        install(new DeadLockContextImpl(listSubject, new ExcludeSystemThreadFilter()));
+        install(new DeadLockContextImpl(listSubject, new DeadlockDefaultThreadFilter()));
     }
 
     public void install(Observable<List<Thread>> listSubject, ThreadFilter threadFilter) {

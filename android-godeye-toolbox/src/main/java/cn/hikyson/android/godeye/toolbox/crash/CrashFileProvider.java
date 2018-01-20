@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.toolbox;
+package cn.hikyson.android.godeye.toolbox.crash;
 
 import android.content.Context;
 import android.os.Environment;
@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cn.hikyson.android.godeye.toolbox.serializer.GsonSerializer;
+import cn.hikyson.android.godeye.toolbox.serializer.Serializer;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
 import cn.hikyson.godeye.core.utils.IoUtil;
@@ -30,6 +32,11 @@ public class CrashFileProvider implements CrashProvider {
     public CrashFileProvider(Context context, Serializer serializer) {
         mContext = context.getApplicationContext();
         mSerializer = serializer;
+    }
+
+    public CrashFileProvider(Context context) {
+        mContext = context.getApplicationContext();
+        mSerializer = new GsonSerializer();
     }
 
     @Override
