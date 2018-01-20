@@ -54,7 +54,7 @@ dependencies {
 Install modules , GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
-GodEye.instance().installAll(getApplication(),new CrashFileProvider())
+GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
 ```
 
 > Recommended to be installed in application.

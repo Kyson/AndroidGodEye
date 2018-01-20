@@ -57,7 +57,7 @@ dependencies {
 在应用入口安装所有模块：
 
 ```java
-GodEye.instance().installAll(getApplication(),new CrashFileProvider())
+GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
 ```
 
 > 推荐在application中进行安装
