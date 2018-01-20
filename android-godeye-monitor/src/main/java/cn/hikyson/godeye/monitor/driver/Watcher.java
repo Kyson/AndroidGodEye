@@ -141,7 +141,7 @@ public class Watcher {
             public CrashInfo apply(List<CrashInfo> crashInfos) throws Exception {
                 //获取最近的一次崩溃
                 if (crashInfos == null || crashInfos.isEmpty()) {
-                    return null;
+                    return CrashInfo.INVALID;
                 }
                 Collections.sort(crashInfos, new Comparator<CrashInfo>() {
                     @Override
@@ -160,6 +160,9 @@ public class Watcher {
         }).subscribe(new Consumer<CrashInfo>() {
             @Override
             public void accept(CrashInfo crashInfo) throws Exception {
+                if (crashInfo == CrashInfo.INVALID) {
+                    return;
+                }
                 mPipe.pushCrashInfo(crashInfo);
             }
         }));

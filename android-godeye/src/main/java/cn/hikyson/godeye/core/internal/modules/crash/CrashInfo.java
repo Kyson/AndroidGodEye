@@ -10,6 +10,7 @@ import cn.hikyson.godeye.core.utils.StacktraceUtil;
  * Created by kysonchao on 2017/12/18.
  */
 public class CrashInfo implements Serializable {
+    public static CrashInfo INVALID = new CrashInfo();
     public long timestampMillis;
     public String threadName;
     public String threadState;
@@ -19,6 +20,9 @@ public class CrashInfo implements Serializable {
     public boolean threadIsInterrupted;
     public String throwableMessage;
     public List<String> throwableStacktrace;
+
+    public CrashInfo() {
+    }
 
     public CrashInfo(long timestampMillis, Thread thread, Throwable throwable) {
         this.timestampMillis = timestampMillis;
