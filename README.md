@@ -103,11 +103,13 @@ GodEyeMonitor.shutDown()
 
 You're good to go!
 
-Make sure your android device and pc are on the same network segment, and open browser on pc,
-open `Android device ip : Port`, now enjoy it!
+Make sure your android device and pc are on the same network segment, and open browser on pc, then open `Android device ip : Port`
+
+Or if you are using it over usb, run `adb forward tcp:5390 tcp:5390`, then open `http://localhost:5390/`.
+
+now enjoy it!
 
 > Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context)`, log is like:'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...'.
-
 
 **Okay...If you just want to see the results, you can install [APK](https://fir.im/5k67) directly.**
 
