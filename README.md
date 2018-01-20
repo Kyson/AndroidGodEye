@@ -109,7 +109,7 @@ open `Android device ip : Port`, now enjoy it!
 > Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context)`, log is like:'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...'.
 
 
-**Okay...If you just want to see the effect, you can install [APK](https://fir.im/5k67) directly.**
+**Okay...If you just want to see the results, you can install [APK](https://fir.im/5k67) directly.**
 
 ## Debug Monitor
 
