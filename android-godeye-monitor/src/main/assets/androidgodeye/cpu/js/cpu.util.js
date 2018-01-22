@@ -17,7 +17,7 @@ var cpuUtil = function () {
             //     top: '2%'
             // },
             legend: {
-                data: ['总体使用率', 'APP使用率', '用户进程使用率', '系统进程使用率'],
+                data: ['Total', 'App', 'UserProcess', 'SystemProcess'],
                 top: '2%'
             },
             tooltip: {
@@ -65,7 +65,7 @@ var cpuUtil = function () {
             yAxis: [
                 {
                     type: 'value',
-                    name: "CPU占用(百分比)",
+                    name: "Cpu Usage Rate(Percentage)",
                     nameLocation: 'middle',
                     nameRotate: 90,
                     nameGap: 35,
@@ -75,22 +75,22 @@ var cpuUtil = function () {
             ],
             series: [
                 {
-                    name: '总体使用率',
+                    name: 'Total',
                     type: 'line',
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
-                    name: 'APP使用率',
+                    name: 'App',
                     type: 'line',
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
-                    name: '用户进程使用率',
+                    name: 'UserProcess',
                     type: 'line',
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
-                    name: '系统进程使用率',
+                    name: 'SystemProcess',
                     type: 'line',
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }

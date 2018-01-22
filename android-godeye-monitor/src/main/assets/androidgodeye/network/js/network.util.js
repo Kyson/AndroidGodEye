@@ -60,7 +60,7 @@ var networkUtil = function () {
             yAxis: [
                 {
                     type: 'value',
-                    name: "请求(ms)",
+                    name: "RequestCostTime(ms)",
                     nameLocation: 'middle',
                     nameRotate: 90,
                     nameGap: 45

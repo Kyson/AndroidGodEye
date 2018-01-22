@@ -62,7 +62,7 @@ var blockUtil = function () {
             yAxis: [
                 {
                     type: 'value',
-                    name: "卡顿(ms)",
+                    name: "BlockTime(ms)",
                     nameLocation: 'middle',
                     nameRotate: 90,
                     nameGap: 45
@@ -83,7 +83,7 @@ var blockUtil = function () {
             if (blockDetail) {
                 $("#block_detail").html(jsonFormat.syntaxHighlight(JSON.parse(blockDetail)));
             } else {
-                $("#block_detail").html("无卡顿详情");
+                $("#block_detail").html("None block detail found");
             }
         });
     }

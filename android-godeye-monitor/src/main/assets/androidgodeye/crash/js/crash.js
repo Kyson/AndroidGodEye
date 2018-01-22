@@ -20,13 +20,13 @@ function refresh() {
 function refreshView(crashInfo) {
     if (crashInfo) {
         var time = DateFormat.format(new Date(crashInfo.timestampMillis), 'yyyy/MM/dd hh:mm:ss');
-        var html = "<b>最近一次Crash&nbsp;[&nbsp;" + time + "&nbsp;]</b></br></br><b>Message:</b></br>" + crashInfo.throwableMessage + "</br></br>" + "<b>Stacktrace:</b>&nbsp;</br>"
+        var html = "<b>Last Crash&nbsp;[&nbsp;" + time + "&nbsp;]</b></br></br><b>Message:</b></br>" + crashInfo.throwableMessage + "</br></br>" + "<b>Stacktrace:</b>&nbsp;</br>"
         for (var j = 0; j < crashInfo.throwableStacktrace.length; j++) {
             var path = crashInfo.throwableStacktrace[j];
             html += "<small><small>" + path + "</small></small></br>"
         }
         $("#crash_detail").html(html);
     } else {
-        $("#crash_detail").html("最近一次Crash **");
+        $("#crash_detail").html("Last Crash **");
     }
 }

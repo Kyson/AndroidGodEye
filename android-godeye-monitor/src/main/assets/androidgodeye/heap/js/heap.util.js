@@ -17,7 +17,7 @@ var heapUtil = function () {
             //     top: '2%'
             // },
             legend: {
-                data: ['已分配', 'Free'],
+                data: ['Allocated', 'Free'],
                 top: '2%'
             },
             tooltip: {
@@ -65,7 +65,7 @@ var heapUtil = function () {
             yAxis: [
                 {
                     type: 'value',
-                    name: "堆内存(MB)",
+                    name: "Heap(MB)",
                     nameLocation: 'middle',
                     nameRotate: 90,
                     nameGap: 35
@@ -73,7 +73,7 @@ var heapUtil = function () {
             ],
             series: [
                 {
-                    name: '已分配',
+                    name: 'Allocated',
                     type: 'line',
                     stack: 'heap',
                     areaStyle: {normal: {}},

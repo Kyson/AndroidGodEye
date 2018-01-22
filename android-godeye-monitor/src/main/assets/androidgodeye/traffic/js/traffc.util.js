@@ -17,7 +17,7 @@ var trafficUtil = function () {
             //     top: '2%'
             // },
             legend: {
-                data: ['设备下载速度', '设备上传速度', '应用下载速度', '应用上传速度'],
+                data: ['DeviceRX', 'DeviceTX', 'AppRX', 'AppTX'],
                 top: '2%'
             },
             tooltip: {
@@ -65,7 +65,7 @@ var trafficUtil = function () {
             yAxis: [
                 {
                     type: 'value',
-                    name: "流量(KB/S)",
+                    name: "Traffic(KB/S)",
                     nameLocation: 'middle',
                     nameRotate: 90,
                     nameGap: 35
@@ -73,22 +73,22 @@ var trafficUtil = function () {
             ],
             series: [
                 {
-                    name: '设备下载速度',
+                    name: 'DeviceRX',
                     type: 'line',
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
-                    name: '设备上传速度',
+                    name: 'DeviceTX',
                     type: 'line',
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
-                    name: '应用下载速度',
+                    name: 'AppRX',
                     type: 'line',
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 },
                 {
-                    name: '应用上传速度',
+                    name: 'AppTX',
                     type: 'line',
                     data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
                 }
