@@ -7,7 +7,7 @@ $(document).ready(function () {
     setInterval(refresh, interval);
 });
 
-var interval = 2000;
+var interval = 3000;
 
 function refresh() {
     requestUtil.getData("/block", function (data) {

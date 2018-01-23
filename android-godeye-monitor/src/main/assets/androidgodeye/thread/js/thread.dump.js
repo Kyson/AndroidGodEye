@@ -63,7 +63,7 @@ var refreshThreadTableId;
 function startRefreshThreadTable() {
     if (!refreshStatus) {
         refreshStatus = true;
-        $('#thread_refresh_status').html("refreshing...&nbsp;&nbsp;|&nbsp;&nbsp;死锁仅作参考，如果确认某个线程没有处于死锁状态，deadlock模块中使用ThreadFilter进行排除");
+        $('#thread_refresh_status').html("refreshing...&nbsp;&nbsp;|&nbsp;&nbsp;DeadLock status is provided for reference,you can exclude one thread by ThreadFilter(in module deadlock) if you confirm it is not in deadlock");
         refreshThreadTableId = setInterval(refreshThreadTable, interval);
     }
 }
@@ -71,7 +71,7 @@ function startRefreshThreadTable() {
 function stopRefreshThreadTable() {
     if (refreshStatus) {
         refreshStatus = false;
-        $('#thread_refresh_status').html("stopped.&nbsp;&nbsp;|&nbsp;&nbsp;死锁仅作参考，如果确认某个线程没有处于死锁状态，deadlock模块中使用ThreadFilter进行排除");
+        $('#thread_refresh_status').html("stopped.&nbsp;&nbsp;|&nbsp;&nbsp;DeadLock status is provided for reference,you can exclude one thread by ThreadFilter(in module deadlock) if you confirm it is not in deadlock");
         clearInterval(refreshThreadTableId);
     }
 }
