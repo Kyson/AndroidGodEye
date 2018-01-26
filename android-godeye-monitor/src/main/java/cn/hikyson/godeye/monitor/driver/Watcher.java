@@ -15,6 +15,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageloadInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
@@ -164,6 +165,12 @@ public class Watcher {
                     return;
                 }
                 mPipe.pushCrashInfo(crashInfo);
+            }
+        }));
+        mCompositeDisposable.add(godEye.pageload().subject().subscribe(new Consumer<List<PageloadInfo>>() {
+            @Override
+            public void accept(List<PageloadInfo> pageloadInfos) throws Exception {
+                mPipe.pushPageloadInfo(pageloadInfos);
             }
         }));
     }
