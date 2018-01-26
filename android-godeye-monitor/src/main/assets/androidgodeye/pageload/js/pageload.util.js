@@ -9,6 +9,10 @@ var pageloadUtil = function () {
 
     function setup(chartContainer) {
         pageloadChart = echarts.init(chartContainer, 'dark');
+        var ss = [];
+        for (var i = 0; i < 10; i++) {
+            ss.push(createItem("", 0));
+        }
         pageloadOptions = {
             tooltip: {
                 type: 'axis'
@@ -16,8 +20,8 @@ var pageloadUtil = function () {
             color: ['#EB4334', '#4586F3', '#FBBD06', '#35AA53'],
             xAxis3D: {
                 type: 'category',
-                name: '',
-                data: [''],
+                name: '123131',
+                data: ['345'],
                 axisLine: {
                     lineStyle: {
                         color: 'rgba(0,0,0,0)'
@@ -26,8 +30,8 @@ var pageloadUtil = function () {
             },
             yAxis3D: {
                 type: 'category',
-                name: '',
-                data: [''],
+                name: 's2424x24d',
+                data: ['3453'],
                 axisLine: {
                     lineStyle: {
                         color: 'rgba(0,0,0,0)'
@@ -36,7 +40,7 @@ var pageloadUtil = function () {
             },
             zAxis3D: {
                 type: 'value',
-                name: '',
+                name: 'd341314',
                 axisLine: {
                     lineStyle: {
                         color: 'rgba(0,0,0,0)'
@@ -58,7 +62,7 @@ var pageloadUtil = function () {
                     }
                 }
             },
-            series: []
+            series: ss
         };
         pageloadChart.setOption(pageloadOptions);
     }
@@ -92,12 +96,18 @@ var pageloadUtil = function () {
         }
     }
 
-
     function refreshPageload(pageInfos) {
-        pageloadOptions.series = [];
-        for (var i = 0; i < pageInfos.length; i++) {
-            var pageInfo = pageInfos[i];
-            pageloadOptions.series.push(createItem(pageInfo.pagename, pageInfo.didloadTime));
+        if (pageInfos && pageInfos.length > 0) {
+            for (var i = 0; i < pageInfos.length; i++) {
+                var pageInfo = pageInfos[i];
+                //默认给个10ms
+                var didLoadTime = 10;
+                if (pageInfo.loadTimeInfo) {
+                    didLoadTime = pageInfo.loadTimeInfo.didDrawTime;
+                }
+                pageloadOptions.series.shift();
+                pageloadOptions.series.push(createItem(pageInfo.pageName, didLoadTime));
+            }
         }
         pageloadChart.setOption(pageloadOptions);
     }

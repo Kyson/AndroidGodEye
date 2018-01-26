@@ -13,12 +13,10 @@ function refresh() {
     requestUtil.getData("/pageload", function (data) {
         refreshView(data);
     }, function () {
-
+        refreshView(null);
     });
 }
 
 function refreshView(pageloadInfos) {
-    if (pageloadInfos) {
-        pageloadUtil.refreshPageload(pageloadInfos);
-    }
+    pageloadUtil.refreshPageload(pageloadInfos);
 }
