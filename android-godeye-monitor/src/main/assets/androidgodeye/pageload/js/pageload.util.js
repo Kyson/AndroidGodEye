@@ -96,17 +96,31 @@ var pageloadUtil = function () {
         }
     }
 
+    function getLastArray(count, array) {
+        if (array && array.length > 0) {
+            return array.slice(array.length - count)
+        }
+        return [];
+    }
+
+
     function refreshPageload(pageInfos) {
-        if (pageInfos && pageInfos.length > 0) {
-            for (var i = 0; i < pageInfos.length; i++) {
-                var pageInfo = pageInfos[i];
-                //默认给个10ms
-                var didLoadTime = 10;
-                if (pageInfo.loadTimeInfo) {
-                    didLoadTime = pageInfo.loadTimeInfo.didDrawTime;
-                }
-                pageloadOptions.series.shift();
-                pageloadOptions.series.push(createItem(pageInfo.pageName, didLoadTime));
+        var seriesSize = pageloadOptions.series.length;
+        for (var j = 0; j < seriesSize; j++) {
+            pageloadOptions.series.shift();
+        }
+        var last10Array = getLastArray(pageInfos, 10);
+        for (var i = 0; i < seriesSize; i++) {
+            var pageInfo = last10Array[i];
+            //默认给个10ms
+            var didLoadTime = 10;
+            if(!pageInfo){
+                pageloadOptions.series.push(createItem("", 0));
+                continue;
+            }
+            //TODO KYSON IMPL
+            if (pageInfo.loadTimeInfo && pageInfo.loadTimeInfo.didDrawTime) {
+                didLoadTime = pageInfo.loadTimeInfo.didDrawTime;
             }
         }
         pageloadChart.setOption(pageloadOptions);
