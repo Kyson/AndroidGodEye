@@ -14,6 +14,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageloadInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
@@ -229,6 +230,16 @@ public class Pipe {
 
     public CrashInfo popCrashInfo() {
         return mCrashInfo;
+    }
+
+    private List<PageloadInfo> mPageloadInfos;
+
+    public void pushPageloadInfo(List<PageloadInfo> pageloadInfos) {
+        mPageloadInfos = pageloadInfos;
+    }
+
+    public List<PageloadInfo> popPageloadInfo() {
+        return mPageloadInfos;
     }
 
     private static <T> Collection<T> cloneList(Collection<T> originList) {

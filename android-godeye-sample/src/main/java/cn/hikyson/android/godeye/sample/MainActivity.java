@@ -31,6 +31,8 @@ import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageloadContextImpl;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageloadInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
@@ -66,6 +68,8 @@ public class MainActivity extends Activity implements Loggable {
     CheckBox mActivityMainThread;
     @BindView(R.id.activity_main_deadlock)
     CheckBox mActivityMainDeadLock;
+    @BindView(R.id.activity_main_pageload)
+    CheckBox mActivityMainPageload;
     @BindView(R.id.activity_main_all)
     Button mActivityMainAll;
     @BindView(R.id.activity_main_cancel_all)
@@ -126,7 +130,7 @@ public class MainActivity extends Activity implements Loggable {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
-        installableCbs = new CheckBox[12];
+        installableCbs = new CheckBox[13];
         installableCbs[0] = mActivityMainCpu;
         installableCbs[1] = mActivityMainBattery;
         installableCbs[2] = mActivityMainFps;
@@ -139,6 +143,7 @@ public class MainActivity extends Activity implements Loggable {
         installableCbs[9] = mActivityMainCrash;
         installableCbs[10] = mActivityMainThread;
         installableCbs[11] = mActivityMainDeadLock;
+        installableCbs[12] = mActivityMainPageload;
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -171,10 +176,10 @@ public class MainActivity extends Activity implements Loggable {
             R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss,
             R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm,
             R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash,
-            R.id.activity_main_consumer_thread, R.id.activity_main_consumer_deadlock,
+            R.id.activity_main_consumer_thread, R.id.activity_main_consumer_deadlock, R.id.activity_main_consumer_pageload,
             R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak,
             R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear,
-            R.id.activity_main_make_deadlock})
+            R.id.activity_main_make_deadlock, R.id.activity_main_make_pageload})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_main_all:
@@ -237,6 +242,9 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_consumer_deadlock:
                 mCompositeDisposable.add(GodEye.instance().deadLock().subject().subscribe(new LogObserver<List<Thread>>("deadlock", this)));
                 break;
+            case R.id.activity_main_consumer_pageload:
+                mCompositeDisposable.add(GodEye.instance().pageload().subject().subscribe(new LogObserver<List<PageloadInfo>>("pageload", this)));
+                break;
             case R.id.activity_main_make_block:
                 block();
                 break;
@@ -251,6 +259,10 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_make_deadlock:
                 DeadLockMaker.makeBlock(this);
                 DeadLockMaker.makeNormal();
+                break;
+            case R.id.activity_main_make_pageload:
+                Intent intent = new Intent(this, SecondActivity.class);
+                startActivity(intent);
                 break;
             case R.id.activity_main_consumer_cancel_watch:
                 mCompositeDisposable.clear();
@@ -308,11 +320,11 @@ public class MainActivity extends Activity implements Loggable {
         });
     }
 
-
     private void jumpToLeak() {
         Intent intent = new Intent(MainActivity.this, LeakActivity.class);
         startActivity(intent);
     }
+
 
     private void checkAllInstall() {
         for (CheckBox cb : installableCbs) {
@@ -363,6 +375,9 @@ public class MainActivity extends Activity implements Loggable {
         if (mActivityMainDeadLock.isChecked()) {
             GodEye.instance().deadLock().install(GodEye.instance().threadDump().subject());
         }
+        if (mActivityMainPageload.isChecked()) {
+            GodEye.instance().pageload().install(new PageloadContextImpl(getApplication()));
+        }
     }
 
     private void onClickUninstall() {
@@ -401,6 +416,9 @@ public class MainActivity extends Activity implements Loggable {
         }
         if (mActivityMainDeadLock.isChecked()) {
             GodEye.instance().deadLock().uninstall();
+        }
+        if (mActivityMainPageload.isChecked()) {
+            GodEye.instance().pageload().uninstall();
         }
     }
 

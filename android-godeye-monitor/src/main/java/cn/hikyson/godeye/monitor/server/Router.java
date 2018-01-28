@@ -6,6 +6,7 @@ import android.support.v4.util.ArrayMap;
 
 import java.util.Map;
 
+import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.monitor.modules.AppInfoModule;
 import cn.hikyson.godeye.monitor.modules.AssetsModule;
 import cn.hikyson.godeye.monitor.modules.BatteryModule;
@@ -17,6 +18,7 @@ import cn.hikyson.godeye.monitor.modules.HeapModule;
 import cn.hikyson.godeye.monitor.modules.LeakMemoryModule;
 import cn.hikyson.godeye.monitor.modules.Module;
 import cn.hikyson.godeye.monitor.modules.NetworkModule;
+import cn.hikyson.godeye.monitor.modules.PageloadModule;
 import cn.hikyson.godeye.monitor.modules.PssModule;
 import cn.hikyson.godeye.monitor.modules.RamModule;
 import cn.hikyson.godeye.monitor.modules.StartUpModule;
@@ -72,6 +74,8 @@ public class Router {
         mRouteModules.put("thread", threadModule);
         CrashModule crashModule = new CrashModule();
         mRouteModules.put("crash", crashModule);
+        PageloadModule pageloadModule = new PageloadModule();
+        mRouteModules.put("pageload", pageloadModule);
     }
 
     public byte[] process(Uri uri) throws Throwable {

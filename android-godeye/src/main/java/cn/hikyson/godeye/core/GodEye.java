@@ -14,9 +14,9 @@ import cn.hikyson.godeye.core.internal.modules.memory.Heap;
 import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
+import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
-import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLock;
@@ -43,6 +43,7 @@ public class GodEye {
     private Crash mCrash;
     private ThreadDump mThreadDump;
     private DeadLock mDeadLock;
+    private Pageload mPageload;
 
     private GodEye() {
     }
@@ -75,6 +76,7 @@ public class GodEye {
         crash().install(crashProvider);
         threadDump().install();
         deadLock().install(threadDump().subject(), deadLockThreadFilter);
+        pageload().install(c);
     }
 
     public void uninstallAll() {
@@ -92,6 +94,7 @@ public class GodEye {
         crash().uninstall();
         threadDump().uninstall();
         deadLock().uninstall();
+        pageload().uninstall();
     }
 
     public Cpu cpu() {
@@ -190,5 +193,12 @@ public class GodEye {
             mDeadLock = new DeadLock();
         }
         return mDeadLock;
+    }
+
+    public Pageload pageload() {
+        if (mPageload == null) {
+            mPageload = new Pageload();
+        }
+        return mPageload;
     }
 }
