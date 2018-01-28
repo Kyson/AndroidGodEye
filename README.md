@@ -161,6 +161,7 @@ and more...
 |crash|yes|external|after install,one time|
 |thread dump|yes|internal|interval|
 |deadlock|yes|internal|interval&happen|
+|pageload|yes|internal|happen|
 
 ## Framework
 

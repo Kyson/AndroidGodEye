@@ -159,7 +159,7 @@ GodEyeMonitor.shutDown()
 |crash|是|外部驱动|安装后，一次性|
 |thread dump|是|内置|定时|
 |deadlock|是|内置|定时并发生时|
-
+|pageload|yes|internal|happen|
 
 ## 框架
 
