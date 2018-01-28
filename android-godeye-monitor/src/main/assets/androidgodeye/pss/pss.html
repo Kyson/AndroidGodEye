@@ -5,29 +5,22 @@
     <script src="../resources/jquery.min.js"></script>
     <script src="../resources/bootstrap.min.js"></script>
     <link href="../resources/bootstrap.min.css" rel="stylesheet">
-    <link href="css/pss.css" rel="stylesheet">
     <script src="../resources/requests.js"></script>
+    <script src="../resources/highchart/http_cdn.hcharts.cn_highcharts_highcharts.js"></script>
+    <script src="../resources/highchart/http_cdn.hcharts.cn_highcharts_themes_dark-unica.js"></script>
+    <script src="../resources/highchart/highcharts-zh_CN.js"></script>
 </head>
 <body>
-http://gallery.echartsjs.com/editor.html?c=xr1gtk7csg
-http://gallery.echartsjs.com/editor.html?c=xByzFvaw1M
 <div class="panel panel-default">
     <div class="panel-heading">
         <h6>Pss(共享比例物理内存)</h6>
     </div>
     <div class="panel-body">
-        <div class="psstotal" id="pss_total">
-            <div class="pss_dalvik" id="pss_dalvik_line"></div>
-            <div class="pss_dalvik_text" id="pss_dalvik_text"></div>
-            <div class="pss_native" id="pss_native_line"></div>
-            <div class="pss_native_text" id="pss_native_text"></div>
-            <div class="pss_other" id="pss_other_line"></div>
-            <div class="pss_other_text" id="pss_other_text"></div>
-            <div class="pss_unknown" id="pss_unknown_line"></div>
-            <div class="pss_unknown_text" id="pss_unknown_text"></div>
+        <div id="pss_chart" style="height:200px;width: 100%">
         </div>
     </div>
 </div>
 <script src="js/pss.js"></script>
+<script src="js/pss.util.js"></script>
 </body>
 </html>

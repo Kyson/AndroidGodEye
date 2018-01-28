@@ -6,28 +6,22 @@
     <script src="../resources/bootstrap.min.js"></script>
     <link href="../resources/bootstrap.min.css" rel="stylesheet">
     <script src="../resources/requests.js"></script>
-    <link href="css/ram.css" rel="stylesheet">
+    <script src="../resources/highchart/http_cdn.hcharts.cn_highcharts_highcharts.js"></script>
+    <script src="../resources/highchart/http_cdn.hcharts.cn_highcharts_themes_dark-unica.js"></script>
+    <script src="../resources/highchart/highcharts-zh_CN.js"></script>
 </head>
 <body>
-
-http://gallery.echartsjs.com/editor.html?c=xrybi9qzFe
 
 <div class="panel panel-default">
     <div class="panel-heading">
         <h6>Ram</h6>
     </div>
     <div class="panel-body">
-        <div class="ramtotal" id="ram_total">
-            <div class="ram_allocated" id="ram_allocated"></div>
-            <div class="ram_allocated_text" id="ram_allocated_text"></div>
-        </div>
-        <br><br><br><br>
-        <div class="span12">
-            <div id="ram_low_status" class="redcircle" style="display:inline-block"></div>
-            <span style="color: #ffffff">LowMemoryThreshol:</span><span style="color: #ffffff" id="ram_low_memory"></span>
+        <div id="ram_chart" style="height:200px;width: 100%">
         </div>
     </div>
 </div>
 <script src="js/ram.js"></script>
+<script src="js/ram.util.js"></script>
 </body>
 </html>

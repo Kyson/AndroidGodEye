@@ -1,9 +1,9 @@
 /**
- * Created by kysonchao on 2017/11/28.
+ * Created by kys/onchao on 2017/11/28.
  */
 'use strict';
 $(document).ready(function () {
-    pageloadUtil.setup(document.getElementById('pageload_chart'));
+    pageloadUtil.setup('pageload_chart');
     setInterval(refresh, interval)
 });
 
@@ -11,12 +11,8 @@ var interval = 2000;
 
 function refresh() {
     requestUtil.getData("/pageload", function (data) {
-        refreshView(data);
+        pageloadUtil.refreshPageload(data);
     }, function () {
-        refreshView(null);
+        pageloadUtil.refreshPageload(null);
     });
-}
-
-function refreshView(pageloadInfos) {
-    pageloadUtil.refreshPageload(pageloadInfos);
 }
