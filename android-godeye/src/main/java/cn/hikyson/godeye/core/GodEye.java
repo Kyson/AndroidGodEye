@@ -1,11 +1,24 @@
 package cn.hikyson.godeye.core;
 
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.StringDef;
+import android.support.v4.util.ArrayMap;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Type;
+
+import cn.hikyson.godeye.core.helper.PermissionContext;
+import cn.hikyson.godeye.core.helper.PermissionRequest;
+import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
+import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
@@ -22,6 +35,8 @@ import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLock;
 import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadlockDefaultThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 
 /**
  * 入口
@@ -56,40 +71,47 @@ public class GodEye {
         return InstanceHolder.sInstance;
     }
 
-    public void installAll(Application c, CrashProvider crashProvider) {
-        installAll(c, crashProvider, new DeadlockDefaultThreadFilter());
+    public void installAll(Application c, PermissionRequest permissionRequest, CrashProvider crashProvider) {
+        installAll(c, permissionRequest, crashProvider, new DeadlockDefaultThreadFilter());
     }
 
-    public void installAll(Application c, CrashProvider crashProvider, ThreadFilter deadLockThreadFilter) {
+    public void installAll(final Application c, final PermissionRequest permissionRequest, CrashProvider crashProvider, ThreadFilter deadLockThreadFilter) {
         Context context = c.getApplicationContext();
         cpu().install();
         battery().install(context);
         fps().install(context);
-        leakDetector().install(c);
         heap().install();
         pss().install(context);
         ram().install(context);
-        // network().install(null);
         sm().install(context);
-        // startup().install(null);
         traffic().install();
         crash().install(crashProvider);
         threadDump().install();
         deadLock().install(threadDump().subject(), deadLockThreadFilter);
         pageload().install(c);
+        PermissionContext.getAttachedActivity(c, new PermissionContext.OnAttachActivityCallback() {
+            @Override
+            public void onAttachActivity(Activity activity) {
+                permissionRequest.dispatchRequest(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            leakDetector().install(c);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void uninstallAll() {
         cpu().uninstall();
         battery().uninstall();
         fps().uninstall();
-        // leakDetector().uninstall();
         heap().uninstall();
         pss().uninstall();
         ram().uninstall();
-        // network().install(null);
         sm().uninstall();
-        // startup().install(null);
         traffic().uninstall();
         crash().uninstall();
         threadDump().uninstall();
@@ -201,4 +223,44 @@ public class GodEye {
         }
         return mPageload;
     }
+
+
+//    @SuppressWarnings("unchecked")
+//    private <T> T getModule(@ModuleName String moduleName, Class<T> clz) {
+//        if (mModules == null) {
+//            throw new IllegalStateException("None modules were installed.");
+//        }
+//        Install module = mModules.get(moduleName);
+//        if (module == null) {
+//            throw new IllegalStateException(moduleName + " module has not installed.");
+//        }
+//        if (!clz.isInstance(module)) {
+//            throw new IllegalStateException(moduleName + " type " + clz.getName() + " does not match, expect " + module.getClass().getName());
+//        }
+//        return (T) module;
+//    }
+
+    //    @Retention(RetentionPolicy.SOURCE)
+//    @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
+//            ModuleName.HEAP, ModuleName.PSS, ModuleName.TRAFFIC, ModuleName.CRASH,
+//            ModuleName.THREAD, ModuleName.RAM, ModuleName.NETWORK, ModuleName.SM,
+//            ModuleName.STARTUP, ModuleName.DEADLOCK, ModuleName.PAGELOAD
+//    })
+//    public @interface ModuleName {
+//        public static final String CPU = "CPU";
+//        public static final String BATTERY = "BATTERY";
+//        public static final String FPS = "FPS";
+//        public static final String LEAK = "LEAK";
+//        public static final String HEAP = "HEAP";
+//        public static final String PSS = "PSS";
+//        public static final String RAM = "RAM";
+//        public static final String NETWORK = "NETWORK";
+//        public static final String SM = "SM";
+//        public static final String STARTUP = "STARTUP";
+//        public static final String TRAFFIC = "TRAFFIC";
+//        public static final String CRASH = "CRASH";
+//        public static final String THREAD = "THREAD";
+//        public static final String DEADLOCK = "DEADLOCK";
+//        public static final String PAGELOAD = "PAGELOAD";
+//    }
 }
