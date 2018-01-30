@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.StringDef;
 import android.support.v4.util.ArrayMap;
+import android.support.v4.util.Pair;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,9 +17,11 @@ import java.lang.reflect.Type;
 import cn.hikyson.godeye.core.helper.PermissionContext;
 import cn.hikyson.godeye.core.helper.PermissionRequest;
 import cn.hikyson.godeye.core.internal.Install;
+import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
+import cn.hikyson.godeye.core.internal.modules.cpu.CpuContextImpl;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
@@ -35,6 +38,7 @@ import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLock;
 import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadlockDefaultThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
+import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 
@@ -69,6 +73,53 @@ public class GodEye {
 
     public static GodEye instance() {
         return InstanceHolder.sInstance;
+    }
+
+    public <T> GodEye install(Install<T> install, T config) {
+        install.install(config);
+        return this;
+    }
+
+    public <T> GodEye installz(Class<? extends Install<T>> clz, T config) {
+        getModule(clz).install(config);
+        return this;
+    }
+
+    public <T> GodEye install2(Pair<Class<? extends Install<T>>, T>... pairs) {
+        for (Pair<Class<? extends Install<T>>, T> p : pairs) {
+            installz(p.first, p.second);
+        }
+        return this;
+    }
+
+    public <T> GodEye installz(@Modules.ModuleName String moduleName, T config) {
+        Modules.sModules.get(moduleName)
+        getModule(clz).install(config);
+        return this;
+    }
+
+//    public void e() {
+//        install2(new Pair<Class<? extends Install<CpuContext>>, CpuContext>(Cpu.class,new CpuContextImpl()));
+//        installz(Cpu.class, new CpuContextImpl());
+//    }
+
+    public Cpu cpu2() {
+        return getModule(Cpu.class);
+    }
+
+    public <T> T getModule(Class<T> clz) {
+        try {
+            return clz.newInstance();
+        } catch (InstantiationException e) {
+            L.e(String.valueOf(e));
+        } catch (IllegalAccessException e) {
+            L.e(String.valueOf(e));
+        }
+        return null;
+    }
+
+    public <T> T getModule(@Modules.ModuleName String moduleName){
+        getModule(Modules.sModules.get(moduleName));
     }
 
     public void installAll(Application c, PermissionRequest permissionRequest, CrashProvider crashProvider) {
@@ -238,29 +289,5 @@ public class GodEye {
 //            throw new IllegalStateException(moduleName + " type " + clz.getName() + " does not match, expect " + module.getClass().getName());
 //        }
 //        return (T) module;
-//    }
-
-    //    @Retention(RetentionPolicy.SOURCE)
-//    @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
-//            ModuleName.HEAP, ModuleName.PSS, ModuleName.TRAFFIC, ModuleName.CRASH,
-//            ModuleName.THREAD, ModuleName.RAM, ModuleName.NETWORK, ModuleName.SM,
-//            ModuleName.STARTUP, ModuleName.DEADLOCK, ModuleName.PAGELOAD
-//    })
-//    public @interface ModuleName {
-//        public static final String CPU = "CPU";
-//        public static final String BATTERY = "BATTERY";
-//        public static final String FPS = "FPS";
-//        public static final String LEAK = "LEAK";
-//        public static final String HEAP = "HEAP";
-//        public static final String PSS = "PSS";
-//        public static final String RAM = "RAM";
-//        public static final String NETWORK = "NETWORK";
-//        public static final String SM = "SM";
-//        public static final String STARTUP = "STARTUP";
-//        public static final String TRAFFIC = "TRAFFIC";
-//        public static final String CRASH = "CRASH";
-//        public static final String THREAD = "THREAD";
-//        public static final String DEADLOCK = "DEADLOCK";
-//        public static final String PAGELOAD = "PAGELOAD";
 //    }
 }
