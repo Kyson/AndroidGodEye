@@ -143,23 +143,23 @@ GodEyeMonitor.shutDown()
 
 ## 模块详情
 
-|模块名|需要安装|数据引擎|数据生产时机|
-|-----|------|-------|----------|
-|cpu|是|内置|定时|
-|battery|是|内置|定时|
-|fps|是|内置|定时|
-|leakDetector|是|内置|发生时|
-|heap|是|内置|定时|
-|pss|是|内置|定时|
-|ram|是|内置|定时|
-|network|否|外部驱动|-|
-|sm|是|内置|发生时|
-|startup|否|外部驱动|-|
-|traffic|是|外部驱动|定时|
-|crash|是|外部驱动|安装后，一次性|
-|thread dump|是|内置|定时|
-|deadlock|是|内置|定时并发生时|
-|pageload|yes|internal|happen|
+|模块名|需要安装|数据引擎|数据生产时机|权限|
+|-----|------|-------|----------|---|
+|cpu|是|内置|定时|无|
+|battery|是|内置|定时|无|
+|fps|是|内置|定时|无|
+|leakDetector|是|内置|发生时|WRITE_EXTERNAL_STORAGE|
+|heap|是|内置|定时|无|
+|pss|是|内置|定时|无|
+|ram|是|内置|定时|无|
+|network|否|外部驱动|-|无|
+|sm|是|内置|发生时|无|
+|startup|否|外部驱动|-|无|
+|traffic|是|外部驱动|定时|无|
+|crash|是|外部驱动|安装后，一次性|无|
+|thread dump|是|内置|定时|无|
+|deadlock|是|内置|定时并发生时|无|
+|pageload|yes|internal|happen|无|
 
 ## 框架
 

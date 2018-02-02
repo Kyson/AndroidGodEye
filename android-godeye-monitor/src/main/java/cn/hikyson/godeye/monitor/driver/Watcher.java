@@ -6,18 +6,33 @@ import java.util.Comparator;
 import java.util.List;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
+import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
+import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
+import cn.hikyson.godeye.core.internal.modules.fps.Fps;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
+import cn.hikyson.godeye.core.internal.modules.memory.Heap;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
+import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
+import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
+import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
+import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
+import cn.hikyson.godeye.core.internal.modules.sm.Sm;
+import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
+import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLock;
+import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.monitor.modules.ThreadInfo;
 import io.reactivex.disposables.CompositeDisposable;
@@ -42,73 +57,73 @@ public class Watcher {
      */
     public void observeAll() {
         GodEye godEye = GodEye.instance();
-        mCompositeDisposable.add(godEye.battery().subject().subscribe(new Consumer<BatteryInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Battery.class).subject().subscribe(new Consumer<BatteryInfo>() {
             @Override
             public void accept(BatteryInfo batteryInfo) throws Exception {
                 mPipe.pushBatteryInfo(batteryInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.cpu().subject().subscribe(new Consumer<CpuInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Cpu.class).subject().subscribe(new Consumer<CpuInfo>() {
             @Override
             public void accept(CpuInfo cpuInfo) throws Exception {
                 mPipe.pushCpuInfo(cpuInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.traffic().subject().subscribe(new Consumer<TrafficInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Traffic.class).subject().subscribe(new Consumer<TrafficInfo>() {
             @Override
             public void accept(TrafficInfo trafficInfo) throws Exception {
                 mPipe.pushTrafficInfo(trafficInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.fps().subject().subscribe(new Consumer<FpsInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Fps.class).subject().subscribe(new Consumer<FpsInfo>() {
             @Override
             public void accept(FpsInfo fpsInfo) throws Exception {
                 mPipe.pushFpsInfo(fpsInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.leakDetector().subject().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
+        mCompositeDisposable.add(godEye.getModule(LeakDetector.class).subject().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
             @Override
             public void accept(LeakQueue.LeakMemoryInfo leakMemoryInfo) throws Exception {
                 mPipe.pushLeakMemoryInfos(leakMemoryInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.sm().subject().subscribe(new Consumer<BlockInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Sm.class).subject().subscribe(new Consumer<BlockInfo>() {
             @Override
             public void accept(BlockInfo blockInfo) throws Exception {
                 mPipe.pushBlockInfos(blockInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.network().subject().subscribe(new Consumer<RequestBaseInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Network.class).subject().subscribe(new Consumer<RequestBaseInfo>() {
             @Override
             public void accept(RequestBaseInfo requestBaseInfo) throws Exception {
                 mPipe.pushRequestBaseInfos(requestBaseInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.startup().subject().subscribe(new Consumer<StartupInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Startup.class).subject().subscribe(new Consumer<StartupInfo>() {
             @Override
             public void accept(StartupInfo startupInfo) throws Exception {
                 mPipe.pushStartupInfo(startupInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.ram().subject().subscribe(new Consumer<RamInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Ram.class).subject().subscribe(new Consumer<RamInfo>() {
             @Override
             public void accept(RamInfo ramInfo) throws Exception {
                 mPipe.pushRamInfo(ramInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.pss().subject().subscribe(new Consumer<PssInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Pss.class).subject().subscribe(new Consumer<PssInfo>() {
             @Override
             public void accept(PssInfo pssInfo) throws Exception {
                 mPipe.pushPssInfo(pssInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.heap().subject().subscribe(new Consumer<HeapInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Heap.class).subject().subscribe(new Consumer<HeapInfo>() {
             @Override
             public void accept(HeapInfo heapInfo) throws Exception {
                 mPipe.pushHeapInfo(heapInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.threadDump().subject().map(new Function<List<Thread>, List<ThreadInfo>>() {
+        mCompositeDisposable.add(godEye.getModule(ThreadDump.class).subject().map(new Function<List<Thread>, List<ThreadInfo>>() {
             @Override
             public List<ThreadInfo> apply(List<Thread> threads) throws Exception {
                 return ThreadInfo.convert(threads);
@@ -119,7 +134,7 @@ public class Watcher {
                 mPipe.pushThreadInfo(threads);
             }
         }));
-        mCompositeDisposable.add(godEye.deadLock().subject().map(new Function<List<Thread>, List<Long>>() {
+        mCompositeDisposable.add(godEye.getModule(DeadLock.class).subject().map(new Function<List<Thread>, List<Long>>() {
             @Override
             public List<Long> apply(List<Thread> threads) throws Exception {
                 List<Long> threadIds = new ArrayList<>();
@@ -137,7 +152,7 @@ public class Watcher {
                 mPipe.pushDeadLocks(threads);
             }
         }));
-        mCompositeDisposable.add(godEye.crash().subject().map(new Function<List<CrashInfo>, CrashInfo>() {
+        mCompositeDisposable.add(godEye.getModule(Crash.class).subject().map(new Function<List<CrashInfo>, CrashInfo>() {
             @Override
             public CrashInfo apply(List<CrashInfo> crashInfos) throws Exception {
                 //获取最近的一次崩溃
@@ -167,7 +182,7 @@ public class Watcher {
                 mPipe.pushCrashInfo(crashInfo);
             }
         }));
-        mCompositeDisposable.add(godEye.pageload().subject().subscribe(new Consumer<List<PageloadInfo>>() {
+        mCompositeDisposable.add(godEye.getModule(Pageload.class).subject().subscribe(new Consumer<List<PageloadInfo>>() {
             @Override
             public void accept(List<PageloadInfo> pageloadInfos) throws Exception {
                 mPipe.pushPageloadInfo(pageloadInfos);

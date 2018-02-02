@@ -145,23 +145,23 @@ and more...
 
 ## Modules
 
-|Module Name|Need Install|Engine|Data produce time|
-|-----|------|-------|----------|
-|cpu|yes|internal|interval|
-|battery|yes|internal|interval|
-|fps|yes|internal|interval|
-|leakDetector|yes|internal|happen|
-|heap|yes|internal|interval|
-|pss|yes|internal|interval|
-|ram|yes|internal|interval|
-|network|no|external|-|
-|sm|yes|internal|happen|
-|startup|no|external|-|
-|traffic|yes|external|interval|
-|crash|yes|external|after install,one time|
-|thread dump|yes|internal|interval|
-|deadlock|yes|internal|interval&happen|
-|pageload|yes|internal|happen|
+|Module Name|Need Install|Engine|Data produce time|permissions|
+|-----------|------------|------|-----------------|-----------|
+|cpu|yes|internal|interval|no|
+|battery|yes|internal|interval|no|
+|fps|yes|internal|interval|no|
+|leakDetector|yes|internal|happen|WRITE_EXTERNAL_STORAGE|
+|heap|yes|internal|interval|no|
+|pss|yes|internal|interval|no|
+|ram|yes|internal|interval|no|
+|network|no|external|-|no|
+|sm|yes|internal|happen|no|
+|startup|no|external|-|no|
+|traffic|yes|external|interval|no|
+|crash|yes|external|after install,one time|no|
+|thread dump|yes|internal|interval|no|
+|deadlock|yes|internal|interval&happen|no|
+|pageload|yes|internal|happen|no|
 
 ## Framework
 

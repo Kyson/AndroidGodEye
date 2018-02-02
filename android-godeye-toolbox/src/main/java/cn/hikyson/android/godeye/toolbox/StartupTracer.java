@@ -1,9 +1,11 @@
 package cn.hikyson.android.godeye.toolbox;
 
+import android.app.Activity;
+import android.os.Handler;
 import android.os.Looper;
-import android.os.MessageQueue;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 
 /**
@@ -36,15 +38,20 @@ public class StartupTracer {
         mSplashStartTime = System.currentTimeMillis();
     }
 
-    public void onHomeCreate() {
+    public void onHomeCreate(Activity activity) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw new IllegalStateException("call onHomeCreate ui thread!");
         }
-        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+        activity.getWindow().getDecorView().post(new Runnable() {
             @Override
-            public boolean queueIdle() {
-                GodEye.instance().startup().produce(generateStartupInfo(System.currentTimeMillis()));
-                return false;
+            public void run() {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Startup startup = GodEye.instance().getModule(Startup.class);
+                        startup.produce(generateStartupInfo(System.currentTimeMillis()));
+                    }
+                });
             }
         });
     }

@@ -2,7 +2,6 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.Manifest;
 import android.app.Application;
-import android.support.v4.content.PermissionChecker;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -16,6 +15,7 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.LeakC
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.LeakDirectoryProvider;
 import cn.hikyson.godeye.core.utils.FileUtil;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -38,34 +38,39 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
     }
 
     @Override
-    public synchronized void install(LeakContext config) {
-        Application application = config.application();
+    public synchronized void install(final LeakContext config) {
+        final Application application = config.application();
         if (LeakCanary.isInAnalyzerProcess(application)) {
             throw new IllegalStateException("can not call install leak");
         }
-        if (PermissionChecker.checkSelfPermission(config.application(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED) {
-            throw new IllegalStateException("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        uninstall();
-        mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(application);
-        try {
-            clearLeaks();
-        } catch (FileUtil.FileException e) {
-            L.e(e.getLocalizedMessage());
-        }
-        CanaryLog.setLogger(new CanaryLog.Logger() {
+        config.permissionNeed(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
             @Override
-            public void d(String s, Object... objects) {
-                L.d(String.format(s, objects));
-            }
+            public void accept(Boolean aBoolean) throws Exception {
+                if (!aBoolean) {
+                    throw new IllegalStateException("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+                uninstall();
+                mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(application);
+                try {
+                    clearLeaks();
+                } catch (FileUtil.FileException e) {
+                    L.e(e.getLocalizedMessage());
+                }
+                CanaryLog.setLogger(new CanaryLog.Logger() {
+                    @Override
+                    public void d(String s, Object... objects) {
+                        L.d(String.format(s, objects));
+                    }
 
-            @Override
-            public void d(Throwable throwable, String s, Object... objects) {
-                L.e(String.format(s, objects) + "\n" + String.valueOf(throwable));
+                    @Override
+                    public void d(Throwable throwable, String s, Object... objects) {
+                        L.e(String.format(s, objects) + "\n" + String.valueOf(throwable));
+                    }
+                });
+                LeakCanary.install(application);
+                L.d("LeakCanary installed");
             }
         });
-        LeakCanary.install(application);
-        L.d("LeakCanary installed");
     }
 
     @Override
