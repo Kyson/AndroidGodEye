@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.List;
 
+import cn.hikyson.godeye.core.helper.PermissionRequest;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.CanaryLog;
@@ -31,6 +32,10 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
 
     public static LeakDetector instance() {
         return InstanceHolder.sINSTANCE;
+    }
+
+    public synchronized void install(Application application, final PermissionRequest permissionRequest) {
+        install(new LeakContextImpl2(application, permissionRequest));
     }
 
     public synchronized void install(Application application) {
