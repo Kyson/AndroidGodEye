@@ -59,27 +59,51 @@ dependencies {
 在应用入口安装所有模块：
 
 ```java
-GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
+// v1.7以下
+// GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
+// v1.7.0以上installAll api删除，使用如下：
+GodEye.instance().install(Cpu.class, new CpuContextImpl())
+                .install(Battery.class, new BatteryContextImpl(this))
+                .install(Fps.class, new FpsContextImpl(this))
+                .install(Heap.class, Long.valueOf(2000))
+                .install(Pss.class, new PssContextImpl(this))
+                .install(Ram.class, new RamContextImpl(this))
+                .install(Sm.class, new SmContextImpl(this, 1000, 300, 800))
+                .install(Traffic.class, new TrafficContextImpl())
+                .install(Crash.class, new CrashFileProvider(this))
+                .install(ThreadDump.class, new ThreadContextImpl())
+                .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
+                .install(Pageload.class, new PageloadContextImpl(this))
+                .install(LeakDetector.class, new LeakContextImpl2(this, new PermissionRequest() {
+                    @Override
+                    public Observable<Boolean> dispatchRequest(Activity activity, String... permissions) {
+                        return new RxPermissions(activity).request(permissions);
+                    }
+                }));
 ```
 
-> 推荐在application中进行安装
+> 推荐在application中进行安装，否则部分模块可能工作异常
 
 #### 可选部分
 
-不需要的时候卸载所有模块：
+不需要的时候卸载模块(不推荐)：
 
 ```java
-GodEye.instance().uninstallAll();
+// v1.7以下
+// GodEye.instance().uninstallAll();
+// v1.7.0以上uninstallAll api删除，不提供便捷的卸载方法，如果非要卸载：
+GodEye.instance().getModule(Cpu.class).uninstall();
 ```
-
-如果不想要所有的模块，你也可以自己安装想要的模块，比如`GodEye.instance().cpu().install()`
 
 > 注意：network和startup模块不需要安装和卸载
 
 安装完之后相应的模块就开始输出数据了，一般来说可以使用模块的consume方法进行消费，比如cpu模块：
 
 ```java
-GodEye.instance().cpu().subject().subscribe()
+// v1.7以下
+// GodEye.instance().cpu().subject().subscribe()
+// v1.7.0以上使用class获取对应模块
+GodEye.instance().getModule(Cpu.class).subject().subscribe();
 ```
 
 > 就像我们之后会提到的Debug Monitor，也是通过消费这些数据进行展示的
@@ -109,7 +133,6 @@ GodEyeMonitor.shutDown()
 即可看到Debug面板!
 
 > 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...' 中包含了访问地址。
-
 
 **好吧，如果你懒得自己编译这个项目的话，你也可以先下载 [APK](https://fir.im/5k67) 看看效果。**
 

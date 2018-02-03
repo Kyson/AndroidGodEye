@@ -56,23 +56,40 @@ dependencies {
 Install modules , GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
-GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
+// before v1.7.0
+// GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
+// after v1.7.0 ,install one by one
+GodEye.instance().install(Cpu.class, new CpuContextImpl())
+                .install(Battery.class, new BatteryContextImpl(this))
+                .install(Fps.class, new FpsContextImpl(this))
+                .install(Heap.class, Long.valueOf(2000))
+                .install(Pss.class, new PssContextImpl(this))
+                .install(Ram.class, new RamContextImpl(this))
+                .install(Sm.class, new SmContextImpl(this, 1000, 300, 800))
+                .install(Traffic.class, new TrafficContextImpl())
+                .install(Crash.class, new CrashFileProvider(this))
+                .install(ThreadDump.class, new ThreadContextImpl())
+                .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
+                .install(Pageload.class, new PageloadContextImpl(this))
+                .install(LeakDetector.class, new LeakContextImpl2(this, new PermissionRequest() {
+                    @Override
+                    public Observable<Boolean> dispatchRequest(Activity activity, String... permissions) {
+                        return new RxPermissions(activity).request(permissions);
+                    }
+                }));
 ```
 
-> Recommended to be installed in application.
+> Recommend install in application.
 
 #### Optional
 
-Uninstall modules when you don't need it:
+Uninstall modules when you don't need it(not recommend):
 
 ```java
-GodEye.instance().uninstallAll()
-```
-
-If you don't need all modules , you can install separately, such as "cpu":
-
-```java
-GodEye.instance().cpu().install()
+// before v1.7.0
+// GodEye.instance().uninstallAll()
+// after v1.7.0 ,uninstall one by one
+GodEye.instance().getModule(Cpu.class).uninstall();
 ```
 
 > Note that network and startup module don't need install and uninstall.
@@ -80,7 +97,10 @@ GodEye.instance().cpu().install()
 When install finished, GodEye begin produce performance data, generally you can call consume of modules to get these datas, for example：
 
 ```java
-GodEye.instance().cpu().subject().subscribe()
+// before v1.7.0
+// GodEye.instance().cpu().subject().subscribe()
+// after v1.7.0, get module by class
+GodEye.instance().getModule(Cpu.class).subject().subscribe();
 ```
 
 > Just like we will mention later,Debug Monitor is one of these consumers.
