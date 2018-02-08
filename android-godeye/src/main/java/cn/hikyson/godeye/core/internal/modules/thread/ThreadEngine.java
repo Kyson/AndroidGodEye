@@ -70,6 +70,9 @@ public class ThreadEngine implements Engine {
      */
     public static List<Thread> dump(@NonNull ThreadFilter threadFilter) {
         ThreadGroup rootGroup = Thread.currentThread().getThreadGroup();
+        if (rootGroup == null) {
+            return new ArrayList<>();
+        }
         ThreadGroup parentGroup;
         while ((parentGroup = rootGroup.getParent()) != null) {
             rootGroup = parentGroup;

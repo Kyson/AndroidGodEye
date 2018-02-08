@@ -8,6 +8,18 @@ import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 public class DeadlockDefaultThreadFilter implements ThreadFilter {
     @Override
     public boolean filter(Thread thread) {
-        return !("LeakCanary-File-IO".equals(thread.getName()) || "system".equals(thread.getThreadGroup().getName()));
+        if (thread == null) {
+            return false;
+        }
+        if ("LeakCanary-File-IO".equals(thread.getName())) {
+            return false;
+        }
+        if (thread.getThreadGroup() == null) {
+            return true;
+        }
+        if ("system".equals(thread.getThreadGroup().getName())) {
+            return false;
+        }
+        return true;
     }
 }
