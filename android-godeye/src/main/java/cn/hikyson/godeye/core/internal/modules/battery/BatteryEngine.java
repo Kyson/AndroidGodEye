@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.internal.exception.GodEyeInvalidDataException;
+import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
@@ -45,6 +46,11 @@ public class BatteryEngine implements Engine {
             @Override
             public void accept(BatteryInfo food) throws Exception {
                 mProducer.produce(food);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                L.e(String.valueOf(throwable));
             }
         }));
     }
