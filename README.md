@@ -36,6 +36,8 @@ AndroidGodEye prodive several modules, such as cpu, heap, block, leak memory and
 
 ## Quickstart
 
+Demo:[https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
+
 ### Step1
 
 In your build.gradle:

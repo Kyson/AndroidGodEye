@@ -4,10 +4,10 @@ package cn.hikyson.godeye.core.internal.modules.fps;
  * Created by kysonchao on 2017/11/23.
  */
 public class FpsInfo {
-    public float currentFps;
-    public float systemFps;
+    public int currentFps;
+    public int systemFps;
 
-    public FpsInfo(float currentFps, float systemFps) {
+    public FpsInfo(int currentFps, int systemFps) {
         this.currentFps = currentFps;
         this.systemFps = systemFps;
     }

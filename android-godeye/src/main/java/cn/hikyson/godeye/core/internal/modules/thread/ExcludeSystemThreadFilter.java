@@ -8,6 +8,12 @@ public class ExcludeSystemThreadFilter implements ThreadFilter {
 
     @Override
     public boolean filter(Thread thread) {
+        if (thread == null) {
+            return false;
+        }
+        if (thread.getThreadGroup() == null) {
+            return true;
+        }
         return !"system".equals(thread.getThreadGroup().getName());
     }
 }

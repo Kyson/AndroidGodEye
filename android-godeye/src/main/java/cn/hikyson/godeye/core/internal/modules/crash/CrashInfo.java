@@ -28,7 +28,9 @@ public class CrashInfo implements Serializable {
         this.timestampMillis = timestampMillis;
         this.threadName = thread.getName();
         this.threadState = String.valueOf(thread.getState());
-        this.threadGroupName = String.valueOf(thread.getThreadGroup().getName());
+        if (thread.getThreadGroup() != null) {
+            this.threadGroupName = String.valueOf(thread.getThreadGroup().getName());
+        }
         this.threadIsDaemon = thread.isDaemon();
         this.threadIsAlive = thread.isAlive();
         this.threadIsInterrupted = thread.isInterrupted();

@@ -76,7 +76,7 @@ public class FpsEngine implements Engine {
                             public void doFrame(long frameTimeNanos) {
                                 long frameInterval = frameTimeNanos - startTimeNanos;//计算两帧的时间间隔
                                 float fps = (float) (1000000000 / frameInterval);
-                                e.onNext(new FpsInfo(Math.min(fps, systemRate), systemRate));
+                                e.onNext(new FpsInfo((int)Math.min(fps, systemRate), (int)systemRate));
                                 e.onComplete();
                             }
                         });

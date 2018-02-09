@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.internal.exception.GodEyeInvalidDataException;
+import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -41,6 +42,11 @@ public class CpuEngine implements Engine {
             @Override
             public void accept(CpuInfo food) throws Exception {
                 mProducer.produce(food);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                L.e(String.valueOf(throwable));
             }
         }));
     }
