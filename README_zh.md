@@ -37,6 +37,8 @@ AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存�
 
 ## 快速开始
 
+参考Demo:[https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
+
 ### STEP1
 
 引入依赖，使用gradle
