@@ -48,6 +48,7 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
         if (LeakCanary.isInAnalyzerProcess(application)) {
             throw new IllegalStateException("can not call install leak");
         }
+        //TODO KYSON IMPL 这里可以使用activity的堆栈，获取当前的activity进行请求
         config.permissionNeed(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
