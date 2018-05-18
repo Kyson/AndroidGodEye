@@ -58,3 +58,8 @@ freeline_project_description.json
 # VERSION FOR MAVEN
 VERSION
 android-godeye-monitor/src/main/assets/.idea
+android-godeye-monitor/src/main/assets/android-god-eye/.idea/workspace.xml
+android-godeye-monitor/src/main/assets/android-god-eye/.idea/inspectionProfiles/profiles_settings.xml
+android-godeye-monitor/src/main/assets/androidgodeye/.idea/preferred-vcs.xml
+android-godeye-monitor/src/main/assets/androidgodeye/.idea/workspace.xml
+android-godeye-monitor/src/main/assets/androidgodeye/.idea/inspectionProfiles/profiles_settings.xml
