@@ -2,14 +2,16 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import AppInfo from "./appinfo/appInfo";
-import {Row, Col, Clearfix, Grid} from 'react-bootstrap'
+import {Row, Col, Clearfix, Grid, Panel, Label} from 'react-bootstrap'
 import globalWs from './communication/websocket'
+import BatteryInfo from "./batteryinfo/batteryInfo";
+import Startup from "./startup/startup";
 
 class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {appInfo: ''};
+        this.state = {appInfo: '', batteryInfo: '', startupInfo: ''};
         this._onReceiveMessage = this._onReceiveMessage.bind(this);
     }
 
@@ -19,13 +21,7 @@ class App extends Component {
     }
 
     _onReceiveMessage(moduleName, payload) {
-        if ('appInfo' === moduleName) {
-            this.setState({appInfo: payload});
-            return;
-        }
-        if ('' === moduleName) {
-
-        }
+        this.setState({[moduleName]: payload});
     }
 
     render() {
@@ -40,6 +36,17 @@ class App extends Component {
                 </p>
                 <Grid>
                     <Row><AppInfo appInfo={this.state.appInfo}/></Row>
+                    <Row>
+                        <Col md={3}> <BatteryInfo batteryInfo={this.state.batteryInfo}/>
+                        </Col>
+                        <Col md={4}> <Startup startupInfo={this.state.startupInfo}/>
+                        </Col>
+                        <Col md={5}> <Label >XXXX</Label>
+                        </Col>
+                    </Row>
+                    <Row>
+
+                    </Row>
                 </Grid>
             </div>
         );

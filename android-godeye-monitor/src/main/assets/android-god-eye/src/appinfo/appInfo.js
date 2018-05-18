@@ -16,11 +16,11 @@ class AppInfo extends Component {
 
     render() {
         return (
-            <div style={{alignItems: "flex-start"}}>
-                <h1 style={{textAlign: "left"}}>
+            <div style={{textAlign: "left"}}>
+                <h1 >
                     {this.props.appInfo ? this.props.appInfo.appName : "**"}
                 </h1>
-                <div style={{alignItems: "flex-start", textAlign: "left"}}>
+                <div>
                     {this.renderLabel(this.props.appInfo ? this.props.appInfo.labels : [])}</div>
             </div>
         );

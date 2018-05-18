@@ -69,81 +69,69 @@ public class Watcher {
                 mMessager.sendMessage(new ServerMessage("appInfo", new AppInfo()).toString());
             }
         }));
-
         mCompositeDisposable.add(godEye.getModule(Battery.class).subject().subscribe(new Consumer<BatteryInfo>() {
             @Override
             public void accept(BatteryInfo batteryInfo) throws Exception {
-//                mPipe.pushBatteryInfo(batteryInfo);
-//                mMessager.sendMessage(new ServerMessage("batteryInfo", batteryInfo).toString());
+                mMessager.sendMessage(new ServerMessage("batteryInfo", batteryInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Cpu.class).subject().subscribe(new Consumer<CpuInfo>() {
             @Override
             public void accept(CpuInfo cpuInfo) throws Exception {
-//                mPipe.pushCpuInfo(cpuInfo);
                 mMessager.sendMessage(new ServerMessage("cpuInfo", cpuInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Traffic.class).subject().subscribe(new Consumer<TrafficInfo>() {
             @Override
             public void accept(TrafficInfo trafficInfo) throws Exception {
-//                mPipe.pushTrafficInfo(trafficInfo);
                 mMessager.sendMessage(new ServerMessage("trafficInfo", trafficInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Fps.class).subject().subscribe(new Consumer<FpsInfo>() {
             @Override
             public void accept(FpsInfo fpsInfo) throws Exception {
-//                mPipe.pushFpsInfo(fpsInfo);
                 mMessager.sendMessage(new ServerMessage("fpsInfo", fpsInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(LeakDetector.class).subject().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
             @Override
             public void accept(LeakQueue.LeakMemoryInfo leakMemoryInfo) throws Exception {
-//                mPipe.pushLeakMemoryInfos(leakMemoryInfo);
                 mMessager.sendMessage(new ServerMessage("leakMemoryInfo", leakMemoryInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Sm.class).subject().subscribe(new Consumer<BlockInfo>() {
             @Override
             public void accept(BlockInfo blockInfo) throws Exception {
-//                mPipe.pushBlockInfos(blockInfo);
                 mMessager.sendMessage(new ServerMessage("blockInfo", blockInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Network.class).subject().subscribe(new Consumer<RequestBaseInfo>() {
             @Override
             public void accept(RequestBaseInfo requestBaseInfo) throws Exception {
-//                mPipe.pushRequestBaseInfos(requestBaseInfo);
                 mMessager.sendMessage(new ServerMessage("requestBaseInfo", requestBaseInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Startup.class).subject().subscribe(new Consumer<StartupInfo>() {
             @Override
             public void accept(StartupInfo startupInfo) throws Exception {
-//                mPipe.pushStartupInfo(startupInfo);
                 mMessager.sendMessage(new ServerMessage("startupInfo", startupInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Ram.class).subject().subscribe(new Consumer<RamInfo>() {
             @Override
             public void accept(RamInfo ramInfo) throws Exception {
-//                mPipe.pushRamInfo(ramInfo);
                 mMessager.sendMessage(new ServerMessage("ramInfo", ramInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Pss.class).subject().subscribe(new Consumer<PssInfo>() {
             @Override
             public void accept(PssInfo pssInfo) throws Exception {
-//                mPipe.pushPssInfo(pssInfo);
                 mMessager.sendMessage(new ServerMessage("pssInfo", pssInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Heap.class).subject().subscribe(new Consumer<HeapInfo>() {
             @Override
             public void accept(HeapInfo heapInfo) throws Exception {
-//                mPipe.pushHeapInfo(heapInfo);
                 mMessager.sendMessage(new ServerMessage("heapInfo", heapInfo).toString());
             }
         }));
@@ -155,7 +143,6 @@ public class Watcher {
         }).subscribe(new Consumer<List<ThreadInfo>>() {
             @Override
             public void accept(List<ThreadInfo> threadInfos) throws Exception {
-//                mPipe.pushThreadInfo(threads);
                 mMessager.sendMessage(new ServerMessage("threadInfos", threadInfos).toString());
             }
         }));
@@ -174,8 +161,6 @@ public class Watcher {
         }).subscribe(new Consumer<List<Long>>() {
             @Override
             public void accept(List<Long> threads) throws Exception {
-//                mPipe.pushDeadLocks(threads);
-                //TODO KYSON IMPL
 //                mMessager.sendMessage(new Module.ResultWrapper<>(threads).toString());
             }
         }));
@@ -206,14 +191,12 @@ public class Watcher {
                 if (crashInfo == CrashInfo.INVALID) {
                     return;
                 }
-//                mPipe.pushCrashInfo(crashInfo);
                 mMessager.sendMessage(new ServerMessage("crashInfo", crashInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Pageload.class).subject().subscribe(new Consumer<List<PageloadInfo>>() {
             @Override
             public void accept(List<PageloadInfo> pageloadInfos) throws Exception {
-//                mPipe.pushPageloadInfo(pageloadInfos);
                 mMessager.sendMessage(new ServerMessage("pageloadInfos", pageloadInfos).toString());
             }
         }));
