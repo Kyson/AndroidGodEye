@@ -4,7 +4,8 @@
 'use strict';
 $(document).ready(function () {
     refresh();
-    setInterval(refresh, interval)
+    //TODO KYSON
+    // setInterval(refresh, interval)
 });
 
 var interval = 5000;

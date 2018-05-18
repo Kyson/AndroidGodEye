@@ -4,7 +4,8 @@
 'use strict';
 $(document).ready(function () {
     pageloadUtil.setup('pageload_chart');
-    setInterval(refresh, interval)
+    //TODO KYSON
+    // setInterval(refresh, interval)
 });
 
 var interval = 2000;

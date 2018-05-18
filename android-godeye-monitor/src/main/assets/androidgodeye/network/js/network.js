@@ -4,7 +4,8 @@
 'use strict';
 $(document).ready(function () {
     networkUtil.setup(document.getElementById('network_chart'));
-    setInterval(refresh, interval)
+    //TODO KYSON
+    // setInterval(refresh, interval)
 });
 
 var interval = 2000;

@@ -4,7 +4,8 @@
 'use strict';
 $(document).ready(function () {
     heapUtil.setup(document.getElementById('heap_chart'));
-    setInterval(refresh, interval)
+    //TODO KYSON
+    // setInterval(refresh, interval)
 });
 
 var interval = 2000;

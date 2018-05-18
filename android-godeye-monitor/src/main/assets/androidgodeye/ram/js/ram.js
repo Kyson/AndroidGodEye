@@ -4,7 +4,8 @@
 'use strict';
 $(document).ready(function () {
     ramUtil.setup('ram_chart');
-    setInterval(refresh, interval)
+    //TODO KYSON
+    // setInterval(refresh, interval)
 });
 
 var interval = 6000;

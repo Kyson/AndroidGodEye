@@ -4,7 +4,8 @@
 'use strict';
 $(document).ready(function () {
     blockUtil.setup(document.getElementById('block_chart'));
-    setInterval(refresh, interval);
+    //TODO KYSON
+    // setInterval(refresh, interval);
 });
 
 var interval = 3000;

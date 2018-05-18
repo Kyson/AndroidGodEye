@@ -50,7 +50,8 @@ $(document).ready(function () {
         stopRefreshLeakTable();
     });
 
-    startRefreshLeakTable()
+    //TODO KYSON
+    // startRefreshLeakTable()
 });
 
 
