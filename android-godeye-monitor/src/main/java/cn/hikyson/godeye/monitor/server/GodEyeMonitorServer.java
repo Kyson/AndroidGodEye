@@ -46,8 +46,6 @@ public class GodEyeMonitorServer {
                         if (mMonitorServerCallback != null) {
                             mMonitorServerCallback.onWebSocketRequest(webSocket, s);
                         }
-//                        if ("Hello Server".equals(s))
-//                            webSocket.send("Welcome Client!");
                     }
                 });
             }
@@ -58,7 +56,6 @@ public class GodEyeMonitorServer {
                 if (mMonitorServerCallback != null) {
                     mMonitorServerCallback.onHttpRequest(request, response);
                 }
-//                response.send("Hello!!!");
             }
         });
     }

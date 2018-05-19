@@ -6,12 +6,13 @@ import {Row, Col, Clearfix, Grid, Panel, Label} from 'react-bootstrap'
 import globalWs from './communication/websocket'
 import BatteryInfo from "./batteryinfo/batteryInfo";
 import Startup from "./startup/startup";
+import Ram from "./ram/ram";
 
 class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {appInfo: '', batteryInfo: '', startupInfo: ''};
+        this.state = {appInfo: '', batteryInfo: '', startupInfo: '', ramInfo: ''};
         this._onReceiveMessage = this._onReceiveMessage.bind(this);
     }
 
@@ -45,7 +46,8 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row>
-
+                        <Col md={5}> <Ram ramInfo={this.state.ramInfo}/>
+                        </Col>
                     </Row>
                 </Grid>
             </div>

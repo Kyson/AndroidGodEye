@@ -23,7 +23,6 @@ import cn.hikyson.godeye.monitor.server.GodEyeMonitorServer;
 public class GodEyeMonitor {
     private static boolean sIsWorking = false;
     private static final int DEFAULT_PORT = 5390;
-    //    private static ClientServer sClientServer;
     private static GodEyeMonitorServer sGodEyeMonitorServer;
     private static Watcher sWatcher;
 
@@ -56,7 +55,6 @@ public class GodEyeMonitor {
             throw new IllegalStateException("context can not be null.");
         }
         Context applicationContext = context.getApplicationContext();
-//        Router.get().init(applicationContext);
         sGodEyeMonitorServer = new GodEyeMonitorServer(port);
         sGodEyeMonitorServer.start();
         final StaticProcessor assetsModule = new StaticProcessor(applicationContext);
@@ -65,8 +63,8 @@ public class GodEyeMonitor {
             @Override
             public void onHttpRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 try {
-                    StaticProcessor.StaticResource fileResult = assetsModule.process(request.getPath());
-                    response.send(fileResult.contentType, fileResult.payload);
+                    StaticProcessor.StaticResource staticResource = assetsModule.process(request.getPath());
+                    response.send(staticResource.contentType, staticResource.payload);
                 } catch (Throwable throwable) {
                     L.e(String.valueOf(throwable));
                 }
@@ -75,6 +73,8 @@ public class GodEyeMonitor {
             @Override
             public void onWebSocketRequest(WebSocket webSocket, String messageFromClient) {
                 //解析客户端消息
+                // if ("Hello Server".equals(s))
+                // webSocket.send("Welcome Client!");
                 webSocket.send(webSocketProcessor.process(messageFromClient));
             }
         });
