@@ -73,7 +73,7 @@ class Cpu extends Component {
         return data;
     }
 
-    updateRenderData(cpuInfo) {
+    refresh(cpuInfo) {
         if (cpuInfo) {
             let axisData = (new Date()).toLocaleTimeString();
             this.refs.chart.getChart().series[0].addPoint([axisData, cpuInfo.totalUseRatio * 100], true, true, true);

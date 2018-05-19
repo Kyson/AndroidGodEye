@@ -11,17 +11,24 @@ class Fps extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            fpsInfo: {}
+        }
+    }
+
+    refresh(fpsInfo) {
+        this.setState({fpsInfo});
     }
 
     render() {
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <h5>Pss(共享比例物理内存)
+                    <h5>FPS
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>
-                    <h2>{this.props.fpsInfo ? (this.props.fpsInfo.currentFps + "/" + this.props.fpsInfo.systemFps) : "**/**"}</h2>
+                    <h2>{this.state.fpsInfo ? (this.state.fpsInfo.currentFps + "/" + this.state.fpsInfo.systemFps) : "**/**"}</h2>
                 </Panel.Body>
             </Panel>);
     }

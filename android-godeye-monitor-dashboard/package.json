@@ -19,6 +19,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "deploy": "python deploy.py",
+    "bd": "react-scripts build && python deploy.py",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

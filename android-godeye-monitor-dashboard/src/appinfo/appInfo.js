@@ -12,15 +12,22 @@ class AppInfo extends Component {
     constructor(props) {
         super(props);
         this.renderLabel = this.renderLabel.bind(this);
+        this.state = {
+            appInfo: {}
+        }
+    }
+
+    refresh(appInfo) {
+        this.setState({appInfo});
     }
 
     render() {
         return (
             <div>
                 <h1>
-                    {this.props.appInfo ? this.props.appInfo.appName : "**"}
+                    {this.state.appInfo ? this.state.appInfo.appName : "**"}
                 </h1>
-                <Row style={{padding: 15}}>{this.renderLabel(this.props.appInfo ? this.props.appInfo.labels : [])}</Row>
+                <Row style={{padding: 15}}>{this.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</Row>
             </div>
         );
     }

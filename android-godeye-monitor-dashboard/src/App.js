@@ -15,17 +15,6 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            appInfo: {
-                appName: "***",
-                labels: []
-            },
-            batteryInfo: '',
-            startupInfo: '',
-            ramInfo: '',
-            pssInfo: '',
-            fpsInfo: ''
-        };
         this._onReceiveMessage = this._onReceiveMessage.bind(this);
         this.refresh = this.refresh.bind(this);
     }
@@ -47,10 +36,33 @@ class App extends Component {
 
     _onReceiveMessage(moduleName, payload) {
         if ("cpuInfo" === moduleName) {
-            this.refs.cpu.updateRenderData(payload);
+            this.refs.cpu.refresh(payload);
             return;
         }
-        this.setState({[moduleName]: payload});
+        if ("appInfo" === moduleName) {
+            this.refs.appInfo.refresh(payload);
+            return;
+        }
+        if ("batteryInfo" === moduleName) {
+            this.refs.batteryInfo.refresh(payload);
+            return;
+        }
+        if ("startupInfo" === moduleName) {
+            this.refs.startupInfo.refresh(payload);
+            return;
+        }
+        if ("ramInfo" === moduleName) {
+            this.refs.ramInfo.refresh(payload);
+            return;
+        }
+        if ("pssInfo" === moduleName) {
+            this.refs.pssInfo.refresh(payload);
+            return;
+        }
+        if ("fpsInfo" === moduleName) {
+            this.refs.fpsInfo.refresh(payload);
+            return;
+        }
     }
 
     render() {
@@ -58,22 +70,22 @@ class App extends Component {
             <div className="App">
                 <Grid>
                     <Row>
-                        <Col md={12}><AppInfo appInfo={this.state.appInfo}/></Col>
+                        <Col md={12}><AppInfo ref="appInfo"/></Col>
                     </Row>
                     <Row>
-                        <Col md={3}> <BatteryInfo batteryInfo={this.state.batteryInfo}/>
+                        <Col md={3}> <BatteryInfo ref="batteryInfo"/>
                         </Col>
-                        <Col md={4}> <Startup startupInfo={this.state.startupInfo}/>
+                        <Col md={4}> <Startup ref="startupInfo"/>
                         </Col>
                         <Col md={5}> <Label>XXXX</Label>
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={5}> <Ram ramInfo={this.state.ramInfo}/>
+                        <Col md={5}> <Ram ref="ramInfo"/>
                         </Col>
-                        <Col md={5}> <Pss pssInfo={this.state.pssInfo}/>
+                        <Col md={5}> <Pss ref="pssInfo"/>
                         </Col>
-                        <Col md={2}> <Fps fpsInfo={this.state.fpsInfo}/>
+                        <Col md={2}> <Fps ref="fpsInfo"/>
                         </Col>
                     </Row>
                     <Row>

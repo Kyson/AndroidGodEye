@@ -12,10 +12,17 @@ class Startup extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            startupInfo: {}
+        }
+    }
+
+    refresh(startupInfo) {
+        this.setState(startupInfo);
     }
 
     render() {
-        let info = this.props.startupInfo;
+        let info = this.state.startupInfo;
         if (!info) {
             info = {};
         }

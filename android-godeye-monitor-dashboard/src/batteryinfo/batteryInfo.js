@@ -13,10 +13,15 @@ class BatteryInfo extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {batteryInfo: {}}
+    }
+
+    refresh(batteryInfo) {
+        this.setState({batteryInfo});
     }
 
     render() {
-        let info = this.props.batteryInfo;
+        let info = this.state.batteryInfo;
         if (!info) {
             info = {};
         }
@@ -37,25 +42,25 @@ class BatteryInfo extends Component {
                         <div>
                             <span>Level(电量):</span><span>{info.level}</span></div>
                         <div>
-                            <span >StateOfCharge(充电状态):</span><span>{info.status}</span>
+                            <span>StateOfCharge(充电状态):</span><span>{info.status}</span>
                         </div>
                         <div>
-                            <span >TypeOfCharge(充电方式):</span><span>{info.plugged}</span>
+                            <span>TypeOfCharge(充电方式):</span><span>{info.plugged}</span>
                         </div>
                         <div>
-                            <span >Present(使用状态):</span><span>{info.present}</span>
+                            <span>Present(使用状态):</span><span>{info.present}</span>
                         </div>
                         <div>
-                            <span >Health(健康状态):</span><span>{info.health}</span>
+                            <span>Health(健康状态):</span><span>{info.health}</span>
                         </div>
                         <div>
-                            <span >Voltage(电压):</span><span>{info.voltage}</span>
+                            <span>Voltage(电压):</span><span>{info.voltage}</span>
                         </div>
                         <div>
-                            <span >Temperature(温度):</span><span>{info.temperature}</span>
+                            <span>Temperature(温度):</span><span>{info.temperature}</span>
                         </div>
                         <div>
-                            <span >Technology(电池类型):</span><span>{info.technology}</span>
+                            <span>Technology(电池类型):</span><span>{info.technology}</span>
                         </div>
                     </div>
                 </Panel.Body>

@@ -5,8 +5,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
 import Highcharts from '../../node_modules/highcharts/highstock';
-//TODO KYSON IMPL 换成非官方的
-import HighchartsReact from '../../node_modules/highcharts-react-official'
+import ReactHighcharts from '../../node_modules/react-highcharts'
 
 /**
  * RAM信息
@@ -68,7 +67,7 @@ class Ram extends Component {
         }
     }
 
-    updateRenderData(info) {
+    refresh(info) {
         let datas = [];
         if (info) {
             let allocatedKb = info.totalMemKb - info.availMemKb;
@@ -80,10 +79,10 @@ class Ram extends Component {
             this.options.title.text = "**";
         }
         this.options.series[0].data = datas;
+        this.refs.chart.getChart().update(this.options);
     }
 
     render() {
-        this.updateRenderData(this.props.ramInfo);
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
@@ -91,9 +90,9 @@ class Ram extends Component {
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>
-                    <HighchartsReact
-                        highcharts={Highcharts}
-                        options={this.options}
+                    <ReactHighcharts
+                        ref="chart"
+                        config={this.options}
                     />
                 </Panel.Body>
             </Panel>);

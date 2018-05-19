@@ -48,7 +48,7 @@ if __name__ == "__main__":
     currentDir = os.path.dirname(os.path.realpath(__file__))
     currentParentDir = os.path.dirname(currentDir)
     sourceDir = os.path.join(currentDir,"build")
-    targetDir = os.path.join(currentParentDir,"android-godeye-monitor/src/main/assets/android-god-eye")
+    targetDir = os.path.join(currentParentDir,"android-godeye-monitor/src/main/assets/android-godeye-dashboard")
     print sourceDir
     print targetDir
     del_dir_tree(targetDir)

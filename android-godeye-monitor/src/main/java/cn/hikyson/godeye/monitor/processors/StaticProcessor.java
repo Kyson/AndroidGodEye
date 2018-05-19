@@ -27,7 +27,7 @@ public class StaticProcessor {
         if (TextUtils.isEmpty(path)) {
             path = "index.html";
         }
-        String fileName = "android-god-eye/build/" + path;
+        String fileName = "android-godeye-dashboard/" + path;
         return new StaticResource(parseMimeType(fileName), loadContent(fileName, mAssets));
     }
 
