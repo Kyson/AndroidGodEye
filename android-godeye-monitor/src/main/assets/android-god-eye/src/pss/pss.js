@@ -8,9 +8,9 @@ import Highcharts from '../../node_modules/highcharts/highstock';
 import HighchartsReact from '../../node_modules/highcharts-react-official'
 
 /**
- * RAM信息
+ * PSS信息
  */
-class Ram extends Component {
+class Pss extends Component {
 
     constructor(props) {
         super(props);
@@ -22,7 +22,7 @@ class Ram extends Component {
                 spacing: [0, 0, 0, 0]
             },
             title: {
-                text: "Ram",
+                text: "Pss",
                 align: 'center',
                 verticalAlign: 'middle',
                 y: 50
@@ -32,7 +32,7 @@ class Ram extends Component {
                     return '<div style="text-align:center"><span style="font-size:18px;color:' +
                         ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">' +
                         this.point.name + ":" +
-                        (this.point.y / 1024).toFixed(1) + 'M,' +
+                        (this.point.y / 1024).toFixed(2) + 'M,' +
                         this.point.percentage.toFixed(1) + "%"
                         + '</span></div>'
                 }
@@ -53,7 +53,7 @@ class Ram extends Component {
             },
             series: [{
                 type: 'pie',
-                name: 'ram',
+                name: 'pss',
                 innerSize: '80%',
                 data: []
             }]
@@ -70,10 +70,12 @@ class Ram extends Component {
     updateRenderData(info) {
         let datas = [];
         if (info) {
-            let allocatedKb = info.totalMemKb - info.availMemKb;
-            datas.push(this.createSeriresData("allocated", allocatedKb));
-            datas.push(this.createSeriresData("free", info.availMemKb));
-            let title = "Total:" + (info.totalMemKb / 1024).toFixed(1) + "M";
+            let unknownPssKb = info.totalPssKb - info.dalvikPssKb - info.nativePssKb - info.otherPssKb;
+            datas.push(this.createSeriresData("dalvik", info.dalvikPssKb));
+            datas.push(this.createSeriresData("native", info.nativePssKb));
+            datas.push(this.createSeriresData("other", info.otherPssKb));
+            datas.push(this.createSeriresData("unknown", unknownPssKb));
+            let title = "Total:" + (info.totalPssKb / 1024).toFixed(2) + "M";
             this.options.title.text = title;
         } else {
             this.options.title.text = "**";
@@ -81,12 +83,13 @@ class Ram extends Component {
         this.options.series[0].data = datas;
     }
 
+
     render() {
-        this.updateRenderData(this.props.ramInfo);
+        this.updateRenderData(this.props.pssInfo);
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <h5>Ram(运行时内存)
+                    <h5>Pss(共享比例物理内存)
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>
@@ -99,4 +102,4 @@ class Ram extends Component {
     }
 }
 
-export default Ram;
+export default Pss;

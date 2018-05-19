@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import '../App.css';
-import {Label} from 'react-bootstrap';
+import {Label, Row, Col, Panel, Badge} from 'react-bootstrap';
 import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -16,12 +16,11 @@ class AppInfo extends Component {
 
     render() {
         return (
-            <div style={{textAlign: "left"}}>
-                <h1 >
+            <div>
+                <h1>
                     {this.props.appInfo ? this.props.appInfo.appName : "**"}
                 </h1>
-                <div>
-                    {this.renderLabel(this.props.appInfo ? this.props.appInfo.labels : [])}</div>
+                <Row style={{padding: 15}}>{this.renderLabel(this.props.appInfo ? this.props.appInfo.labels : [])}</Row>
             </div>
         );
     }
@@ -29,9 +28,9 @@ class AppInfo extends Component {
     renderLabel(labels) {
         if (labels) {
             var items = [];
-            var styles = ["default", "primary", "success", "warning", "danger"];
+            var styles = ["#EB4334", "#4586F3", "#FBBD06", "#35AA53", "#999999"];
             for (let i = 0; i < labels.length; i++) {
-                items.push(<Label bsStyle={styles[i % 5]} style={{marginRight: 5}} key={i}>{labels[i]}</Label>);
+                items.push(<Badge style={{marginRight: 5, backgroundColor: styles[i % 5]}} key={i}>{labels[i]}</Badge>);
             }
             return items;
         }
