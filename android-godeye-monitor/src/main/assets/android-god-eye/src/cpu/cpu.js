@@ -5,7 +5,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
 import Highcharts from '../../node_modules/highcharts/highstock';
-import HighchartsReact from '../../node_modules/highcharts-react-official'
+import ReactHighcharts from '../../node_modules/react-highcharts'
 
 /**
  * Cpu
@@ -31,8 +31,7 @@ class Cpu extends Component {
                 }
             },
             xAxis: {
-                type: 'category',
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                type: 'category'
             },
             yAxis: {
                 title: {
@@ -45,45 +44,46 @@ class Cpu extends Component {
             series: [
                 {
                     name: 'Total',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    data: (Cpu.initSeries())
                 },
                 {
                     name: 'App',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    data: (Cpu.initSeries())
                 },
                 {
                     name: 'UserProcess',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    data: (Cpu.initSeries())
                 },
                 {
                     name: 'SystemProcess',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    data: (Cpu.initSeries())
                 }
             ]
         };
     }
 
-    updateRenderData(cpuInfos) {
-        if (cpuInfos && cpuInfos.length > 0) {
-            for (let i = 0; i < cpuInfos.length; i++) {
-                let cpuInfo = cpuInfos[i];
-                let axisData = (new Date()).toLocaleTimeString();
-                this.options.xAxis.data.shift();
-                this.options.xAxis.data.push(axisData);
-                this.options.series[0].data.shift();
-                this.options.series[0].data.push(cpuInfo.totalUseRatio * 100);
-                this.options.series[1].data.shift();
-                this.options.series[1].data.push(cpuInfo.appCpuRatio * 100);
-                this.options.series[2].data.shift();
-                this.options.series[2].data.push(cpuInfo.userCpuRatio * 100);
-                this.options.series[3].data.shift();
-                this.options.series[3].data.push(cpuInfo.sysCpuRatio * 100);
-            }
+    static initSeries() {
+        let data = [];
+        for (let i = -19; i <= 0; i += 1) {
+            data.push({
+                x: i,
+                y: 0
+            });
+        }
+        return data;
+    }
+
+    updateRenderData(cpuInfo) {
+        if (cpuInfo) {
+            let axisData = (new Date()).toLocaleTimeString();
+            this.refs.chart.getChart().series[0].addPoint([axisData, cpuInfo.totalUseRatio * 100], true, true, true);
+            this.refs.chart.getChart().series[1].addPoint([axisData, cpuInfo.appCpuRatio * 100], true, true, true);
+            this.refs.chart.getChart().series[2].addPoint([axisData, cpuInfo.userCpuRatio * 100], true, true, true);
+            this.refs.chart.getChart().series[3].addPoint([axisData, cpuInfo.sysCpuRatio * 100], true, true, true);
         }
     }
 
     render() {
-        this.updateRenderData(this.props.cpuInfos);
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
@@ -91,9 +91,9 @@ class Cpu extends Component {
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>
-                    <HighchartsReact
-                        highcharts={Highcharts}
-                        options={this.options}
+                    <ReactHighcharts
+                        ref="chart"
+                        config={this.options}
                     />
                 </Panel.Body>
             </Panel>);

@@ -4,9 +4,6 @@ import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
-import Highcharts from '../../node_modules/highcharts/highstock';
-import HighchartsReact from '../../node_modules/highcharts-react-official'
-
 /**
  * Fps
  */

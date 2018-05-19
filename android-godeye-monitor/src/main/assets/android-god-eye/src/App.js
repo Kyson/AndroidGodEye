@@ -24,18 +24,16 @@ class App extends Component {
             startupInfo: '',
             ramInfo: '',
             pssInfo: '',
-            fpsInfo: '',
-            cpuInfos: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
+            fpsInfo: ''
         };
         this._onReceiveMessage = this._onReceiveMessage.bind(this);
-        this._getCpu = this._getCpu.bind(this);
         this.refresh = this.refresh.bind(this);
     }
 
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        setInterval(this.refresh, 2000)
+        // setInterval(this.refresh, 2000)
     }
 
     refresh() {
@@ -47,17 +45,9 @@ class App extends Component {
         })
     }
 
-    _getCpu(prevState, payload) {
-        prevState.cpuInfos.shift();
-        prevState.cpuInfos.push(payload);
-        return prevState.cpuInfos;
-    }
-
     _onReceiveMessage(moduleName, payload) {
         if ("cpuInfo" === moduleName) {
-            this.setState((prevState, props) => ({
-                cpuInfos: this._getCpu(prevState, payload)
-            }));
+            this.refs.cpu.updateRenderData(payload);
             return;
         }
         this.setState({[moduleName]: payload});
@@ -87,7 +77,7 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={6}> <Cpu cpuInfos={this.state.cpuInfos}/>
+                        <Col md={6}> <Cpu ref="cpu"/>
                         </Col>
                     </Row>
                 </Grid>

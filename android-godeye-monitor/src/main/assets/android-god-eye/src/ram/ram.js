@@ -5,6 +5,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
 import Highcharts from '../../node_modules/highcharts/highstock';
+//TODO KYSON IMPL 换成非官方的
 import HighchartsReact from '../../node_modules/highcharts-react-official'
 
 /**
