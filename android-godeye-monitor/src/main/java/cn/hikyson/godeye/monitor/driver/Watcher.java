@@ -48,12 +48,10 @@ import io.reactivex.functions.Function;
  * Created by kysonchao on 2017/11/21.
  */
 public class Watcher {
-    //    private Pipe mPipe;
     private CompositeDisposable mCompositeDisposable;
     private Messager mMessager;
 
     public Watcher(Messager messager) {
-//        mPipe = Pipe.instance();
         mCompositeDisposable = new CompositeDisposable();
         mMessager = messager;
     }
