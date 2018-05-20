@@ -8,12 +8,13 @@ import Highcharts from '../../node_modules/highcharts/highstock';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 
 /**
- * Cpu
+ * Heap
  */
-class Cpu extends Component {
+class Heap extends Component {
 
     constructor(props) {
         super(props);
+
         this.options = {
             title: {
                 text: null
@@ -25,7 +26,7 @@ class Cpu extends Component {
                     for (let i = 0; i < this.points.length; i++) {
                         let point = this.points[i].point;
                         let seriesName = this.points[i].series.name;
-                        tip = tip + seriesName + ' : ' + point.y.toFixed(1) + ' % <br/>';
+                        tip = tip + seriesName + ' : ' + point.y.toFixed(1) + ' MB<br/>';
                     }
                     return tip;
                 }
@@ -35,28 +36,25 @@ class Cpu extends Component {
             },
             yAxis: {
                 title: {
-                    text: "Cpu Usage Rate(Percentage)",
+                    text: "Heap(MB)",
                     align: "middle",
                 },
-                min: 0,
-                max: 100
+                min: 0
             },
             series: [
                 {
-                    name: 'Total',
-                    data: (Cpu.initSeries())
+                    name: 'Allocated',
+                    stack: 'heap',
+                    stacking: 'normal',
+                    type: "line",
+                    data: (Heap.initSeries())
                 },
                 {
-                    name: 'App',
-                    data: (Cpu.initSeries())
-                },
-                {
-                    name: 'UserProcess',
-                    data: (Cpu.initSeries())
-                },
-                {
-                    name: 'SystemProcess',
-                    data: (Cpu.initSeries())
+                    name: 'Free',
+                    stack: 'heap',
+                    stacking: 'normal',
+                    type: "line",
+                    data: (Heap.initSeries())
                 }
             ]
         };
@@ -73,13 +71,11 @@ class Cpu extends Component {
         return data;
     }
 
-    refresh(cpuInfo) {
-        if (cpuInfo) {
+    refresh(heapInfo) {
+        if (heapInfo) {
             let axisData = (new Date()).toLocaleTimeString();
-            this.refs.chart.getChart().series[0].addPoint([axisData, cpuInfo.totalUseRatio * 100], true, true, true);
-            this.refs.chart.getChart().series[1].addPoint([axisData, cpuInfo.appCpuRatio * 100], true, true, true);
-            this.refs.chart.getChart().series[2].addPoint([axisData, cpuInfo.userCpuRatio * 100], true, true, true);
-            this.refs.chart.getChart().series[3].addPoint([axisData, cpuInfo.sysCpuRatio * 100], true, true, true);
+            this.refs.chart.getChart().series[0].addPoint([axisData, heapInfo.allocatedKb / 1024], true, true, true);
+            this.refs.chart.getChart().series[1].addPoint([axisData, heapInfo.freeMemKb / 1024], true, true, true);
         }
     }
 
@@ -87,7 +83,7 @@ class Cpu extends Component {
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <h5>Cpu
+                    <h5>Heap
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>
@@ -100,4 +96,4 @@ class Cpu extends Component {
     }
 }
 
-export default Cpu;
+export default Heap;

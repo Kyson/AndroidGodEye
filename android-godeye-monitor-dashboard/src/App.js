@@ -10,6 +10,7 @@ import Ram from "./ram/ram";
 import Pss from "./pss/pss";
 import Fps from "./fps/fps";
 import Cpu from "./cpu/cpu";
+import Heap from "./heap/heap";
 
 class App extends Component {
 
@@ -22,21 +23,23 @@ class App extends Component {
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        // setInterval(this.refresh, 2000)
+        setInterval(this.refresh, 2000)
     }
 
     refresh() {
-        this._onReceiveMessage("cpuInfo", {
-            totalUseRatio: 0.56,
-            appCpuRatio: 0.22,
-            userCpuRatio: 0.10,
-            sysCpuRatio: 0.18
+        this._onReceiveMessage("heapInfo", {
+            allocatedKb: 56,
+            freeMemKb: 22
         })
     }
 
     _onReceiveMessage(moduleName, payload) {
         if ("cpuInfo" === moduleName) {
-            this.refs.cpu.refresh(payload);
+            this.refs.cpuInfo.refresh(payload);
+            return;
+        }
+        if ("heapInfo" === moduleName) {
+            this.refs.heapInfo.refresh(payload);
             return;
         }
         if ("appInfo" === moduleName) {
@@ -89,7 +92,9 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={6}> <Cpu ref="cpu"/>
+                        <Col md={6}> <Cpu ref="cpuInfo"/>
+                        </Col>
+                        <Col md={6}> <Heap ref="heapInfo"/>
                         </Col>
                     </Row>
                 </Grid>
