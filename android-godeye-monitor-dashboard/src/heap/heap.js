@@ -16,6 +16,9 @@ class Heap extends Component {
         super(props);
 
         this.options = {
+            chart: {
+                type: 'area'
+            },
             title: {
                 text: null
             },
@@ -46,14 +49,12 @@ class Heap extends Component {
                     name: 'Allocated',
                     stack: 'heap',
                     stacking: 'normal',
-                    type: "line",
                     data: (Heap.initSeries())
                 },
                 {
                     name: 'Free',
                     stack: 'heap',
                     stacking: 'normal',
-                    type: "line",
                     data: (Heap.initSeries())
                 }
             ]
@@ -64,8 +65,7 @@ class Heap extends Component {
         let data = [];
         for (let i = 0; i <= 20; i++) {
             data.push({
-                x: i,
-                y: 0
+                x: i, y: 0
             });
         }
         return data;

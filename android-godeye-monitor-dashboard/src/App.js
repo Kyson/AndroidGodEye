@@ -23,13 +23,13 @@ class App extends Component {
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        setInterval(this.refresh, 2000)
+        // setInterval(this.refresh, 2000)
     }
 
     refresh() {
         this._onReceiveMessage("heapInfo", {
-            allocatedKb: 56,
-            freeMemKb: 22
+            allocatedKb: 1024,
+            freeMemKb: 2048
         })
     }
 
