@@ -11,6 +11,7 @@ import Pss from "./pss/pss";
 import Fps from "./fps/fps";
 import Cpu from "./cpu/cpu";
 import Heap from "./heap/heap";
+import Pageload from "./pageload/pageload";
 
 class App extends Component {
 
@@ -23,13 +24,15 @@ class App extends Component {
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        // setInterval(this.refresh, 2000)
+        setInterval(this.refresh, 2000)
     }
 
     refresh() {
-        this._onReceiveMessage("heapInfo", {
-            allocatedKb: 1024,
-            freeMemKb: 2048
+        this._onReceiveMessage("pageloadInfo", {
+            pageId: "11",
+            pageName: "ActivityA",
+            pageStatus: "created",
+            pageStatusTime: "2018-03-00"
         })
     }
 
@@ -66,6 +69,10 @@ class App extends Component {
             this.refs.fpsInfo.refresh(payload);
             return;
         }
+        if ("pageloadInfo" === moduleName) {
+            this.refs.pageloadInfo.refresh(payload);
+            return;
+        }
     }
 
     render() {
@@ -96,6 +103,9 @@ class App extends Component {
                         </Col>
                         <Col md={6}> <Heap ref="heapInfo"/>
                         </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><Pageload ref="pageloadInfo"/></Col>
                     </Row>
                 </Grid>
             </div>

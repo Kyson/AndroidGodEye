@@ -6,3 +6,7 @@
 2. `npm install`
 3. `npm run bd` or `npm run build` then `npm run deploy`
 4. run android android-godeye-sample
+
+
+table:https://react-table.js.org/#/story/readme
+charts:highcharts

@@ -3,6 +3,7 @@ import '../App.css';
 import {Label, Row, Col, Panel, Badge} from 'react-bootstrap';
 import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import Util from '../libs/util'
 
 /**
  * 应用基本信息
@@ -34,10 +35,12 @@ class AppInfo extends Component {
 
     renderLabel(labels) {
         if (labels) {
-            var items = [];
-            var styles = ["#EB4334", "#4586F3", "#FBBD06", "#35AA53", "#999999"];
+            let items = [];
+            let styles = Util.getCommonColors();
+            let styleCount = styles.length;
             for (let i = 0; i < labels.length; i++) {
-                items.push(<Badge style={{marginRight: 5, backgroundColor: styles[i % 5]}} key={i}>{labels[i]}</Badge>);
+                items.push(<Badge style={{marginRight: 5, backgroundColor: styles[i % styleCount]}}
+                                  key={i}>{labels[i]}</Badge>);
             }
             return items;
         }

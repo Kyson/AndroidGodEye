@@ -1,0 +1,27 @@
+class Util {
+    static getCommonColors() {
+        return ["#EB4334", "#4586F3", "#FBBD06", "#35AA53", "#999999"];
+    }
+
+    static getRed() {
+        return Util.getCommonColors()[0];
+    }
+
+    static getBlue() {
+        return Util.getCommonColors()[1];
+    }
+
+    static getOrange() {
+        return Util.getCommonColors()[2];
+    }
+
+    static getGreen() {
+        return Util.getCommonColors()[3];
+    }
+
+    static getGrey() {
+        return Util.getCommonColors()[4];
+    }
+}
+
+export default Util;
