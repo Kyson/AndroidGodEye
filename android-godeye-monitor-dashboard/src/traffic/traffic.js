@@ -8,9 +8,9 @@ import Highcharts from '../../node_modules/highcharts/highstock';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 
 /**
- * Cpu
+ * Traffic
  */
-class Cpu extends Component {
+class Traffic extends Component {
 
     constructor(props) {
         super(props);
@@ -25,7 +25,7 @@ class Cpu extends Component {
                     for (let i = 0; i < this.points.length; i++) {
                         let point = this.points[i].point;
                         let seriesName = this.points[i].series.name;
-                        tip = tip + seriesName + ' : ' + point.y.toFixed(1) + ' % <br/>';
+                        tip = tip + seriesName + ' : ' + point.y.toFixed(3) + ' KB/S <br/>';
                     }
                     return tip;
                 }
@@ -35,28 +35,27 @@ class Cpu extends Component {
             },
             yAxis: {
                 title: {
-                    text: "Cpu Usage Rate(Percentage)",
+                    text: "Traffic(KB/S)",
                     align: "middle",
                 },
-                min: 0,
-                max: 100
+                min: 0
             },
             series: [
                 {
-                    name: 'Total',
-                    data: (Cpu.initSeries())
+                    name: 'DeviceRX',
+                    data: (Traffic.initSeries())
                 },
                 {
-                    name: 'App',
-                    data: (Cpu.initSeries())
+                    name: 'DeviceTX',
+                    data: (Traffic.initSeries())
                 },
                 {
-                    name: 'UserProcess',
-                    data: (Cpu.initSeries())
+                    name: 'AppRX',
+                    data: (Traffic.initSeries())
                 },
                 {
-                    name: 'SystemProcess',
-                    data: (Cpu.initSeries())
+                    name: 'AppTX',
+                    data: (Traffic.initSeries())
                 }
             ]
         };
@@ -73,13 +72,13 @@ class Cpu extends Component {
         return data;
     }
 
-    refresh(cpuInfo) {
-        if (cpuInfo) {
+    refresh(trafficInfo) {
+        if (trafficInfo) {
             let axisData = (new Date()).toLocaleTimeString();
-            this.refs.chart.getChart().series[0].addPoint([axisData, cpuInfo.totalUseRatio * 100], true, true, true);
-            this.refs.chart.getChart().series[1].addPoint([axisData, cpuInfo.appCpuRatio * 100], true, true, true);
-            this.refs.chart.getChart().series[2].addPoint([axisData, cpuInfo.userCpuRatio * 100], true, true, true);
-            this.refs.chart.getChart().series[3].addPoint([axisData, cpuInfo.sysCpuRatio * 100], true, true, true);
+            this.refs.chart.getChart().series[0].addPoint([axisData, trafficInfo.rxTotalRate], true, true, true);
+            this.refs.chart.getChart().series[1].addPoint([axisData, trafficInfo.txTotalRate], true, true, true);
+            this.refs.chart.getChart().series[2].addPoint([axisData, trafficInfo.rxUidRate], true, true, true);
+            this.refs.chart.getChart().series[3].addPoint([axisData, trafficInfo.txUidRate], true, true, true);
         }
     }
 
@@ -87,7 +86,7 @@ class Cpu extends Component {
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <h5>Cpu
+                    <h5>Traffic
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>
@@ -100,4 +99,4 @@ class Cpu extends Component {
     }
 }
 
-export default Cpu;
+export default Traffic;

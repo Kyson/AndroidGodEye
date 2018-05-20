@@ -63,7 +63,7 @@ class Heap extends Component {
 
     static initSeries() {
         let data = [];
-        for (let i = 0; i <= 20; i++) {
+        for (let i = 0; i < 20; i++) {
             data.push({
                 x: i, y: 0
             });

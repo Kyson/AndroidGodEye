@@ -12,6 +12,12 @@ import Fps from "./fps/fps";
 import Cpu from "./cpu/cpu";
 import Heap from "./heap/heap";
 import Pageload from "./pageload/pageload";
+import Traffic from "./traffic/traffic";
+import Crash from "./crash/crash";
+import Block from "./block/block";
+import Network from "./network/network";
+import Thread from "./thread/thread";
+import MemoryLeak from "./memoryleak/memoryLeak";
 
 class App extends Component {
 
@@ -24,16 +30,82 @@ class App extends Component {
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        setInterval(this.refresh, 2000)
+        setInterval(this.refresh, 2000);
     }
 
     refresh() {
-        this._onReceiveMessage("pageloadInfo", {
-            pageId: "11",
-            pageName: "ActivityA",
-            pageStatus: "created",
-            pageStatusTime: "2018-03-00"
+        this._onReceiveMessage("fpsInfo", {
+            currentFps: "12",
+            systemFps: "34"
+        });
+        // this._onReceiveMessage("pageloadInfo", {
+        //     pageId: "11",
+        //     pageName: "ActivityA",
+        //     pageStatus: "created",
+        //     pageStatusTime: "2018-03-00"
+        // })
+        // this._onReceiveMessage("crashInfo", {
+        //     timestampMillis: new Date().getMilliseconds(),
+        //     throwableMessage: "throwableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessage",
+        //     throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
+        // })
+        // this._onReceiveMessage("blockInfo", {
+        //     blockTime: 123,
+        //     blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
+        // })
+        // this._onReceiveMessage("networkInfo", {
+        //     url: "http://www.baidu.com",
+        //     endTimeMillis: 123,
+        //     startTimeMillis: 120
+        // })
+        this._onReceiveMessage("leakInfo", {
+            referenceKey: "referenceKey",
+            leakTime: "leakTime",
+            leakObjectName: "leakObjectName",
+            statusSummary: "statusSummary",
+            leakStack: ["leakStack", "leakStack", "leakStack", "leakStack", "leakStack"]
         })
+
+        // this._onReceiveMessage("threadInfo", [
+        //     {
+        //         id: 1,
+        //         name: "name",
+        //         state: "state",
+        //         deadlock: "deadlock",
+        //         priority: "priority",
+        //         deamon: "deamon",
+        //         isAlive: "isAlive",
+        //         isInterrupted: "isInterrupted",
+        //     },
+        //     {
+        //         id: 1,
+        //         name: "name",
+        //         state: "state",
+        //         deadlock: "deadlock",
+        //         priority: "priority",
+        //         deamon: "deamon",
+        //         isAlive: "isAlive",
+        //         isInterrupted: "isInterrupted",
+        //     }, {
+        //         id: 1,
+        //         name: "name",
+        //         state: "state",
+        //         deadlock: "deadlock",
+        //         priority: "priority",
+        //         deamon: "deamon",
+        //         isAlive: "isAlive",
+        //         isInterrupted: "isInterrupted",
+        //     }, {
+        //         id: 1,
+        //         name: "name",
+        //         state: "state",
+        //         deadlock: "deadlock",
+        //         priority: "priority",
+        //         deamon: "deamon",
+        //         isAlive: "isAlive",
+        //         isInterrupted: "isInterrupted",
+        //     }
+        // ]);
     }
 
     _onReceiveMessage(moduleName, payload) {
@@ -73,6 +145,30 @@ class App extends Component {
             this.refs.pageloadInfo.refresh(payload);
             return;
         }
+        if ("trafficInfo" === moduleName) {
+            this.refs.trafficInfo.refresh(payload);
+            return;
+        }
+        if ("crashInfo" === moduleName) {
+            this.refs.crashInfo.refresh(payload);
+            return;
+        }
+        if ("blockInfo" === moduleName) {
+            this.refs.blockInfo.refresh(payload);
+            return;
+        }
+        if ("networkInfo" === moduleName) {
+            this.refs.networkInfo.refresh(payload);
+            return;
+        }
+        if ("threadInfo" === moduleName) {
+            this.refs.threadInfo.refresh(payload);
+            return;
+        }
+        if ("leakInfo" === moduleName) {
+            this.refs.leakInfo.refresh(payload);
+            return;
+        }
     }
 
     render() {
@@ -83,19 +179,17 @@ class App extends Component {
                         <Col md={12}><AppInfo ref="appInfo"/></Col>
                     </Row>
                     <Row>
-                        <Col md={3}> <BatteryInfo ref="batteryInfo"/>
+                        <Col md={4}> <BatteryInfo ref="batteryInfo"/>
                         </Col>
-                        <Col md={4}> <Startup ref="startupInfo"/>
+                        <Col md={5}> <Startup ref="startupInfo"/>
                         </Col>
-                        <Col md={5}> <Label>XXXX</Label>
+                        <Col md={3}> <Fps ref="fpsInfo"/>
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={5}> <Ram ref="ramInfo"/>
+                        <Col md={6}> <Ram ref="ramInfo"/>
                         </Col>
-                        <Col md={5}> <Pss ref="pssInfo"/>
-                        </Col>
-                        <Col md={2}> <Fps ref="fpsInfo"/>
+                        <Col md={6}> <Pss ref="pssInfo"/>
                         </Col>
                     </Row>
                     <Row>
@@ -105,7 +199,21 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row>
+                        <Col md={6}><Traffic ref="trafficInfo"/></Col>
+                        <Col md={6}><Crash ref="crashInfo"/></Col>
+                    </Row>
+                    <Row>
                         <Col md={12}><Pageload ref="pageloadInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}><Block ref="blockInfo"/></Col>
+                        <Col md={6}><Network ref="networkInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><Thread ref="threadInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><MemoryLeak ref="leakInfo"/></Col>
                     </Row>
                 </Grid>
             </div>
