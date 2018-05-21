@@ -56,6 +56,10 @@ class Heap extends Component {
                     stack: 'heap',
                     stacking: 'normal',
                     data: (Heap.initSeries())
+                }, {
+                    name: 'Max',
+                    type: 'line',
+                    data: (Heap.initSeries())
                 }
             ]
         };
@@ -76,6 +80,7 @@ class Heap extends Component {
             let axisData = (new Date()).toLocaleTimeString();
             this.refs.chart.getChart().series[0].addPoint([axisData, heapInfo.allocatedKb / 1024], true, true, true);
             this.refs.chart.getChart().series[1].addPoint([axisData, heapInfo.freeMemKb / 1024], true, true, true);
+            this.refs.chart.getChart().series[2].addPoint([axisData, heapInfo.maxMemKb / 1024], true, true, true);
         }
     }
 

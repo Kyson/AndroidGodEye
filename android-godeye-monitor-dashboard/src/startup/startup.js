@@ -18,14 +18,11 @@ class Startup extends Component {
     }
 
     refresh(startupInfo) {
-        this.setState(startupInfo);
+        this.setState({startupInfo});
     }
 
     render() {
         let info = this.state.startupInfo;
-        if (!info) {
-            info = {};
-        }
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
@@ -34,7 +31,12 @@ class Startup extends Component {
                 </Panel.Heading>
                 <Panel.Body>
                     <div className="span12">
-                        <span>{'startup type:' + info.startupType + ", cost:" + info.startupTime + "ms"}</span>
+                        <p>
+                            <strong>{'Startup Type:'}&nbsp;&nbsp;&nbsp;</strong><span style={{fontSize:30}}>{info.startupType}</span>
+                        </p>
+                        <p>
+                            <strong>{'Cost time:'}&nbsp;&nbsp;&nbsp;</strong><span style={{fontSize:30}}>{info.startupTime}</span>&nbsp;&nbsp;{"ms"}
+                        </p>
                     </div>
                 </Panel.Body>
 

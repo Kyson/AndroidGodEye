@@ -14,15 +14,11 @@ class Pageload extends Component {
 
     constructor() {
         super();
-
-
         this.pageloadInfos = [];
-
         this.state = {
             dataList: [],
             isRefreshing: true
         };
-
         this.setRefreshStatus = this.setRefreshStatus.bind(this);
     }
 
@@ -59,7 +55,8 @@ class Pageload extends Component {
                         columns={[
                             {
                                 Header: "PageId",
-                                accessor: "pageId"
+                                accessor: "pageId",
+                                maxWidth: 100
                             }, {
                                 Header: "PageName",
                                 accessor: "pageName"
@@ -80,9 +77,22 @@ class Pageload extends Component {
                             }, {
                                 Header: "Time",
                                 accessor: "pageStatusTime"
+                            }, {
+                                Header: "Load Detail",
+                                accessor: "loadTimeInfo",
+                                minWidth: 200,
+                                Cell: row => (
+                                    <span>
+                                        PageDrawTime:&nbsp;&nbsp;{
+                                        (row.value.didDrawTime && row.value.createTime && row.value.didDrawTime > row.value.createTime) ? (row.value.didDrawTime - row.value.createTime) : "**"
+                                    }&nbsp;ms,
+                                        PageLoadTime:&nbsp;&nbsp;{
+                                        (row.value.loadTime && row.value.createTime && row.value.loadTime > row.value.createTime) ? (row.value.loadTime - row.value.createTime) : "**"
+                                    }&nbsp;ms
+                                    </span>
+                                )
                             }
                         ]}
-
                         defaultPageSize={10}
                         className="-striped -highlight"/>
                 </Panel.Body>

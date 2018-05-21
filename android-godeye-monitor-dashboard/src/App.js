@@ -30,7 +30,7 @@ class App extends Component {
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        setInterval(this.refreshMock, 2000);
+        // setInterval(this.refreshMock, 2000);
     }
 
     refreshMock() {
@@ -53,8 +53,6 @@ class App extends Component {
             technology: "technology",
             scale: 100,
         });
-
-
         this._onReceiveMessage("cpuInfo", {
             totalUseRatio: 0.56,
             appCpuRatio: 0.12,
@@ -63,7 +61,8 @@ class App extends Component {
         });
         this._onReceiveMessage("heapInfo", {
             freeMemKb: 1024 * 520,
-            allocatedKb: 1024 * 1520
+            allocatedKb: 1024 * 1520,
+            maxMemKb: 1024 * 6000
         });
         this._onReceiveMessage("ramInfo", {
             totalMemKb: 1024 * 1024 * 3,
@@ -83,7 +82,12 @@ class App extends Component {
             pageId: "11",
             pageName: "ActivityA",
             pageStatus: "created",
-            pageStatusTime: "2018-03-00"
+            pageStatusTime: "2018-03-00",
+            loadTimeInfo: {
+                createTime: 100,
+                didDrawTime: 120,
+                loadTime: 150
+            }
         });
         this._onReceiveMessage("crashInfo", {
             timestampMillis: new Date().getMilliseconds(),
@@ -110,7 +114,7 @@ class App extends Component {
             leakTime: "leakTime",
             leakObjectName: "leakObjectName",
             statusSummary: "statusSummary",
-            leakStack: ["leakStack", "leakStack", "leakStack", "leakStack", "leakStack"]
+            pathToGcRoot: ["leakStack", "leakStack", "leakStack", "leakStack", "leakStack"]
         });
         this._onReceiveMessage("threadInfo", [
             {
@@ -178,10 +182,10 @@ class App extends Component {
             this.refs.fpsInfo.refresh(payload);
             return;
         }
-        if ("pageloadInfo" === moduleName) {
-            this.refs.pageloadInfo.refresh(payload);
-            return;
-        }
+        // if ("pageloadInfo" === moduleName) {
+        //     this.refs.pageloadInfo.refresh(payload);
+        //     return;
+        // }
         if ("trafficInfo" === moduleName) {
             this.refs.trafficInfo.refresh(payload);
             return;
@@ -212,11 +216,11 @@ class App extends Component {
         return (
             <div className="App">
                 <Grid>
-                    <Row style={{marginBottom: 15}}>
+                    <Row style={{marginBottom: 30}}>
                         <Col md={12}><AppInfo ref="appInfo"/></Col>
                     </Row>
                     <Row>
-                        <Col md={6}> <Startup ref="startupInfo"/>
+                        <Col md={3}> <Startup ref="startupInfo"/>
                         </Col>
                         <Col md={2}> <Fps ref="fpsInfo"/>
                         </Col>

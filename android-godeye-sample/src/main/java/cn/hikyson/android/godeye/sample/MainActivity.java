@@ -259,7 +259,7 @@ public class MainActivity extends Activity implements Loggable {
                 mCompositeDisposable.add(GodEye.instance().getModule(DeadLock.class).subject().subscribe(new LogObserver<List<Thread>>("deadlock", this)));
                 break;
             case R.id.activity_main_consumer_pageload:
-                mCompositeDisposable.add(GodEye.instance().getModule(Pageload.class).subject().subscribe(new LogObserver<List<PageloadInfo>>("pageload", this)));
+                mCompositeDisposable.add(GodEye.instance().getModule(Pageload.class).subject().subscribe(new LogObserver<PageloadInfo>("pageload", this)));
                 break;
             case R.id.activity_main_make_block:
                 block();

@@ -71,7 +71,7 @@ class MemoryLeak extends Component {
                         SubComponent={row => {
                             return (
                                 <div style={{padding: "20px"}}>
-                                    <JSONPretty id="json-pretty" json={row.original.leakStack}/>
+                                    <JSONPretty id="json-pretty" json={row.original.pathToGcRoot}/>
                                 </div>
                             );
                         }}

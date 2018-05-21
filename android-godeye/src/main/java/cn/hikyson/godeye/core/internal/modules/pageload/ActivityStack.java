@@ -14,38 +14,43 @@ import java.util.Map;
 public class ActivityStack {
     private LinkedHashMap<Activity, LoadTimeInfo> mActivityPageloadInfoLinkedHashMap;
 
-    public synchronized void push(Activity activity) {
+    public synchronized void onCreate(Activity activity, long time) {
         if (mActivityPageloadInfoLinkedHashMap == null) {
             mActivityPageloadInfoLinkedHashMap = new LinkedHashMap<>();
         }
-        mActivityPageloadInfoLinkedHashMap.put(activity, new LoadTimeInfo(0));
+        LoadTimeInfo loadTimeInfo = new LoadTimeInfo();
+        loadTimeInfo.createTime = time;
+        mActivityPageloadInfoLinkedHashMap.put(activity, loadTimeInfo);
     }
 
-    public synchronized void push(Activity activity, LoadTimeInfo loadTimeInfo) {
+    public synchronized void onDidDraw(Activity activity, long time) {
         if (mActivityPageloadInfoLinkedHashMap == null) {
             mActivityPageloadInfoLinkedHashMap = new LinkedHashMap<>();
         }
         if (mActivityPageloadInfoLinkedHashMap.containsKey(activity)) {
-            mActivityPageloadInfoLinkedHashMap.put(activity, loadTimeInfo);
+            LoadTimeInfo loadTimeInfo = mActivityPageloadInfoLinkedHashMap.get(activity);
+            if (loadTimeInfo != null) {
+                loadTimeInfo.didDrawTime = time;
+            }
         }
     }
 
-    @Nullable
-    public synchronized LoadTimeInfo pop(Activity activity) {
+    public synchronized void onLoaded(Activity activity, long time) {
+        if (mActivityPageloadInfoLinkedHashMap == null) {
+            mActivityPageloadInfoLinkedHashMap = new LinkedHashMap<>();
+        }
+        if (mActivityPageloadInfoLinkedHashMap.containsKey(activity)) {
+            LoadTimeInfo loadTimeInfo = mActivityPageloadInfoLinkedHashMap.get(activity);
+            if (loadTimeInfo != null) {
+                loadTimeInfo.loadTime = time;
+            }
+        }
+    }
+
+    public synchronized LoadTimeInfo onDestory(Activity activity) {
         if (mActivityPageloadInfoLinkedHashMap == null) {
             return null;
         }
         return mActivityPageloadInfoLinkedHashMap.remove(activity);
-    }
-
-    public synchronized List<PageloadInfo> getActivityPageloads() {
-        List<PageloadInfo> pageloadInfos = new ArrayList<>();
-        if (mActivityPageloadInfoLinkedHashMap == null || mActivityPageloadInfoLinkedHashMap.isEmpty()) {
-            return pageloadInfos;
-        }
-        for (Map.Entry<Activity, LoadTimeInfo> entry : mActivityPageloadInfoLinkedHashMap.entrySet()) {
-            pageloadInfos.add(new PageloadInfo(entry.getKey().getClass().getSimpleName() + entry.getKey().hashCode(), entry.getValue()));
-        }
-        return pageloadInfos;
     }
 }

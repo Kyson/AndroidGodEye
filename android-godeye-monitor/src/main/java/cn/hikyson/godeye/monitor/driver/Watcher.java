@@ -36,10 +36,12 @@ import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLock;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
+import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
 import cn.hikyson.godeye.monitor.processors.Messager;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -94,25 +96,30 @@ public class Watcher {
         mCompositeDisposable.add(godEye.getModule(LeakDetector.class).subject().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
             @Override
             public void accept(LeakQueue.LeakMemoryInfo leakMemoryInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("leakMemoryInfo", leakMemoryInfo).toString());
+                mMessager.sendMessage(new ServerMessage("leakInfo", leakMemoryInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Sm.class).subject().subscribe(new Consumer<BlockInfo>() {
             @Override
             public void accept(BlockInfo blockInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("blockInfo", blockInfo).toString());
+                mMessager.sendMessage(new ServerMessage("blockInfo", new BlockSimpleInfo(blockInfo)).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Network.class).subject().subscribe(new Consumer<RequestBaseInfo>() {
             @Override
             public void accept(RequestBaseInfo requestBaseInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("requestBaseInfo", requestBaseInfo).toString());
+                mMessager.sendMessage(new ServerMessage("networkInfo", requestBaseInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Startup.class).subject().subscribe(new Consumer<StartupInfo>() {
             @Override
-            public void accept(StartupInfo startupInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("startupInfo", startupInfo).toString());
+            public void accept(final StartupInfo startupInfo) throws Exception {
+                mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        mMessager.sendMessage(new ServerMessage("startupInfo", startupInfo).toString());
+                    }
+                }));
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Ram.class).subject().subscribe(new Consumer<RamInfo>() {
@@ -141,7 +148,7 @@ public class Watcher {
         }).subscribe(new Consumer<List<ThreadInfo>>() {
             @Override
             public void accept(List<ThreadInfo> threadInfos) throws Exception {
-                mMessager.sendMessage(new ServerMessage("threadInfos", threadInfos).toString());
+                mMessager.sendMessage(new ServerMessage("threadInfo", threadInfos).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(DeadLock.class).subject().map(new Function<List<Thread>, List<Long>>() {
@@ -192,10 +199,10 @@ public class Watcher {
                 mMessager.sendMessage(new ServerMessage("crashInfo", crashInfo).toString());
             }
         }));
-        mCompositeDisposable.add(godEye.getModule(Pageload.class).subject().subscribe(new Consumer<List<PageloadInfo>>() {
+        mCompositeDisposable.add(godEye.getModule(Pageload.class).subject().subscribe(new Consumer<PageloadInfo>() {
             @Override
-            public void accept(List<PageloadInfo> pageloadInfos) throws Exception {
-                mMessager.sendMessage(new ServerMessage("pageloadInfos", pageloadInfos).toString());
+            public void accept(PageloadInfo pageloadInfo) throws Exception {
+                mMessager.sendMessage(new ServerMessage("pageloadInfo", pageloadInfo).toString());
             }
         }));
     }
