@@ -15,6 +15,9 @@ class Cpu extends Component {
     constructor(props) {
         super(props);
         this.options = {
+            chart: {
+                type: 'area'
+            },
             title: {
                 text: null
             },
@@ -44,18 +47,26 @@ class Cpu extends Component {
             series: [
                 {
                     name: 'Total',
+                    stack: 'cpu_total',
+                    stacking: 'normal',
                     data: (Cpu.initSeries())
                 },
                 {
                     name: 'App',
+                    stack: 'cpu',
+                    stacking: 'normal',
                     data: (Cpu.initSeries())
                 },
                 {
                     name: 'UserProcess',
+                    stack: 'cpu',
+                    stacking: 'normal',
                     data: (Cpu.initSeries())
                 },
                 {
                     name: 'SystemProcess',
+                    stack: 'cpu',
+                    stacking: 'normal',
                     data: (Cpu.initSeries())
                 }
             ]

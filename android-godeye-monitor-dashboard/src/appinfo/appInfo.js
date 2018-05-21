@@ -28,7 +28,10 @@ class AppInfo extends Component {
                 <h1>
                     {this.state.appInfo ? this.state.appInfo.appName : "**"}
                 </h1>
-                <Row style={{padding: 15}}>{this.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</Row>
+                <Row style={{
+                    paddingTop: 10,
+                    paddingBottom: 10
+                }}>{this.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</Row>
             </div>
         );
     }
@@ -40,7 +43,7 @@ class AppInfo extends Component {
             let styleCount = styles.length;
             for (let i = 0; i < labels.length; i++) {
                 items.push(<Badge style={{marginRight: 5, backgroundColor: styles[i % styleCount]}}
-                                  key={i}>{labels[i]}</Badge>);
+                                  key={"appinfo" + i}>{labels[i]}</Badge>);
             }
             return items;
         }

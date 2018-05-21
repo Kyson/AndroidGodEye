@@ -41,10 +41,7 @@ class Ram extends Component {
                 pie: {
                     dataLabels: {
                         enabled: true,
-                        format: '<b>{point.name}</b>',
-                        style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                        }
+                        format: '<b>{point.name}</b>'
                     },
                     startAngle: -90,
                     endAngle: 90,

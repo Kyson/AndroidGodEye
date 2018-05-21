@@ -28,7 +28,7 @@ class Fps extends Component {
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>
-                    <h2 style={{textAlign: "center"}}>{(this.state.fpsInfo && this.state.fpsInfo.currentFps && this.state.fpsInfo.systemFps) ? (this.state.fpsInfo.currentFps + "/" + this.state.fpsInfo.systemFps) : "**/**"}</h2>
+                    <h1 style={{textAlign: "center"}}>{(this.state.fpsInfo && this.state.fpsInfo.currentFps && this.state.fpsInfo.systemFps) ? (this.state.fpsInfo.currentFps + "/" + this.state.fpsInfo.systemFps) : "**/**"}</h1>
                 </Panel.Body>
             </Panel>);
     }

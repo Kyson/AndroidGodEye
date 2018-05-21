@@ -24,88 +24,125 @@ class App extends Component {
     constructor(props) {
         super(props);
         this._onReceiveMessage = this._onReceiveMessage.bind(this);
-        this.refresh = this.refresh.bind(this);
+        this.refreshMock = this.refreshMock.bind(this);
     }
 
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        setInterval(this.refresh, 2000);
+        setInterval(this.refreshMock, 2000);
     }
 
-    refresh() {
+    refreshMock() {
+        this._onReceiveMessage("appInfo", {
+            appName: "I am Name",
+            labels: ["label1", "label2", "label3"]
+        });
+        this._onReceiveMessage("startupInfo", {
+            startupType: "cold",
+            startupTime: 1003
+        });
+        this._onReceiveMessage("batteryInfo", {
+            level: 24,
+            status: "ok",
+            plugged: "plugged",
+            present: "present",
+            health: "health",
+            voltage: "voltage",
+            temperature: "temperature",
+            technology: "technology",
+            scale: 100,
+        });
+
+
+        this._onReceiveMessage("cpuInfo", {
+            totalUseRatio: 0.56,
+            appCpuRatio: 0.12,
+            userCpuRatio: 0.23,
+            sysCpuRatio: 0.09
+        });
+        this._onReceiveMessage("heapInfo", {
+            freeMemKb: 1024 * 520,
+            allocatedKb: 1024 * 1520
+        });
+        this._onReceiveMessage("ramInfo", {
+            totalMemKb: 1024 * 1024 * 3,
+            availMemKb: 1024 * 1024 * 1.5
+        });
+        this._onReceiveMessage("pssInfo", {
+            totalPssKb: 1024 * 300,
+            dalvikPssKb: 1024 * 125,
+            nativePssKb: 1024 * 200,
+            otherPssKb: 1024 * 7,
+        });
         this._onReceiveMessage("fpsInfo", {
             currentFps: "12",
             systemFps: "34"
         });
-        // this._onReceiveMessage("pageloadInfo", {
-        //     pageId: "11",
-        //     pageName: "ActivityA",
-        //     pageStatus: "created",
-        //     pageStatusTime: "2018-03-00"
-        // })
-        // this._onReceiveMessage("crashInfo", {
-        //     timestampMillis: new Date().getMilliseconds(),
-        //     throwableMessage: "throwableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessage",
-        //     throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
-        // })
-        // this._onReceiveMessage("blockInfo", {
-        //     blockTime: 123,
-        //     blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
-        // })
-        // this._onReceiveMessage("networkInfo", {
-        //     url: "http://www.baidu.com",
-        //     endTimeMillis: 123,
-        //     startTimeMillis: 120
-        // })
+        this._onReceiveMessage("pageloadInfo", {
+            pageId: "11",
+            pageName: "ActivityA",
+            pageStatus: "created",
+            pageStatusTime: "2018-03-00"
+        });
+        this._onReceiveMessage("crashInfo", {
+            timestampMillis: new Date().getMilliseconds(),
+            throwableMessage: "throwableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessage",
+            throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
+        });
+        this._onReceiveMessage("blockInfo", {
+            blockTime: 123,
+            blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
+        });
+        this._onReceiveMessage("networkInfo", {
+            url: "http://www.baidu.com",
+            endTimeMillis: 123,
+            startTimeMillis: 120
+        });
+        this._onReceiveMessage("trafficInfo", {
+            rxTotalRate: 56,
+            txTotalRate: 48,
+            rxUidRate: 34,
+            txUidRate: 42
+        });
         this._onReceiveMessage("leakInfo", {
             referenceKey: "referenceKey",
             leakTime: "leakTime",
             leakObjectName: "leakObjectName",
             statusSummary: "statusSummary",
             leakStack: ["leakStack", "leakStack", "leakStack", "leakStack", "leakStack"]
-        })
-
-        // this._onReceiveMessage("threadInfo", [
-        //     {
-        //         id: 1,
-        //         name: "name",
-        //         state: "state",
-        //         deadlock: "deadlock",
-        //         priority: "priority",
-        //         deamon: "deamon",
-        //         isAlive: "isAlive",
-        //         isInterrupted: "isInterrupted",
-        //     },
-        //     {
-        //         id: 1,
-        //         name: "name",
-        //         state: "state",
-        //         deadlock: "deadlock",
-        //         priority: "priority",
-        //         deamon: "deamon",
-        //         isAlive: "isAlive",
-        //         isInterrupted: "isInterrupted",
-        //     }, {
-        //         id: 1,
-        //         name: "name",
-        //         state: "state",
-        //         deadlock: "deadlock",
-        //         priority: "priority",
-        //         deamon: "deamon",
-        //         isAlive: "isAlive",
-        //         isInterrupted: "isInterrupted",
-        //     }, {
-        //         id: 1,
-        //         name: "name",
-        //         state: "state",
-        //         deadlock: "deadlock",
-        //         priority: "priority",
-        //         deamon: "deamon",
-        //         isAlive: "isAlive",
-        //         isInterrupted: "isInterrupted",
-        //     }
-        // ]);
+        });
+        this._onReceiveMessage("threadInfo", [
+            {
+                id: 1,
+                name: "name",
+                state: "state",
+                deadlock: "deadlock",
+                priority: "priority",
+                deamon: "deamon",
+                isAlive: "isAlive",
+                isInterrupted: "isInterrupted",
+            },
+            {
+                id: 1,
+                name: "name",
+                state: "state",
+                deadlock: "deadlock",
+                priority: "priority",
+                deamon: "deamon",
+                isAlive: "isAlive",
+                isInterrupted: "isInterrupted",
+            }, {
+                id: 1,
+                name: "name",
+                state: "state",
+                deadlock: "deadlock",
+                priority: "priority",
+                deamon: "deamon",
+                isAlive: "isAlive",
+                isInterrupted: "isInterrupted",
+            }
+        ]);
     }
 
     _onReceiveMessage(moduleName, payload) {
@@ -175,15 +212,15 @@ class App extends Component {
         return (
             <div className="App">
                 <Grid>
-                    <Row>
+                    <Row style={{marginBottom: 15}}>
                         <Col md={12}><AppInfo ref="appInfo"/></Col>
                     </Row>
                     <Row>
+                        <Col md={6}> <Startup ref="startupInfo"/>
+                        </Col>
+                        <Col md={2}> <Fps ref="fpsInfo"/>
+                        </Col>
                         <Col md={4}> <BatteryInfo ref="batteryInfo"/>
-                        </Col>
-                        <Col md={5}> <Startup ref="startupInfo"/>
-                        </Col>
-                        <Col md={3}> <Fps ref="fpsInfo"/>
                         </Col>
                     </Row>
                     <Row>

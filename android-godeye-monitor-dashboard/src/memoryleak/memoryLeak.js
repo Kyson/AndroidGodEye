@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../App.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
+import {Row, Col, Clearfix, Grid, Panel, Button} from 'react-bootstrap'
 import ReactTable from "../../node_modules/react-table";
 import '../../node_modules/react-table/react-table.css'
 import Util from '../libs/util'
@@ -13,22 +13,28 @@ import JSONPretty from '../../node_modules/react-json-pretty';
  */
 class MemoryLeak extends Component {
 
-    refresh(leakInfo) {
-        function getNewDataList(prevState, dataList) {
-            prevState.dataList.push(dataList);
-            return prevState.dataList;
-        }
-
-        this.setState((prevState, props) => ({
-            dataList: getNewDataList(prevState, leakInfo)
-        }));
-    }
-
     constructor() {
         super();
+        this.leakInfos = [];
         this.state = {
-            dataList: []
+            dataList: [],
+            isRefreshing: true
         };
+        this.setRefreshStatus = this.setRefreshStatus.bind(this);
+    }
+
+    refresh(leakInfo) {
+        this.leakInfos.push(leakInfo);
+        if (this.state.isRefreshing) {
+            this.setState({dataList: this.leakInfos});
+        }
+    }
+
+    setRefreshStatus() {
+        this.setState((prevState, props) => ({
+            isRefreshing: !prevState.isRefreshing,
+            dataList: this.leakInfos
+        }));
     }
 
     render() {
@@ -36,8 +42,13 @@ class MemoryLeak extends Component {
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <h5>Memory Leak(内存泄漏)
-                    </h5>
+                    <Row>
+                        <Col md={10}><h5>Memory Leak(内存泄漏)
+                        </h5></Col>
+                        <Col md={2}
+                             style={{textAlign: 'right'}}><Button
+                            onClick={this.setRefreshStatus}>{this.state.isRefreshing ? "Refreshing...|Stop" : "Stopped...|Start"}</Button></Col>
+                    </Row>
                 </Panel.Heading>
                 <Panel.Body>
                     <ReactTable

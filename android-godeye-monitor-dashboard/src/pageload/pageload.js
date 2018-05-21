@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../App.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
+import {Row, Col, Clearfix, Grid, Panel, Button} from 'react-bootstrap'
 import ReactTable from "../../node_modules/react-table";
 import '../../node_modules/react-table/react-table.css'
 import Util from '../libs/util'
@@ -12,23 +12,32 @@ import Util from '../libs/util'
  */
 class Pageload extends Component {
 
-
-    refresh(pageloadInfo) {
-        function getNewDataList(prevState, pageloadInfo) {
-            prevState.dataList.push(pageloadInfo);
-            return prevState.dataList;
-        }
-
-        this.setState((prevState, props) => ({
-            dataList: getNewDataList(prevState, pageloadInfo)
-        }));
-    }
-
     constructor() {
         super();
+
+
+        this.pageloadInfos = [];
+
         this.state = {
-            dataList: []
+            dataList: [],
+            isRefreshing: true
         };
+
+        this.setRefreshStatus = this.setRefreshStatus.bind(this);
+    }
+
+    refresh(pageloadInfo) {
+        this.pageloadInfos.push(pageloadInfo);
+        if (this.state.isRefreshing) {
+            this.setState({dataList: this.pageloadInfos});
+        }
+    }
+
+    setRefreshStatus() {
+        this.setState((prevState, props) => ({
+            isRefreshing: !prevState.isRefreshing,
+            dataList: this.pageloadInfos
+        }));
     }
 
     render() {
@@ -36,8 +45,13 @@ class Pageload extends Component {
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <h5>Pageload(页面加载)
-                    </h5>
+                    <Row>
+                        <Col md={10}><h5>Pageload(页面加载)
+                        </h5></Col>
+                        <Col md={2}
+                             style={{textAlign: 'right'}}><Button
+                            onClick={this.setRefreshStatus}>{this.state.isRefreshing ? "Refreshing...|Stop" : "Stopped...|Start"}</Button></Col>
+                    </Row>
                 </Panel.Heading>
                 <Panel.Body>
                     <ReactTable
