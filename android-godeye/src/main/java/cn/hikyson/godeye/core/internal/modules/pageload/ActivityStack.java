@@ -14,16 +14,17 @@ import java.util.Map;
 public class ActivityStack {
     private LinkedHashMap<Activity, LoadTimeInfo> mActivityPageloadInfoLinkedHashMap;
 
-    public synchronized void onCreate(Activity activity, long time) {
+    public synchronized LoadTimeInfo onCreate(Activity activity, long time) {
         if (mActivityPageloadInfoLinkedHashMap == null) {
             mActivityPageloadInfoLinkedHashMap = new LinkedHashMap<>();
         }
         LoadTimeInfo loadTimeInfo = new LoadTimeInfo();
         loadTimeInfo.createTime = time;
         mActivityPageloadInfoLinkedHashMap.put(activity, loadTimeInfo);
+        return loadTimeInfo;
     }
 
-    public synchronized void onDidDraw(Activity activity, long time) {
+    public synchronized LoadTimeInfo onDidDraw(Activity activity, long time) {
         if (mActivityPageloadInfoLinkedHashMap == null) {
             mActivityPageloadInfoLinkedHashMap = new LinkedHashMap<>();
         }
@@ -31,11 +32,13 @@ public class ActivityStack {
             LoadTimeInfo loadTimeInfo = mActivityPageloadInfoLinkedHashMap.get(activity);
             if (loadTimeInfo != null) {
                 loadTimeInfo.didDrawTime = time;
+                return loadTimeInfo;
             }
         }
+        return null;
     }
 
-    public synchronized void onLoaded(Activity activity, long time) {
+    public synchronized LoadTimeInfo onLoaded(Activity activity, long time) {
         if (mActivityPageloadInfoLinkedHashMap == null) {
             mActivityPageloadInfoLinkedHashMap = new LinkedHashMap<>();
         }
@@ -43,8 +46,10 @@ public class ActivityStack {
             LoadTimeInfo loadTimeInfo = mActivityPageloadInfoLinkedHashMap.get(activity);
             if (loadTimeInfo != null) {
                 loadTimeInfo.loadTime = time;
+                return loadTimeInfo;
             }
         }
+        return null;
     }
 
     public synchronized LoadTimeInfo onDestory(Activity activity) {

@@ -182,10 +182,13 @@ class App extends Component {
             this.refs.fpsInfo.refresh(payload);
             return;
         }
-        // if ("pageloadInfo" === moduleName) {
-        //     this.refs.pageloadInfo.refresh(payload);
-        //     return;
-        // }
+        if ("pageloadInfo" === moduleName) {
+            window.console.log(moduleName);
+            window.console.log(payload);
+            window.console.log(this.refs.pageloadInfo);
+            this.refs.pageloadInfo.refresh(payload);
+            return;
+        }
         if ("trafficInfo" === moduleName) {
             this.refs.trafficInfo.refresh(payload);
             return;

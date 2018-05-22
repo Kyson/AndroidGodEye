@@ -20,6 +20,7 @@ class Pageload extends Component {
             isRefreshing: true
         };
         this.setRefreshStatus = this.setRefreshStatus.bind(this);
+        this.refresh = this.refresh.bind(this);
     }
 
     refresh(pageloadInfo) {
@@ -66,9 +67,9 @@ class Pageload extends Component {
                                 Cell: row => (
                                     <span>
                                         <span style={{
-                                            color: row.value === 'created' ? Util.getGreen()
+                                            color: row.value === 'created' ? Util.getBlue()
                                                 : row.value === 'destroyed' ? Util.getRed()
-                                                    : Util.getGrey(),
+                                                    : row.value === 'didDraw' ? Util.getGreen() : Util.getGrey(),
                                             transition: 'all .3s ease'
                                         }}>
                                           &#x25cf;
@@ -76,7 +77,10 @@ class Pageload extends Component {
                                 )
                             }, {
                                 Header: "Time",
-                                accessor: "pageStatusTime"
+                                id: "pageStatusTime",
+                                accessor: d => {
+                                    return new Date(d.pageStatusTime).toLocaleTimeString();
+                                }
                             }, {
                                 Header: "Load Detail",
                                 accessor: "loadTimeInfo",
@@ -84,10 +88,10 @@ class Pageload extends Component {
                                 Cell: row => (
                                     <span>
                                         PageDrawTime:&nbsp;&nbsp;{
-                                        (row.value.didDrawTime && row.value.createTime && row.value.didDrawTime > row.value.createTime) ? (row.value.didDrawTime - row.value.createTime) : "**"
+                                        (row.value && row.value.didDrawTime && row.value.createTime && row.value.didDrawTime > row.value.createTime) ? (row.value.didDrawTime - row.value.createTime) : "**"
                                     }&nbsp;ms,
                                         PageLoadTime:&nbsp;&nbsp;{
-                                        (row.value.loadTime && row.value.createTime && row.value.loadTime > row.value.createTime) ? (row.value.loadTime - row.value.createTime) : "**"
+                                        (row.value && row.value.loadTime && row.value.createTime && row.value.loadTime > row.value.createTime) ? (row.value.loadTime - row.value.createTime) : "**"
                                     }&nbsp;ms
                                     </span>
                                 )

@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.monitor.server;
 
+import com.koushikdutta.async.AsyncServer;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.WebSocket;
 import com.koushikdutta.async.http.server.AsyncHttpServer;
@@ -70,6 +71,7 @@ public class GodEyeMonitorServer {
 
     public void stop() {
         mServer.stop();
+        AsyncServer.getDefault().stop();
     }
 
     public void sendMessage(String message) {

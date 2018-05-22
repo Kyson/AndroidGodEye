@@ -37,14 +37,16 @@ public class PageloadEngine implements Engine {
                 @Override
                 public void onActivityCreated(final Activity activity, Bundle savedInstanceState) {
                     final long time = System.currentTimeMillis();
-                    mActivityStack.onCreate(activity, time);
-                    mProducer.produce(new PageloadInfo(String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "created", time));
+                    PageloadInfo pageloadInfo = new PageloadInfo(String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "created", time);
+                    pageloadInfo.loadTimeInfo = mActivityStack.onCreate(activity, time);
+                    mProducer.produce(pageloadInfo);
                     measureActivityDidAppearOnCreate(activity, new OnActivityDidAppearCallback() {
                         @Override
                         public void didAppear() {
                             final long time2 = System.currentTimeMillis();
-                            mActivityStack.onDidDraw(activity, time2);
-                            mProducer.produce(new PageloadInfo(String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "didDraw", time2));
+                            PageloadInfo pageloadInfo2 = new PageloadInfo(String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "didDraw", time2);
+                            pageloadInfo2.loadTimeInfo = mActivityStack.onDidDraw(activity, time2);
+                            mProducer.produce(pageloadInfo2);
                         }
                     });
                 }

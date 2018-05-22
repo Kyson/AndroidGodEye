@@ -24,7 +24,16 @@ class MemoryLeak extends Component {
     }
 
     refresh(leakInfo) {
-        this.leakInfos.push(leakInfo);
+        let hasLeakBefore = false;
+        for (let i = 0; i < this.leakInfos.length; i++) {
+            if (leakInfo && leakInfo.referenceKey && leakInfo.referenceKey === this.leakInfos[i].referenceKey) {
+                this.leakInfos[i] = leakInfo;
+                hasLeakBefore = true;
+            }
+        }
+        if (!hasLeakBefore) {
+            this.leakInfos.push(leakInfo);
+        }
         if (this.state.isRefreshing) {
             this.setState({dataList: this.leakInfos});
         }

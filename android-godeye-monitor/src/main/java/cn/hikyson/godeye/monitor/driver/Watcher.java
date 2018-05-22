@@ -111,6 +111,7 @@ public class Watcher {
                 mMessager.sendMessage(new ServerMessage("networkInfo", requestBaseInfo).toString());
             }
         }));
+        //TODO KYSON 启动信息在产生之后再订阅就没了？
         mCompositeDisposable.add(godEye.getModule(Startup.class).subject().subscribe(new Consumer<StartupInfo>() {
             @Override
             public void accept(final StartupInfo startupInfo) throws Exception {
@@ -192,11 +193,16 @@ public class Watcher {
             }
         }).subscribe(new Consumer<CrashInfo>() {
             @Override
-            public void accept(CrashInfo crashInfo) throws Exception {
+            public void accept(final CrashInfo crashInfo) throws Exception {
                 if (crashInfo == CrashInfo.INVALID) {
                     return;
                 }
-                mMessager.sendMessage(new ServerMessage("crashInfo", crashInfo).toString());
+                mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        mMessager.sendMessage(new ServerMessage("crashInfo", crashInfo).toString());
+                    }
+                }));
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Pageload.class).subject().subscribe(new Consumer<PageloadInfo>() {
