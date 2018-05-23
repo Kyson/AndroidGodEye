@@ -200,14 +200,13 @@ public final class HeapAnalyzer {
         LeakTrace leakTrace = buildLeakTrace(result.leakingNode);
         String className = leakingRef.getClassObj().getClassName();
         // Side effect: computes retained size.
-        //TODO KYSON IMPL 因为这里暂停所有线程太久，太耗时导致分析失败
+        // 因为这里暂停所有线程太久，太耗时导致分析失败
 //    snapshot.computeDominators();
 //    Log.d(TAG,"checkForLeak step14");
 //    Instance leakingInstance = result.leakingNode.instance;
 //    Log.d(TAG,"checkForLeak step15");
 //    long retainedSize = leakingInstance.getTotalRetainedSize();
 //    Log.d(TAG,"checkForLeak step16");
-//    // TODO: check O sources and see what happened to android.graphics.Bitmap.mBuffer
 //    if (SDK_INT <= N_MR1) {
 //      Log.d(TAG,"checkForLeak step17");
 //      retainedSize += computeIgnoredBitmapRetainedSize(snapshot, leakingInstance);

@@ -1,13 +1,16 @@
 package cn.hikyson.godeye.core;
 
 
+import android.app.Application;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.util.Pair;
 
 import java.util.Map;
 
+import cn.hikyson.godeye.core.helper.ActivityStackSubject;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
+import cn.hikyson.godeye.core.internal.modules.pageload.ActivityStack;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 
 /**
@@ -26,6 +29,16 @@ public class GodEye {
 
     public static GodEye instance() {
         return InstanceHolder.sInstance;
+    }
+
+    private ActivityStackSubject mActivityStackSubject;
+
+    public void init(Application application) {
+        mActivityStackSubject = new ActivityStackSubject(application);
+    }
+
+    public ActivityStackSubject getActivityStackSubject() {
+        return mActivityStackSubject;
     }
 
     public final <T> GodEye install(Class<? extends Install<T>> clz, T config) {

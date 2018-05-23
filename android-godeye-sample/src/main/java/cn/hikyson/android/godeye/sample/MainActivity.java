@@ -22,7 +22,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.android.godeye.toolbox.crash.CrashFileProvider;
+import cn.hikyson.android.godeye.toolbox.rxpermission.RxPermissionRequest;
+import cn.hikyson.android.godeye.toolbox.rxpermission.RxPermissions;
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.helper.PermissionRequest;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
@@ -176,7 +179,6 @@ public class MainActivity extends Activity implements Loggable {
                 log("!!EXCEPTION: " + e.getLocalizedMessage());
             }
         });
-        GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl(this));
         mActivityMainFollow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -365,7 +367,7 @@ public class MainActivity extends Activity implements Loggable {
             GodEye.instance().getModule(Fps.class).install(this);
         }
         if (mActivityMainLeak.isChecked()) {
-            GodEye.instance().getModule(LeakDetector.class).install(getApplication());
+            GodEye.instance().getModule(LeakDetector.class).install(getApplication(), new RxPermissionRequest());
         }
         if (mActivityMainHeap.isChecked()) {
             GodEye.instance().getModule(Heap.class).install();

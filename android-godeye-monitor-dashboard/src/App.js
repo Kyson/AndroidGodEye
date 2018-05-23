@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
 import './App.css';
 import AppInfo from "./appinfo/appInfo";
 import {Row, Col, Clearfix, Grid, Panel, Label, PageHeader} from 'react-bootstrap'
@@ -31,6 +30,118 @@ class App extends Component {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
         // setInterval(this.refreshMock, 2000);
+    }
+
+    _onReceiveMessage(moduleName, payload) {
+        if ("appInfo" === moduleName) {
+            this.refs.appInfo.refresh(payload);
+            return;
+        }
+        if ("startupInfo" === moduleName) {
+            this.refs.startupInfo.refresh(payload);
+            return;
+        }
+        if ("fpsInfo" === moduleName) {
+            this.refs.fpsInfo.refresh(payload);
+            return;
+        }
+        if ("cpuInfo" === moduleName) {
+            this.refs.cpuInfo.refresh(payload);
+            return;
+        }
+        if ("heapInfo" === moduleName) {
+            this.refs.heapInfo.refresh(payload);
+            return;
+        }
+        if ("batteryInfo" === moduleName) {
+            this.refs.batteryInfo.refresh(payload);
+            return;
+        }
+        if ("ramInfo" === moduleName) {
+            this.refs.ramInfo.refresh(payload);
+            return;
+        }
+        if ("pssInfo" === moduleName) {
+            this.refs.pssInfo.refresh(payload);
+            return;
+        }
+        if ("pageloadInfo" === moduleName) {
+            this.refs.pageloadInfo.refresh(payload);
+            return;
+        }
+        if ("trafficInfo" === moduleName) {
+            this.refs.trafficInfo.refresh(payload);
+            return;
+        }
+        if ("crashInfo" === moduleName) {
+            this.refs.crashInfo.refresh(payload);
+            return;
+        }
+        if ("blockInfo" === moduleName) {
+            this.refs.blockInfo.refresh(payload);
+            return;
+        }
+        if ("networkInfo" === moduleName) {
+            this.refs.networkInfo.refresh(payload);
+            return;
+        }
+        if ("threadInfo" === moduleName) {
+            this.refs.threadInfo.refresh(payload);
+            return;
+        }
+        if ("leakInfo" === moduleName) {
+            this.refs.leakInfo.refresh(payload);
+            return;
+        }
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <Grid>
+                    <Row style={{marginBottom: 30}}>
+                        <Col md={12}><AppInfo ref="appInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={3}> <Startup ref="startupInfo"/>
+                        </Col>
+                        <Col md={2}> <Fps ref="fpsInfo"/>
+                        </Col>
+                        <Col md={4}> <BatteryInfo ref="batteryInfo"/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}> <Ram ref="ramInfo"/>
+                        </Col>
+                        <Col md={6}> <Pss ref="pssInfo"/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}> <Cpu ref="cpuInfo"/>
+                        </Col>
+                        <Col md={6}> <Heap ref="heapInfo"/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}><Traffic ref="trafficInfo"/></Col>
+                        <Col md={6}><Crash ref="crashInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><Pageload ref="pageloadInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}><Block ref="blockInfo"/></Col>
+                        <Col md={6}><Network ref="networkInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><Thread ref="threadInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><MemoryLeak ref="leakInfo"/></Col>
+                    </Row>
+                </Grid>
+            </div>
+        );
     }
 
     refreshMock() {
@@ -149,120 +260,6 @@ class App extends Component {
         ]);
     }
 
-    _onReceiveMessage(moduleName, payload) {
-        if ("cpuInfo" === moduleName) {
-            this.refs.cpuInfo.refresh(payload);
-            return;
-        }
-        if ("heapInfo" === moduleName) {
-            this.refs.heapInfo.refresh(payload);
-            return;
-        }
-        if ("appInfo" === moduleName) {
-            this.refs.appInfo.refresh(payload);
-            return;
-        }
-        if ("batteryInfo" === moduleName) {
-            this.refs.batteryInfo.refresh(payload);
-            return;
-        }
-        if ("startupInfo" === moduleName) {
-            this.refs.startupInfo.refresh(payload);
-            return;
-        }
-        if ("ramInfo" === moduleName) {
-            this.refs.ramInfo.refresh(payload);
-            return;
-        }
-        if ("pssInfo" === moduleName) {
-            this.refs.pssInfo.refresh(payload);
-            return;
-        }
-        if ("fpsInfo" === moduleName) {
-            this.refs.fpsInfo.refresh(payload);
-            return;
-        }
-        if ("pageloadInfo" === moduleName) {
-            window.console.log(moduleName);
-            window.console.log(payload);
-            window.console.log(this.refs.pageloadInfo);
-            this.refs.pageloadInfo.refresh(payload);
-            return;
-        }
-        if ("trafficInfo" === moduleName) {
-            this.refs.trafficInfo.refresh(payload);
-            return;
-        }
-        if ("crashInfo" === moduleName) {
-            this.refs.crashInfo.refresh(payload);
-            return;
-        }
-        if ("blockInfo" === moduleName) {
-            this.refs.blockInfo.refresh(payload);
-            return;
-        }
-        if ("networkInfo" === moduleName) {
-            this.refs.networkInfo.refresh(payload);
-            return;
-        }
-        if ("threadInfo" === moduleName) {
-            this.refs.threadInfo.refresh(payload);
-            return;
-        }
-        if ("leakInfo" === moduleName) {
-            this.refs.leakInfo.refresh(payload);
-            return;
-        }
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <Grid>
-                    <Row style={{marginBottom: 30}}>
-                        <Col md={12}><AppInfo ref="appInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={3}> <Startup ref="startupInfo"/>
-                        </Col>
-                        <Col md={2}> <Fps ref="fpsInfo"/>
-                        </Col>
-                        <Col md={4}> <BatteryInfo ref="batteryInfo"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}> <Ram ref="ramInfo"/>
-                        </Col>
-                        <Col md={6}> <Pss ref="pssInfo"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}> <Cpu ref="cpuInfo"/>
-                        </Col>
-                        <Col md={6}> <Heap ref="heapInfo"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}><Traffic ref="trafficInfo"/></Col>
-                        <Col md={6}><Crash ref="crashInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}><Pageload ref="pageloadInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}><Block ref="blockInfo"/></Col>
-                        <Col md={6}><Network ref="networkInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}><Thread ref="threadInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}><MemoryLeak ref="leakInfo"/></Col>
-                    </Row>
-                </Grid>
-            </div>
-        );
-    }
 }
 
 export default App;

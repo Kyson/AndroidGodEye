@@ -41,7 +41,6 @@ import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
 import cn.hikyson.godeye.monitor.processors.Messager;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -111,7 +110,6 @@ public class Watcher {
                 mMessager.sendMessage(new ServerMessage("networkInfo", requestBaseInfo).toString());
             }
         }));
-        //TODO KYSON 启动信息在产生之后再订阅就没了？
         mCompositeDisposable.add(godEye.getModule(Startup.class).subject().subscribe(new Consumer<StartupInfo>() {
             @Override
             public void accept(final StartupInfo startupInfo) throws Exception {
