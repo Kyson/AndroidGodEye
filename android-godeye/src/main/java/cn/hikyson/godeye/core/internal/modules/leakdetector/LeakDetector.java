@@ -54,7 +54,8 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (!aBoolean) {
-                    throw new IllegalStateException("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    L.e("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    return;
                 }
                 uninstall();
                 mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(application);

@@ -10,3 +10,5 @@
 
 table:https://react-table.js.org/#/story/readme
 charts:highcharts
+
+https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API

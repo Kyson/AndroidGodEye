@@ -45,6 +45,9 @@ public class BatteryEngine implements Engine {
                 }).subscribe(new Consumer<BatteryInfo>() {
             @Override
             public void accept(BatteryInfo food) throws Exception {
+                if(food == BatteryInfo.INVALID){
+                    return;
+                }
                 mProducer.produce(food);
             }
         }, new Consumer<Throwable>() {
@@ -89,7 +92,8 @@ public class BatteryEngine implements Engine {
         try {
             Intent batteryInfoIntent = context.registerReceiver(null, BatteryIntentFilterHolder.BATTERY_INTENT_FILTER);
             if (batteryInfoIntent == null) {
-                throw new GodEyeInvalidDataException("can not registerReceiver for battery");
+                L.e("can not registerReceiver for battery");
+                return BatteryInfo.INVALID;
             }
             BatteryInfo batteryInfo = new BatteryInfo();
             batteryInfo.status = batteryInfoIntent.getIntExtra(BatteryManager.EXTRA_STATUS, BatteryManager
@@ -105,7 +109,8 @@ public class BatteryEngine implements Engine {
             batteryInfo.technology = batteryInfoIntent.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY);
             return batteryInfo;
         } catch (Throwable e) {
-            throw new GodEyeInvalidDataException(e);
+            L.e(String.valueOf(e));
+            return BatteryInfo.INVALID;
         }
     }
 }

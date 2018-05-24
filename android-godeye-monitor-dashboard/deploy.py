@@ -18,9 +18,9 @@ def copyFiles(sourceDir, targetDir):
             #文件不存在，或者存在但是大小不同，覆盖
             if not os.path.exists(targetF) or (os.path.exists(targetF) and (os.path.getsize(targetF) != os.path.getsize(sourceF))):
                 open(targetF, "wb").write(open(sourceF, "rb").read())
-                print u"%s复制完毕" %targetF
+                print u"[%s] copy to [%s] ok." %(sourceF,targetF)
             else:
-                print u"%s已存在，不重复复制" % targetF
+                print u"[%s] already exist,copy canceled." % targetF
         if os.path.isdir(sourceF):   
             copyFiles(sourceF, targetF)
 
@@ -29,7 +29,7 @@ def del_dir_tree(path):
     if os.path.isfile(path):
         try:
             os.remove(path)
-            print u"%s删除文件" % path
+            print u"[%s] deleted." % path
         except Exception, e:
             #pass
             print e
@@ -39,7 +39,7 @@ def del_dir_tree(path):
             del_dir_tree(itempath)
         try:
             os.rmdir(path)   # 删除空目录
-            print u"%s删除空目录" % path
+            print u"[%s] empty dir deleted." % path
         except Exception, e:
             #pass
             print e
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     currentParentDir = os.path.dirname(currentDir)
     sourceDir = os.path.join(currentDir,"build")
     targetDir = os.path.join(currentParentDir,"android-godeye-monitor/src/main/assets/android-godeye-dashboard")
-    print sourceDir
-    print targetDir
+    print u"source dir: [%s]"%sourceDir
+    print u"target dir: [%s]"%targetDir
     del_dir_tree(targetDir)
     copyFiles(sourceDir,targetDir)

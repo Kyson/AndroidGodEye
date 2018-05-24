@@ -6,6 +6,7 @@ import android.app.Application;
 import android.app.PendingIntent;
 import android.os.Bundle;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,10 +45,14 @@ public class LeakContextImpl2 implements LeakContext {
         if (GodEye.instance().getActivityStackSubject() == null) {
             throw new RuntimeException("Please call GodEye.instance().init() first.");
         }
-        return GodEye.instance().getActivityStackSubject().topActivityObservable().concatMap(new Function<Activity, ObservableSource<Boolean>>() {
+        return GodEye.instance().getActivityStackSubject().topActivityObservable().concatMap(new Function<WeakReference<Activity>, ObservableSource<Boolean>>() {
             @Override
-            public ObservableSource<Boolean> apply(Activity activity) throws Exception {
-                return mPermissionRequest.dispatchRequest(activity, permissions);
+            public ObservableSource<Boolean> apply(WeakReference<Activity> activityRef) throws Exception {
+                Activity topActivity = activityRef.get();
+                if (topActivity == null) {
+                    return Observable.just(false);
+                }
+                return mPermissionRequest.dispatchRequest(activityRef.get(), permissions);
             }
         });
     }
