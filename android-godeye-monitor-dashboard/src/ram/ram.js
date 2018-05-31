@@ -16,16 +16,17 @@ class Ram extends Component {
         super(props);
         this.options = {
             chart: {
+                height: 200,
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                spacing: [0, 0, 0, 0]
+                margin: [0, 0, 0, 0]
             },
             title: {
                 text: "Ram",
                 align: 'center',
                 verticalAlign: 'middle',
-                y: 50
+                y: 80
             },
             tooltip: {
                 formatter: function () {
@@ -41,6 +42,7 @@ class Ram extends Component {
                 pie: {
                     dataLabels: {
                         enabled: true,
+                        distance: -20,
                         format: '<b>{point.name}</b>'
                     },
                     startAngle: -90,
@@ -51,7 +53,7 @@ class Ram extends Component {
             series: [{
                 type: 'pie',
                 name: 'ram',
-                innerSize: '80%',
+                innerSize: '70%',
                 data: []
             }]
         };

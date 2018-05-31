@@ -17,6 +17,7 @@ import Block from "./block/block";
 import Network from "./network/network";
 import Thread from "./thread/thread";
 import MemoryLeak from "./memoryleak/memoryLeak";
+import PageVisibility from 'react-page-visibility';
 
 class App extends Component {
 
@@ -24,12 +25,14 @@ class App extends Component {
         super(props);
         this._onReceiveMessage = this._onReceiveMessage.bind(this);
         this.refreshMock = this.refreshMock.bind(this);
+        this._appVisibilityChange = this._appVisibilityChange.bind(this);
+        this.canRefresh = true;
     }
 
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        // setInterval(this.refreshMock, 2000);
+        setInterval(this.refreshMock, 2000);
     }
 
     _onReceiveMessage(moduleName, payload) {
@@ -95,52 +98,58 @@ class App extends Component {
         }
     }
 
+    _appVisibilityChange(isVisible) {
+        this.canRefresh = isVisible;
+    }
+
     render() {
         return (
-            <div className="App">
-                <Grid>
-                    <Row style={{marginBottom: 30}}>
-                        <Col md={12}><AppInfo ref="appInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={3}> <Startup ref="startupInfo"/>
-                        </Col>
-                        <Col md={2}> <Fps ref="fpsInfo"/>
-                        </Col>
-                        <Col md={4}> <BatteryInfo ref="batteryInfo"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}> <Ram ref="ramInfo"/>
-                        </Col>
-                        <Col md={6}> <Pss ref="pssInfo"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}> <Cpu ref="cpuInfo"/>
-                        </Col>
-                        <Col md={6}> <Heap ref="heapInfo"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}><Traffic ref="trafficInfo"/></Col>
-                        <Col md={6}><Crash ref="crashInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}><Pageload ref="pageloadInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}><Block ref="blockInfo"/></Col>
-                        <Col md={6}><Network ref="networkInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}><Thread ref="threadInfo"/></Col>
-                    </Row>
-                    <Row>
-                        <Col md={12}><MemoryLeak ref="leakInfo"/></Col>
-                    </Row>
-                </Grid>
-            </div>
+            <PageVisibility onChange={this._appVisibilityChange}>
+                <div className="App">
+                    <Grid>
+                        <Row style={{marginBottom: 30}}>
+                            <Col md={12}><AppInfo ref="appInfo"/></Col>
+                        </Row>
+                        <Row>
+                            <Col md={9}> <Startup ref="startupInfo"/>
+                            </Col>
+                            <Col md={3}> <Fps ref="fpsInfo"/>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={4}> <Ram ref="ramInfo"/>
+                            </Col>
+                            <Col md={4}> <Pss ref="pssInfo"/>
+                            </Col>
+                            <Col md={4}> <BatteryInfo ref="batteryInfo"/>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}> <Cpu ref="cpuInfo"/>
+                            </Col>
+                            <Col md={6}> <Heap ref="heapInfo"/>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}><Traffic ref="trafficInfo"/></Col>
+                            <Col md={6}><Crash ref="crashInfo"/></Col>
+                        </Row>
+                        <Row>
+                            <Col md={12}><Pageload ref="pageloadInfo"/></Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}><Block ref="blockInfo"/></Col>
+                            <Col md={6}><Network ref="networkInfo"/></Col>
+                        </Row>
+                        <Row>
+                            <Col md={12}><Thread ref="threadInfo"/></Col>
+                        </Row>
+                        <Row>
+                            <Col md={12}><MemoryLeak ref="leakInfo"/></Col>
+                        </Row>
+                    </Grid>
+                </div>
+            </PageVisibility>
         );
     }
 

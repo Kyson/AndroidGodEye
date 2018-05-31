@@ -16,16 +16,17 @@ class Pss extends Component {
         super(props);
         this.options = {
             chart: {
+                height: 200,
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                spacing: [0, 0, 0, 0]
+                margin: [0, 0, 0, 0]
             },
             title: {
                 text: "Pss",
                 align: 'center',
                 verticalAlign: 'middle',
-                y: 50
+                y: 80
             },
             tooltip: {
                 formatter: function () {
@@ -41,6 +42,7 @@ class Pss extends Component {
                 pie: {
                     dataLabels: {
                         enabled: true,
+                        distance: -20,
                         format: '<b>{point.name}</b>',
                         style: {
                             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
@@ -54,7 +56,7 @@ class Pss extends Component {
             series: [{
                 type: 'pie',
                 name: 'pss',
-                innerSize: '80%',
+                innerSize: '70%',
                 data: []
             }]
         };
