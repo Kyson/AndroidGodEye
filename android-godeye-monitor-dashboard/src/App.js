@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import AppInfo from "./appinfo/appInfo";
-import {Row, Col, Clearfix, Grid, Panel, Label, PageHeader} from 'react-bootstrap'
+import {Row, Col, Grid} from 'react-bootstrap'
 import globalWs from './communication/websocket'
 import BatteryInfo from "./batteryinfo/batteryInfo";
 import Startup from "./startup/startup";
@@ -17,7 +17,7 @@ import Block from "./block/block";
 import Network from "./network/network";
 import Thread from "./thread/thread";
 import MemoryLeak from "./memoryleak/memoryLeak";
-import PageVisibility from 'react-page-visibility';
+import RefreshStatus from "./refreshstatus/refreshStatus";
 
 class App extends Component {
 
@@ -25,7 +25,7 @@ class App extends Component {
         super(props);
         this._onReceiveMessage = this._onReceiveMessage.bind(this);
         this.refreshMock = this.refreshMock.bind(this);
-        this._appVisibilityChange = this._appVisibilityChange.bind(this);
+        this._setCanRefresh = this._setCanRefresh.bind(this);
         this.canRefresh = true;
     }
 
@@ -36,6 +36,9 @@ class App extends Component {
     }
 
     _onReceiveMessage(moduleName, payload) {
+        if (!this.canRefresh) {
+            return;
+        }
         if ("appInfo" === moduleName) {
             this.refs.appInfo.refresh(payload);
             return;
@@ -98,59 +101,63 @@ class App extends Component {
         }
     }
 
-    _appVisibilityChange(isVisible) {
-        this.canRefresh = isVisible;
-        console.log("PageVisibility:" + this.canRefresh);
+    _setCanRefresh(canRefresh) {
+        this.canRefresh = canRefresh;
     }
 
     render() {
         return (
-            <PageVisibility onChange={this._appVisibilityChange}>
-                <div className="App">
-                    <Grid>
-                        <Row style={{marginBottom: 30}}>
-                            <Col md={12}><AppInfo ref="appInfo"/></Col>
-                        </Row>
-                        <Row>
-                            <Col md={9}> <Startup ref="startupInfo"/>
-                            </Col>
-                            <Col md={3}> <Fps ref="fpsInfo"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={4}> <Ram ref="ramInfo"/>
-                            </Col>
-                            <Col md={4}> <Pss ref="pssInfo"/>
-                            </Col>
-                            <Col md={4}> <BatteryInfo ref="batteryInfo"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={6}> <Cpu ref="cpuInfo"/>
-                            </Col>
-                            <Col md={6}> <Heap ref="heapInfo"/>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md={6}><Traffic ref="trafficInfo"/></Col>
-                            <Col md={6}><Crash ref="crashInfo"/></Col>
-                        </Row>
-                        <Row>
-                            <Col md={12}><Pageload ref="pageloadInfo"/></Col>
-                        </Row>
-                        <Row>
-                            <Col md={6}><Block ref="blockInfo"/></Col>
-                            <Col md={6}><Network ref="networkInfo"/></Col>
-                        </Row>
-                        <Row>
-                            <Col md={12}><Thread ref="threadInfo"/></Col>
-                        </Row>
-                        <Row>
-                            <Col md={12}><MemoryLeak ref="leakInfo"/></Col>
-                        </Row>
-                    </Grid>
-                </div>
-            </PageVisibility>
+
+            <div className="App">
+                <Grid>
+                    <Row style={{marginBottom: 30}}>
+                        <Col md={12}><AppInfo ref="appInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <RefreshStatus setCanRefresh={this._setCanRefresh}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={9}> <Startup ref="startupInfo"/>
+                        </Col>
+                        <Col md={3}> <Fps ref="fpsInfo"/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4}> <Ram ref="ramInfo"/>
+                        </Col>
+                        <Col md={4}> <Pss ref="pssInfo"/>
+                        </Col>
+                        <Col md={4}> <BatteryInfo ref="batteryInfo"/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}> <Cpu ref="cpuInfo"/>
+                        </Col>
+                        <Col md={6}> <Heap ref="heapInfo"/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}><Traffic ref="trafficInfo"/></Col>
+                        <Col md={6}><Crash ref="crashInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><Pageload ref="pageloadInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}><Block ref="blockInfo"/></Col>
+                        <Col md={6}><Network ref="networkInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><Thread ref="threadInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><MemoryLeak ref="leakInfo"/></Col>
+                    </Row>
+                </Grid>
+            </div>
+
         );
     }
 

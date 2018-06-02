@@ -47,7 +47,7 @@ class Pageload extends Component {
                         </h5></Col>
                         <Col md={2}
                              style={{textAlign: 'right'}}><Button
-                            onClick={this.setRefreshStatus}>{this.state.isRefreshing ? "Refreshing...|Stop" : "Stopped...|Start"}</Button></Col>
+                            onClick={this.setRefreshStatus}>{this.state.isRefreshing ? "Stop" : "Start"}</Button></Col>
                     </Row>
                 </Panel.Heading>
                 <Panel.Body>
