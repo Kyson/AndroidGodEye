@@ -68,7 +68,7 @@ GodEye.instance().init(this);
 // v1.7以下
 // GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
 // v1.7.0以上installAll api删除，使用如下：
-GodEye.instance().install(Cpu.class, new CpuContextImpl())
+        GodEye.instance().install(Cpu.class, new CpuContextImpl())
                 .install(Battery.class, new BatteryContextImpl(this))
                 .install(Fps.class, new FpsContextImpl(this))
                 .install(Heap.class, Long.valueOf(2000))
@@ -80,7 +80,7 @@ GodEye.instance().install(Cpu.class, new CpuContextImpl())
                 .install(ThreadDump.class, new ThreadContextImpl())
                 .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
                 .install(Pageload.class, new PageloadContextImpl(this))
-                .install(getApplication(), new RxPermissionRequest());
+                .install(LeakDetector.class,new LeakContextImpl2(this,new RxPermissionRequest()));
 ```
 
 > 推荐在application中进行安装，否则部分模块可能工作异常
@@ -129,13 +129,15 @@ GodEyeMonitor.shutDown()
 
 完成！开始使用：
 
-手机与pc连接同一网段，在pc浏览器中访问`手机ip+端口`。或者如果你是用USB连接的话，执行`adb forward tcp:5390 tcp:5390`，然后pc浏览器中访问`http://localhost:5390/`。
+手机与pc连接同一网段，在pc浏览器中访问`手机ip+端口+/index.html`。或者如果你是用USB连接的话，执行`adb forward tcp:5390 tcp:5390`，然后pc浏览器中访问`http://localhost:5390/index.html`。
 
 即可看到Debug面板!
 
-> 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...' 中包含了访问地址。
+> 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390/index.html" ] in your browser...' 中包含了访问地址。
 
 **好吧，如果你懒得自己编译这个项目的话，你也可以先下载 [APK](https://fir.im/5k67) 看看效果。**
+
+**注意：/index.html 是必须的!!!**
 
 ## Debug开发者面板
 

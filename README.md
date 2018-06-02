@@ -65,7 +65,7 @@ Install modules , GodEye class is entrance for this step, all modules are provid
 // before v1.7.0
 // GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
 // after v1.7.0 ,install one by one
-GodEye.instance().install(Cpu.class, new CpuContextImpl())
+        GodEye.instance().install(Cpu.class, new CpuContextImpl())
                 .install(Battery.class, new BatteryContextImpl(this))
                 .install(Fps.class, new FpsContextImpl(this))
                 .install(Heap.class, Long.valueOf(2000))
@@ -77,7 +77,7 @@ GodEye.instance().install(Cpu.class, new CpuContextImpl())
                 .install(ThreadDump.class, new ThreadContextImpl())
                 .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
                 .install(Pageload.class, new PageloadContextImpl(this))
-                .install(getApplication(), new RxPermissionRequest());
+                .install(LeakDetector.class,new LeakContextImpl2(this,new RxPermissionRequest()));
 ```
 
 > Recommend install in application.
@@ -126,15 +126,17 @@ GodEyeMonitor.shutDown()
 
 You're good to go!
 
-Make sure your android device and pc are on the same network segment, and open browser on pc, then open `Android device ip : Port`
+Make sure your android device and pc are on the same network segment, and open browser on pc, then open `Android device ip : Port/index.html`
 
-Or if you are using it over usb, run `adb forward tcp:5390 tcp:5390`, then open `http://localhost:5390/`.
+Or if you are using it over usb, run `adb forward tcp:5390 tcp:5390`, then open `http://localhost:5390/index.html`.
 
 now enjoy it!
 
-> Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context)`, log is like:'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...'.
+> Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context)`, log is like:'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390/index.html" ] in your browser...'.
 
 **Okay...If you just want to see the results, you can install [APK](https://fir.im/5k67) directly.**
+
+**Note that /index.html is necessary!!!**
 
 ## Debug Monitor
 
