@@ -53,8 +53,8 @@ $(document).ready(function () {
     $('#thread_stop_dump').click(function () {
         stopRefreshThreadTable();
     });
-
-    startRefreshThreadTable()
+    //TODO KYSON
+    // startRefreshThreadTable()
 });
 
 

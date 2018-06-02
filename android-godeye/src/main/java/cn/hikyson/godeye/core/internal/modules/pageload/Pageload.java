@@ -11,7 +11,7 @@ import cn.hikyson.godeye.core.utils.L;
 /**
  * Created by kysonchao on 2018/1/25.
  */
-public class Pageload extends ProduceableSubject<List<PageloadInfo>> implements Install<PageloadContext> {
+public class Pageload extends ProduceableSubject<PageloadInfo> implements Install<PageloadContext> {
     private PageloadEngine mPageloadEngine;
 
     public void install(Application application) {

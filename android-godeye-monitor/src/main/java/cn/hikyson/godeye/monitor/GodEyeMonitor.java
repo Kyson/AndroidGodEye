@@ -1,17 +1,21 @@
 package cn.hikyson.godeye.monitor;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 
+import com.koushikdutta.async.http.WebSocket;
+import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
+import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
+
 import java.util.Map;
 
-import cn.hikyson.godeye.monitor.driver.Watcher;
-import cn.hikyson.godeye.monitor.modules.AppInfoModule;
-import cn.hikyson.godeye.monitor.server.ClientServer;
-import cn.hikyson.godeye.monitor.server.Router;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.monitor.driver.Watcher;
+import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
+import cn.hikyson.godeye.monitor.processors.StaticProcessor;
+import cn.hikyson.godeye.monitor.processors.WebSocketProcessor;
+import cn.hikyson.godeye.monitor.server.GodEyeMonitorServer;
 
 /**
  * Created by kysonchao on 2017/11/27.
@@ -19,7 +23,7 @@ import cn.hikyson.godeye.core.utils.L;
 public class GodEyeMonitor {
     private static boolean sIsWorking = false;
     private static final int DEFAULT_PORT = 5390;
-    private static ClientServer sClientServer;
+    private static GodEyeMonitorServer sGodEyeMonitorServer;
     private static Watcher sWatcher;
 
     public interface AppInfoConext {
@@ -32,7 +36,7 @@ public class GodEyeMonitor {
      * @param appInfoConext
      */
     public static synchronized void injectAppInfoConext(AppInfoConext appInfoConext) {
-        AppInfoModule.injectAppInfoConext(appInfoConext);
+        AppInfo.injectAppInfoConext(appInfoConext);
     }
 
     public static synchronized void work(Context context) {
@@ -51,10 +55,33 @@ public class GodEyeMonitor {
             throw new IllegalStateException("context can not be null.");
         }
         Context applicationContext = context.getApplicationContext();
-        sWatcher = new Watcher();
+        sGodEyeMonitorServer = new GodEyeMonitorServer(port);
+        sGodEyeMonitorServer.start();
+        final StaticProcessor assetsModule = new StaticProcessor(applicationContext);
+        final WebSocketProcessor webSocketProcessor = new WebSocketProcessor(sGodEyeMonitorServer);
+        sGodEyeMonitorServer.setMonitorServerCallback(new GodEyeMonitorServer.MonitorServerCallback() {
+            @Override
+            public void onHttpRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                try {
+                    StaticProcessor.StaticResource staticResource = assetsModule.process(request.getPath());
+                    response.send(staticResource.contentType, staticResource.payload);
+                } catch (Throwable throwable) {
+                    L.e(String.valueOf(throwable));
+                }
+            }
+
+            @Override
+            public void onWebSocketRequest(WebSocket webSocket, String messageFromClient) {
+                //解析客户端消息
+                // if ("Hello Server".equals(s))
+                // webSocket.send("Welcome Client!");
+                webSocket.send(webSocketProcessor.process(messageFromClient));
+            }
+        });
+        sWatcher = new Watcher(webSocketProcessor);
         sWatcher.observeAll();
-        Router.get().init(applicationContext);
-        initServer(applicationContext, port);
+        L.d(getAddressLog(context, port));
+        L.d("Leak dump files are in /storage/download/leakcanary-" + context.getPackageName());
         L.d("GodEye monitor is working...");
     }
 
@@ -62,9 +89,9 @@ public class GodEyeMonitor {
      * monitor停止工作
      */
     public static synchronized void shutDown() {
-        if (sClientServer != null) {
-            sClientServer.stop();
-            sClientServer = null;
+        if (sGodEyeMonitorServer != null) {
+            sGodEyeMonitorServer.stop();
+            sGodEyeMonitorServer = null;
         }
         if (sWatcher != null) {
             sWatcher.cancelAllObserve();
@@ -72,13 +99,6 @@ public class GodEyeMonitor {
         }
         sIsWorking = false;
         L.d("GodEye monitor stopped.");
-    }
-
-    private static void initServer(Context context, int port) {
-        sClientServer = new ClientServer(port);
-        sClientServer.start();
-        L.d(getAddressLog(context, port));
-        L.d("Leak dump files are in /storage/download/leakcanary-" + context.getPackageName());
     }
 
     private static String getAddressLog(Context context, int port) {
@@ -90,6 +110,6 @@ public class GodEyeMonitor {
                 (ipAddress >> 8 & 0xff),
                 (ipAddress >> 16 & 0xff),
                 (ipAddress >> 24 & 0xff));
-        return "Open AndroidGodEye dashboard [ http://" + formattedIpAddress + ":" + port + " ] in your browser , if can not open it , make sure device and pc are on the same network segment";
+        return "Open AndroidGodEye dashboard [ http://" + formattedIpAddress + ":" + port + "/index.html ] in your browser , if can not open it , make sure device and pc are on the same network segment";
     }
 }

@@ -1,0 +1,29 @@
+{
+  "name": "android-god-eye",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "echarts": "^4.1.0",
+    "highcharts": "^6.1.0",
+    "highcharts-react-official": "^1.1.0",
+    "npm": "^6.0.1",
+    "react": "^16.3.2",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.3.2",
+    "react-highcharts": "^16.0.2",
+    "react-json-pretty": "^1.7.6",
+    "react-page-visibility": "^3.0.0",
+    "react-scripts": "1.1.4",
+    "react-table": "^6.8.5",
+    "sockette": "^2.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "deploy": "python deploy.py",
+    "bd": "react-scripts build && python deploy.py",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

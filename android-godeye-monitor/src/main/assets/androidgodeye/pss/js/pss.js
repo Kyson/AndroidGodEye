@@ -4,7 +4,8 @@
 'use strict';
 $(document).ready(function () {
     pssUtil.setup('pss_chart');
-    setInterval(refresh, interval)
+    //TODO KYSON
+    // setInterval(refresh, interval)
 });
 
 var interval = 6000;

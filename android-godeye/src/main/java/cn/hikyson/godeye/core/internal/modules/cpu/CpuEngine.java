@@ -41,6 +41,9 @@ public class CpuEngine implements Engine {
                 }).subscribe(new Consumer<CpuInfo>() {
             @Override
             public void accept(CpuInfo food) throws Exception {
+                if (food == CpuInfo.INVALID) {
+                    return;
+                }
                 mProducer.produce(food);
             }
         }, new Consumer<Throwable>() {
@@ -64,7 +67,8 @@ public class CpuEngine implements Engine {
                 CpuSnapshot endSnapshot = CpuSnapshot.snapshot();
                 float totalTime = (endSnapshot.total - startSnapshot.total) * 1.0f;
                 if (totalTime <= 0) {
-                    throw new GodEyeInvalidDataException("totalTime must greater than 0");
+                    L.e("totalTime must greater than 0");
+                    return CpuInfo.INVALID;
                 }
                 long idleTime = endSnapshot.idle - startSnapshot.idle;
                 double totalRatio = (totalTime - idleTime) / totalTime;
@@ -73,7 +77,8 @@ public class CpuEngine implements Engine {
                 double systemRatio = (endSnapshot.system - startSnapshot.system) / totalTime;
                 double ioWaitRatio = (endSnapshot.ioWait - startSnapshot.ioWait) / totalTime;
                 if (!isValidRatios(totalRatio, appRatio, userRatio, systemRatio, ioWaitRatio)) {
-                    throw new GodEyeInvalidDataException("not valid ratio");
+                    L.e("not valid ratio");
+                    return CpuInfo.INVALID;
                 }
                 return new CpuInfo(totalRatio, appRatio, userRatio, systemRatio, ioWaitRatio);
             }

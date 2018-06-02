@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
@@ -34,7 +35,11 @@ import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLock;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
-import cn.hikyson.godeye.monitor.modules.ThreadInfo;
+import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
+import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
+import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
+import cn.hikyson.godeye.monitor.processors.Messager;
+import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -44,12 +49,12 @@ import io.reactivex.functions.Function;
  * Created by kysonchao on 2017/11/21.
  */
 public class Watcher {
-    private Pipe mPipe;
     private CompositeDisposable mCompositeDisposable;
+    private Messager mMessager;
 
-    public Watcher() {
-        mPipe = Pipe.instance();
+    public Watcher(Messager messager) {
         mCompositeDisposable = new CompositeDisposable();
+        mMessager = messager;
     }
 
     /**
@@ -57,70 +62,81 @@ public class Watcher {
      */
     public void observeAll() {
         GodEye godEye = GodEye.instance();
+        mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long aLong) throws Exception {
+                mMessager.sendMessage(new ServerMessage("appInfo", new AppInfo()).toString());
+            }
+        }));
         mCompositeDisposable.add(godEye.getModule(Battery.class).subject().subscribe(new Consumer<BatteryInfo>() {
             @Override
             public void accept(BatteryInfo batteryInfo) throws Exception {
-                mPipe.pushBatteryInfo(batteryInfo);
+                mMessager.sendMessage(new ServerMessage("batteryInfo", batteryInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Cpu.class).subject().subscribe(new Consumer<CpuInfo>() {
             @Override
             public void accept(CpuInfo cpuInfo) throws Exception {
-                mPipe.pushCpuInfo(cpuInfo);
+                mMessager.sendMessage(new ServerMessage("cpuInfo", cpuInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Traffic.class).subject().subscribe(new Consumer<TrafficInfo>() {
             @Override
             public void accept(TrafficInfo trafficInfo) throws Exception {
-                mPipe.pushTrafficInfo(trafficInfo);
+                mMessager.sendMessage(new ServerMessage("trafficInfo", trafficInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Fps.class).subject().subscribe(new Consumer<FpsInfo>() {
             @Override
             public void accept(FpsInfo fpsInfo) throws Exception {
-                mPipe.pushFpsInfo(fpsInfo);
+                mMessager.sendMessage(new ServerMessage("fpsInfo", fpsInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(LeakDetector.class).subject().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
             @Override
             public void accept(LeakQueue.LeakMemoryInfo leakMemoryInfo) throws Exception {
-                mPipe.pushLeakMemoryInfos(leakMemoryInfo);
+                mMessager.sendMessage(new ServerMessage("leakInfo", leakMemoryInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Sm.class).subject().subscribe(new Consumer<BlockInfo>() {
             @Override
             public void accept(BlockInfo blockInfo) throws Exception {
-                mPipe.pushBlockInfos(blockInfo);
+                mMessager.sendMessage(new ServerMessage("blockInfo", new BlockSimpleInfo(blockInfo)).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Network.class).subject().subscribe(new Consumer<RequestBaseInfo>() {
             @Override
             public void accept(RequestBaseInfo requestBaseInfo) throws Exception {
-                mPipe.pushRequestBaseInfos(requestBaseInfo);
+                mMessager.sendMessage(new ServerMessage("networkInfo", requestBaseInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Startup.class).subject().subscribe(new Consumer<StartupInfo>() {
             @Override
-            public void accept(StartupInfo startupInfo) throws Exception {
-                mPipe.pushStartupInfo(startupInfo);
+            public void accept(final StartupInfo startupInfo) throws Exception {
+                mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        mMessager.sendMessage(new ServerMessage("startupInfo", startupInfo).toString());
+                    }
+                }));
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Ram.class).subject().subscribe(new Consumer<RamInfo>() {
             @Override
             public void accept(RamInfo ramInfo) throws Exception {
-                mPipe.pushRamInfo(ramInfo);
+                mMessager.sendMessage(new ServerMessage("ramInfo", ramInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Pss.class).subject().subscribe(new Consumer<PssInfo>() {
             @Override
             public void accept(PssInfo pssInfo) throws Exception {
-                mPipe.pushPssInfo(pssInfo);
+                mMessager.sendMessage(new ServerMessage("pssInfo", pssInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Heap.class).subject().subscribe(new Consumer<HeapInfo>() {
             @Override
             public void accept(HeapInfo heapInfo) throws Exception {
-                mPipe.pushHeapInfo(heapInfo);
+                mMessager.sendMessage(new ServerMessage("heapInfo", heapInfo).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(ThreadDump.class).subject().map(new Function<List<Thread>, List<ThreadInfo>>() {
@@ -130,8 +146,8 @@ public class Watcher {
             }
         }).subscribe(new Consumer<List<ThreadInfo>>() {
             @Override
-            public void accept(List<ThreadInfo> threads) throws Exception {
-                mPipe.pushThreadInfo(threads);
+            public void accept(List<ThreadInfo> threadInfos) throws Exception {
+                mMessager.sendMessage(new ServerMessage("threadInfo", threadInfos).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(DeadLock.class).subject().map(new Function<List<Thread>, List<Long>>() {
@@ -149,7 +165,7 @@ public class Watcher {
         }).subscribe(new Consumer<List<Long>>() {
             @Override
             public void accept(List<Long> threads) throws Exception {
-                mPipe.pushDeadLocks(threads);
+//                mMessager.sendMessage(new Module.ResultWrapper<>(threads).toString());
             }
         }));
         mCompositeDisposable.add(godEye.getModule(Crash.class).subject().map(new Function<List<CrashInfo>, CrashInfo>() {
@@ -175,17 +191,22 @@ public class Watcher {
             }
         }).subscribe(new Consumer<CrashInfo>() {
             @Override
-            public void accept(CrashInfo crashInfo) throws Exception {
+            public void accept(final CrashInfo crashInfo) throws Exception {
                 if (crashInfo == CrashInfo.INVALID) {
                     return;
                 }
-                mPipe.pushCrashInfo(crashInfo);
+                mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long aLong) throws Exception {
+                        mMessager.sendMessage(new ServerMessage("crashInfo", crashInfo).toString());
+                    }
+                }));
             }
         }));
-        mCompositeDisposable.add(godEye.getModule(Pageload.class).subject().subscribe(new Consumer<List<PageloadInfo>>() {
+        mCompositeDisposable.add(godEye.getModule(Pageload.class).subject().subscribe(new Consumer<PageloadInfo>() {
             @Override
-            public void accept(List<PageloadInfo> pageloadInfos) throws Exception {
-                mPipe.pushPageloadInfo(pageloadInfos);
+            public void accept(PageloadInfo pageloadInfo) throws Exception {
+                mMessager.sendMessage(new ServerMessage("pageloadInfo", pageloadInfo).toString());
             }
         }));
     }

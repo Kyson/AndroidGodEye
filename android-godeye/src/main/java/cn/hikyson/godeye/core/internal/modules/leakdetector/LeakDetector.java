@@ -1,6 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Application;
 
 import java.io.File;
@@ -42,6 +43,7 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
         install(new LeakContextImpl(application));
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public synchronized void install(final LeakContext config) {
         final Application application = config.application();
@@ -52,7 +54,8 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (!aBoolean) {
-                    throw new IllegalStateException("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    L.e("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    return;
                 }
                 uninstall();
                 mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(application);

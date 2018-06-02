@@ -3,17 +3,22 @@
  */
 'use strict';
 $(document).ready(function () {
-    setInterval(refresh, interval)
+    // setInterval(refresh, interval)
+    require(['EventBus'],function (EventBus) {
+        EventBus.addEventListener('batteryInfo', function(payload) {
+            refreshView(payload);
+        });
+    });
 });
 
-var interval = 2000;
+// var interval = 2000;
 
 function refresh() {
-    requestUtil.getData("/battery", function (data) {
-        refreshView(data);
-    }, function () {
-        refreshView(null);
-    });
+    // requestUtil.getData("/battery", function (data) {
+    //     refreshView(data);
+    // }, function () {
+    //     refreshView(null);
+    // });
 }
 
 function refreshView(data) {
