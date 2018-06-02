@@ -65,6 +65,7 @@ Install modules , GodEye class is entrance for this step, all modules are provid
 // before v1.7.0
 // GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
 // after v1.7.0 ,install one by one
+if (isMainProcess(this)) {//can not install modules in sub process
         GodEye.instance().install(Cpu.class, new CpuContextImpl())
                 .install(Battery.class, new BatteryContextImpl(this))
                 .install(Fps.class, new FpsContextImpl(this))
@@ -78,6 +79,23 @@ Install modules , GodEye class is entrance for this step, all modules are provid
                 .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
                 .install(Pageload.class, new PageloadContextImpl(this))
                 .install(LeakDetector.class,new LeakContextImpl2(this,new RxPermissionRequest()));
+}
+
+/**
+* is main process
+*/
+    private static boolean isMainProcess(Application application) {
+        int pid = android.os.Process.myPid();
+        String processName = "";
+        ActivityManager manager = (ActivityManager) application.getSystemService
+                (Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
+            if (process.pid == pid) {
+                processName = process.processName;
+            }
+        }
+        return application.getPackageName().equals(processName);
+    }
 ```
 
 > Recommend install in application.

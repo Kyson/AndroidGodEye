@@ -68,6 +68,7 @@ GodEye.instance().init(this);
 // v1.7以下
 // GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
 // v1.7.0以上installAll api删除，使用如下：
+if (isMainProcess(this)) {//安装只能在主进程
         GodEye.instance().install(Cpu.class, new CpuContextImpl())
                 .install(Battery.class, new BatteryContextImpl(this))
                 .install(Fps.class, new FpsContextImpl(this))
@@ -81,6 +82,24 @@ GodEye.instance().init(this);
                 .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
                 .install(Pageload.class, new PageloadContextImpl(this))
                 .install(LeakDetector.class,new LeakContextImpl2(this,new RxPermissionRequest()));
+}
+
+
+/**
+* 是否主进程
+*/
+    private static boolean isMainProcess(Application application) {
+        int pid = android.os.Process.myPid();
+        String processName = "";
+        ActivityManager manager = (ActivityManager) application.getSystemService
+                (Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
+            if (process.pid == pid) {
+                processName = process.processName;
+            }
+        }
+        return application.getPackageName().equals(processName);
+    }
 ```
 
 > 推荐在application中进行安装，否则部分模块可能工作异常
