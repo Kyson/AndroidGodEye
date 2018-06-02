@@ -32,7 +32,7 @@ class App extends Component {
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        setInterval(this.refreshMock, 2000);
+        // setInterval(this.refreshMock, 2000);
     }
 
     _onReceiveMessage(moduleName, payload) {
@@ -100,6 +100,7 @@ class App extends Component {
 
     _appVisibilityChange(isVisible) {
         this.canRefresh = isVisible;
+        console.log("PageVisibility:" + this.canRefresh);
     }
 
     render() {

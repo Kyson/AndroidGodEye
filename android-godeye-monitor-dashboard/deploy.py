@@ -53,3 +53,4 @@ if __name__ == "__main__":
     print u"target dir: [%s]"%targetDir
     del_dir_tree(targetDir)
     copyFiles(sourceDir,targetDir)
+    print u"deploy complete."
