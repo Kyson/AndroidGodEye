@@ -5,8 +5,6 @@
 <h1 align="center">AndroidGodEye</h1>
 <p align="center">
 <a href="https://travis-ci.org/Kyson/AndroidGodEye" target="_blank"><img src="https://travis-ci.org/Kyson/AndroidGodEye.svg?branch=master"></img></a>
-<a href="https://oss.sonatype.org/content/repositories/releases/cn/hikyson/godeye/godeye-core/" target="_blank"><img src="https://img.shields.io/maven-central/v/cn.hikyson.godeye/godeye-core.svg"></img></a>
-<a href="https://jitpack.io/#Kyson/AndroidGodEye" target="_blank"><img src="https://jitpack.io/v/Kyson/AndroidGodEye.svg"></img></a>
 <a href="http://androidweekly.net/issues/issue-293" target="_blank"><img src="https://img.shields.io/badge/Android%20Weekly-%23293-blue.svg"></img></a>
 <a href="https://android-arsenal.com/details/1/6561" target="_blank"><img src="https://img.shields.io/badge/Android%20Arsenal-AndroidGodEye-brightgreen.svg?style=flat"></img></a>
 <a href="LICENSE" target="_blank"><img src="http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat"></img></a>
@@ -55,6 +53,12 @@ dependencies {
 
 ### Step2
 
+Init first in your application:
+
+```java
+GodEye.instance().init(this);
+```
+
 Install modules , GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
@@ -73,12 +77,7 @@ GodEye.instance().install(Cpu.class, new CpuContextImpl())
                 .install(ThreadDump.class, new ThreadContextImpl())
                 .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
                 .install(Pageload.class, new PageloadContextImpl(this))
-                .install(LeakDetector.class, new LeakContextImpl2(this, new PermissionRequest() {
-                    @Override
-                    public Observable<Boolean> dispatchRequest(Activity activity, String... permissions) {
-                        return new RxPermissions(activity).request(permissions);
-                    }
-                }));
+                .install(getApplication(), new RxPermissionRequest());
 ```
 
 > Recommend install in application.

@@ -5,8 +5,6 @@
 <h1 align="center">AndroidGodEye</h1>
 <p align="center">
 <a href="https://travis-ci.org/Kyson/AndroidGodEye" target="_blank"><img src="https://travis-ci.org/Kyson/AndroidGodEye.svg?branch=master"></img></a>
-<a href="https://oss.sonatype.org/content/repositories/releases/cn/hikyson/godeye/godeye-core/" target="_blank"><img src="https://img.shields.io/maven-central/v/cn.hikyson.godeye/godeye-core.svg"></img></a>
-<a href="https://jitpack.io/#Kyson/AndroidGodEye" target="_blank"><img src="https://jitpack.io/v/Kyson/AndroidGodEye.svg"></img></a>
 <a href="http://androidweekly.net/issues/issue-293" target="_blank"><img src="https://img.shields.io/badge/Android%20Weekly-%23293-blue.svg"></img></a>
 <a href="https://android-arsenal.com/details/1/6561" target="_blank"><img src="https://img.shields.io/badge/Android%20Arsenal-AndroidGodEye-brightgreen.svg?style=flat"></img></a>
 <a href="LICENSE" target="_blank"><img src="http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat"></img></a>
@@ -56,6 +54,12 @@ dependencies {
 
 ### STEP2
 
+Application中初始化:
+
+```java
+GodEye.instance().init(this);
+```
+
 模块安装，GodEye类是AndroidGodEye的核心类，所有模块由它提供。
 
 在应用入口安装所有模块：
@@ -76,12 +80,7 @@ GodEye.instance().install(Cpu.class, new CpuContextImpl())
                 .install(ThreadDump.class, new ThreadContextImpl())
                 .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
                 .install(Pageload.class, new PageloadContextImpl(this))
-                .install(LeakDetector.class, new LeakContextImpl2(this, new PermissionRequest() {
-                    @Override
-                    public Observable<Boolean> dispatchRequest(Activity activity, String... permissions) {
-                        return new RxPermissions(activity).request(permissions);
-                    }
-                }));
+                .install(getApplication(), new RxPermissionRequest());
 ```
 
 > 推荐在application中进行安装，否则部分模块可能工作异常
