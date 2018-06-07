@@ -53,7 +53,12 @@ public class ActivityStackSubject {
                 @Override
                 public void subscribe(final ObservableEmitter<Activity> e) throws Exception {
                     ThreadUtil.ensureMainThread();
-                    mApplication.registerActivityLifecycleCallbacks(new SimpleActivityLifecycleCallbacks() {
+                    if (!mActivities.isEmpty()) {
+                        e.onNext(mActivities.get(0));
+                        e.onComplete();
+                        return;
+                    }
+                    SimpleActivityLifecycleCallbacks simpleActivityLifecycleCallbacks = new SimpleActivityLifecycleCallbacks() {
                         @Override
                         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                             ThreadUtil.ensureMainThread();
@@ -61,7 +66,8 @@ public class ActivityStackSubject {
                             e.onComplete();
                             mApplication.unregisterActivityLifecycleCallbacks(this);
                         }
-                    });
+                    };
+                    mApplication.registerActivityLifecycleCallbacks(simpleActivityLifecycleCallbacks);
                 }
             }).subscribeOn(AndroidSchedulers.mainThread());
         } else {
