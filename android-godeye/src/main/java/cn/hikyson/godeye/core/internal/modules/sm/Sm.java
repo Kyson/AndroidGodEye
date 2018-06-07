@@ -29,7 +29,7 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
     }
 
     public synchronized void install(Context context) {
-        install(new SmContextImpl(context, 2000, 500, 800));
+        install(new SmContextImpl(context));
     }
 
     @Override

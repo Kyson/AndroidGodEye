@@ -171,7 +171,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Uninstall"
+                    android:text="UninstallAll"
                     android:textSize="13dp"/>
 
             </LinearLayout>

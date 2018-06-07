@@ -19,6 +19,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -45,15 +46,15 @@ public class LeakContextImpl2 implements LeakContext {
         if (GodEye.instance().getActivityStackSubject() == null) {
             throw new RuntimeException("Please call GodEye.instance().init() first.");
         }
-        return GodEye.instance().getActivityStackSubject().topActivityObservable().concatMap(new Function<WeakReference<Activity>, ObservableSource<Boolean>>() {
-            @Override
-            public ObservableSource<Boolean> apply(WeakReference<Activity> activityRef) throws Exception {
-                Activity topActivity = activityRef.get();
-                if (topActivity == null) {
-                    return Observable.just(false);
-                }
-                return mPermissionRequest.dispatchRequest(activityRef.get(), permissions);
-            }
-        });
+        return GodEye.instance().getActivityStackSubject().topActivityObservable()
+                .concatMap(new Function<Activity, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(Activity topActivity) throws Exception {
+                        if (topActivity == null || topActivity.isFinishing()) {
+                            return Observable.just(false);
+                        }
+                        return mPermissionRequest.dispatchRequest(topActivity, permissions);
+                    }
+                }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread());
     }
 }

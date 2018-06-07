@@ -66,19 +66,19 @@ Install modules , GodEye class is entrance for this step, all modules are provid
 // GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
 // after v1.7.0 ,install one by one
 if (isMainProcess(this)) {//can not install modules in sub process
-        GodEye.instance().install(Cpu.class, new CpuContextImpl())
-                .install(Battery.class, new BatteryContextImpl(this))
-                .install(Fps.class, new FpsContextImpl(this))
-                .install(Heap.class, Long.valueOf(2000))
-                .install(Pss.class, new PssContextImpl(this))
-                .install(Ram.class, new RamContextImpl(this))
-                .install(Sm.class, new SmContextImpl(this, 1000, 300, 800))
-                .install(Traffic.class, new TrafficContextImpl())
-                .install(Crash.class, new CrashFileProvider(this))
-                .install(ThreadDump.class, new ThreadContextImpl())
-                .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
-                .install(Pageload.class, new PageloadContextImpl(this))
-                .install(LeakDetector.class,new LeakContextImpl2(this,new RxPermissionRequest()));
+        GodEye.instance()
+                        .install(new BatteryConfig(this))
+                        .install(new CpuConfig())
+                        .install(new CrashConfig(new CrashFileProvider(this)))
+                        .install(new FpsConfig(this))
+                        .install(new HeapConfig())
+                        .install(new LeakConfig(this,new RxPermissionRequest()))
+                        .install(new PageloadConfig(this))
+                        .install(new PssConfig(this))
+                        .install(new RamConfig(this))
+                        .install(new SmConfig(this))
+                        .install(new ThreadConfig())
+                        .install(new TrafficConfig());
 }
 
 /**
@@ -108,7 +108,11 @@ Uninstall modules when you don't need it(not recommend):
 // before v1.7.0
 // GodEye.instance().uninstallAll()
 // after v1.7.0 ,uninstall one by one
-GodEye.instance().getModule(Cpu.class).uninstall();
+// GodEye.instance().getModule(Cpu.class).uninstall();
+// after v2.1.0 ,uninstall all
+GodEye.instance().uninstallAll();
+// after v2.1.0 ,uninstall one by one
+GodEye.instance().uninstall(ModuleName.CPU);
 ```
 
 > Note that network and startup module don't need install and uninstall.
@@ -119,7 +123,9 @@ When install finished, GodEye begin produce performance data, generally you can 
 // before v1.7.0
 // GodEye.instance().cpu().subject().subscribe()
 // after v1.7.0, get module by class
-GodEye.instance().getModule(Cpu.class).subject().subscribe();
+//GodEye.instance().getModule(Cpu.class).subject().subscribe();
+// after v2.1.0, get module by name
+GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe()
 ```
 
 > Just like we will mention later,Debug Monitor is one of these consumers.
