@@ -19,4 +19,6 @@ sh deploy_release.sh
 
 ### jcenter
 
+bintrayKey:https://bintray.com/profile/edit
+
 ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=BINTRAY_KEY -PdryRun=false
