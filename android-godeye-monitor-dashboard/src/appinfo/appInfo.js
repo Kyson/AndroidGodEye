@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import '../App.css';
-import {Label, Row, Col, Panel, Badge} from 'react-bootstrap';
+import {Row, Badge} from 'react-bootstrap';
 import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Util from '../libs/util'

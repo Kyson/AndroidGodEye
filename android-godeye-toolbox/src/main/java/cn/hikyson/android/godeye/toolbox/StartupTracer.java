@@ -9,6 +9,7 @@ import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 
 /**
+ * @deprecated 没啥用，删了
  * Created by kysonchao on 2017/12/2.
  */
 public class StartupTracer {
@@ -48,7 +49,7 @@ public class StartupTracer {
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
-                        Startup startup = GodEye.instance().getModule(Startup.class);
+                        Startup startup = GodEye.instance().getModule(GodEye.ModuleName.STARTUP);
                         startup.produce(generateStartupInfo(System.currentTimeMillis()));
                     }
                 });

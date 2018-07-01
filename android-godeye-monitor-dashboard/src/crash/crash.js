@@ -72,9 +72,11 @@ class Crash extends Component {
         if (throwableStacktraces) {
             let items = [];
             for (let i = 0; i < throwableStacktraces.length; i++) {
-                items.push(<p style={{wordWrap: "break-word", wordBreak: "break-all", margin: 0}}>
-                    <small key={"crash" + i}>{throwableStacktraces[i]}</small>
-                </p>);
+                items.push(
+                    <p style={{wordWrap: "break-word", wordBreak: "break-all", margin: 0}} key={"crash" + i}>
+                        <small>{throwableStacktraces[i]}</small>
+                    </p>
+                );
             }
             return items;
         }

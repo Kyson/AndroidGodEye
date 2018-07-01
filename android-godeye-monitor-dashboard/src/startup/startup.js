@@ -32,10 +32,10 @@ class Startup extends Component {
                 <Panel.Body>
                     <div className="span12">
                         <p>
-                            <strong>{'Startup Type:'}&nbsp;&nbsp;&nbsp;</strong><span style={{fontSize:30}}>{info.startupType}</span>
-                        </p>
-                        <p>
-                            <strong>{'Cost time:'}&nbsp;&nbsp;&nbsp;</strong><span style={{fontSize:30}}>{info.startupTime}</span>&nbsp;&nbsp;{"ms"}
+                            <strong>{'Startup Type:'}&nbsp;&nbsp;&nbsp;</strong><span
+                            style={{fontSize: 30}}>{info.startupType}</span>
+                            <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{'Cost time:'}&nbsp;&nbsp;&nbsp;</strong><span
+                            style={{fontSize: 30}}>{info.startupTime}</span>&nbsp;&nbsp;{"ms"}
                         </p>
                     </div>
                 </Panel.Body>

@@ -1,6 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Application;
 
 import java.io.File;
@@ -42,18 +43,19 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
         install(new LeakContextImpl(application));
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public synchronized void install(final LeakContext config) {
         final Application application = config.application();
         if (LeakCanary.isInAnalyzerProcess(application)) {
             throw new IllegalStateException("can not call install leak");
         }
-        //TODO KYSON IMPL 这里可以使用activity的堆栈，获取当前的activity进行请求
         config.permissionNeed(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (!aBoolean) {
-                    throw new IllegalStateException("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    L.e("install leak need permission:" + Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    return;
                 }
                 uninstall();
                 mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(application);

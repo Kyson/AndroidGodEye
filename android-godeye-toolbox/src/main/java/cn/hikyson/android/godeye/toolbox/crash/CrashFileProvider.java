@@ -1,7 +1,9 @@
 package cn.hikyson.android.godeye.toolbox.crash;
 
+import android.Manifest;
 import android.content.Context;
 import android.os.Environment;
+import android.support.v4.content.PermissionChecker;
 
 import java.io.File;
 import java.io.FileReader;
@@ -99,7 +101,8 @@ public class CrashFileProvider implements CrashProvider {
 
     private static File makeSureCrashDir(Context context) throws IOException {
         File crashDir;
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
+                && PermissionChecker.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED) {
             crashDir = new File(context.getExternalCacheDir(), "AndroidGodEyeCrash");
         } else {
             crashDir = new File(context.getCacheDir(), "AndroidGodEyeCrash");

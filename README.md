@@ -5,8 +5,6 @@
 <h1 align="center">AndroidGodEye</h1>
 <p align="center">
 <a href="https://travis-ci.org/Kyson/AndroidGodEye" target="_blank"><img src="https://travis-ci.org/Kyson/AndroidGodEye.svg?branch=master"></img></a>
-<a href="https://oss.sonatype.org/content/repositories/releases/cn/hikyson/godeye/godeye-core/" target="_blank"><img src="https://img.shields.io/maven-central/v/cn.hikyson.godeye/godeye-core.svg"></img></a>
-<a href="https://jitpack.io/#Kyson/AndroidGodEye" target="_blank"><img src="https://jitpack.io/v/Kyson/AndroidGodEye.svg"></img></a>
 <a href="http://androidweekly.net/issues/issue-293" target="_blank"><img src="https://img.shields.io/badge/Android%20Weekly-%23293-blue.svg"></img></a>
 <a href="https://android-arsenal.com/details/1/6561" target="_blank"><img src="https://img.shields.io/badge/Android%20Arsenal-AndroidGodEye-brightgreen.svg?style=flat"></img></a>
 <a href="LICENSE" target="_blank"><img src="http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat"></img></a>
@@ -55,30 +53,49 @@ dependencies {
 
 ### Step2
 
+Init first in your application:
+
+```java
+GodEye.instance().init(this);
+```
+
 Install modules , GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
 // before v1.7.0
 // GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
 // after v1.7.0 ,install one by one
-GodEye.instance().install(Cpu.class, new CpuContextImpl())
-                .install(Battery.class, new BatteryContextImpl(this))
-                .install(Fps.class, new FpsContextImpl(this))
-                .install(Heap.class, Long.valueOf(2000))
-                .install(Pss.class, new PssContextImpl(this))
-                .install(Ram.class, new RamContextImpl(this))
-                .install(Sm.class, new SmContextImpl(this, 1000, 300, 800))
-                .install(Traffic.class, new TrafficContextImpl())
-                .install(Crash.class, new CrashFileProvider(this))
-                .install(ThreadDump.class, new ThreadContextImpl())
-                .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
-                .install(Pageload.class, new PageloadContextImpl(this))
-                .install(LeakDetector.class, new LeakContextImpl2(this, new PermissionRequest() {
-                    @Override
-                    public Observable<Boolean> dispatchRequest(Activity activity, String... permissions) {
-                        return new RxPermissions(activity).request(permissions);
-                    }
-                }));
+if (isMainProcess(this)) {//can not install modules in sub process
+        GodEye.instance()
+                        .install(new BatteryConfig(this))
+                        .install(new CpuConfig())
+                        .install(new CrashConfig(new CrashFileProvider(this)))
+                        .install(new FpsConfig(this))
+                        .install(new HeapConfig())
+                        .install(new LeakConfig(this,new RxPermissionRequest()))
+                        .install(new PageloadConfig(this))
+                        .install(new PssConfig(this))
+                        .install(new RamConfig(this))
+                        .install(new SmConfig(this))
+                        .install(new ThreadConfig())
+                        .install(new TrafficConfig());
+}
+
+/**
+* is main process
+*/
+    private static boolean isMainProcess(Application application) {
+        int pid = android.os.Process.myPid();
+        String processName = "";
+        ActivityManager manager = (ActivityManager) application.getSystemService
+                (Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
+            if (process.pid == pid) {
+                processName = process.processName;
+            }
+        }
+        return application.getPackageName().equals(processName);
+    }
 ```
 
 > Recommend install in application.
@@ -91,7 +108,11 @@ Uninstall modules when you don't need it(not recommend):
 // before v1.7.0
 // GodEye.instance().uninstallAll()
 // after v1.7.0 ,uninstall one by one
-GodEye.instance().getModule(Cpu.class).uninstall();
+// GodEye.instance().getModule(Cpu.class).uninstall();
+// after v2.1.0 ,uninstall all
+GodEye.instance().uninstallAll();
+// after v2.1.0 ,uninstall one by one
+GodEye.instance().uninstall(ModuleName.CPU);
 ```
 
 > Note that network and startup module don't need install and uninstall.
@@ -102,7 +123,9 @@ When install finished, GodEye begin produce performance data, generally you can 
 // before v1.7.0
 // GodEye.instance().cpu().subject().subscribe()
 // after v1.7.0, get module by class
-GodEye.instance().getModule(Cpu.class).subject().subscribe();
+//GodEye.instance().getModule(Cpu.class).subject().subscribe();
+// after v2.1.0, get module by name
+GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe()
 ```
 
 > Just like we will mention later,Debug Monitor is one of these consumers.
@@ -127,15 +150,17 @@ GodEyeMonitor.shutDown()
 
 You're good to go!
 
-Make sure your android device and pc are on the same network segment, and open browser on pc, then open `Android device ip : Port`
+Make sure your android device and pc are on the same network segment, and open browser on pc, then open `Android device ip : Port/index.html`
 
-Or if you are using it over usb, run `adb forward tcp:5390 tcp:5390`, then open `http://localhost:5390/`.
+Or if you are using it over usb, run `adb forward tcp:5390 tcp:5390`, then open `http://localhost:5390/index.html`.
 
 now enjoy it!
 
-> Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context)`, log is like:'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...'.
+> Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context)`, log is like:'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390/index.html" ] in your browser...'.
 
 **Okay...If you just want to see the results, you can install [APK](https://fir.im/5k67) directly.**
+
+**Note that /index.html is necessary!!!**
 
 ## Debug Monitor
 

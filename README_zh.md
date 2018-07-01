@@ -5,8 +5,6 @@
 <h1 align="center">AndroidGodEye</h1>
 <p align="center">
 <a href="https://travis-ci.org/Kyson/AndroidGodEye" target="_blank"><img src="https://travis-ci.org/Kyson/AndroidGodEye.svg?branch=master"></img></a>
-<a href="https://oss.sonatype.org/content/repositories/releases/cn/hikyson/godeye/godeye-core/" target="_blank"><img src="https://img.shields.io/maven-central/v/cn.hikyson.godeye/godeye-core.svg"></img></a>
-<a href="https://jitpack.io/#Kyson/AndroidGodEye" target="_blank"><img src="https://jitpack.io/v/Kyson/AndroidGodEye.svg"></img></a>
 <a href="http://androidweekly.net/issues/issue-293" target="_blank"><img src="https://img.shields.io/badge/Android%20Weekly-%23293-blue.svg"></img></a>
 <a href="https://android-arsenal.com/details/1/6561" target="_blank"><img src="https://img.shields.io/badge/Android%20Arsenal-AndroidGodEye-brightgreen.svg?style=flat"></img></a>
 <a href="LICENSE" target="_blank"><img src="http://img.shields.io/badge/license-Apache2.0-brightgreen.svg?style=flat"></img></a>
@@ -56,6 +54,12 @@ dependencies {
 
 ### STEP2
 
+Application中初始化:
+
+```java
+GodEye.instance().init(this);
+```
+
 模块安装，GodEye类是AndroidGodEye的核心类，所有模块由它提供。
 
 在应用入口安装所有模块：
@@ -64,24 +68,38 @@ dependencies {
 // v1.7以下
 // GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
 // v1.7.0以上installAll api删除，使用如下：
-GodEye.instance().install(Cpu.class, new CpuContextImpl())
-                .install(Battery.class, new BatteryContextImpl(this))
-                .install(Fps.class, new FpsContextImpl(this))
-                .install(Heap.class, Long.valueOf(2000))
-                .install(Pss.class, new PssContextImpl(this))
-                .install(Ram.class, new RamContextImpl(this))
-                .install(Sm.class, new SmContextImpl(this, 1000, 300, 800))
-                .install(Traffic.class, new TrafficContextImpl())
-                .install(Crash.class, new CrashFileProvider(this))
-                .install(ThreadDump.class, new ThreadContextImpl())
-                .install(DeadLock.class, new DeadLockContextImpl(GodEye.instance().getModule(ThreadDump.class).subject(), new DeadlockDefaultThreadFilter()))
-                .install(Pageload.class, new PageloadContextImpl(this))
-                .install(LeakDetector.class, new LeakContextImpl2(this, new PermissionRequest() {
-                    @Override
-                    public Observable<Boolean> dispatchRequest(Activity activity, String... permissions) {
-                        return new RxPermissions(activity).request(permissions);
-                    }
-                }));
+if (isMainProcess(this)) {//安装只能在主进程
+        GodEye.instance()
+                                .install(new BatteryConfig(this))
+                                .install(new CpuConfig())
+                                .install(new CrashConfig(new CrashFileProvider(this)))
+                                .install(new FpsConfig(this))
+                                .install(new HeapConfig())
+                                .install(new LeakConfig(this,new RxPermissionRequest()))
+                                .install(new PageloadConfig(this))
+                                .install(new PssConfig(this))
+                                .install(new RamConfig(this))
+                                .install(new SmConfig(this))
+                                .install(new ThreadConfig())
+                                .install(new TrafficConfig());
+}
+
+
+/**
+* 是否主进程
+*/
+    private static boolean isMainProcess(Application application) {
+        int pid = android.os.Process.myPid();
+        String processName = "";
+        ActivityManager manager = (ActivityManager) application.getSystemService
+                (Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
+            if (process.pid == pid) {
+                processName = process.processName;
+            }
+        }
+        return application.getPackageName().equals(processName);
+    }
 ```
 
 > 推荐在application中进行安装，否则部分模块可能工作异常
@@ -94,7 +112,11 @@ GodEye.instance().install(Cpu.class, new CpuContextImpl())
 // v1.7以下
 // GodEye.instance().uninstallAll();
 // v1.7.0以上uninstallAll api删除，不提供便捷的卸载方法，如果非要卸载：
-GodEye.instance().getModule(Cpu.class).uninstall();
+//GodEye.instance().getModule(Cpu.class).uninstall();
+// after v2.1.0 ,uninstall 所有
+GodEye.instance().uninstallAll();
+// after v2.1.0 ,uninstall 
+GodEye.instance().uninstall(ModuleName.CPU);
 ```
 
 > 注意：network和startup模块不需要安装和卸载
@@ -104,8 +126,10 @@ GodEye.instance().getModule(Cpu.class).uninstall();
 ```java
 // v1.7以下
 // GodEye.instance().cpu().subject().subscribe()
-// v1.7.0以上使用class获取对应模块
-GodEye.instance().getModule(Cpu.class).subject().subscribe();
+// after v1.7.0, get module by class
+//GodEye.instance().getModule(Cpu.class).subject().subscribe();
+// after v2.1.0, get module by name
+GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe()
 ```
 
 > 就像我们之后会提到的Debug Monitor，也是通过消费这些数据进行展示的
@@ -130,13 +154,15 @@ GodEyeMonitor.shutDown()
 
 完成！开始使用：
 
-手机与pc连接同一网段，在pc浏览器中访问`手机ip+端口`。或者如果你是用USB连接的话，执行`adb forward tcp:5390 tcp:5390`，然后pc浏览器中访问`http://localhost:5390/`。
+手机与pc连接同一网段，在pc浏览器中访问`手机ip+端口+/index.html`。或者如果你是用USB连接的话，执行`adb forward tcp:5390 tcp:5390`，然后pc浏览器中访问`http://localhost:5390/index.html`。
 
 即可看到Debug面板!
 
-> 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390" ] in your browser...' 中包含了访问地址。
+> 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390/index.html" ] in your browser...' 中包含了访问地址。
 
 **好吧，如果你懒得自己编译这个项目的话，你也可以先下载 [APK](https://fir.im/5k67) 看看效果。**
+
+**注意：/index.html 是必须的!!!**
 
 ## Debug开发者面板
 
