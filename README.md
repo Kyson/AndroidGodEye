@@ -189,7 +189,7 @@ and more...
 
 How does AndroidGodEye work？As below:
 
-![android_god_eye_framework](ART/android_god_eye_framework.jpeg)
+![android_god_eye_framework_2](ART/android_god_eye_framework_2.jpg)
 
 ## License
 

@@ -190,7 +190,7 @@ GodEyeMonitor.shutDown()
 
 下图可以更清楚地解释AndroidGodEye是如何工作的：
 
-![android_god_eye_framework](ART/android_god_eye_framework.jpeg)
+![android_god_eye_framework_2](ART/android_god_eye_framework_2.jpg)
 
 ## 许可协议
 
