@@ -1,7 +1,8 @@
 ## TODO
 
 - Thread watch
-- ...
+- NDK crash handler
+- Startup rocket
 
 ## Deploy
 
