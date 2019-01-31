@@ -1,4 +1,5 @@
 language: android
+sudo: required
 
 android:
   components:
@@ -18,8 +19,15 @@ before_install:
     - echo -e "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
     - echo -e "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
 
-sudo: required
-
+install:
+    - sdkmanager --list || true
+    - echo yes | sdkmanager "tools"
+    - echo yes | sdkmanager "platforms;android-26"
+    - echo yes | sdkmanager "extras;google;m2repository"
+    - echo yes | sdkmanager "extras;android;m2repository"
+    - echo yes | sdkmanager "extras;android;support"
+    - sdkmanager --list || true
+    
 script:
     - ./gradlew clean build
 
