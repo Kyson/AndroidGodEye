@@ -25,7 +25,6 @@ install:
     - echo yes | sdkmanager "platforms;android-26"
     - echo yes | sdkmanager "extras;google;m2repository"
     - echo yes | sdkmanager "extras;android;m2repository"
-    - echo yes | sdkmanager "extras;android;support"
     - sdkmanager --list || true
     
 script:
