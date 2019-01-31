@@ -1,12 +1,8 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
 import android.app.Activity;
-import android.support.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by kysonchao on 2018/1/25.

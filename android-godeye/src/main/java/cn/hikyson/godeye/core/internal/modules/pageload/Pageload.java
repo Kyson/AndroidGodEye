@@ -1,8 +1,8 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
+import android.app.Activity;
 import android.app.Application;
 
-import java.util.List;
 
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
@@ -16,6 +16,12 @@ public class Pageload extends ProduceableSubject<PageloadInfo> implements Instal
 
     public void install(Application application) {
         install(new PageloadContextImpl(application));
+    }
+
+    public void onPageLoaded(Activity activity) {
+        if (mPageloadEngine != null) {
+            mPageloadEngine.onPageLoaded(activity);
+        }
     }
 
     @Override
