@@ -35,4 +35,7 @@ notifications:
         - tech@hikyson.cn
 
 after_success:
-    - chmod 777 .buildscript/deploy_snapshot.sh && .buildscript/deploy_snapshot.sh
+    - echo deploying to jcenter...
+    - ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false
+    - echo deployed to jcenter.
+      if:(tag =~ ^v) AND (branch = master)
