@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.List;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
@@ -37,14 +36,14 @@ public class PageloadEngine implements Engine {
                 @Override
                 public void onActivityCreated(final Activity activity, Bundle savedInstanceState) {
                     final long time = System.currentTimeMillis();
-                    PageloadInfo pageloadInfo = new PageloadInfo(String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "created", time);
+                    PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "created", time);
                     pageloadInfo.loadTimeInfo = mActivityStack.onCreate(activity, time);
                     mProducer.produce(pageloadInfo);
                     measureActivityDidAppearOnCreate(activity, new OnActivityDidAppearCallback() {
                         @Override
                         public void didAppear() {
                             final long time2 = System.currentTimeMillis();
-                            PageloadInfo pageloadInfo2 = new PageloadInfo(String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "didDraw", time2);
+                            PageloadInfo pageloadInfo2 = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "didDraw", time2);
                             pageloadInfo2.loadTimeInfo = mActivityStack.onDidDraw(activity, time2);
                             mProducer.produce(pageloadInfo2);
                         }
@@ -79,7 +78,7 @@ public class PageloadEngine implements Engine {
                 @Override
                 public void onActivityDestroyed(Activity activity) {
                     final long time = System.currentTimeMillis();
-                    PageloadInfo pageloadInfo = new PageloadInfo(String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "destroyed", time);
+                    PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "destroyed", time);
                     pageloadInfo.loadTimeInfo = mActivityStack.onDestory(activity);
                     mProducer.produce(pageloadInfo);
                 }
@@ -93,6 +92,13 @@ public class PageloadEngine implements Engine {
         mPageloadContext.application().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         mActivityLifecycleCallbacks = null;
         mActivityStack = null;
+    }
+
+    void onPageLoaded(Activity activity) {
+        long time = System.currentTimeMillis();
+        PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "loaded", time);
+        pageloadInfo.loadTimeInfo = mActivityStack.onLoaded(activity, time);
+        mProducer.produce(pageloadInfo);
     }
 
     public interface OnActivityDidAppearCallback {
