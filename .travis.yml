@@ -34,11 +34,6 @@ notifications:
     email:
         - tech@hikyson.cn
 
-stages:
-  - name: after_success
-    if: (tag =~ ^v) AND (branch = master)
-
 after_success:
-    - echo deploying to jcenter...
-    - ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false
-    - echo deployed to jcenter.
+    - echo check should deploy?
+    - test tag IS present && test branch = master && echo deploying to jcenter... && ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false && echo deployed to jcenter.
