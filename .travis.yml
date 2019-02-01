@@ -26,7 +26,7 @@ install:
     - echo yes | sdkmanager "extras;google;m2repository"
     - echo yes | sdkmanager "extras;android;m2repository"
     - sdkmanager --list || true
-    
+
 script:
     - ./gradlew clean build
 
@@ -34,7 +34,11 @@ notifications:
     email:
         - tech@hikyson.cn
 
-jobs:
-  include:
+stages:
+  - name: after_success
+    if: (tag =~ ^v) AND (branch = master)
+
+after_success:
+    - echo deploying to jcenter...
     - ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false
-      if: (tag =~ ^v) AND (branch = master)
+    - echo deployed to jcenter.
