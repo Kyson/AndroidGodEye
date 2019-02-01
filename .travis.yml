@@ -34,8 +34,7 @@ notifications:
     email:
         - tech@hikyson.cn
 
-after_success:
-    - echo deploying to jcenter...
+jobs:
+  include:
     - ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false
-    - echo deployed to jcenter.
-      if:(tag =~ ^v) AND (branch = master)
+      if: (tag =~ ^v) AND (branch = master)
