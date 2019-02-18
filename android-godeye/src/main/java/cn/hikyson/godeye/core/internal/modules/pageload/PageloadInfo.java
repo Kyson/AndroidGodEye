@@ -13,7 +13,7 @@ public class PageloadInfo {
     public String pageStatus;
     public long pageStatusTime;
     public LoadTimeInfo loadTimeInfo;
-    public WeakReference<Activity> activityReference;
+    public transient WeakReference<Activity> activityReference;
 
     public PageloadInfo(Activity activity, String pageId, String pageName, String pageStatus, long pageStatusTime) {
         this.activityReference = new WeakReference<>(activity);
