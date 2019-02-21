@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.toolbox.crash;
+package cn.hikyson.godeye.core.internal.modules.crash;
 
 import android.Manifest;
 import android.content.Context;
@@ -16,10 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cn.hikyson.android.godeye.toolbox.serializer.GsonSerializer;
-import cn.hikyson.android.godeye.toolbox.serializer.Serializer;
-import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
-import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
+import cn.hikyson.godeye.core.helper.GsonSerializer;
+import cn.hikyson.godeye.core.helper.Serializer;
 import cn.hikyson.godeye.core.utils.IoUtil;
 
 /**

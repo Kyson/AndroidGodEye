@@ -71,6 +71,7 @@ public class GodEye {
     }
 
     private ActivityStackSubject mActivityStackSubject;
+    private Application mApplication;
 
     private Map<String, Object> mModules = new HashMap<>();
 
@@ -177,6 +178,11 @@ public class GodEye {
         } catch (Throwable e) {
             throw new UnexpectException("module [" + moduleName + "] is not exist or type is wrong");
         }
+    }
+
+
+    public Application getApplication() {
+        return mApplication;
     }
 
     public ActivityStackSubject getActivityStackSubject() {

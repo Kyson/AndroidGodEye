@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.toolbox.serializer;
+package cn.hikyson.godeye.core.helper;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
