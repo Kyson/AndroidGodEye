@@ -11,10 +11,6 @@ import cn.hikyson.godeye.core.utils.L;
 public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuContext> {
     private CpuEngine mCpuEngine;
 
-    public synchronized void install() {
-        install(new CpuContextImpl());
-    }
-
     @Override
     public synchronized void install(CpuContext config) {
         if (mCpuEngine != null) {

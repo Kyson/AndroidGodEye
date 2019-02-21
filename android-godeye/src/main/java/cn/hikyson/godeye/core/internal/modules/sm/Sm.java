@@ -28,10 +28,6 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
         return InstanceHoler.sINSTANCE;
     }
 
-    public synchronized void install(Context context) {
-        install(new SmContextImpl(context));
-    }
-
     @Override
     public synchronized void install(SmContext config) {
         if (mInstalled) {
@@ -39,7 +35,7 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
             return;
         }
         this.mInstalled = true;
-        this.mBlockCore = new SmCore(config.context(), config.config());
+        this.mBlockCore = new SmCore(config.context(), config.longBlockThreshold(), config.shortBlockThreshold(), config.dumpInterval());
         this.mBlockCore.addBlockInterceptor(new BlockInterceptor() {
             @Override
             public void onStart(Context context) {

@@ -12,10 +12,6 @@ import cn.hikyson.godeye.core.utils.L;
 public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsContext> {
     private FpsEngine mFpsEngine;
 
-    public synchronized void install(Context context) {
-        install(new FpsContextImpl(context));
-    }
-
     @Override
     public synchronized void install(FpsContext config) {
         if (mFpsEngine != null) {

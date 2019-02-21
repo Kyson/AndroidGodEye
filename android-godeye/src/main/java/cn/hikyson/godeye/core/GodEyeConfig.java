@@ -1,195 +1,34 @@
 package cn.hikyson.godeye.core;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
+import cn.hikyson.godeye.core.internal.modules.battery.BatteryContext;
+import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider;
+import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
+import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
+import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
+import cn.hikyson.godeye.core.internal.modules.memory.RamContext;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageloadContext;
+import cn.hikyson.godeye.core.internal.modules.sm.SmContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
+import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
 
 public class GodEyeConfig {
-
-    public static class BatteryConfig {
-        public long intervalMillis;
-
-        public BatteryConfig(long intervalMillis) {
-            this.intervalMillis = intervalMillis;
-        }
-
-        public BatteryConfig() {
-            this.intervalMillis = 5000;
-        }
-    }
-
-    public static class CpuConfig {
-        public long intervalMillis;
-        public long sampleMillis;
-
-        public CpuConfig(long intervalMillis, long sampleMillis) {
-            this.intervalMillis = intervalMillis;
-            this.sampleMillis = sampleMillis;
-        }
-
-        public CpuConfig() {
-            this.intervalMillis = 2000;
-            this.sampleMillis = 1000;
-        }
-    }
-
-    public static class CrashConfig {
-        public CrashProvider crashProvider;
-
-        public CrashConfig(CrashProvider crashProvider) {
-            this.crashProvider = crashProvider;
-        }
-
-        public CrashConfig() {
-            this.crashProvider = new CrashFileProvider(GodEye.instance().getApplication());
-        }
-    }
-
-    public static class FpsConfig {
-        public long intervalMillis;
-        //TODO KYSON IMPL
-        public long sampleMillis;
-
-        public FpsConfig(long intervalMillis, long sampleMillis) {
-            this.intervalMillis = intervalMillis;
-            this.sampleMillis = sampleMillis;
-        }
-
-        public FpsConfig() {
-            this.intervalMillis = 2000;
-            this.sampleMillis = 200;
-        }
-    }
-
-    public static class HeapConfig {
-        public long intervalMillis;
-
-        public HeapConfig(long intervalMillis) {
-            this.intervalMillis = intervalMillis;
-        }
-
-        public HeapConfig() {
-            this.intervalMillis = 2000;
-        }
-    }
-
-    public static class LeakConfig {
-        //TODO KYSON IMPL
-        public boolean debugNotify;
-
-        public LeakConfig(boolean debugNotify) {
-            this.debugNotify = debugNotify;
-        }
-
-        public LeakConfig() {
-            this.debugNotify = true;
-        }
-    }
-
-    public static class PageloadConfig {
-        public PageloadConfig() {
-        }
-    }
-
-    public static class PssConfig {
-        public long intervalMillis;
-
-        public PssConfig(long intervalMillis) {
-            this.intervalMillis = intervalMillis;
-        }
-
-        public PssConfig() {
-            this.intervalMillis = 2000;
-        }
-    }
-
-    public static class RamConfig {
-        public long intervalMillis;
-
-        public RamConfig(long intervalMillis) {
-            this.intervalMillis = intervalMillis;
-        }
-
-        public RamConfig() {
-            this.intervalMillis = 3000;
-        }
-    }
-
-    public static class SmConfig {
-        public long longBlockThresholdMillis;
-        public long shortBlockThresholdMillis;
-        public long dumpIntervalMillis;
-
-        public SmConfig(long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
-            this.longBlockThresholdMillis = longBlockThresholdMillis;
-            this.shortBlockThresholdMillis = shortBlockThresholdMillis;
-            this.dumpIntervalMillis = dumpIntervalMillis;
-        }
-
-        public SmConfig() {
-            this.longBlockThresholdMillis = 500;
-            this.shortBlockThresholdMillis = 100;
-            this.dumpIntervalMillis = 300;
-        }
-    }
-
-    public static class ThreadConfig {
-        public long intervalMillis;
-        public ThreadFilter threadFilter;
-
-        public ThreadConfig(long intervalMillis, ThreadFilter threadFilter) {
-            this.intervalMillis = intervalMillis;
-            this.threadFilter = threadFilter;
-        }
-
-        public ThreadConfig() {
-            this.intervalMillis = 2000;
-            this.threadFilter = new ExcludeSystemThreadFilter();
-        }
-    }
-
-    public static class TrafficConfig {
-        public long intervalMillis;
-        public long sampleMillis;
-
-        public TrafficConfig(long intervalMillis, long sampleMillis) {
-            this.intervalMillis = intervalMillis;
-            this.sampleMillis = sampleMillis;
-        }
-
-        public TrafficConfig() {
-            this.intervalMillis = 2000;
-            this.sampleMillis = 1000;
-        }
-    }
-
-    private BatteryConfig mBatteryConfig;
-    private CpuConfig mCpuConfig;
-    private CrashConfig mCrashConfig;
-    private FpsConfig mFpsConfig;
-    private HeapConfig mHeapConfig;
-    private LeakConfig mLeakConfig;
-    private PageloadConfig mPageloadConfig;
-    private PssConfig mPssConfig;
-    private RamConfig mRamConfig;
-    private SmConfig mSmConfig;
-    private ThreadConfig mThreadConfig;
-    private TrafficConfig mTrafficConfig;
-
     public static GodEyeConfigBuilder fromAssert(Context context, String path) {
         GodEyeConfigBuilder builder = GodEyeConfigBuilder.godEyeConfig();
         try {
@@ -217,15 +56,501 @@ public class GodEyeConfig {
                 }
                 builder.withCpuConfig(cpuConfig);
             }
-            //TODO KYSON IMPL
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+            element = getFirstElementByTagInRoot(root, "crash");
+            if (element != null) {
+                final String crashProviderString = element.getAttribute("crashProvider");
+                CrashConfig crashConfig = new CrashConfig();
+                if (!TextUtils.isEmpty(crashProviderString)) {
+                    crashConfig.crashProvider = (CrashProvider) Class.forName(crashProviderString).newInstance();
+                }
+                builder.withCrashConfig(crashConfig);
+            }
+            element = getFirstElementByTagInRoot(root, "fps");
+            if (element != null) {
+                final String intervalMillisString = element.getAttribute("intervalMillis");
+                final String sampleMillisString = element.getAttribute("sampleMillis");
+                FpsConfig fpsConfig = new FpsConfig();
+                if (!TextUtils.isEmpty(intervalMillisString)) {
+                    fpsConfig.intervalMillis = Long.parseLong(intervalMillisString);
+                }
+                if (!TextUtils.isEmpty(sampleMillisString)) {
+                    fpsConfig.sampleMillis = Long.parseLong(sampleMillisString);
+                }
+                builder.withFpsConfig(fpsConfig);
+            }
+            element = getFirstElementByTagInRoot(root, "heap");
+            if (element != null) {
+                final String intervalMillisString = element.getAttribute("intervalMillis");
+                HeapConfig heapConfig = new HeapConfig();
+                if (!TextUtils.isEmpty(intervalMillisString)) {
+                    heapConfig.intervalMillis = Long.parseLong(intervalMillisString);
+                }
+                builder.withHeapConfig(heapConfig);
+            }
+            element = getFirstElementByTagInRoot(root, "leakMemory");
+            if (element != null) {
+                final String debugNotifyString = element.getAttribute("debugNotify");
+                LeakConfig leakConfig = new LeakConfig();
+                if (!TextUtils.isEmpty(debugNotifyString)) {
+                    leakConfig.debugNotify = Boolean.parseBoolean(debugNotifyString);
+                }
+                builder.withLeakConfig(leakConfig);
+            }
+            element = getFirstElementByTagInRoot(root, "pageload");
+            if (element != null) {
+                builder.withPageloadConfig(new PageloadConfig());
+            }
+            element = getFirstElementByTagInRoot(root, "pss");
+            if (element != null) {
+                final String intervalMillisString = element.getAttribute("intervalMillis");
+                PssConfig pssConfig = new PssConfig();
+                if (!TextUtils.isEmpty(intervalMillisString)) {
+                    pssConfig.intervalMillis = Long.parseLong(intervalMillisString);
+                }
+                builder.withPssConfig(pssConfig);
+            }
+            element = getFirstElementByTagInRoot(root, "ram");
+            if (element != null) {
+                final String intervalMillisString = element.getAttribute("intervalMillis");
+                RamConfig ramConfig = new RamConfig();
+                if (!TextUtils.isEmpty(intervalMillisString)) {
+                    ramConfig.intervalMillis = Long.parseLong(intervalMillisString);
+                }
+                builder.withRamConfig(ramConfig);
+            }
+            element = getFirstElementByTagInRoot(root, "sm");
+            if (element != null) {
+                final String longBlockThresholdMillisString = element.getAttribute("longBlockThresholdMillis");
+                final String shortBlockThresholdMillisString = element.getAttribute("shortBlockThresholdMillis");
+                final String dumpIntervalMillisString = element.getAttribute("dumpIntervalMillis");
+                SmConfig smConfig = new SmConfig();
+                if (!TextUtils.isEmpty(longBlockThresholdMillisString)) {
+                    smConfig.longBlockThresholdMillis = Long.parseLong(longBlockThresholdMillisString);
+                }
+                if (!TextUtils.isEmpty(shortBlockThresholdMillisString)) {
+                    smConfig.shortBlockThresholdMillis = Long.parseLong(shortBlockThresholdMillisString);
+                }
+                if (!TextUtils.isEmpty(dumpIntervalMillisString)) {
+                    smConfig.dumpIntervalMillis = Long.parseLong(dumpIntervalMillisString);
+                }
+                builder.withSmConfig(smConfig);
+            }
+            element = getFirstElementByTagInRoot(root, "thread");
+            if (element != null) {
+                final String intervalMillisString = element.getAttribute("intervalMillis");
+                final String threadFilterString = element.getAttribute("threadFilter");
+                ThreadConfig threadConfig = new ThreadConfig();
+                if (!TextUtils.isEmpty(intervalMillisString)) {
+                    threadConfig.intervalMillis = Long.parseLong(intervalMillisString);
+                }
+                if (!TextUtils.isEmpty(threadFilterString)) {
+                    threadConfig.threadFilter = (ThreadFilter) Class.forName(threadFilterString).newInstance();
+                }
+                builder.withThreadConfig(threadConfig);
+            }
+            element = getFirstElementByTagInRoot(root, "traffic");
+            if (element != null) {
+                final String intervalMillisString = element.getAttribute("intervalMillis");
+                final String sampleMillisString = element.getAttribute("sampleMillis");
+                TrafficConfig trafficConfig = new TrafficConfig();
+                if (!TextUtils.isEmpty(intervalMillisString)) {
+                    trafficConfig.intervalMillis = Long.parseLong(intervalMillisString);
+                }
+                if (!TextUtils.isEmpty(sampleMillisString)) {
+                    trafficConfig.sampleMillis = Long.parseLong(sampleMillisString);
+                }
+                builder.withTrafficConfig(trafficConfig);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return builder;
+    }
+
+    public static class BatteryConfig implements BatteryContext {
+        public long intervalMillis;
+
+        public BatteryConfig(long intervalMillis) {
+            this.intervalMillis = intervalMillis;
+        }
+
+        public BatteryConfig() {
+            this.intervalMillis = 5000;
+        }
+
+        @Override
+        public Context context() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public long intervalMillis() {
+            return intervalMillis;
+        }
+    }
+
+    public static class CpuConfig implements CpuContext {
+        public long intervalMillis;
+        public long sampleMillis;
+
+        public CpuConfig(long intervalMillis, long sampleMillis) {
+            this.intervalMillis = intervalMillis;
+            this.sampleMillis = sampleMillis;
+        }
+
+        public CpuConfig() {
+            this.intervalMillis = 2000;
+            this.sampleMillis = 1000;
+        }
+
+        @Override
+        public long intervalMillis() {
+            return intervalMillis;
+        }
+
+        @Override
+        public long sampleMillis() {
+            return sampleMillis;
+        }
+    }
+
+    public static class CrashConfig implements CrashProvider {
+        public CrashProvider crashProvider;
+
+        public CrashConfig(CrashProvider crashProvider) {
+            this.crashProvider = crashProvider;
+        }
+
+        public CrashConfig() {
+            this.crashProvider = new CrashFileProvider(GodEye.instance().getApplication());
+        }
+
+        @Override
+        public void storeCrash(CrashInfo crashInfo) throws Throwable {
+            crashProvider.storeCrash(crashInfo);
+        }
+
+        @Override
+        public List<CrashInfo> restoreCrash() throws Throwable {
+            return crashProvider.restoreCrash();
+        }
+    }
+
+    public static class FpsConfig implements FpsContext {
+        public long intervalMillis;
+        //TODO KYSON IMPL
+        public long sampleMillis;
+
+        public FpsConfig(long intervalMillis, long sampleMillis) {
+            this.intervalMillis = intervalMillis;
+            this.sampleMillis = sampleMillis;
+        }
+
+        public FpsConfig() {
+            this.intervalMillis = 2000;
+            this.sampleMillis = 200;
+        }
+
+        @Override
+        public Context context() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public long intervalMillis() {
+            return intervalMillis;
+        }
+
+        @Override
+        public long sampleMillis() {
+            return sampleMillis;
+        }
+    }
+
+    public static class HeapConfig {
+        public long intervalMillis;
+
+        public HeapConfig(long intervalMillis) {
+            this.intervalMillis = intervalMillis;
+        }
+
+        public HeapConfig() {
+            this.intervalMillis = 2000;
+        }
+    }
+
+    public static class LeakConfig implements LeakContext {
+        //TODO KYSON IMPL
+        public boolean debugNotify;
+
+        public LeakConfig(boolean debugNotify) {
+            this.debugNotify = debugNotify;
+        }
+
+        public LeakConfig() {
+            this.debugNotify = true;
+        }
+
+        @Override
+        public Application application() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public boolean debugNotify() {
+            return debugNotify;
+        }
+    }
+
+    public static class PageloadConfig implements PageloadContext {
+        public PageloadConfig() {
+        }
+
+        @Override
+        public Application application() {
+            return GodEye.instance().getApplication();
+        }
+    }
+
+    public static class PssConfig implements PssContext {
+        public long intervalMillis;
+
+        public PssConfig(long intervalMillis) {
+            this.intervalMillis = intervalMillis;
+        }
+
+        public PssConfig() {
+            this.intervalMillis = 2000;
+        }
+
+        @Override
+        public Context context() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public long intervalMillis() {
+            return intervalMillis;
+        }
+    }
+
+    public static class RamConfig implements RamContext {
+        public long intervalMillis;
+
+        public RamConfig(long intervalMillis) {
+            this.intervalMillis = intervalMillis;
+        }
+
+        public RamConfig() {
+            this.intervalMillis = 3000;
+        }
+
+        @Override
+        public Context context() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public long intervalMillis() {
+            return intervalMillis;
+        }
+    }
+
+    public static class SmConfig implements SmContext {
+        public long longBlockThresholdMillis;
+        public long shortBlockThresholdMillis;
+        public long dumpIntervalMillis;
+
+        public SmConfig(long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
+            this.longBlockThresholdMillis = longBlockThresholdMillis;
+            this.shortBlockThresholdMillis = shortBlockThresholdMillis;
+            this.dumpIntervalMillis = dumpIntervalMillis;
+        }
+
+        public SmConfig() {
+            this.longBlockThresholdMillis = 500;
+            this.shortBlockThresholdMillis = 100;
+            this.dumpIntervalMillis = 300;
+        }
+
+        @Override
+        public Context context() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public long longBlockThreshold() {
+            return longBlockThresholdMillis;
+        }
+
+        @Override
+        public long shortBlockThreshold() {
+            return shortBlockThresholdMillis;
+        }
+
+        @Override
+        public long dumpInterval() {
+            return dumpIntervalMillis;
+        }
+    }
+
+    public static class ThreadConfig implements ThreadContext {
+        public long intervalMillis;
+        public ThreadFilter threadFilter;
+
+        public ThreadConfig(long intervalMillis, ThreadFilter threadFilter) {
+            this.intervalMillis = intervalMillis;
+            this.threadFilter = threadFilter;
+        }
+
+        public ThreadConfig() {
+            this.intervalMillis = 2000;
+            this.threadFilter = new ExcludeSystemThreadFilter();
+        }
+
+        @Override
+        public long intervalMillis() {
+            return intervalMillis;
+        }
+
+        @Override
+        public ThreadFilter threadFilter() {
+            return threadFilter;
+        }
+    }
+
+    public static class TrafficConfig implements TrafficContext {
+        public long intervalMillis;
+        public long sampleMillis;
+
+        public TrafficConfig(long intervalMillis, long sampleMillis) {
+            this.intervalMillis = intervalMillis;
+            this.sampleMillis = sampleMillis;
+        }
+
+        public TrafficConfig() {
+            this.intervalMillis = 2000;
+            this.sampleMillis = 1000;
+        }
+
+        @Override
+        public long intervalMillis() {
+            return intervalMillis;
+        }
+
+        @Override
+        public long sampleMillis() {
+            return sampleMillis;
+        }
+    }
+
+    private BatteryConfig mBatteryConfig;
+    private CpuConfig mCpuConfig;
+    private CrashConfig mCrashConfig;
+    private FpsConfig mFpsConfig;
+    private HeapConfig mHeapConfig;
+    private LeakConfig mLeakConfig;
+    private PageloadConfig mPageloadConfig;
+    private PssConfig mPssConfig;
+    private RamConfig mRamConfig;
+    private SmConfig mSmConfig;
+    private ThreadConfig mThreadConfig;
+    private TrafficConfig mTrafficConfig;
+
+    public BatteryConfig getBatteryConfig() {
+        return mBatteryConfig;
+    }
+
+    public void setBatteryConfig(BatteryConfig batteryConfig) {
+        mBatteryConfig = batteryConfig;
+    }
+
+    public CpuConfig getCpuConfig() {
+        return mCpuConfig;
+    }
+
+    public void setCpuConfig(CpuConfig cpuConfig) {
+        mCpuConfig = cpuConfig;
+    }
+
+    public CrashConfig getCrashConfig() {
+        return mCrashConfig;
+    }
+
+    public void setCrashConfig(CrashConfig crashConfig) {
+        mCrashConfig = crashConfig;
+    }
+
+    public FpsConfig getFpsConfig() {
+        return mFpsConfig;
+    }
+
+    public void setFpsConfig(FpsConfig fpsConfig) {
+        mFpsConfig = fpsConfig;
+    }
+
+    public HeapConfig getHeapConfig() {
+        return mHeapConfig;
+    }
+
+    public void setHeapConfig(HeapConfig heapConfig) {
+        mHeapConfig = heapConfig;
+    }
+
+    public LeakConfig getLeakConfig() {
+        return mLeakConfig;
+    }
+
+    public void setLeakConfig(LeakConfig leakConfig) {
+        mLeakConfig = leakConfig;
+    }
+
+    public PageloadConfig getPageloadConfig() {
+        return mPageloadConfig;
+    }
+
+    public void setPageloadConfig(PageloadConfig pageloadConfig) {
+        mPageloadConfig = pageloadConfig;
+    }
+
+    public PssConfig getPssConfig() {
+        return mPssConfig;
+    }
+
+    public void setPssConfig(PssConfig pssConfig) {
+        mPssConfig = pssConfig;
+    }
+
+    public RamConfig getRamConfig() {
+        return mRamConfig;
+    }
+
+    public void setRamConfig(RamConfig ramConfig) {
+        mRamConfig = ramConfig;
+    }
+
+    public SmConfig getSmConfig() {
+        return mSmConfig;
+    }
+
+    public void setSmConfig(SmConfig smConfig) {
+        mSmConfig = smConfig;
+    }
+
+    public ThreadConfig getThreadConfig() {
+        return mThreadConfig;
+    }
+
+    public void setThreadConfig(ThreadConfig threadConfig) {
+        mThreadConfig = threadConfig;
+    }
+
+    public TrafficConfig getTrafficConfig() {
+        return mTrafficConfig;
+    }
+
+    public void setTrafficConfig(TrafficConfig trafficConfig) {
+        mTrafficConfig = trafficConfig;
     }
 
     private static @Nullable

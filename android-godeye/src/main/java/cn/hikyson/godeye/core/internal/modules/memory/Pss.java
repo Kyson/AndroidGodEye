@@ -12,10 +12,6 @@ import cn.hikyson.godeye.core.utils.L;
 public class Pss extends ProduceableSubject<PssInfo> implements Install<PssContext> {
     private PssEngine mPssEngine;
 
-    public synchronized void install(Context context) {
-        install(new PssContextImpl(context));
-    }
-
     @Override
     public synchronized void install(PssContext config) {
         if (mPssEngine != null) {

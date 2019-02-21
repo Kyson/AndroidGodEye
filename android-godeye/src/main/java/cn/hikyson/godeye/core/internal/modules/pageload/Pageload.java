@@ -14,10 +14,6 @@ import cn.hikyson.godeye.core.utils.L;
 public class Pageload extends ProduceableSubject<PageloadInfo> implements Install<PageloadContext> {
     private PageloadEngine mPageloadEngine;
 
-    public void install(Application application) {
-        install(new PageloadContextImpl(application));
-    }
-
     public void onPageLoaded(Activity activity) {
         if (mPageloadEngine != null) {
             mPageloadEngine.onPageLoaded(activity);

@@ -24,6 +24,7 @@ import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.android.godeye.toolbox.crash.CrashFileProvider;
 import cn.hikyson.android.godeye.toolbox.rxpermission.RxPermissionRequest;
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.installconfig.BatteryConfig;
 import cn.hikyson.godeye.core.installconfig.CpuConfig;
 import cn.hikyson.godeye.core.installconfig.CrashConfig;
@@ -39,6 +40,7 @@ import cn.hikyson.godeye.core.installconfig.TrafficConfig;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
+import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
@@ -366,16 +368,16 @@ public class MainActivity extends Activity implements Loggable {
 
     private void onClickInstall() {
         if (mActivityMainCpu.isChecked()) {
-            GodEye.instance().install(new CpuConfig());
+            GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).install(new GodEyeConfig.CpuConfig());
         }
         if (mActivityMainBattery.isChecked()) {
-            GodEye.instance().install(new BatteryConfig(getApplication()));
+            GodEye.instance().<Battery>getModule(GodEye.ModuleName.BATTERY).install(new GodEyeConfig.BatteryConfig());
         }
         if (mActivityMainFps.isChecked()) {
-            GodEye.instance().install(new FpsConfig(getApplication()));
+            GodEye.instance().<Fps>getModule(GodEye.ModuleName.FPS).install(new GodEyeConfig.FpsConfig());
         }
         if (mActivityMainLeak.isChecked()) {
-            GodEye.instance().install(new LeakConfig(getApplication(), new RxPermissionRequest()));
+            GodEye.instance().<LeakDetector>getModule(GodEye.ModuleName.LEAK).install(new GodEyeConfig.LeakConfig());
         }
         if (mActivityMainHeap.isChecked()) {
             GodEye.instance().install(new HeapConfig());

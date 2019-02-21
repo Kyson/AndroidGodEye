@@ -10,10 +10,6 @@ import cn.hikyson.godeye.core.utils.L;
 public class Battery extends ProduceableSubject<BatteryInfo> implements Install<BatteryContext> {
     private BatteryEngine mBatteryEngine;
 
-    public synchronized void install(Context context) {
-        install(new BatteryContextImpl(context));
-    }
-
     @Override
     public synchronized void install(BatteryContext config) {
         if (mBatteryEngine != null) {

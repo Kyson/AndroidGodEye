@@ -10,10 +10,6 @@ import cn.hikyson.godeye.core.utils.L;
 public class Heap extends ProduceableSubject<HeapInfo> implements Install<Long> {
     private HeapEngine mHeapEngine;
 
-    public synchronized void install() {
-        install(2000L);
-    }
-
     @Override
     public synchronized void install(Long intervalMillis) {
         if (mHeapEngine != null) {

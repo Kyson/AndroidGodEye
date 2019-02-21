@@ -12,10 +12,6 @@ import cn.hikyson.godeye.core.utils.L;
 public class Ram extends ProduceableSubject<RamInfo> implements Install<RamContext> {
     private RamEngine mRamEngine;
 
-    public synchronized void install(Context context) {
-        install(new RamContextImpl(context));
-    }
-
     @Override
     public synchronized void install(RamContext config) {
         if (mRamEngine != null) {

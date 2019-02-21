@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.MemoryUtil;
 import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 public final class SmCore {
@@ -19,17 +20,17 @@ public final class SmCore {
     private LooperMonitor mMonitor;
     private StackSampler stackSampler;
     private CpuSampler cpuSampler;
-    private SmConfig mSmConfig;
 
     private List<BlockInterceptor> mInterceptorChain = new LinkedList<>();
 
+    private long mLongBlockThresholdMillis;
 
-    public SmCore(final Context context, SmConfig smConfig) {
+    public SmCore(final Context context, long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
         this.mContext = context;
-        this.mSmConfig = smConfig;
+        this.mLongBlockThresholdMillis = longBlockThresholdMillis;
         this.stackSampler = new StackSampler(
-                Looper.getMainLooper().getThread(), this.mSmConfig.dumpInterval);
-        this.cpuSampler = new CpuSampler(this.mSmConfig.dumpInterval);
+                Looper.getMainLooper().getThread(), dumpIntervalMillis);
+        this.cpuSampler = new CpuSampler(dumpIntervalMillis);
         this.mMonitor = new LooperMonitor(new LooperMonitor.BlockListener() {
 
             @Override
@@ -60,7 +61,7 @@ public final class SmCore {
                         //这里短卡顿基本是dump不到数据的，因为dump延时一般都会比短卡顿时间久
                         final List<CpuInfo> cpuInfos = cpuSampler.getCpuRateInfo(eventStartTimeMilliis, eventEndTimeMillis);
                         final Map<Long, List<StackTraceElement>> threadStackEntries = stackSampler.getThreadStackEntries(eventStartTimeMilliis, eventEndTimeMillis);
-                        Observable.fromCallable(new Callable<MemoryInfo>() {
+                        Disposable disposable = Observable.fromCallable(new Callable<MemoryInfo>() {
                             @Override
                             public MemoryInfo call() throws Exception {
                                 return new MemoryInfo(MemoryUtil.getAppHeapInfo(), MemoryUtil.getAppPssInfo(mContext), MemoryUtil.getRamInfo(mContext));
@@ -80,7 +81,7 @@ public final class SmCore {
                     }
                 });
             }
-        }, this.mSmConfig.longBlockThreshold, this.mSmConfig.shortBlockThreshold);
+        }, longBlockThresholdMillis, shortBlockThresholdMillis);
     }
 
     private void startDump() {
@@ -116,21 +117,16 @@ public final class SmCore {
 
     /**
      * 获取dump信息的延时时间
-     * 认为1秒是长卡顿，那么延时0.8s开始dump信息
+     * 认为1秒是长卡顿，那么延时0.9s开始dump信息
      * 换句话说，短卡顿是dump不到信息的
      *
      * @return
      */
     public long getSampleDelay() {
-        return (long) (this.mSmConfig.longBlockThreshold * 0.8f);
+        return (long) (this.mLongBlockThresholdMillis * 0.9f);
     }
 
     public Context getContext() {
         return mContext;
     }
-
-    public SmConfig getSmConfig() {
-        return mSmConfig;
-    }
-
 }

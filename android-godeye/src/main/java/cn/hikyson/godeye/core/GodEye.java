@@ -2,8 +2,8 @@ package cn.hikyson.godeye.core;
 
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.StringDef;
-import android.text.TextUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,23 +11,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.hikyson.godeye.core.helper.ActivityStackSubject;
-import cn.hikyson.godeye.core.installconfig.CpuConfig;
-import cn.hikyson.godeye.core.installconfig.InstallConfig;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
+import cn.hikyson.godeye.core.internal.modules.battery.BatteryContext;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
+import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
+import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.memory.Heap;
 import cn.hikyson.godeye.core.internal.modules.memory.Pss;
+import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
+import cn.hikyson.godeye.core.internal.modules.memory.RamContext;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageloadContext;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
+import cn.hikyson.godeye.core.internal.modules.sm.SmContext;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
+import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
 
 /**
  * 入口
@@ -81,6 +90,7 @@ public class GodEye {
      * @param application
      */
     public void init(Application application) {
+        mApplication = application;
         mActivityStackSubject = new ActivityStackSubject(application);
         mModules.put(ModuleName.CPU, new Cpu());
         mModules.put(ModuleName.BATTERY, new Battery());
@@ -95,37 +105,156 @@ public class GodEye {
         mModules.put(ModuleName.TRAFFIC, new Traffic());
         mModules.put(ModuleName.CRASH, new Crash());
         mModules.put(ModuleName.THREAD, new ThreadDump());
-//        mModules.put(ModuleName.DEADLOCK, new DeadLock());
         mModules.put(ModuleName.PAGELOAD, new Pageload());
     }
 
-    /**
-     * 安装模块
-     *
-     * @param installConfig
-     * @param <T>
-     * @return
-     */
-    public <T> GodEye install(InstallConfig<T> installConfig) {
-        if (installConfig == null) {
-            throw new UnexpectException("can not install by InstallConfig null.");
+    public GodEye install(final GodEyeConfig godEyeConfig) {
+        if (godEyeConfig.getCpuConfig() != null) {
+            ((Cpu) mModules.get(ModuleName.CPU)).install(new CpuContext() {
+                @Override
+                public long intervalMillis() {
+                    return godEyeConfig.getCpuConfig().intervalMillis;
+                }
+
+                @Override
+                public long sampleMillis() {
+                    return godEyeConfig.getCpuConfig().sampleMillis;
+                }
+            });
         }
-        if (TextUtils.isEmpty(installConfig.getModule())) {
-            throw new UnexpectException("can not install by InstallConfig module null or empty.");
+        if (godEyeConfig.getBatteryConfig() != null) {
+            ((Battery) mModules.get(ModuleName.BATTERY)).install(new BatteryContext() {
+                @Override
+                public Context context() {
+                    return mApplication;
+                }
+
+                @Override
+                public long intervalMillis() {
+                    return godEyeConfig.getBatteryConfig().intervalMillis;
+                }
+            });
         }
-        if (installConfig.getConfig() == null) {
-            throw new UnexpectException("can not install by InstallConfig config null.");
+        if (godEyeConfig.getFpsConfig() != null) {
+            ((Fps) mModules.get(ModuleName.FPS)).install(new FpsContext() {
+                @Override
+                public Context context() {
+                    return mApplication;
+                }
+
+                @Override
+                public long intervalMillis() {
+                    return godEyeConfig.getFpsConfig().intervalMillis;
+                }
+
+                @Override
+                public long sampleMillis() {
+                    return godEyeConfig.getFpsConfig().sampleMillis;
+                }
+            });
         }
-        Object moduleObj = mModules.get(installConfig.getModule());
-        if (moduleObj == null) {
-            throw new UnexpectException("can not find module [" + installConfig.getModule() + "] to install.");
+        if (godEyeConfig.getLeakConfig() != null) {
+            ((LeakDetector) mModules.get(ModuleName.LEAK)).install(new LeakContext() {
+                @Override
+                public Application application() {
+                    return mApplication;
+                }
+
+                @Override
+                public boolean debugNotify() {
+                    return godEyeConfig.getLeakConfig().debugNotify;
+                }
+            });
         }
-        try {
-            // noinspection unchecked
-            Install<T> installableModule = (Install<T>) moduleObj;
-            installableModule.install(installConfig.getConfig());
-        } catch (Throwable e) {
-            throw new UnexpectException("module [" + moduleObj.getClass().getSimpleName() + "] is not installable, maybe no necessary to install?");
+        if (godEyeConfig.getHeapConfig() != null) {
+            ((Heap) mModules.get(ModuleName.HEAP)).install(godEyeConfig.getHeapConfig().intervalMillis);
+        }
+        if (godEyeConfig.getPssConfig() != null) {
+            ((Pss) mModules.get(ModuleName.PSS)).install(new PssContext() {
+                @Override
+                public Context context() {
+                    return mApplication;
+                }
+
+                @Override
+                public long intervalMillis() {
+                    return godEyeConfig.getPssConfig().intervalMillis;
+                }
+            });
+        }
+        if (godEyeConfig.getRamConfig() != null) {
+            ((Ram) mModules.get(ModuleName.RAM)).install(new RamContext() {
+                @Override
+                public Context context() {
+                    return mApplication;
+                }
+
+                @Override
+                public long intervalMillis() {
+                    return godEyeConfig.getRamConfig().intervalMillis;
+                }
+            });
+        }
+        if (godEyeConfig.getSmConfig() != null) {
+            ((Sm) mModules.get(ModuleName.SM)).install(new SmContext() {
+
+                @Override
+                public Context context() {
+                    return mApplication;
+                }
+
+                @Override
+                public long longBlockThreshold() {
+                    return godEyeConfig.getSmConfig().longBlockThresholdMillis;
+                }
+
+                @Override
+                public long shortBlockThreshold() {
+                    return godEyeConfig.getSmConfig().shortBlockThresholdMillis;
+                }
+
+                @Override
+                public long dumpInterval() {
+                    return godEyeConfig.getSmConfig().dumpIntervalMillis;
+                }
+            });
+        }
+        if (godEyeConfig.getTrafficConfig() != null) {
+            ((Traffic) mModules.get(ModuleName.TRAFFIC)).install(new TrafficContext() {
+                @Override
+                public long intervalMillis() {
+                    return godEyeConfig.getTrafficConfig().intervalMillis;
+                }
+
+                @Override
+                public long sampleMillis() {
+                    return godEyeConfig.getTrafficConfig().sampleMillis;
+                }
+            });
+        }
+        if (godEyeConfig.getCrashConfig() != null) {
+            ((Crash) mModules.get(ModuleName.CRASH)).install(godEyeConfig.getCrashConfig().crashProvider);
+        }
+        if (godEyeConfig.getThreadConfig() != null) {
+            ((ThreadDump) mModules.get(ModuleName.THREAD)).install(new ThreadContext() {
+                @Override
+                public long intervalMillis() {
+                    return godEyeConfig.getThreadConfig().intervalMillis;
+                }
+
+                @Override
+                public ThreadFilter threadFilter() {
+                    return godEyeConfig.getThreadConfig().threadFilter;
+                }
+            });
+        }
+        if (godEyeConfig.getPageloadConfig() != null) {
+            ((Pageload) mModules.get(ModuleName.PAGELOAD)).install(new PageloadContext() {
+                @Override
+                public Application application() {
+                    return mApplication;
+                }
+            });
         }
         return this;
     }
@@ -135,7 +264,7 @@ public class GodEye {
      *
      * @return
      */
-    public GodEye uninstallAll() {
+    public GodEye uninstall() {
         for (Map.Entry<String, Object> entry : mModules.entrySet()) {
             if (entry.getValue() instanceof Install) {
                 ((Install) entry.getValue()).uninstall();
@@ -179,7 +308,6 @@ public class GodEye {
             throw new UnexpectException("module [" + moduleName + "] is not exist or type is wrong");
         }
     }
-
 
     public Application getApplication() {
         return mApplication;
