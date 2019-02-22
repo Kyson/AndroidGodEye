@@ -21,26 +21,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
-import cn.hikyson.android.godeye.toolbox.crash.CrashFileProvider;
-import cn.hikyson.android.godeye.toolbox.rxpermission.RxPermissionRequest;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
-import cn.hikyson.godeye.core.installconfig.BatteryConfig;
-import cn.hikyson.godeye.core.installconfig.CpuConfig;
-import cn.hikyson.godeye.core.installconfig.CrashConfig;
-import cn.hikyson.godeye.core.installconfig.FpsConfig;
-import cn.hikyson.godeye.core.installconfig.HeapConfig;
-import cn.hikyson.godeye.core.installconfig.LeakConfig;
-import cn.hikyson.godeye.core.installconfig.PageloadConfig;
-import cn.hikyson.godeye.core.installconfig.PssConfig;
-import cn.hikyson.godeye.core.installconfig.RamConfig;
-import cn.hikyson.godeye.core.installconfig.SmConfig;
-import cn.hikyson.godeye.core.installconfig.ThreadConfig;
-import cn.hikyson.godeye.core.installconfig.TrafficConfig;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
-import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
@@ -267,9 +252,6 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_consumer_thread:
                 mCompositeDisposable.add(GodEye.instance().<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject().subscribe(new LogObserver<List<Thread>>("thread", this)));
                 break;
-//            case R.id.activity_main_consumer_deadlock:
-//                mCompositeDisposable.add(GodEye.instance().<DeadLock>getModule(GodEye.ModuleName.DEADLOCK).subject().subscribe(new LogObserver<List<Thread>>("deadlock", this)));
-//                break;
             case R.id.activity_main_consumer_pageload:
                 mCompositeDisposable.add(GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject().subscribe(new LogObserver<PageloadInfo>("pageload", this)));
                 break;
@@ -302,7 +284,6 @@ public class MainActivity extends Activity implements Loggable {
                 break;
         }
     }
-
 
     private void request() {
         new Thread(new Runnable() {
@@ -380,36 +361,33 @@ public class MainActivity extends Activity implements Loggable {
             GodEye.instance().<LeakDetector>getModule(GodEye.ModuleName.LEAK).install(new GodEyeConfig.LeakConfig());
         }
         if (mActivityMainHeap.isChecked()) {
-            GodEye.instance().install(new HeapConfig());
+            GodEye.instance().<Heap>getModule(GodEye.ModuleName.HEAP).install(new GodEyeConfig.HeapConfig());
         }
         if (mActivityMainPss.isChecked()) {
-            GodEye.instance().install(new PssConfig(getApplication()));
+            GodEye.instance().<Pss>getModule(GodEye.ModuleName.PSS).install(new GodEyeConfig.PssConfig());
         }
         if (mActivityMainRam.isChecked()) {
-            GodEye.instance().install(new RamConfig(getApplication()));
+            GodEye.instance().<Ram>getModule(GodEye.ModuleName.RAM).install(new GodEyeConfig.RamConfig());
         }
         if (mActivityMainSm.isChecked()) {
-            GodEye.instance().install(new SmConfig(getApplication()));
+            GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).install(new GodEyeConfig.SmConfig());
         }
         if (mActivityMainTraffic.isChecked()) {
-            GodEye.instance().install(new TrafficConfig());
+            GodEye.instance().<Traffic>getModule(GodEye.ModuleName.TRAFFIC).install(new GodEyeConfig.TrafficConfig());
         }
         if (mActivityMainCrash.isChecked()) {
-            GodEye.instance().install(new CrashConfig(new CrashFileProvider(getApplication())));
+            GodEye.instance().<Crash>getModule(GodEye.ModuleName.CRASH).install(new GodEyeConfig.CrashConfig());
         }
         if (mActivityMainThread.isChecked()) {
-            GodEye.instance().install(new ThreadConfig());
+            GodEye.instance().<ThreadDump>getModule(GodEye.ModuleName.THREAD).install(new GodEyeConfig.ThreadConfig());
         }
-//        if (mActivityMainDeadLock.isChecked()) {
-//            GodEye.instance().install(new DeadLockConfig(GodEye.instance().<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject()));
-//        }
         if (mActivityMainPageload.isChecked()) {
-            GodEye.instance().install(new PageloadConfig(getApplication()));
+            GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).install(new GodEyeConfig.PageloadConfig());
         }
     }
 
     private void onClickUninstall() {
-        GodEye.instance().uninstallAll();
+        GodEye.instance().uninstall();
     }
 
     @Override

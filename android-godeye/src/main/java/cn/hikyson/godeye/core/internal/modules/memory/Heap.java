@@ -7,16 +7,16 @@ import cn.hikyson.godeye.core.utils.L;
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public class Heap extends ProduceableSubject<HeapInfo> implements Install<Long> {
+public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapContext> {
     private HeapEngine mHeapEngine;
 
     @Override
-    public synchronized void install(Long intervalMillis) {
+    public synchronized void install(HeapContext heapContext) {
         if (mHeapEngine != null) {
             L.d("heap already installed, ignore.");
             return;
         }
-        mHeapEngine = new HeapEngine(this, intervalMillis);
+        mHeapEngine = new HeapEngine(this, heapContext.intervalMillis());
         mHeapEngine.work();
         L.d("heap installed.");
     }

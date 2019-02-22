@@ -14,7 +14,7 @@ import cn.hikyson.godeye.core.internal.Producer;
  * Created by kysonchao on 2018/1/25.
  */
 public class PageloadEngine implements Engine {
-    private ActivityStack mActivityStack;
+    private PageloadActivityStack mActivityStack;
     private Producer<PageloadInfo> mProducer;
     private PageloadContext mPageloadContext;
     private Application.ActivityLifecycleCallbacks mActivityLifecycleCallbacks;
@@ -29,7 +29,7 @@ public class PageloadEngine implements Engine {
     @Override
     public void work() {
         if (mActivityStack == null) {
-            mActivityStack = new ActivityStack();
+            mActivityStack = new PageloadActivityStack();
         }
         if (mActivityLifecycleCallbacks == null) {
             mActivityLifecycleCallbacks = new Application.ActivityLifecycleCallbacks() {

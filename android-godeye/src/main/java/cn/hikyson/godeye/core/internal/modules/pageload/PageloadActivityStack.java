@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 /**
  * Created by kysonchao on 2018/1/25.
  */
-public class ActivityStack {
+public class PageloadActivityStack {
     private LinkedHashMap<Activity, LoadTimeInfo> mActivityPageloadInfoLinkedHashMap;
 
     public synchronized LoadTimeInfo onCreate(Activity activity, long time) {

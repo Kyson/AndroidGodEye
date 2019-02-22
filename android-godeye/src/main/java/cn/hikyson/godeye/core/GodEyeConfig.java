@@ -19,6 +19,7 @@ import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
+import cn.hikyson.godeye.core.internal.modules.memory.HeapContext;
 import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
 import cn.hikyson.godeye.core.internal.modules.memory.RamContext;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadContext;
@@ -29,7 +30,7 @@ import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
 
 public class GodEyeConfig {
-    public static GodEyeConfigBuilder fromAssert(Context context, String path) {
+    public static GodEyeConfig fromAssert(Context context, String path) {
         GodEyeConfigBuilder builder = GodEyeConfigBuilder.godEyeConfig();
         try {
             Element root = DocumentBuilderFactory.newInstance().newDocumentBuilder()
@@ -164,7 +165,7 @@ public class GodEyeConfig {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return builder;
+        return builder.build();
     }
 
     public static class BatteryConfig implements BatteryContext {
@@ -267,7 +268,7 @@ public class GodEyeConfig {
         }
     }
 
-    public static class HeapConfig {
+    public static class HeapConfig implements HeapContext {
         public long intervalMillis;
 
         public HeapConfig(long intervalMillis) {
@@ -276,6 +277,11 @@ public class GodEyeConfig {
 
         public HeapConfig() {
             this.intervalMillis = 2000;
+        }
+
+        @Override
+        public long intervalMillis() {
+            return intervalMillis;
         }
     }
 

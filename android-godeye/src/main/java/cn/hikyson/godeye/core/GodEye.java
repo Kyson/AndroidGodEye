@@ -2,7 +2,6 @@ package cn.hikyson.godeye.core;
 
 
 import android.app.Application;
-import android.content.Context;
 import android.support.annotation.StringDef;
 
 import java.lang.annotation.Retention;
@@ -10,33 +9,22 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.hikyson.godeye.core.helper.ActivityStackSubject;
+import cn.hikyson.godeye.core.helper.ActivityStack;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
-import cn.hikyson.godeye.core.internal.modules.battery.BatteryContext;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
-import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
-import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.memory.Heap;
 import cn.hikyson.godeye.core.internal.modules.memory.Pss;
-import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
-import cn.hikyson.godeye.core.internal.modules.memory.RamContext;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
-import cn.hikyson.godeye.core.internal.modules.pageload.PageloadContext;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
-import cn.hikyson.godeye.core.internal.modules.sm.SmContext;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
-import cn.hikyson.godeye.core.internal.modules.thread.ThreadContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
-import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
-import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
 
 /**
  * 入口
@@ -79,7 +67,7 @@ public class GodEye {
         return InstanceHolder.sInstance;
     }
 
-    private ActivityStackSubject mActivityStackSubject;
+    private ActivityStack mActivityStack;
     private Application mApplication;
 
     private Map<String, Object> mModules = new HashMap<>();
@@ -91,7 +79,7 @@ public class GodEye {
      */
     public void init(Application application) {
         mApplication = application;
-        mActivityStackSubject = new ActivityStackSubject(application);
+        mActivityStack = new ActivityStack(application);
         mModules.put(ModuleName.CPU, new Cpu());
         mModules.put(ModuleName.BATTERY, new Battery());
         mModules.put(ModuleName.FPS, new Fps());
@@ -110,151 +98,40 @@ public class GodEye {
 
     public GodEye install(final GodEyeConfig godEyeConfig) {
         if (godEyeConfig.getCpuConfig() != null) {
-            ((Cpu) mModules.get(ModuleName.CPU)).install(new CpuContext() {
-                @Override
-                public long intervalMillis() {
-                    return godEyeConfig.getCpuConfig().intervalMillis;
-                }
-
-                @Override
-                public long sampleMillis() {
-                    return godEyeConfig.getCpuConfig().sampleMillis;
-                }
-            });
+            ((Cpu) mModules.get(ModuleName.CPU)).install(godEyeConfig.getCpuConfig());
         }
         if (godEyeConfig.getBatteryConfig() != null) {
-            ((Battery) mModules.get(ModuleName.BATTERY)).install(new BatteryContext() {
-                @Override
-                public Context context() {
-                    return mApplication;
-                }
-
-                @Override
-                public long intervalMillis() {
-                    return godEyeConfig.getBatteryConfig().intervalMillis;
-                }
-            });
+            ((Battery) mModules.get(ModuleName.BATTERY)).install(godEyeConfig.getBatteryConfig());
         }
         if (godEyeConfig.getFpsConfig() != null) {
-            ((Fps) mModules.get(ModuleName.FPS)).install(new FpsContext() {
-                @Override
-                public Context context() {
-                    return mApplication;
-                }
-
-                @Override
-                public long intervalMillis() {
-                    return godEyeConfig.getFpsConfig().intervalMillis;
-                }
-
-                @Override
-                public long sampleMillis() {
-                    return godEyeConfig.getFpsConfig().sampleMillis;
-                }
-            });
+            ((Fps) mModules.get(ModuleName.FPS)).install(godEyeConfig.getFpsConfig());
         }
         if (godEyeConfig.getLeakConfig() != null) {
-            ((LeakDetector) mModules.get(ModuleName.LEAK)).install(new LeakContext() {
-                @Override
-                public Application application() {
-                    return mApplication;
-                }
-
-                @Override
-                public boolean debugNotify() {
-                    return godEyeConfig.getLeakConfig().debugNotify;
-                }
-            });
+            ((LeakDetector) mModules.get(ModuleName.LEAK)).install(godEyeConfig.getLeakConfig());
         }
         if (godEyeConfig.getHeapConfig() != null) {
-            ((Heap) mModules.get(ModuleName.HEAP)).install(godEyeConfig.getHeapConfig().intervalMillis);
+            ((Heap) mModules.get(ModuleName.HEAP)).install(godEyeConfig.getHeapConfig());
         }
         if (godEyeConfig.getPssConfig() != null) {
-            ((Pss) mModules.get(ModuleName.PSS)).install(new PssContext() {
-                @Override
-                public Context context() {
-                    return mApplication;
-                }
-
-                @Override
-                public long intervalMillis() {
-                    return godEyeConfig.getPssConfig().intervalMillis;
-                }
-            });
+            ((Pss) mModules.get(ModuleName.PSS)).install(godEyeConfig.getPssConfig());
         }
         if (godEyeConfig.getRamConfig() != null) {
-            ((Ram) mModules.get(ModuleName.RAM)).install(new RamContext() {
-                @Override
-                public Context context() {
-                    return mApplication;
-                }
-
-                @Override
-                public long intervalMillis() {
-                    return godEyeConfig.getRamConfig().intervalMillis;
-                }
-            });
+            ((Ram) mModules.get(ModuleName.RAM)).install(godEyeConfig.getRamConfig());
         }
         if (godEyeConfig.getSmConfig() != null) {
-            ((Sm) mModules.get(ModuleName.SM)).install(new SmContext() {
-
-                @Override
-                public Context context() {
-                    return mApplication;
-                }
-
-                @Override
-                public long longBlockThreshold() {
-                    return godEyeConfig.getSmConfig().longBlockThresholdMillis;
-                }
-
-                @Override
-                public long shortBlockThreshold() {
-                    return godEyeConfig.getSmConfig().shortBlockThresholdMillis;
-                }
-
-                @Override
-                public long dumpInterval() {
-                    return godEyeConfig.getSmConfig().dumpIntervalMillis;
-                }
-            });
+            ((Sm) mModules.get(ModuleName.SM)).install(godEyeConfig.getSmConfig());
         }
         if (godEyeConfig.getTrafficConfig() != null) {
-            ((Traffic) mModules.get(ModuleName.TRAFFIC)).install(new TrafficContext() {
-                @Override
-                public long intervalMillis() {
-                    return godEyeConfig.getTrafficConfig().intervalMillis;
-                }
-
-                @Override
-                public long sampleMillis() {
-                    return godEyeConfig.getTrafficConfig().sampleMillis;
-                }
-            });
+            ((Traffic) mModules.get(ModuleName.TRAFFIC)).install(godEyeConfig.getTrafficConfig());
         }
         if (godEyeConfig.getCrashConfig() != null) {
-            ((Crash) mModules.get(ModuleName.CRASH)).install(godEyeConfig.getCrashConfig().crashProvider);
+            ((Crash) mModules.get(ModuleName.CRASH)).install(godEyeConfig.getCrashConfig());
         }
         if (godEyeConfig.getThreadConfig() != null) {
-            ((ThreadDump) mModules.get(ModuleName.THREAD)).install(new ThreadContext() {
-                @Override
-                public long intervalMillis() {
-                    return godEyeConfig.getThreadConfig().intervalMillis;
-                }
-
-                @Override
-                public ThreadFilter threadFilter() {
-                    return godEyeConfig.getThreadConfig().threadFilter;
-                }
-            });
+            ((ThreadDump) mModules.get(ModuleName.THREAD)).install(godEyeConfig.getThreadConfig());
         }
         if (godEyeConfig.getPageloadConfig() != null) {
-            ((Pageload) mModules.get(ModuleName.PAGELOAD)).install(new PageloadContext() {
-                @Override
-                public Application application() {
-                    return mApplication;
-                }
-            });
+            ((Pageload) mModules.get(ModuleName.PAGELOAD)).install(godEyeConfig.getPageloadConfig());
         }
         return this;
     }
@@ -311,9 +188,5 @@ public class GodEye {
 
     public Application getApplication() {
         return mApplication;
-    }
-
-    public ActivityStackSubject getActivityStackSubject() {
-        return mActivityStackSubject;
     }
 }
