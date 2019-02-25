@@ -69,13 +69,9 @@ public class GodEyeConfig {
             element = getFirstElementByTagInRoot(root, "fps");
             if (element != null) {
                 final String intervalMillisString = element.getAttribute("intervalMillis");
-                final String sampleMillisString = element.getAttribute("sampleMillis");
                 FpsConfig fpsConfig = new FpsConfig();
                 if (!TextUtils.isEmpty(intervalMillisString)) {
                     fpsConfig.intervalMillis = Long.parseLong(intervalMillisString);
-                }
-                if (!TextUtils.isEmpty(sampleMillisString)) {
-                    fpsConfig.sampleMillis = Long.parseLong(sampleMillisString);
                 }
                 builder.withFpsConfig(fpsConfig);
             }
@@ -239,17 +235,13 @@ public class GodEyeConfig {
 
     public static class FpsConfig implements FpsContext {
         public long intervalMillis;
-        //TODO KYSON IMPL
-        public long sampleMillis;
 
-        public FpsConfig(long intervalMillis, long sampleMillis) {
+        public FpsConfig(long intervalMillis){
             this.intervalMillis = intervalMillis;
-            this.sampleMillis = sampleMillis;
         }
 
         public FpsConfig() {
             this.intervalMillis = 2000;
-            this.sampleMillis = 200;
         }
 
         @Override
@@ -260,11 +252,6 @@ public class GodEyeConfig {
         @Override
         public long intervalMillis() {
             return intervalMillis;
-        }
-
-        @Override
-        public long sampleMillis() {
-            return sampleMillis;
         }
     }
 

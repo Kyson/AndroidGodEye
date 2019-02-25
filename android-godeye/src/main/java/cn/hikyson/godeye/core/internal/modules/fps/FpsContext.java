@@ -9,6 +9,4 @@ public interface FpsContext {
     Context context();
 
     long intervalMillis();
-
-    long sampleMillis();
 }

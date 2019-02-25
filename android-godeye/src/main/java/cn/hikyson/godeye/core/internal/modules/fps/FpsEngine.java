@@ -26,67 +26,47 @@ import io.reactivex.functions.Function;
  * Created by kysonchao on 2017/11/23.
  */
 public class FpsEngine implements Engine {
-    private Context mContext;
     private Producer<FpsInfo> mProducer;
     private long mIntervalMillis;
     private CompositeDisposable mCompositeDisposable;
+    private FpsMonitor mFpsMonitor;
+    private final double mSystemRate;
 
     public FpsEngine(Context context, Producer<FpsInfo> producer, long intervalMillis) {
-        mContext = context;
         mProducer = producer;
         mIntervalMillis = intervalMillis;
+        mSystemRate = getRefreshRate(context);
+        mFpsMonitor = new FpsMonitor();
         mCompositeDisposable = new CompositeDisposable();
     }
 
     @Override
     public void work() {
-        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).
-                        concatMap(new Function<Long, ObservableSource<FpsInfo>>() {
-                            @Override
-                            public ObservableSource<FpsInfo> apply(Long aLong) throws Exception {
-                                return create();
-                            }
-                        }).subscribe(new Consumer<FpsInfo>() {
+        mFpsMonitor.start();
+        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
                     @Override
-                    public void accept(FpsInfo fpsInfo) throws Exception {
-                        mProducer.produce(fpsInfo);
+                    public void accept(Long aLong) throws Exception {
+                        double fps = mFpsMonitor.exportThenReset();
+                        mProducer.produce(new FpsInfo(fps, mSystemRate));
                     }
-                })
-        );
+                }));
     }
 
     @Override
     public void shutdown() {
         mCompositeDisposable.dispose();
+        mFpsMonitor.stop();
     }
 
-    private Observable<FpsInfo> create() {
-        return Observable.create(new ObservableOnSubscribe<FpsInfo>() {
-            @Override
-            public void subscribe(final ObservableEmitter<FpsInfo> e) throws Exception {
-                ThreadUtil.ensureMainThread("fps");
-                final float systemRate = getRefreshRate(mContext);
-                final Choreographer choreographer = Choreographer.getInstance();
-                choreographer.postFrameCallback(new Choreographer.FrameCallback() {
-                    @Override
-                    public void doFrame(long frameTimeNanos) {
-                        final long startTimeNanos = frameTimeNanos;
-                        choreographer.postFrameCallback(new Choreographer.FrameCallback() {
-                            @Override
-                            public void doFrame(long frameTimeNanos) {
-                                long frameInterval = frameTimeNanos - startTimeNanos;//计算两帧的时间间隔
-                                float fps = (float) (1000000000 / frameInterval);
-                                e.onNext(new FpsInfo((int)Math.min(fps, systemRate), (int)systemRate));
-                                e.onComplete();
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-    private static float getRefreshRate(Context context) {
+    /**
+     * 每秒理论刷新次数
+     *
+     * @param context
+     * @return
+     */
+    private static double getRefreshRate(Context context) {
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         return display.getRefreshRate();
     }

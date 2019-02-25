@@ -4,7 +4,7 @@
 
 1. `cd android-godeye-monitor-dashboard`
 2. `npm install`
-3. `npm run bd` or `npm run build` then `npm run deploy`
+3. (`npm run bd`) or (`npm run build` then `npm run deploy`)
 4. run android android-godeye-sample
 
 
