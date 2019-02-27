@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.TextView;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
@@ -18,9 +19,10 @@ public class SecondActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                ((TextView)findViewById(R.id.textView)).setText("I am SecondActivity!");
                 GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onPageLoaded(SecondActivity.this);
             }
-        }, 1000);
+        }, 2000);
     }
 
     public void JumpToThirdActivity(View view) {
