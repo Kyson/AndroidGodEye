@@ -3,6 +3,7 @@ package cn.hikyson.godeye.core.internal.modules.crash;
 import android.Manifest;
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.Keep;
 import android.support.v4.content.PermissionChecker;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.helper.GsonSerializer;
 import cn.hikyson.godeye.core.helper.Serializer;
 import cn.hikyson.godeye.core.utils.IoUtil;
@@ -23,20 +25,20 @@ import cn.hikyson.godeye.core.utils.IoUtil;
 /**
  * Created by kysonchao on 2017/12/18.
  */
+@Keep
 public class CrashFileProvider implements CrashProvider {
     private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
 
     private Context mContext;
     private Serializer mSerializer;
 
-    public CrashFileProvider(Context context, Serializer serializer) {
-        mContext = context.getApplicationContext();
+    public CrashFileProvider(Serializer serializer) {
+        mContext = GodEye.instance().getApplication();
         mSerializer = serializer;
     }
 
-    public CrashFileProvider(Context context) {
-        mContext = context.getApplicationContext();
-        mSerializer = new GsonSerializer();
+    public CrashFileProvider() {
+        this(new GsonSerializer());
     }
 
     @Override

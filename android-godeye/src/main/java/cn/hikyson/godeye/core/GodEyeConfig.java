@@ -30,7 +30,8 @@ import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
 
 public class GodEyeConfig {
-    public static GodEyeConfig fromAssert(Context context, String path) {
+    public static GodEyeConfig fromAssets(String path) {
+        Context context = GodEye.instance().getApplication();
         GodEyeConfigBuilder builder = GodEyeConfigBuilder.godEyeConfig();
         try {
             Element root = DocumentBuilderFactory.newInstance().newDocumentBuilder()
@@ -219,7 +220,7 @@ public class GodEyeConfig {
         }
 
         public CrashConfig() {
-            this.crashProvider = new CrashFileProvider(GodEye.instance().getApplication());
+            this.crashProvider = new CrashFileProvider();
         }
 
         @Override
@@ -236,7 +237,7 @@ public class GodEyeConfig {
     public static class FpsConfig implements FpsContext {
         public long intervalMillis;
 
-        public FpsConfig(long intervalMillis){
+        public FpsConfig(long intervalMillis) {
             this.intervalMillis = intervalMillis;
         }
 

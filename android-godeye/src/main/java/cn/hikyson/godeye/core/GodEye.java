@@ -151,26 +151,6 @@ public class GodEye {
     }
 
     /**
-     * 卸载模块
-     *
-     * @param moduleName
-     * @return
-     */
-    public GodEye uninstall(@ModuleName String moduleName) {
-        Object moduleObj = mModules.get(moduleName);
-        if (moduleObj == null) {
-            throw new UnexpectException("can not find module [" + moduleName + "] to uninstall.");
-        }
-        try {
-            Install installableModule = (Install) moduleObj;
-            installableModule.uninstall();
-        } catch (Throwable e) {
-            throw new UnexpectException("module [" + moduleObj.getClass().getSimpleName() + "] is not uninstallable, maybe no necessary to uninstall?");
-        }
-        return this;
-    }
-
-    /**
      * 获取模块
      *
      * @param moduleName

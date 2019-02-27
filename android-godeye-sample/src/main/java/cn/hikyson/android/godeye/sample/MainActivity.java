@@ -89,6 +89,8 @@ public class MainActivity extends Activity implements Loggable {
     Button mActivityMainCancelAll;
     @BindView(R.id.activity_main_install)
     Button mActivityMainInstall;
+    @BindView(R.id.activity_main_install_with_assets)
+    Button mActivityMainInstallWithAssets;
     @BindView(R.id.activity_main_uninstall)
     Button mActivityMainUninstall;
     @BindView(R.id.activity_main_monitor_work)
@@ -183,7 +185,7 @@ public class MainActivity extends Activity implements Loggable {
         StartupTracer.get().onHomeCreate(this);
     }
 
-    @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install,
+    @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install, R.id.activity_main_install_with_assets,
             R.id.activity_main_uninstall, R.id.activity_main_monitor_work, R.id.activity_main_monitor_shutdown,
             R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps,
             R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss,
@@ -204,8 +206,11 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_install:
                 onClickInstall();
                 break;
+            case R.id.activity_main_install_with_assets:
+                GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+                break;
             case R.id.activity_main_uninstall:
-                onClickUninstall();
+                GodEye.instance().uninstall();
                 break;
             case R.id.activity_main_monitor_work:
                 GodEyeMonitor.work(MainActivity.this);
@@ -384,10 +389,6 @@ public class MainActivity extends Activity implements Loggable {
         if (mActivityMainPageload.isChecked()) {
             GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).install(new GodEyeConfig.PageloadConfig());
         }
-    }
-
-    private void onClickUninstall() {
-        GodEye.instance().uninstall();
     }
 
     @Override

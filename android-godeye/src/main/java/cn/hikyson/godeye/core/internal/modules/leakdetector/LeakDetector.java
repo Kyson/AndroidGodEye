@@ -40,8 +40,7 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
         if (LeakCanary.isInAnalyzerProcess(application)) {
             throw new IllegalStateException("can not call install leak");
         }
-
-        uninstall();
+        LeakCanary.uninstall();
         mLeakDirectoryProvider = new DefaultLeakDirectoryProvider(application);
         try {
             clearLeaks();

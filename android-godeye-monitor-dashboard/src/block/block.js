@@ -116,7 +116,8 @@ class Block extends Component {
                         <Modal.Title>Block detail</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <JSONPretty id="json-pretty" json={this.state.blockInfo.blockBaseinfo}/>
+                        <JSONPretty id="json-pretty"
+                                    json={this.state.blockInfo.blockBaseinfo ? this.state.blockInfo.blockBaseinfo : "No detail found, maybe it is a short block."}/>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.handleClose}>Close</Button>
