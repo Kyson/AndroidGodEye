@@ -67,7 +67,6 @@ public class GodEye {
         return InstanceHolder.sInstance;
     }
 
-    private ActivityStack mActivityStack;
     private Application mApplication;
 
     private Map<String, Object> mModules = new HashMap<>();
@@ -79,7 +78,6 @@ public class GodEye {
      */
     public void init(Application application) {
         mApplication = application;
-        mActivityStack = new ActivityStack(application);
         mModules.put(ModuleName.CPU, new Cpu());
         mModules.put(ModuleName.BATTERY, new Battery());
         mModules.put(ModuleName.FPS, new Fps());
