@@ -41,6 +41,7 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 /**
  * monitor数据引擎，用于生产各项数据
@@ -166,41 +167,42 @@ public class Watcher {
 //
 //            }
 //        }));
-        mCompositeDisposable.add(godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject().map(new Function<List<CrashInfo>, CrashInfo>() {
-            @Override
-            public CrashInfo apply(List<CrashInfo> crashInfos) throws Exception {
-                //获取最近的一次崩溃
-                if (crashInfos == null || crashInfos.isEmpty()) {
-                    return CrashInfo.INVALID;
-                }
-                Collections.sort(crashInfos, new Comparator<CrashInfo>() {
+        mCompositeDisposable.add(godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject()
+                .filter(new Predicate<List<CrashInfo>>() {
                     @Override
-                    public int compare(CrashInfo o1, CrashInfo o2) {
-                        if (o1.timestampMillis < o2.timestampMillis) {
-                            return 1;
-                        }
-                        if (o1.timestampMillis > o2.timestampMillis) {
-                            return -1;
-                        }
-                        return 0;
+                    public boolean test(List<CrashInfo> crashInfos) throws Exception {
+                        return crashInfos != null && !crashInfos.isEmpty();
                     }
-                });
-                return crashInfos.get(0);
-            }
-        }).subscribe(new Consumer<CrashInfo>() {
-            @Override
-            public void accept(final CrashInfo crashInfo) throws Exception {
-                if (crashInfo == CrashInfo.INVALID) {
-                    return;
-                }
-                mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+                })
+                .map(new Function<List<CrashInfo>, CrashInfo>() {
                     @Override
-                    public void accept(Long aLong) throws Exception {
-                        mMessager.sendMessage(new ServerMessage("crashInfo", crashInfo).toString());
+                    public CrashInfo apply(List<CrashInfo> crashInfos) throws Exception {
+                        //获取最近的一次崩溃
+                        Collections.sort(crashInfos, new Comparator<CrashInfo>() {
+                            @Override
+                            public int compare(CrashInfo o1, CrashInfo o2) {
+                                if (o1.timestampMillis < o2.timestampMillis) {
+                                    return 1;
+                                }
+                                if (o1.timestampMillis > o2.timestampMillis) {
+                                    return -1;
+                                }
+                                return 0;
+                            }
+                        });
+                        return crashInfos.get(0);
+                    }
+                }).subscribe(new Consumer<CrashInfo>() {
+                    @Override
+                    public void accept(final CrashInfo crashInfo) throws Exception {
+                        mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
+                            @Override
+                            public void accept(Long aLong) throws Exception {
+                                mMessager.sendMessage(new ServerMessage("crashInfo", crashInfo).toString());
+                            }
+                        }));
                     }
                 }));
-            }
-        }));
         mCompositeDisposable.add(godEye.<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject().subscribe(new Consumer<PageloadInfo>() {
             @Override
             public void accept(PageloadInfo pageloadInfo) throws Exception {

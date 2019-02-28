@@ -20,6 +20,7 @@ import javax.net.ssl.HttpsURLConnection;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.hikyson.android.godeye.toolbox.OkNetworkCollector;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
@@ -52,6 +53,9 @@ import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
 import io.reactivex.disposables.CompositeDisposable;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends Activity implements Loggable {
     private static final String TAG = "AndroidGodEye";
@@ -139,10 +143,13 @@ public class MainActivity extends Activity implements Loggable {
     CheckBox[] installableCbs;
     private CompositeDisposable mCompositeDisposable;
 
+    private OkHttpClient mZygote = new OkHttpClient();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mZygote = new OkHttpClient.Builder().eventListener(new OkNetworkCollector(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK))).build();
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
         installableCbs = new CheckBox[13];
@@ -290,31 +297,21 @@ public class MainActivity extends Activity implements Loggable {
         }
     }
 
+
     private void request() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    long startTimeMillis = System.currentTimeMillis();
-                    URL url = new URL("https://www.trip.com/");
-                    //打开连接
-                    HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-                    if (200 == urlConnection.getResponseCode()) {
-                        //得到输入流
-                        InputStream is = urlConnection.getInputStream();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        byte[] buffer = new byte[1024];
-                        int len = 0;
-                        while (-1 != (len = is.read(buffer))) {
-                            baos.write(buffer, 0, len);
-                            baos.flush();
-                        }
-                        String result = baos.toString("utf-8");
-                        long endTimeMillis = System.currentTimeMillis();
-                        GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK).produce(new RequestBaseInfo(startTimeMillis, endTimeMillis, result.getBytes().length, String.valueOf(url)));
-                    }
+                    OkHttpClient client = mZygote;
+                    Request request = new Request.Builder()
+                            .url("www.baidu.com")
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    L.d("testRequest result:" + response.code());
                 } catch (IOException e) {
                     e.printStackTrace();
+                    L.d("testRequest result:" + String.valueOf(e));
                 }
             }
         }).start();
