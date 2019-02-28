@@ -94,7 +94,8 @@ class Block extends Component {
                 name: axisData,
                 y: blockInfo.blockTime,
                 blockInfo: blockInfo
-            }, true, true, true);
+            }, false, true, true);
+            this.refs.chart.getChart().redraw(true);
         }
     }
 

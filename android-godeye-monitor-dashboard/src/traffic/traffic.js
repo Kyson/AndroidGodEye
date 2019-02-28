@@ -75,10 +75,11 @@ class Traffic extends Component {
     refresh(trafficInfo) {
         if (trafficInfo) {
             let axisData = (new Date()).toLocaleTimeString();
-            this.refs.chart.getChart().series[0].addPoint([axisData, trafficInfo.rxTotalRate], true, true, true);
-            this.refs.chart.getChart().series[1].addPoint([axisData, trafficInfo.txTotalRate], true, true, true);
-            this.refs.chart.getChart().series[2].addPoint([axisData, trafficInfo.rxUidRate], true, true, true);
-            this.refs.chart.getChart().series[3].addPoint([axisData, trafficInfo.txUidRate], true, true, true);
+            this.refs.chart.getChart().series[0].addPoint([axisData, trafficInfo.rxTotalRate], false, true, true);
+            this.refs.chart.getChart().series[1].addPoint([axisData, trafficInfo.txTotalRate], false, true, true);
+            this.refs.chart.getChart().series[2].addPoint([axisData, trafficInfo.rxUidRate], false, true, true);
+            this.refs.chart.getChart().series[3].addPoint([axisData, trafficInfo.txUidRate], false, true, true);
+            this.refs.chart.getChart().redraw(true);
         }
     }
 

@@ -32,13 +32,14 @@ class App extends Component {
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
-        // setInterval(this.refreshMock, 2000);
+//        setInterval(this.refreshMock, 2000);
     }
 
     _onReceiveMessage(moduleName, payload) {
         if (!this.canRefresh) {
             return;
         }
+         this.refs.refreshStatus.refresh(new Date());
         if ("appInfo" === moduleName) {
             this.refs.appInfo.refresh(payload);
             return;
@@ -115,7 +116,7 @@ class App extends Component {
                     </Row>
                     <Row>
                         <Col md={12}>
-                            <RefreshStatus setCanRefresh={this._setCanRefresh}/>
+                            <RefreshStatus ref="refreshStatus" setCanRefresh={this._setCanRefresh}/>
                         </Col>
                     </Row>
                     <Row>

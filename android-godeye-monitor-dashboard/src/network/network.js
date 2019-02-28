@@ -94,7 +94,8 @@ class Network extends Component {
                 name: axisData,
                 y: (networkInfo.endTimeMillis - networkInfo.startTimeMillis),
                 networkInfo: networkInfo
-            }, true, true, true);
+            }, false, true, true);
+            this.refs.chart.getChart().redraw(true);
         }
     }
 

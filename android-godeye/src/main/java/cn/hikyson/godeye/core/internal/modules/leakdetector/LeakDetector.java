@@ -15,7 +15,6 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.LeakC
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.LeakDirectoryProvider;
 import cn.hikyson.godeye.core.utils.FileUtil;
 import cn.hikyson.godeye.core.utils.L;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by kysonchao on 2017/11/23.
