@@ -305,7 +305,7 @@ public class MainActivity extends Activity implements Loggable {
                 try {
                     OkHttpClient client = mZygote;
                     Request request = new Request.Builder()
-                            .url("www.baidu.com")
+                            .url("http://www.baidu.com")
                             .build();
                     Response response = client.newCall(request).execute();
                     L.d("testRequest result:" + response.code());
