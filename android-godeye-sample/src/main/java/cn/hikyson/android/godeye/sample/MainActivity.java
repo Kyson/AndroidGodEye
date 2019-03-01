@@ -3,24 +3,20 @@ package cn.hikyson.android.godeye.sample;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.hikyson.android.godeye.toolbox.OkNetworkCollector;
+import cn.hikyson.android.godeye.toolbox.OkNetworkCollectorFactory;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
@@ -149,7 +145,7 @@ public class MainActivity extends Activity implements Loggable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mZygote = new OkHttpClient.Builder().eventListener(new OkNetworkCollector(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK))).build();
+        mZygote = new OkHttpClient.Builder().eventListenerFactory(new OkNetworkCollectorFactory(GodEye.instance().<Network>getModule(GodEye.ModuleName.CPU))).build();
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
         installableCbs = new CheckBox[13];
@@ -166,7 +162,6 @@ public class MainActivity extends Activity implements Loggable {
         installableCbs[10] = mActivityMainThread;
         installableCbs[11] = mActivityMainDeadLock;
         installableCbs[12] = mActivityMainPageload;
-
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -297,7 +292,6 @@ public class MainActivity extends Activity implements Loggable {
         }
     }
 
-
     private void request() {
         new Thread(new Runnable() {
             @Override
@@ -305,13 +299,14 @@ public class MainActivity extends Activity implements Loggable {
                 try {
                     OkHttpClient client = mZygote;
                     Request request = new Request.Builder()
-                            .url("http://www.baidu.com")
+                            .url("https://www.trip.com")
                             .build();
                     Response response = client.newCall(request).execute();
-                    L.d("testRequest result:" + response.code());
+                    String body = response.body().string();
+                    L.d("testRequest111 result:" + response.code());
                 } catch (IOException e) {
                     e.printStackTrace();
-                    L.d("testRequest result:" + String.valueOf(e));
+                    L.d("testRequest111 result:" + String.valueOf(e));
                 }
             }
         }).start();
