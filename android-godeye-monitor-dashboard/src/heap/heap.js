@@ -95,7 +95,7 @@ class Heap extends Component {
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <h5>Heap
+                    <h5>Heap(堆内存)
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>

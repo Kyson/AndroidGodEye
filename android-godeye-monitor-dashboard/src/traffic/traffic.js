@@ -51,19 +51,19 @@ class Traffic extends Component {
             },
             series: [
                 {
-                    name: 'DeviceRX',
+                    name: 'DeviceRX(设备下行)',
                     data: (Traffic.initSeries())
                 },
                 {
-                    name: 'DeviceTX',
+                    name: 'DeviceTX(设备上行)',
                     data: (Traffic.initSeries())
                 },
                 {
-                    name: 'AppRX',
+                    name: 'AppRX(App下行)',
                     data: (Traffic.initSeries())
                 },
                 {
-                    name: 'AppTX',
+                    name: 'AppTX(App上行)',
                     data: (Traffic.initSeries())
                 }
             ]
@@ -96,7 +96,7 @@ class Traffic extends Component {
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <h5>Traffic
+                    <h5>Traffic(流量)
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>

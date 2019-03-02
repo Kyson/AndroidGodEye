@@ -104,7 +104,7 @@ class Cpu extends Component {
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <h5>Cpu
+                    <h5>Cpu(处理器)
                     </h5>
                 </Panel.Heading>
                 <Panel.Body>

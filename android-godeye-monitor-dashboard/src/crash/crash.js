@@ -38,7 +38,7 @@ class Crash extends Component {
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
                     <Row>
-                        <Col md={10}><h5>Last Crash Info</h5></Col>
+                        <Col md={10}><h5>Last Crash Info(最新一次崩溃)</h5></Col>
                         <Col md={2}
                              style={{textAlign: 'right'}}><Button
                             onClick={this.handleCrashDetailClick}>Detail</Button></Col>
@@ -46,12 +46,12 @@ class Crash extends Component {
                 </Panel.Heading>
                 <Panel.Body>
                     <p>
-                        <strong>Time:&nbsp;</strong>{crashInfo.timestampMillis ? new Date(crashInfo.timestampMillis).toLocaleTimeString() : "**"}
+                        <strong>Time(崩溃时间):&nbsp;</strong>{crashInfo.timestampMillis ? new Date(crashInfo.timestampMillis).toLocaleTimeString() : "**"}
                     </p>
                     <p style={{wordWrap: "break-word", wordBreak: "break-all"}}>
-                        <strong>Message:&nbsp;</strong>{crashInfo.throwableMessage ? crashInfo.throwableMessage : "**"}
+                        <strong>Message(异常信息):&nbsp;</strong>{crashInfo.throwableMessage ? crashInfo.throwableMessage : "**"}
                     </p>
-                    <p><strong>Stacktrace</strong></p>
+                    <p><strong>Stacktrace(异常堆栈)</strong></p>
                     {this.renderStacktraceItem(crashInfo.throwableStacktrace)}
                 </Panel.Body>
                 <Modal show={this.state.show} onHide={this.handleClose}>
