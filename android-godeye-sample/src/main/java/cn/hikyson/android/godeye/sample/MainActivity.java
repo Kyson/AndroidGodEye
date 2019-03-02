@@ -145,7 +145,7 @@ public class MainActivity extends Activity implements Loggable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mZygote = new OkHttpClient.Builder().eventListenerFactory(new OkNetworkCollectorFactory(GodEye.instance().<Network>getModule(GodEye.ModuleName.CPU))).build();
+        mZygote = new OkHttpClient.Builder().eventListenerFactory(new OkNetworkCollectorFactory(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK))).build();
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
         installableCbs = new CheckBox[13];

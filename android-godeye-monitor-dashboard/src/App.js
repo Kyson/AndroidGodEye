@@ -39,7 +39,7 @@ class App extends Component {
         if (!this.canRefresh) {
             return;
         }
-         this.refs.refreshStatus.refresh(new Date());
+        this.refs.refreshStatus.refresh(new Date());
         if ("appInfo" === moduleName) {
             this.refs.appInfo.refresh(payload);
             return;
@@ -228,9 +228,32 @@ class App extends Component {
             blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
         });
         this._onReceiveMessage("networkInfo", {
-            url: "http://www.baidu.com",
-            endTimeMillis: 123,
-            startTimeMillis: 120
+            networkInfoConnection: {
+                cipherSuite: "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                localIp: "10.0.2.15",
+                localPort: 53010,
+                protocol: "h2",
+                remoteIp: "117.184.207.147",
+                remotePort: 443,
+                tlsVersion: "TLSv1.2"
+            },
+            networkInfoRequest: {
+                method: "https://www.trip.com/",
+                url: "GET"
+            },
+            networkSimplePerformance: {
+                connectTimeMillis: 1345,
+                dnsTimeMillis: 41,
+                receiveBodyTimeMillis: 389,
+                receiveHeaderTimeMillis: 713,
+                sendBodyTimeMillis: 0,
+                sendHeaderTimeMillis: 11,
+                totalTimeMillis: 2527
+            },
+            requestBodySizeByte: 0,
+            requestId: "117910124:https://www.trip.com/",
+            responseBodySizeByte: 14133,
+            resultCode: "200"
         });
         this._onReceiveMessage("trafficInfo", {
             rxTotalRate: 56,

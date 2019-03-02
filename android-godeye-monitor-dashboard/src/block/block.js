@@ -18,6 +18,9 @@ class Block extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.options = {
+            credits: {
+                enabled: false
+            },
             chart: {
                 type: 'column'
             },
@@ -78,7 +81,7 @@ class Block extends Component {
 
     static initSeries() {
         let data = [];
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 10; i++) {
             data.push({
                 x: i,
                 y: 0

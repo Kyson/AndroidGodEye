@@ -1,10 +1,14 @@
 package cn.hikyson.android.godeye.toolbox;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.Socket;
 import java.util.List;
+
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfoConnection;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfoRequest;
@@ -28,8 +32,8 @@ public class OkNetworkCollector extends EventListener {
 
     public OkNetworkCollector(Producer<RequestBaseInfo> producer) {
         this.mRequestBaseInfoProducer = producer;
-        networkPerformanceBuilder = NetworkPerformance.NetworkPerformanceBuilder.aNetworkPerformance();
-        requestBaseInfoBuilder = RequestBaseInfo.RequestBaseInfoBuilder.aRequestBaseInfo();
+        this.networkPerformanceBuilder = NetworkPerformance.NetworkPerformanceBuilder.aNetworkPerformance();
+        this.requestBaseInfoBuilder = RequestBaseInfo.RequestBaseInfoBuilder.aRequestBaseInfo();
     }
 
     @Override
