@@ -42,6 +42,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakOutputReceiver;
+
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult.failure;
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult.leakDetected;
 import static cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult.noLeak;
@@ -136,7 +138,8 @@ public final class HeapAnalyzer {
     public static final String OUTPUT_BOARDCAST_ACTION_PROGRESS = "com.ctrip.ibu.leakcanary.output.progress";
 
     private void sendOutputBroadcastProgress(String refrenceKey, String progress) {
-        Intent intent = new Intent(OUTPUT_BOARDCAST_ACTION_PROGRESS);
+        Intent intent = new Intent(mContext, LeakOutputReceiver.class);
+        intent.setAction(OUTPUT_BOARDCAST_ACTION_PROGRESS);
         intent.putExtra("refrenceKey", refrenceKey);
         intent.putExtra("progress", progress);
         mContext.sendBroadcast(intent);

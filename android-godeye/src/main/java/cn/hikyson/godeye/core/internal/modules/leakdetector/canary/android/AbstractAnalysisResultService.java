@@ -18,15 +18,20 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 
 import com.squareup.leakcanary.HeapDump;
 
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult;
 
-public abstract class AbstractAnalysisResultService extends IntentService {
+public abstract class AbstractAnalysisResultService extends ForegroundService {
 
     private static final String HEAP_DUMP_EXTRA = "heap_dump_extra";
     private static final String RESULT_EXTRA = "result_extra";
+
+    public AbstractAnalysisResultService(String name) {
+        super(name);
+    }
 
     public static void sendResultToListener(Context context, String listenerServiceClassName,
                                             HeapDump heapDump, AnalysisResult result) {
@@ -39,11 +44,7 @@ public abstract class AbstractAnalysisResultService extends IntentService {
         Intent intent = new Intent(context, listenerServiceClass);
         intent.putExtra(HEAP_DUMP_EXTRA, heapDump);
         intent.putExtra(RESULT_EXTRA, result);
-        context.startService(intent);
-    }
-
-    public AbstractAnalysisResultService() {
-        super(AbstractAnalysisResultService.class.getName());
+        ContextCompat.startForegroundService(context, intent);
     }
 
     @Override

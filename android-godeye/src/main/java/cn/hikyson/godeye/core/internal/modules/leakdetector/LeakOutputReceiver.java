@@ -41,7 +41,6 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_START);
         LeakQueue.instance().createOrUpdateIfExsist(refrenceKey, map);
         LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(refrenceKey));
-
     }
 
     private void onLeakDumpProgress(Intent intent) {

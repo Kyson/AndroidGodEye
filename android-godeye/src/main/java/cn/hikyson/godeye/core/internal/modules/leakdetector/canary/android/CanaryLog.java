@@ -19,7 +19,7 @@ public final class CanaryLog {
         @Override
         public void d(String message, Object... args) {
             String formatted = String.format(message, args);
-            largeLog(Log.DEBUG, "LeakCanary", formatted);
+            largeLog(Log.DEBUG, "AndroidGodEye", formatted);
         }
 
         private static final int LOG_MAX_LENGTH = 3000;

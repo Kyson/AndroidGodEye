@@ -1,8 +1,14 @@
 package cn.hikyson.android.godeye.sample;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
+
+import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal.HeapAnalyzerService;
 
 public class LeakActivity extends Activity {
 
@@ -12,16 +18,18 @@ public class LeakActivity extends Activity {
         setContentView(R.layout.activity_leak);
     }
 
-    public void leak(View view) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(30000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                 }
+                ((TextView) LeakActivity.this.findViewById(R.id.activity_leak_test)).setText("Yes, i am leaking...");
             }
         }).start();
     }
-
 }

@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import cn.hikyson.godeye.core.R;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakOutputReceiver;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.AbstractAnalysisResultService;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.CanaryLog;
@@ -47,6 +48,10 @@ public class OutputLeakService extends AbstractAnalysisResultService {
     public static final String OUTPUT_BOARDCAST_ACTION_START = "com.ctrip.ibu.leakcanary.output.start";
     public static final String OUTPUT_BOARDCAST_ACTION_RETRY = "com.ctrip.ibu.leakcanary.output.retry";
     public static final String OUTPUT_BOARDCAST_ACTION_DONE = "com.ctrip.ibu.leakcanary.output.done";
+
+    public OutputLeakService() {
+        super("整理内存泄漏信息服务");
+    }
 
     @Override
     @WorkerThread
@@ -83,19 +88,22 @@ public class OutputLeakService extends AbstractAnalysisResultService {
     }
 
     public static void sendOutputBroadcastStart(Context context, String refrenceKey) {
-        Intent intent = new Intent(OUTPUT_BOARDCAST_ACTION_START);
+        Intent intent = new Intent(context, LeakOutputReceiver.class);
+        intent.setAction(OUTPUT_BOARDCAST_ACTION_START);
         intent.putExtra("refrenceKey", refrenceKey);
         context.sendBroadcast(intent);
     }
 
     public static void sendOutputBroadcastRetry(Context context, String refrenceKey) {
-        Intent intent = new Intent(OUTPUT_BOARDCAST_ACTION_RETRY);
+        Intent intent = new Intent(context, LeakOutputReceiver.class);
+        intent.setAction(OUTPUT_BOARDCAST_ACTION_RETRY);
         intent.putExtra("refrenceKey", refrenceKey);
         context.sendBroadcast(intent);
     }
 
     public static void sendOutputBroadcastDone(Context context, String refrenceKey, HeapDump heapDump, AnalysisResult result, String summary, String leakInfo) {
-        Intent intent = new Intent(OUTPUT_BOARDCAST_ACTION_DONE);
+        Intent intent = new Intent(context, LeakOutputReceiver.class);
+        intent.setAction(OUTPUT_BOARDCAST_ACTION_DONE);
         intent.putExtra("refrenceKey", refrenceKey);
         intent.putExtra("heapDump", heapDump);
         intent.putExtra("result", result);

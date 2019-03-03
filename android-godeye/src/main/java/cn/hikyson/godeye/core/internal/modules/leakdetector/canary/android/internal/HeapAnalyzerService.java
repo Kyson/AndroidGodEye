@@ -16,21 +16,30 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 
 import com.squareup.leakcanary.HeapDump;
 
+import cn.hikyson.godeye.core.R;
+import cn.hikyson.godeye.core.helper.Notifier;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HeapAnalyzer;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.AbstractAnalysisResultService;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.CanaryLog;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.ForegroundService;
 
 /**
  * This service runs in a separate process to avoid slowing down the app process or making it run
  * out of memory.
  */
-public final class HeapAnalyzerService extends IntentService {
+public final class HeapAnalyzerService extends ForegroundService {
 
     private static final String LISTENER_CLASS_EXTRA = "listener_class_extra";
     private static final String HEAPDUMP_EXTRA = "heapdump_extra";
@@ -40,11 +49,11 @@ public final class HeapAnalyzerService extends IntentService {
         Intent intent = new Intent(context, HeapAnalyzerService.class);
         intent.putExtra(LISTENER_CLASS_EXTRA, listenerServiceClass.getName());
         intent.putExtra(HEAPDUMP_EXTRA, heapDump);
-        context.startService(intent);
+        ContextCompat.startForegroundService(context, intent);
     }
 
     public HeapAnalyzerService() {
-        super(HeapAnalyzerService.class.getSimpleName());
+        super("内存泄漏分析服务");
     }
 
     @Override

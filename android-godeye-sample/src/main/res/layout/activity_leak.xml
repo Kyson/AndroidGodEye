@@ -7,10 +7,10 @@
     android:layout_height="match_parent"
     tools:context="cn.hikyson.android.godeye.sample.LeakActivity">
 
-    <Button
-        android:onClick="leak"
-        android:text="leak"
+    <TextView
+        android:id="@+id/activity_leak_test"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Leak will happen when you finish this activity and wait for a moment."/>
 
 </LinearLayout>

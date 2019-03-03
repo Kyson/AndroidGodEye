@@ -4,11 +4,17 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.os.SystemClock;
+
+import cn.hikyson.godeye.core.R;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class Notifier {
 
-    public static class Config{
+    public static class Config {
         public @interface Type {
             public static final String NOTIFICATION = "NOTIFICATION";
             public static final String TOAST = "TOAST";
@@ -64,29 +70,33 @@ public class Notifier {
         }
     }
 
-    private static Context sContext;
-
-    public static void init(Context context) {
-        sContext = context.getApplicationContext();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("AndroidGodEye", "AndroidGodEye", NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("AndroidGodEye");
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    public void notice(Config config) {
+    public synchronized static void notice(Context context, Config config) {
         if (Config.Type.NOTIFICATION.equals(config.getType())) {
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+            Notification.Builder builder;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                new Notification.Builder(sContext,"AndroidGodEye")
-                        .setContentTitle(config.getTitle())
-                        .setContentText(config.getMessage())
-                        .setStyle(Notification.Style)
-            }else{
-
+                NotificationChannel notificationChannel =
+                        notificationManager.getNotificationChannel("AndroidGodEye");
+                if (notificationChannel == null) {
+                    NotificationChannel channel = new NotificationChannel("AndroidGodEye", "AndroidGodEye", NotificationManager.IMPORTANCE_HIGH);
+                    channel.setDescription("AndroidGodEye");
+                    notificationManager.createNotificationChannel(channel);
+                }
+                builder = new Notification.Builder(context, "AndroidGodEye");
+            } else {
+                builder = new Notification.Builder(context);
             }
+            builder.setSmallIcon(R.drawable.ic_remove_red_eye)
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
+                    .setContentTitle(config.getTitle())
+                    .setContentText(config.getMessage())
+                    .setStyle(new Notification.BigTextStyle().bigText(config.getDetail()))
+                    .build();
+            notificationManager.notify(getId(), builder.build());
         }
     }
 
+    public static int getId() {
+        return (int) SystemClock.uptimeMillis();
+    }
 }

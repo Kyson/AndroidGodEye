@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -46,17 +47,6 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
         } catch (FileUtil.FileException e) {
             L.e(e.getLocalizedMessage());
         }
-        CanaryLog.setLogger(new CanaryLog.Logger() {
-            @Override
-            public void d(String s, Object... objects) {
-                L.d(String.format(s, objects));
-            }
-
-            @Override
-            public void d(Throwable throwable, String s, Object... objects) {
-                L.e(String.format(s, objects) + "\n" + String.valueOf(throwable));
-            }
-        });
         LeakCanary.install(application);
         L.d("LeakCanary installed");
     }
