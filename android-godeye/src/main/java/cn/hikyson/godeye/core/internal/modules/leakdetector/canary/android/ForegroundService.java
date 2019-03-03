@@ -34,7 +34,7 @@ public class ForegroundService extends IntentService {
             NotificationChannel notificationChannel =
                     notificationManager.getNotificationChannel(channelName);
             if (notificationChannel == null) {
-                NotificationChannel channel = new NotificationChannel(channelName, channelName, NotificationManager.IMPORTANCE_HIGH);
+                NotificationChannel channel = new NotificationChannel(channelName, channelName, NotificationManager.IMPORTANCE_MIN);
                 channel.setDescription(channelName);
                 notificationManager.createNotificationChannel(channel);
             }
