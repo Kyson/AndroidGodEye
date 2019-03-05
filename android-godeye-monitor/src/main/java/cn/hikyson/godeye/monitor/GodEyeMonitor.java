@@ -3,6 +3,7 @@ package cn.hikyson.godeye.monitor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import com.koushikdutta.async.http.WebSocket;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
@@ -11,6 +12,7 @@ import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import java.util.Map;
 
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.driver.Watcher;
 import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
 import cn.hikyson.godeye.monitor.processors.StaticProcessor;
@@ -56,14 +58,14 @@ public class GodEyeMonitor {
         }
         Context applicationContext = context.getApplicationContext();
         sGodEyeMonitorServer = new GodEyeMonitorServer(port);
-        sGodEyeMonitorServer.start();
-        final StaticProcessor assetsModule = new StaticProcessor(applicationContext);
+        final StaticProcessor staticProcessor = new StaticProcessor(applicationContext);
         final WebSocketProcessor webSocketProcessor = new WebSocketProcessor(sGodEyeMonitorServer);
         sGodEyeMonitorServer.setMonitorServerCallback(new GodEyeMonitorServer.MonitorServerCallback() {
             @Override
             public void onHttpRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                ThreadUtil.ensureWorkThread("AndroidGodEyeOnHttpRequest");
                 try {
-                    StaticProcessor.StaticResource staticResource = assetsModule.process(request.getPath());
+                    StaticProcessor.StaticResource staticResource = staticProcessor.process(request.getPath());
                     response.send(staticResource.contentType, staticResource.payload);
                 } catch (Throwable throwable) {
                     L.e(String.valueOf(throwable));
@@ -72,13 +74,13 @@ public class GodEyeMonitor {
 
             @Override
             public void onWebSocketRequest(WebSocket webSocket, String messageFromClient) {
-                //解析客户端消息
-                // if ("Hello Server".equals(s))
-                // webSocket.send("Welcome Client!");
+                ThreadUtil.ensureWorkThread("AndroidGodEyeOnWebSocketRequest");
                 webSocket.send(webSocketProcessor.process(messageFromClient));
             }
         });
         sWatcher = new Watcher(webSocketProcessor);
+        webSocketProcessor.setProcessor(sWatcher);
+        sGodEyeMonitorServer.start();
         sWatcher.observeAll();
         L.d(getAddressLog(context, port));
         L.d("Leak dump files are in /storage/download/leakcanary-" + context.getPackageName());

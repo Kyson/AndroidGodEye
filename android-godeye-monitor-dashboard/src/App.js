@@ -32,6 +32,7 @@ class App extends Component {
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
         globalWs.start();
+        globalWs.sendMessage({moduleName: "clientOnline"})
         // setInterval(this.refreshMock, 2000);
     }
 
@@ -108,7 +109,6 @@ class App extends Component {
 
     render() {
         return (
-
             <div className="App">
                 <Grid>
                     <Row style={{marginBottom: 30}}>

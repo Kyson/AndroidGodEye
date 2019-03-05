@@ -1,8 +1,13 @@
 package cn.hikyson.godeye.monitor.driver;
 
+import android.util.Pair;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.GodEye;
@@ -37,8 +42,11 @@ import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
 import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
 import cn.hikyson.godeye.monitor.processors.Messager;
+import cn.hikyson.godeye.monitor.processors.Processor;
+import cn.hikyson.godeye.monitor.utils.GsonUtil;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -47,13 +55,15 @@ import io.reactivex.functions.Predicate;
  * monitor数据引擎，用于生产各项数据
  * Created by kysonchao on 2017/11/21.
  */
-public class Watcher {
+public class Watcher implements Processor {
     private CompositeDisposable mCompositeDisposable;
     private Messager mMessager;
+    private Map<String, Object> mCachedMessage;
 
     public Watcher(Messager messager) {
         mCompositeDisposable = new CompositeDisposable();
         mMessager = messager;
+        mCachedMessage = Collections.synchronizedMap(new LinkedHashMap<String, Object>());
     }
 
     /**
@@ -61,48 +71,37 @@ public class Watcher {
      */
     public void observeAll() {
         GodEye godEye = GodEye.instance();
-        mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
-            @Override
-            public void accept(Long aLong) throws Exception {
-                mMessager.sendMessage(new ServerMessage("appInfo", new AppInfo()).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject().subscribe(new Consumer<BatteryInfo>() {
-            @Override
-            public void accept(BatteryInfo batteryInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("batteryInfo", batteryInfo).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe(new Consumer<CpuInfo>() {
-            @Override
-            public void accept(CpuInfo cpuInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("cpuInfo", cpuInfo).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Traffic>getModule(GodEye.ModuleName.TRAFFIC).subject().subscribe(new Consumer<TrafficInfo>() {
-            @Override
-            public void accept(TrafficInfo trafficInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("trafficInfo", trafficInfo).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Fps>getModule(GodEye.ModuleName.FPS).subject().subscribe(new Consumer<FpsInfo>() {
-            @Override
-            public void accept(FpsInfo fpsInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("fpsInfo", fpsInfo).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<LeakDetector>getModule(GodEye.ModuleName.LEAK).subject().subscribe(new Consumer<LeakQueue.LeakMemoryInfo>() {
-            @Override
-            public void accept(LeakQueue.LeakMemoryInfo leakMemoryInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("leakInfo", leakMemoryInfo).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Sm>getModule(GodEye.ModuleName.SM).subject().subscribe(new Consumer<BlockInfo>() {
-            @Override
-            public void accept(BlockInfo blockInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("blockInfo", new BlockSimpleInfo(blockInfo)).toString());
-            }
-        }));
+        mCompositeDisposable.addAll(
+                Observable.just(new AppInfo())
+                        .map(this.<AppInfo>createConvertServerMessageFunction("appInfo"))
+                        .subscribe(createSendMessageConsumer()),
+                godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject()
+                        .map(this.<BatteryInfo>createConvertServerMessageFunction("batteryInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Cpu>getModule(GodEye.ModuleName.CPU).subject()
+                        .map(this.<CpuInfo>createConvertServerMessageFunction("cpuInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Traffic>getModule(GodEye.ModuleName.TRAFFIC).subject()
+                        .map(this.<TrafficInfo>createConvertServerMessageFunction("trafficInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Fps>getModule(GodEye.ModuleName.FPS).subject()
+                        .map(this.<FpsInfo>createConvertServerMessageFunction("fpsInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<LeakDetector>getModule(GodEye.ModuleName.LEAK).subject()
+                        .map(this.<LeakQueue.LeakMemoryInfo>createConvertServerMessageFunction("leakInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Sm>getModule(GodEye.ModuleName.SM).subject()
+                        .map(new Function<BlockInfo, BlockSimpleInfo>() {
+                            @Override
+                            public BlockSimpleInfo apply(BlockInfo blockInfo) throws Exception {
+                                return new BlockSimpleInfo(blockInfo);
+                            }
+                        })
+                        .map(this.<BlockSimpleInfo>createConvertServerMessageFunction("blockInfo"))
+                        .subscribe(this.createSendMessageConsumer())
+
+
+        );
         mCompositeDisposable.add(godEye.<Network>getModule(GodEye.ModuleName.NETWORK).subject().subscribe(new Consumer<RequestBaseInfo>() {
             @Override
             public void accept(RequestBaseInfo requestBaseInfo) throws Exception {
@@ -149,24 +148,6 @@ public class Watcher {
                 mMessager.sendMessage(new ServerMessage("threadInfo", threadInfos).toString());
             }
         }));
-//        mCompositeDisposable.add(godEye.<DeadLock>getModule(GodEye.ModuleName.DEADLOCK).subject().map(new Function<List<Thread>, List<Long>>() {
-//            @Override
-//            public List<Long> apply(List<Thread> threads) throws Exception {
-//                List<Long> threadIds = new ArrayList<>();
-//                for (Thread thread : threads) {
-//                    if (thread == null) {
-//                        continue;
-//                    }
-//                    threadIds.add(thread.getId());
-//                }
-//                return threadIds;
-//            }
-//        }).subscribe(new Consumer<List<Long>>() {
-//            @Override
-//            public void accept(List<Long> threads) throws Exception {
-//
-//            }
-//        }));
         mCompositeDisposable.add(godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject()
                 .filter(new Predicate<List<CrashInfo>>() {
                     @Override
@@ -213,5 +194,22 @@ public class Watcher {
 
     public void cancelAllObserve() {
         mCompositeDisposable.dispose();
+    }
+
+    @Override
+    public String process(String msg) {
+        ClientMessage clientMessage = GsonUtil.fromJson(msg, ClientMessage.class);
+        if ("clientOnline".equals(clientMessage.moduleName)) {//if a client get online,send init message to it
+            mMessager.sendMessage(new ServerMessage("appInfo", new AppInfo()).toString());
+        }
+        return null;
+    }
+
+    private SendMessageConsumer createSendMessageConsumer() {
+        return new SendMessageConsumer(mMessager);
+    }
+
+    private <T> ConvertServerMessageFunction<T> createConvertServerMessageFunction(String module) {
+        return new ConvertServerMessageFunction<T>(mCachedMessage, module);
     }
 }
