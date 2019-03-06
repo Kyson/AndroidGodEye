@@ -1,5 +1,7 @@
 package cn.hikyson.godeye.monitor.processors;
 
+import com.koushikdutta.async.http.WebSocket;
+
 import cn.hikyson.godeye.monitor.server.GodEyeMonitorServer;
 
 public class WebSocketProcessor implements Messager, Processor {
@@ -20,7 +22,7 @@ public class WebSocketProcessor implements Messager, Processor {
     }
 
     @Override
-    public String process(String msg) {
-        return mProcessor.process(msg);
+    public void process(WebSocket webSocket, String msg) {
+        mProcessor.process(webSocket, msg);
     }
 }

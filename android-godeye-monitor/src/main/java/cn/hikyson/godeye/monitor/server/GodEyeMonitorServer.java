@@ -11,11 +11,13 @@ import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.hikyson.godeye.core.utils.L;
+
 public class GodEyeMonitorServer {
 
     private final int mPort;
     private AsyncHttpServer mServer;
-    private List<WebSocket> mWebSockets;
+    private final List<WebSocket> mWebSockets;
     private MonitorServerCallback mMonitorServerCallback;
 
     /**
@@ -30,15 +32,21 @@ public class GodEyeMonitorServer {
     public GodEyeMonitorServer(int port) {
         mPort = port;
         mServer = new AsyncHttpServer();
-        mWebSockets = new ArrayList<WebSocket>();
+        mWebSockets = new ArrayList<>();
         mServer.websocket("/refresh", new AsyncHttpServer.WebSocketRequestCallback() {
             @Override
             public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {
-                mWebSockets.add(webSocket);
+                synchronized (mWebSockets) {
+                    mWebSockets.add(webSocket);
+                    L.d("connection build. current count:" + mWebSockets.size());
+                }
                 webSocket.setClosedCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
-                        mWebSockets.remove(webSocket);
+                        synchronized (mWebSockets) {
+                            mWebSockets.remove(webSocket);
+                            L.d("connection released. current count:" + mWebSockets.size());
+                        }
                     }
                 });
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
@@ -75,8 +83,10 @@ public class GodEyeMonitorServer {
     }
 
     public void sendMessage(String message) {
-        for (WebSocket socket : mWebSockets) {
-            socket.send(message);
+        synchronized (mWebSockets) {
+            for (WebSocket socket : mWebSockets) {
+                socket.send(message);
+            }
         }
     }
 }

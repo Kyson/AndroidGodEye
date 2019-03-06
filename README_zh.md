@@ -62,28 +62,13 @@ GodEye.instance().init(this);
 
 模块安装，GodEye类是AndroidGodEye的核心类，所有模块由它提供。
 
-在应用入口安装所有模块：
+在需要的时候安装所有模块（建议在application中）：
 
 ```java
-// v1.7以下
-// GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
-// v1.7.0以上installAll api删除，使用如下：
 if (isMainProcess(this)) {//安装只能在主进程
-        GodEye.instance()
-                                .install(new BatteryConfig(this))
-                                .install(new CpuConfig())
-                                .install(new CrashConfig(new CrashFileProvider(this)))
-                                .install(new FpsConfig(this))
-                                .install(new HeapConfig())
-                                .install(new LeakConfig(this,new RxPermissionRequest()))
-                                .install(new PageloadConfig(this))
-                                .install(new PssConfig(this))
-                                .install(new RamConfig(this))
-                                .install(new SmConfig(this))
-                                .install(new ThreadConfig())
-                                .install(new TrafficConfig());
+        // Assets文件demo可以在android-godeye模块的assets目录下找到
+        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
 }
-
 
 /**
 * 是否主进程
@@ -102,21 +87,13 @@ if (isMainProcess(this)) {//安装只能在主进程
     }
 ```
 
-> 推荐在application中进行安装，否则部分模块可能工作异常
-
 #### 可选部分
 
 不需要的时候卸载模块(不推荐)：
 
 ```java
-// v1.7以下
-// GodEye.instance().uninstallAll();
-// v1.7.0以上uninstallAll api删除，不提供便捷的卸载方法，如果非要卸载：
-//GodEye.instance().getModule(Cpu.class).uninstall();
-// after v2.1.0 ,uninstall 所有
-GodEye.instance().uninstallAll();
-// after v2.1.0 ,uninstall 
-GodEye.instance().uninstall(ModuleName.CPU);
+// 卸载已经安装的所有模块
+GodEye.instance().uninstall();
 ```
 
 > 注意：network和startup模块不需要安装和卸载
@@ -124,11 +101,6 @@ GodEye.instance().uninstall(ModuleName.CPU);
 安装完之后相应的模块就开始输出数据了，一般来说可以使用模块的consume方法进行消费，比如cpu模块：
 
 ```java
-// v1.7以下
-// GodEye.instance().cpu().subject().subscribe()
-// after v1.7.0, get module by class
-//GodEye.instance().getModule(Cpu.class).subject().subscribe();
-// after v2.1.0, get module by name
 GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe()
 ```
 

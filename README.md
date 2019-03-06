@@ -62,23 +62,9 @@ GodEye.instance().init(this);
 Install modules , GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
-// before v1.7.0
-// GodEye.instance().installAll(getApplication(),new CrashFileProvider(context))
-// after v1.7.0 ,install one by one
 if (isMainProcess(this)) {//can not install modules in sub process
-        GodEye.instance()
-                        .install(new BatteryConfig(this))
-                        .install(new CpuConfig())
-                        .install(new CrashConfig(new CrashFileProvider(this)))
-                        .install(new FpsConfig(this))
-                        .install(new HeapConfig())
-                        .install(new LeakConfig(this,new RxPermissionRequest()))
-                        .install(new PageloadConfig(this))
-                        .install(new PssConfig(this))
-                        .install(new RamConfig(this))
-                        .install(new SmConfig(this))
-                        .install(new ThreadConfig())
-                        .install(new TrafficConfig());
+        // You can find assets file sample in assets path of android-godeye module
+        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
 }
 
 /**
@@ -105,14 +91,7 @@ if (isMainProcess(this)) {//can not install modules in sub process
 Uninstall modules when you don't need it(not recommend):
 
 ```java
-// before v1.7.0
-// GodEye.instance().uninstallAll()
-// after v1.7.0 ,uninstall one by one
-// GodEye.instance().getModule(Cpu.class).uninstall();
-// after v2.1.0 ,uninstall all
-GodEye.instance().uninstallAll();
-// after v2.1.0 ,uninstall one by one
-GodEye.instance().uninstall(ModuleName.CPU);
+GodEye.instance().uninstall();
 ```
 
 > Note that network and startup module don't need install and uninstall.
@@ -120,11 +99,6 @@ GodEye.instance().uninstall(ModuleName.CPU);
 When install finished, GodEye begin produce performance data, generally you can call consume of modules to get these datas, for example：
 
 ```java
-// before v1.7.0
-// GodEye.instance().cpu().subject().subscribe()
-// after v1.7.0, get module by class
-//GodEye.instance().getModule(Cpu.class).subject().subscribe();
-// after v2.1.0, get module by name
 GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe()
 ```
 

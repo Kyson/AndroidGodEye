@@ -35,7 +35,8 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
             return;
         }
         this.mInstalled = true;
-        this.mBlockCore = new SmCore(config.context(), config.longBlockThreshold(), config.shortBlockThreshold(), config.dumpInterval());
+        this.mBlockCore = new SmCore(config.context(), config.debugNotify(),
+                config.longBlockThreshold(), config.shortBlockThreshold(), config.dumpInterval());
         this.mBlockCore.addBlockInterceptor(new BlockInterceptor() {
             @Override
             public void onStart(Context context) {

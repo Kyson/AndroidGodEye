@@ -2,6 +2,8 @@ package cn.hikyson.godeye.monitor.driver;
 
 import android.util.Pair;
 
+import com.koushikdutta.async.http.WebSocket;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -58,12 +60,13 @@ import io.reactivex.functions.Predicate;
 public class Watcher implements Processor {
     private CompositeDisposable mCompositeDisposable;
     private Messager mMessager;
-    private Map<String, Object> mCachedMessage;
+    //cache lastest message
+    private MessageCache mMessageCache;
 
     public Watcher(Messager messager) {
         mCompositeDisposable = new CompositeDisposable();
         mMessager = messager;
-        mCachedMessage = Collections.synchronizedMap(new LinkedHashMap<String, Object>());
+        mMessageCache = new MessageCache();
     }
 
     /**
@@ -91,105 +94,37 @@ public class Watcher implements Processor {
                         .map(this.<LeakQueue.LeakMemoryInfo>createConvertServerMessageFunction("leakInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 godEye.<Sm>getModule(GodEye.ModuleName.SM).subject()
-                        .map(new Function<BlockInfo, BlockSimpleInfo>() {
-                            @Override
-                            public BlockSimpleInfo apply(BlockInfo blockInfo) throws Exception {
-                                return new BlockSimpleInfo(blockInfo);
-                            }
-                        })
+                        .map(blockMap())
                         .map(this.<BlockSimpleInfo>createConvertServerMessageFunction("blockInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Network>getModule(GodEye.ModuleName.NETWORK).subject()
+                        .map(this.<RequestBaseInfo>createConvertServerMessageFunction("networkInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Startup>getModule(GodEye.ModuleName.STARTUP).subject()
+                        .map(this.<StartupInfo>createConvertServerMessageFunction("startupInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Ram>getModule(GodEye.ModuleName.RAM).subject()
+                        .map(this.<RamInfo>createConvertServerMessageFunction("ramInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Pss>getModule(GodEye.ModuleName.PSS).subject()
+                        .map(this.<PssInfo>createConvertServerMessageFunction("pssInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Heap>getModule(GodEye.ModuleName.HEAP).subject()
+                        .map(this.<HeapInfo>createConvertServerMessageFunction("heapInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject()
+                        .map(threadMap())
+                        .map(this.<List<ThreadInfo>>createConvertServerMessageFunction("threadInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject()
+                        .filter(crashPredicate())
+                        .map(firstCrashMap())
+                        .map(this.<CrashInfo>createConvertServerMessageFunction("crashInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject()
+                        .map(this.<PageloadInfo>createConvertServerMessageFunction("pageloadInfo"))
                         .subscribe(this.createSendMessageConsumer())
-
-
         );
-        mCompositeDisposable.add(godEye.<Network>getModule(GodEye.ModuleName.NETWORK).subject().subscribe(new Consumer<RequestBaseInfo>() {
-            @Override
-            public void accept(RequestBaseInfo requestBaseInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("networkInfo", requestBaseInfo).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Startup>getModule(GodEye.ModuleName.STARTUP).subject().subscribe(new Consumer<StartupInfo>() {
-            @Override
-            public void accept(final StartupInfo startupInfo) throws Exception {
-                mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long aLong) throws Exception {
-                        mMessager.sendMessage(new ServerMessage("startupInfo", startupInfo).toString());
-                    }
-                }));
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Ram>getModule(GodEye.ModuleName.RAM).subject().subscribe(new Consumer<RamInfo>() {
-            @Override
-            public void accept(RamInfo ramInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("ramInfo", ramInfo).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Pss>getModule(GodEye.ModuleName.PSS).subject().subscribe(new Consumer<PssInfo>() {
-            @Override
-            public void accept(PssInfo pssInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("pssInfo", pssInfo).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Heap>getModule(GodEye.ModuleName.HEAP).subject().subscribe(new Consumer<HeapInfo>() {
-            @Override
-            public void accept(HeapInfo heapInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("heapInfo", heapInfo).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject().map(new Function<List<Thread>, List<ThreadInfo>>() {
-            @Override
-            public List<ThreadInfo> apply(List<Thread> threads) throws Exception {
-                return ThreadInfo.convert(threads);
-            }
-        }).subscribe(new Consumer<List<ThreadInfo>>() {
-            @Override
-            public void accept(List<ThreadInfo> threadInfos) throws Exception {
-                mMessager.sendMessage(new ServerMessage("threadInfo", threadInfos).toString());
-            }
-        }));
-        mCompositeDisposable.add(godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject()
-                .filter(new Predicate<List<CrashInfo>>() {
-                    @Override
-                    public boolean test(List<CrashInfo> crashInfos) throws Exception {
-                        return crashInfos != null && !crashInfos.isEmpty();
-                    }
-                })
-                .map(new Function<List<CrashInfo>, CrashInfo>() {
-                    @Override
-                    public CrashInfo apply(List<CrashInfo> crashInfos) throws Exception {
-                        //获取最近的一次崩溃
-                        Collections.sort(crashInfos, new Comparator<CrashInfo>() {
-                            @Override
-                            public int compare(CrashInfo o1, CrashInfo o2) {
-                                if (o1.timestampMillis < o2.timestampMillis) {
-                                    return 1;
-                                }
-                                if (o1.timestampMillis > o2.timestampMillis) {
-                                    return -1;
-                                }
-                                return 0;
-                            }
-                        });
-                        return crashInfos.get(0);
-                    }
-                }).subscribe(new Consumer<CrashInfo>() {
-                    @Override
-                    public void accept(final CrashInfo crashInfo) throws Exception {
-                        mCompositeDisposable.add(Observable.interval(5, TimeUnit.SECONDS).subscribe(new Consumer<Long>() {
-                            @Override
-                            public void accept(Long aLong) throws Exception {
-                                mMessager.sendMessage(new ServerMessage("crashInfo", crashInfo).toString());
-                            }
-                        }));
-                    }
-                }));
-        mCompositeDisposable.add(godEye.<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject().subscribe(new Consumer<PageloadInfo>() {
-            @Override
-            public void accept(PageloadInfo pageloadInfo) throws Exception {
-                mMessager.sendMessage(new ServerMessage("pageloadInfo", pageloadInfo).toString());
-            }
-        }));
     }
 
     public void cancelAllObserve() {
@@ -197,12 +132,13 @@ public class Watcher implements Processor {
     }
 
     @Override
-    public String process(String msg) {
+    public void process(WebSocket webSocket, String msg) {
         ClientMessage clientMessage = GsonUtil.fromJson(msg, ClientMessage.class);
         if ("clientOnline".equals(clientMessage.moduleName)) {//if a client get online,send init message to it
-            mMessager.sendMessage(new ServerMessage("appInfo", new AppInfo()).toString());
+            for (Map.Entry<String, Object> entry : mMessageCache.copy().entrySet()) {
+                webSocket.send(new ServerMessage(entry.getKey(), entry.getValue()).toString());
+            }
         }
-        return null;
     }
 
     private SendMessageConsumer createSendMessageConsumer() {
@@ -210,6 +146,56 @@ public class Watcher implements Processor {
     }
 
     private <T> ConvertServerMessageFunction<T> createConvertServerMessageFunction(String module) {
-        return new ConvertServerMessageFunction<T>(mCachedMessage, module);
+        return new ConvertServerMessageFunction<T>(mMessageCache, module);
     }
+
+    private Predicate<List<CrashInfo>> crashPredicate() {
+        return new Predicate<List<CrashInfo>>() {
+            @Override
+            public boolean test(List<CrashInfo> crashInfos) throws Exception {
+                return crashInfos != null && !crashInfos.isEmpty();
+            }
+        };
+    }
+
+    private Function<List<CrashInfo>, CrashInfo> firstCrashMap() {
+        return new Function<List<CrashInfo>, CrashInfo>() {
+            @Override
+            public CrashInfo apply(List<CrashInfo> crashInfos) throws Exception {
+                //获取最近的一次崩溃
+                Collections.sort(crashInfos, new Comparator<CrashInfo>() {
+                    @Override
+                    public int compare(CrashInfo o1, CrashInfo o2) {
+                        if (o1.timestampMillis < o2.timestampMillis) {
+                            return 1;
+                        }
+                        if (o1.timestampMillis > o2.timestampMillis) {
+                            return -1;
+                        }
+                        return 0;
+                    }
+                });
+                return crashInfos.get(0);
+            }
+        };
+    }
+
+    private Function<List<Thread>, List<ThreadInfo>> threadMap() {
+        return new Function<List<Thread>, List<ThreadInfo>>() {
+            @Override
+            public List<ThreadInfo> apply(List<Thread> threads) throws Exception {
+                return ThreadInfo.convert(threads);
+            }
+        };
+    }
+
+    private Function<BlockInfo, BlockSimpleInfo> blockMap() {
+        return new Function<BlockInfo, BlockSimpleInfo>() {
+            @Override
+            public BlockSimpleInfo apply(BlockInfo blockInfo) throws Exception {
+                return new BlockSimpleInfo(blockInfo);
+            }
+        };
+    }
+
 }

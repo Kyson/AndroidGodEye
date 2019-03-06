@@ -75,7 +75,7 @@ public class GodEyeMonitor {
             @Override
             public void onWebSocketRequest(WebSocket webSocket, String messageFromClient) {
                 ThreadUtil.ensureWorkThread("AndroidGodEyeOnWebSocketRequest");
-                webSocket.send(webSocketProcessor.process(messageFromClient));
+                webSocketProcessor.process(webSocket, messageFromClient);
             }
         });
         sWatcher = new Watcher(webSocketProcessor);

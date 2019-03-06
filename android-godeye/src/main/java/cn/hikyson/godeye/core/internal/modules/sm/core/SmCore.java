@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.helper.Notifier;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.MemoryUtil;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -25,7 +28,7 @@ public final class SmCore {
 
     private long mLongBlockThresholdMillis;
 
-    public SmCore(final Context context, long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
+    public SmCore(final Context context, final boolean debugNotify, long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
         this.mContext = context;
         this.mLongBlockThresholdMillis = longBlockThresholdMillis;
         this.stackSampler = new StackSampler(
@@ -45,6 +48,10 @@ public final class SmCore {
 
             @Override
             public void onBlockEvent(final long blockTimeMillis, final long threadBlockTimeMillis, final boolean longBlock, final long eventStartTimeMilliis, final long eventEndTimeMillis, long longBlockThresholdMillis, long shortBlockThresholdMillis) {
+                if (debugNotify) {
+                    Notifier.notice(GodEye.instance().getApplication()
+                            , new Notifier.Config("AndroidGodEye", "Block!", "Block! Open dashboard for detail.", Notifier.Config.Type.NOTIFICATION));
+                }
                 HandlerThreadFactory.getObtainDumpThreadHandler().post(new Runnable() {
                     @Override
                     public void run() {

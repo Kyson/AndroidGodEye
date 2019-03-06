@@ -118,10 +118,14 @@ public class GodEyeConfig {
             }
             element = getFirstElementByTagInRoot(root, "sm");
             if (element != null) {
+                final String debugNotifyString = element.getAttribute("debugNotify");
                 final String longBlockThresholdMillisString = element.getAttribute("longBlockThresholdMillis");
                 final String shortBlockThresholdMillisString = element.getAttribute("shortBlockThresholdMillis");
                 final String dumpIntervalMillisString = element.getAttribute("dumpIntervalMillis");
                 SmConfig smConfig = new SmConfig();
+                if (!TextUtils.isEmpty(debugNotifyString)) {
+                    smConfig.debugNotify = Boolean.parseBoolean(debugNotifyString);
+                }
                 if (!TextUtils.isEmpty(longBlockThresholdMillisString)) {
                     smConfig.longBlockThresholdMillis = Long.parseLong(longBlockThresholdMillisString);
                 }
@@ -274,7 +278,6 @@ public class GodEyeConfig {
     }
 
     public static class LeakConfig implements LeakContext {
-        //TODO KYSON IMPL
         public boolean debugNotify;
 
         public LeakConfig(boolean debugNotify) {
@@ -354,14 +357,17 @@ public class GodEyeConfig {
         public long longBlockThresholdMillis;
         public long shortBlockThresholdMillis;
         public long dumpIntervalMillis;
+        public boolean debugNotify;
 
-        public SmConfig(long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
+        public SmConfig(boolean debugNotify, long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
+            this.debugNotify = debugNotify;
             this.longBlockThresholdMillis = longBlockThresholdMillis;
             this.shortBlockThresholdMillis = shortBlockThresholdMillis;
             this.dumpIntervalMillis = dumpIntervalMillis;
         }
 
         public SmConfig() {
+            this.debugNotify = true;
             this.longBlockThresholdMillis = 500;
             this.shortBlockThresholdMillis = 100;
             this.dumpIntervalMillis = 300;
@@ -370,6 +376,11 @@ public class GodEyeConfig {
         @Override
         public Context context() {
             return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public boolean debugNotify() {
+            return debugNotify;
         }
 
         @Override

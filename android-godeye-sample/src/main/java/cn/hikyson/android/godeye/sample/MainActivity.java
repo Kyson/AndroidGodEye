@@ -387,5 +387,4 @@ public class MainActivity extends Activity implements Loggable {
     public void log(String msg) {
         mActivityMainLogview.log(msg);
     }
-
 }

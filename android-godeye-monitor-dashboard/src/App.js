@@ -31,8 +31,9 @@ class App extends Component {
 
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
-        globalWs.start();
-        globalWs.sendMessage({moduleName: "clientOnline"})
+        globalWs.start(function (evt) {
+            globalWs.sendMessage('{"moduleName": "clientOnline"}')
+        });
         // setInterval(this.refreshMock, 2000);
     }
 

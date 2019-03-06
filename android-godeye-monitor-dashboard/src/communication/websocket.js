@@ -6,9 +6,10 @@ class GlobalWs {
         this._receiveMessage = this._receiveMessage.bind(this);
     }
 
-    start() {
+    start(onReady) {
         this.ws = new WebSocket("ws://" + window.location.host + "/refresh");
-        this.ws.onmessage = this._receiveMessage;
+        this.ws.addEventListener('open', onReady);
+        this.ws.addEventListener('message', this._receiveMessage);
     }
 
     sendMessage(message) {
@@ -17,7 +18,7 @@ class GlobalWs {
 
     _receiveMessage(e) {
         let message = JSON.parse(e.data);
-        console.log(message);
+        console.log("received message:" + message);
         if (this.receiveMessageCallback) {
             if (message.code === 1) {
                 this.receiveMessageCallback(message.data.moduleName, message.data.payload);

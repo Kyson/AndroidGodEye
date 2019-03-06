@@ -1,5 +1,7 @@
 package cn.hikyson.godeye.monitor.processors;
 
+import com.koushikdutta.async.http.WebSocket;
+
 public interface Processor {
-    String process(String msg);
+    void process(WebSocket webSocket, String msg);
 }
