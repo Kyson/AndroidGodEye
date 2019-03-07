@@ -69,6 +69,7 @@ class Block extends Component {
             show: false,
             blockInfo: {}
         };
+        this.index = 0;
     }
 
     handleClick(e) {
@@ -90,9 +91,14 @@ class Block extends Component {
         return data;
     }
 
+    generateIndex() {
+        this.index = this.index + 1;
+        return this.index;
+    }
+
     refresh(blockInfo) {
         if (blockInfo) {
-            let axisData = (new Date()).toLocaleTimeString();
+            let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
             this.refs.chart.getChart().series[0].addPoint({
                 name: axisData,
                 y: blockInfo.blockTime,

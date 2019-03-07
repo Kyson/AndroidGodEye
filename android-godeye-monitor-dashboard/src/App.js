@@ -225,8 +225,12 @@ class App extends Component {
             throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
         });
         this._onReceiveMessage("blockInfo", {
-            blockTime: 123,
+            blockTime: 200,
             blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
+        });
+        this._onReceiveMessage("blockInfo", {
+            blockTime: 300,
+            blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
         });
         this._onReceiveMessage("networkInfo", {
             networkInfoConnection: {
@@ -254,6 +258,34 @@ class App extends Component {
             requestBodySizeByte: 0,
             requestId: "117910124:https://www.trip.com/",
             responseBodySizeByte: 14133,
+            resultCode: "200"
+        });
+        this._onReceiveMessage("networkInfo", {
+            networkInfoConnection: {
+                cipherSuite: "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+                localIp: "10.0.2.15",
+                localPort: 53010,
+                protocol: "h2",
+                remoteIp: "117.184.207.147",
+                remotePort: 443,
+                tlsVersion: "TLSv1.2"
+            },
+            networkInfoRequest: {
+                method: "https://www.trip.com/",
+                url: "GET"
+            },
+            networkSimplePerformance: {
+                connectTimeMillis: 1000,
+                dnsTimeMillis: 80,
+                receiveBodyTimeMillis: 300,
+                receiveHeaderTimeMillis: 400,
+                sendBodyTimeMillis: 100,
+                sendHeaderTimeMillis: 100,
+                totalTimeMillis: 3213
+            },
+            requestBodySizeByte: 1222,
+            requestId: "22222222:https://www.baidu.com/",
+            responseBodySizeByte: 10000,
             resultCode: "200"
         });
         this._onReceiveMessage("trafficInfo", {

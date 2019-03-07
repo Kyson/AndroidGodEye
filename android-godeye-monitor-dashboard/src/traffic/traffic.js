@@ -68,6 +68,7 @@ class Traffic extends Component {
                 }
             ]
         };
+        this.index = 0;
     }
 
     static initSeries() {
@@ -81,9 +82,14 @@ class Traffic extends Component {
         return data;
     }
 
+    generateIndex() {
+        this.index = this.index + 1;
+        return this.index;
+    }
+
     refresh(trafficInfo) {
         if (trafficInfo) {
-            let axisData = (new Date()).toLocaleTimeString();
+            let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
             this.refs.chart.getChart().series[0].addPoint([axisData, trafficInfo.rxTotalRate], false, true, true);
             this.refs.chart.getChart().series[1].addPoint([axisData, trafficInfo.txTotalRate], false, true, true);
             this.refs.chart.getChart().series[2].addPoint([axisData, trafficInfo.rxUidRate], false, true, true);

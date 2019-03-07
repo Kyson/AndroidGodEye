@@ -95,6 +95,7 @@ class Network extends Component {
             show: false,
             networkInfo: {}
         };
+        this.index = 0;
     }
 
     handleClick(e) {
@@ -118,9 +119,15 @@ class Network extends Component {
         return data;
     }
 
+
+    generateIndex() {
+        this.index = this.index + 1;
+        return this.index;
+    }
+
     refresh(networkInfo) {
         if (networkInfo) {
-            let axisData = (new Date()).toLocaleTimeString();
+            let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
             this.refs.chart.getChart().series[0].addPoint({//dns
                 name: axisData,
                 y: networkInfo.networkSimplePerformance.dnsTimeMillis,
@@ -165,6 +172,7 @@ class Network extends Component {
             this.refs.chart.getChart().redraw(true);
         }
     }
+
 
     render() {
         return (

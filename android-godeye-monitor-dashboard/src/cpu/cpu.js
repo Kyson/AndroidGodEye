@@ -76,6 +76,7 @@ class Cpu extends Component {
                 }
             ]
         };
+        this.index = 0;
     }
 
     static initSeries() {
@@ -89,9 +90,15 @@ class Cpu extends Component {
         return data;
     }
 
+    generateIndex() {
+        this.index = this.index + 1;
+        return this.index;
+    }
+
+
     refresh(cpuInfo) {
         if (cpuInfo) {
-            let axisData = (new Date()).toLocaleTimeString();
+            let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
             this.refs.chart.getChart().series[0].addPoint([axisData, cpuInfo.totalUseRatio * 100], false, true, true);
             this.refs.chart.getChart().series[1].addPoint([axisData, cpuInfo.appCpuRatio * 100], false, true, true);
             this.refs.chart.getChart().series[2].addPoint([axisData, cpuInfo.userCpuRatio * 100], false, true, true);

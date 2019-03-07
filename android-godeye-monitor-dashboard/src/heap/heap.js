@@ -69,6 +69,13 @@ class Heap extends Component {
                 }
             ]
         };
+        this.index = 0;
+    }
+
+
+    generateIndex() {
+        this.index = this.index + 1;
+        return this.index;
     }
 
     static initSeries() {
@@ -83,7 +90,7 @@ class Heap extends Component {
 
     refresh(heapInfo) {
         if (heapInfo) {
-            let axisData = (new Date()).toLocaleTimeString();
+            let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
             this.refs.chart.getChart().series[0].addPoint([axisData, heapInfo.allocatedKb / 1024], false, true, true);
             this.refs.chart.getChart().series[1].addPoint([axisData, heapInfo.freeMemKb / 1024], false, true, true);
             this.refs.chart.getChart().series[2].addPoint([axisData, heapInfo.maxMemKb / 1024], false, true, true);
