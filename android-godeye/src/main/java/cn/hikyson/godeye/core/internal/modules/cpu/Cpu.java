@@ -14,7 +14,11 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConte
     @Override
     public synchronized void install(CpuContext config) {
         if (mCpuEngine != null) {
-            L.d("cpu already installed , ignore.");
+            L.d("cpu already installed, ignore.");
+            return;
+        }
+        if (!CpuUsable.usability()) {
+            L.d("cpu is not usable, ignore.");
             return;
         }
         mCpuEngine = new CpuEngine(this, config.intervalMillis(), config.sampleMillis());
