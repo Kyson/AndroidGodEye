@@ -6,14 +6,14 @@ public class CpuUsable {
 
     public static boolean usability() {
         File stat = new File("/proc/stat");
-        if (stat.exists() && stat.canRead()) {
-            return true;
+        if (!stat.exists() || !stat.canRead()) {
+            return false;
         }
         int pid = android.os.Process.myPid();
         File statPid = new File("/proc/" + pid + "/stat");
-        if (statPid.exists() && statPid.canRead()) {
-            return true;
+        if (!statPid.exists() || !statPid.canRead()) {
+            return false;
         }
-        return false;
+        return true;
     }
 }

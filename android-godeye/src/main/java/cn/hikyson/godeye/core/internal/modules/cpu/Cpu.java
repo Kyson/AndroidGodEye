@@ -18,7 +18,7 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConte
             return;
         }
         if (!CpuUsable.usability()) {
-            L.d("cpu is not usable, ignore.");
+            L.d("cpu is not usable, install ignore.");
             return;
         }
         mCpuEngine = new CpuEngine(this, config.intervalMillis(), config.sampleMillis());

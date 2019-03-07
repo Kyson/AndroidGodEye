@@ -44,29 +44,46 @@ public class CpuSnapshot {
      * @return invalid如果发生了异常
      */
     @WorkerThread
-    public synchronized static @NonNull CpuSnapshot snapshot() {
+    public synchronized static @NonNull
+    CpuSnapshot snapshot() {
+        try {
+            return parse(getCpuRate(), getCpuRateOfApp());
+        } catch (Throwable throwable) {
+            return new CpuSnapshot();
+        }
+    }
+
+    private static String getCpuRate() {
         BufferedReader cpuReader = null;
-        BufferedReader pidReader = null;
         try {
             cpuReader = new BufferedReader(new InputStreamReader(
                     new FileInputStream("/proc/stat")), BUFFER_SIZE);
             String cpuRate = cpuReader.readLine();
             if (cpuRate == null) {
-                cpuRate = "";
+                return "";
             }
+            return cpuRate;
+        } catch (Throwable e) {
+            return "";
+        } finally {
+            IoUtil.closeSilently(cpuReader);
+        }
+    }
+
+    private static String getCpuRateOfApp() {
+        BufferedReader pidReader = null;
+        try {
             int pid = android.os.Process.myPid();
             pidReader = new BufferedReader(new InputStreamReader(
                     new FileInputStream("/proc/" + pid + "/stat")), BUFFER_SIZE);
             String pidCpuRate = pidReader.readLine();
             if (pidCpuRate == null) {
-                pidCpuRate = "";
+                return "";
             }
-            //从系统启动开始，花在各种处理上的apu时间
-            return parse(cpuRate, pidCpuRate);
+            return pidCpuRate;
         } catch (Throwable throwable) {
-            throw new GodEyeInvalidDataException(throwable);
+            return "";
         } finally {
-            IoUtil.closeSilently(cpuReader);
             IoUtil.closeSilently(pidReader);
         }
     }
