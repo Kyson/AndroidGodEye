@@ -206,13 +206,28 @@ public class MainActivity extends Activity implements Loggable {
                 cancelCheckAllInstall();
                 break;
             case R.id.activity_main_install:
-                onClickInstall();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        onClickInstall();
+                    }
+                }).start();
                 break;
             case R.id.activity_main_install_with_assets:
-                GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+                    }
+                }).start();
                 break;
             case R.id.activity_main_uninstall:
-                GodEye.instance().uninstall();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        GodEye.instance().uninstall();
+                    }
+                }).start();
                 break;
             case R.id.activity_main_monitor_work:
                 GodEyeMonitor.work(MainActivity.this);

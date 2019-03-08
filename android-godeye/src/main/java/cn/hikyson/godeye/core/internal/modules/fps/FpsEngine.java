@@ -1,6 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.fps;
 
 import android.content.Context;
+import android.support.annotation.UiThread;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -34,6 +36,19 @@ public class FpsEngine implements Engine {
 
     @Override
     public void work() {
+        if (ThreadUtil.isMainThread()) {
+            startInMain();
+        }
+        ThreadUtil.sMain.execute(new Runnable() {
+            @Override
+            public void run() {
+                startInMain();
+            }
+        });
+    }
+
+    @UiThread
+    private void startInMain() {
         mFpsMonitor.start();
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -48,6 +63,19 @@ public class FpsEngine implements Engine {
 
     @Override
     public void shutdown() {
+        if (ThreadUtil.isMainThread()) {
+            stopInMain();
+        }
+        ThreadUtil.sMain.execute(new Runnable() {
+            @Override
+            public void run() {
+                stopInMain();
+            }
+        });
+    }
+
+    @UiThread
+    private void stopInMain() {
         mCompositeDisposable.dispose();
         mFpsMonitor.stop();
     }
