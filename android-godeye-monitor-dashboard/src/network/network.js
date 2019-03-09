@@ -88,6 +88,10 @@ class Network extends Component {
                     name: 'Other(其他耗时)',
                     stacking: 'normal',
                     data: (Network.initSeries())
+                }, {
+                    name: 'Error(错误)',
+                    stacking: 'normal',
+                    data: (Network.initSeries())
                 }
             ]
         };
@@ -119,7 +123,6 @@ class Network extends Component {
         return data;
     }
 
-
     generateIndex() {
         this.index = this.index + 1;
         return this.index;
@@ -127,52 +130,60 @@ class Network extends Component {
 
     refresh(networkInfo) {
         if (networkInfo) {
+            const resultCode = parseInt(networkInfo.resultCode);
             let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
-            this.refs.chart.getChart().series[0].addPoint({//dns
-                name: axisData,
-                y: networkInfo.networkSimplePerformance.dnsTimeMillis,
-                networkInfo: networkInfo
-            }, false, true, true);
-            this.refs.chart.getChart().series[1].addPoint({//connect
-                name: axisData,
-                y: networkInfo.networkSimplePerformance.connectTimeMillis,
-                networkInfo: networkInfo
-            }, false, true, true);
-            this.refs.chart.getChart().series[2].addPoint({//sendreqheader
-                name: axisData,
-                y: networkInfo.networkSimplePerformance.sendHeaderTimeMillis,
-                networkInfo: networkInfo
-            }, false, true, true);
-            this.refs.chart.getChart().series[3].addPoint({//sendreqbody
-                name: axisData,
-                y: networkInfo.networkSimplePerformance.sendBodyTimeMillis,
-                networkInfo: networkInfo
-            }, false, true, true);
-            this.refs.chart.getChart().series[4].addPoint({//recvhead
-                name: axisData,
-                y: networkInfo.networkSimplePerformance.receiveHeaderTimeMillis,
-                networkInfo: networkInfo
-            }, false, true, true);
-            this.refs.chart.getChart().series[5].addPoint({//recvbody
-                name: axisData,
-                y: networkInfo.networkSimplePerformance.receiveBodyTimeMillis,
-                networkInfo: networkInfo
-            }, false, true, true);
-            this.refs.chart.getChart().series[6].addPoint({//other
-                name: axisData,
-                y: (networkInfo.networkSimplePerformance.totalTimeMillis -
-                (networkInfo.networkSimplePerformance.dnsTimeMillis
-                + networkInfo.networkSimplePerformance.connectTimeMillis
-                + networkInfo.networkSimplePerformance.sendHeaderTimeMillis
-                + networkInfo.networkSimplePerformance.sendBodyTimeMillis
-                + networkInfo.networkSimplePerformance.receiveHeaderTimeMillis
-                + networkInfo.networkSimplePerformance.receiveBodyTimeMillis)),
-                networkInfo: networkInfo
-            }, false, true, true);
+            if (!isNaN(resultCode) && resultCode >= 200 && resultCode < 300) {//request success
+                this.refs.chart.getChart().series[0].addPoint({//dns
+                    name: axisData,
+                    y: networkInfo.networkSimplePerformance.dnsTimeMillis,
+                    networkInfo: networkInfo
+                }, false, true, true);
+                this.refs.chart.getChart().series[1].addPoint({//connect
+                    name: axisData,
+                    y: networkInfo.networkSimplePerformance.connectTimeMillis,
+                    networkInfo: networkInfo
+                }, false, true, true);
+                this.refs.chart.getChart().series[2].addPoint({//sendreqheader
+                    name: axisData,
+                    y: networkInfo.networkSimplePerformance.sendHeaderTimeMillis,
+                    networkInfo: networkInfo
+                }, false, true, true);
+                this.refs.chart.getChart().series[3].addPoint({//sendreqbody
+                    name: axisData,
+                    y: networkInfo.networkSimplePerformance.sendBodyTimeMillis,
+                    networkInfo: networkInfo
+                }, false, true, true);
+                this.refs.chart.getChart().series[4].addPoint({//recvhead
+                    name: axisData,
+                    y: networkInfo.networkSimplePerformance.receiveHeaderTimeMillis,
+                    networkInfo: networkInfo
+                }, false, true, true);
+                this.refs.chart.getChart().series[5].addPoint({//recvbody
+                    name: axisData,
+                    y: networkInfo.networkSimplePerformance.receiveBodyTimeMillis,
+                    networkInfo: networkInfo
+                }, false, true, true);
+                this.refs.chart.getChart().series[6].addPoint({//other
+                    name: axisData,
+                    y: (networkInfo.networkSimplePerformance.totalTimeMillis -
+                    (networkInfo.networkSimplePerformance.dnsTimeMillis
+                    + networkInfo.networkSimplePerformance.connectTimeMillis
+                    + networkInfo.networkSimplePerformance.sendHeaderTimeMillis
+                    + networkInfo.networkSimplePerformance.sendBodyTimeMillis
+                    + networkInfo.networkSimplePerformance.receiveHeaderTimeMillis
+                    + networkInfo.networkSimplePerformance.receiveBodyTimeMillis)),
+                    networkInfo: networkInfo
+                }, false, true, true);
+            } else {//request fail
+                this.refs.chart.getChart().series[7].addPoint({//error
+                    name: axisData,
+                    y: 100,
+                    networkInfo: networkInfo
+                }, false, true, true);
+            }
             this.refs.chart.getChart().redraw(true);
         }
     }
-
 
     render() {
         return (
@@ -189,7 +200,7 @@ class Network extends Component {
                 </Panel.Body>
                 <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header>
-                        <Modal.Title>Block detail</Modal.Title>
+                        <Modal.Title>Network detail</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <JSONPretty id="json-pretty" json={this.state.networkInfo}/>
