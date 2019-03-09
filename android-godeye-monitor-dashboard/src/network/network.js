@@ -63,34 +63,42 @@ class Network extends Component {
                 {
                     name: 'DNS(域名解析)',
                     stacking: 'normal',
+                    color: '#4586F3',
                     data: (Network.initSeries())
                 }, {
                     name: 'Connect(连接)',
                     stacking: 'normal',
+                    color: '#35AA53',
                     data: (Network.initSeries())
                 }, {
                     name: 'SendRequestHead(发送请求头信息)',
                     stacking: 'normal',
+                    color: '#FBBD06',
                     data: (Network.initSeries())
                 }, {
                     name: 'SendRequestBody(发送请求体)',
                     stacking: 'normal',
+                    color: '#a0bb00',
                     data: (Network.initSeries())
                 }, {
                     name: 'ReceiveResponseHead(接收响应头信息)',
                     stacking: 'normal',
+                    color: '#E0a0ff',
                     data: (Network.initSeries())
                 }, {
                     name: 'ReceiveResponseBody(接收响应体)',
                     stacking: 'normal',
+                    color: '#aa8877',
                     data: (Network.initSeries())
                 }, {
                     name: 'Other(其他耗时)',
                     stacking: 'normal',
+                    color: '#999999',
                     data: (Network.initSeries())
                 }, {
                     name: 'Error(错误)',
                     stacking: 'normal',
+                    color: '#EB4334',
                     data: (Network.initSeries())
                 }
             ]
@@ -174,10 +182,22 @@ class Network extends Component {
                     + networkInfo.networkSimplePerformance.receiveBodyTimeMillis)),
                     networkInfo: networkInfo
                 }, false, true, true);
-            } else {//request fail
                 this.refs.chart.getChart().series[7].addPoint({//error
                     name: axisData,
-                    y: 100,
+                    y: 0,
+                    networkInfo: networkInfo
+                }, false, true, true);
+            } else {//request fail
+                for (let i = 0; i < 7; i++) {
+                    this.refs.chart.getChart().series[i].addPoint({//error
+                        name: axisData,
+                        y: 0,
+                        networkInfo: networkInfo
+                    }, false, true, true);
+                }
+                this.refs.chart.getChart().series[7].addPoint({//error
+                    name: axisData,
+                    y: 1000,
                     networkInfo: networkInfo
                 }, false, true, true);
             }

@@ -139,7 +139,7 @@ class Mock {
             requestBodySizeByte: 1222,
             requestId: "22222222:https://www.baidu.com/",
             responseBodySizeByte: 10000,
-            resultCode: "200"
+            resultCode: "no connection"
         });
         this.recvFun("trafficInfo", {
             rxTotalRate: 56,
