@@ -2,106 +2,168 @@ import React, {Component} from 'react';
 import '../App.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel, Button} from 'react-bootstrap'
-import ReactTable from "../../node_modules/react-table";
-import '../../node_modules/react-table/react-table.css'
-import Util from '../libs/util'
+import {Row, Col, Clearfix, Grid, Panel, Modal, Button} from 'react-bootstrap'
+import JSONPretty from '../../node_modules/react-json-pretty';
+
+import Highcharts from '../../node_modules/highcharts/highcharts';
+import exporting from '../../node_modules/highcharts/modules/exporting';
+import ReactHighcharts from '../../node_modules/react-highcharts'
+
+exporting(Highcharts);
 
 /**
  * Pageload
  */
 class Pageload extends Component {
 
-    constructor() {
-        super();
-        this.pageloadInfos = [];
-        this.state = {
-            dataList: [],
-            isRefreshing: true
+    constructor(props) {
+        super(props);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+        this.options = {
+            credits: {
+                enabled: false
+            },
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: null
+            },
+            tooltip: {
+                shared: true,
+                formatter: function () {
+                    let point = this.points[0].point;
+                    if (point.pageloadInfo) {
+                        return point.pageloadInfo.pageId + ' ' + point.pageloadInfo.pageName + '<br/>'
+                            + point.pageloadInfo.pageStatus + '<br/>';
+                    }
+                    return "";
+                }
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: "Page load time(ms)",
+                    align: "middle",
+                },
+                min: 0
+            },
+            plotOptions: {
+                series: {
+                    point: {
+                        events: {
+                            click: this.handleClick
+                        }
+                    }
+                },
+                column: {
+                    grouping: false,
+                    shadow: false,
+                    borderWidth: 0
+                }
+            },
+            series: [
+                {
+                    name: 'DrawTime(绘制耗时)',
+                    color: 'rgba(126,86,134,.9)',
+                    pointPadding: 0.4,
+                    pointPlacement: -0.1,
+                    data: (Pageload.initSeries())
+                }, {
+                    name: 'LoadTime(加载耗时)',
+                    color: 'rgba(165,170,217,0.5)',
+                    pointPadding: 0.2,
+                    pointPlacement: -0.1,
+                    data: (Pageload.initSeries())
+                }
+            ]
         };
-        this.setRefreshStatus = this.setRefreshStatus.bind(this);
-        this.refresh = this.refresh.bind(this);
+        this.state = {
+            show: false,
+            pageloadInfo: {}
+        };
+        this.index = 0;
     }
 
-    refresh(pageloadInfo) {
-        this.pageloadInfos.push(pageloadInfo);
-        if (this.state.isRefreshing) {
-            this.setState({dataList: this.pageloadInfos});
+    handleClick(e) {
+        if (e.point.pageloadInfo) {
+            this.setState({pageloadInfo: e.point.pageloadInfo, show: true});
         }
     }
 
-    setRefreshStatus() {
-        this.setState((prevState, props) => ({
-            isRefreshing: !prevState.isRefreshing,
-            dataList: this.pageloadInfos
-        }));
+    handleClose() {
+        this.setState({show: false});
+    }
+
+    static initSeries() {
+        let data = [];
+        for (let i = 0; i < 30; i++) {
+            data.push({
+                x: i,
+                y: 0
+            });
+        }
+        return data;
+    }
+
+    generateIndex() {
+        this.index = this.index + 1;
+        return this.index;
+    }
+
+    refresh(pageloadInfo) {
+        if (pageloadInfo && pageloadInfo.loadTimeInfo) {
+            let axisData = pageloadInfo.pageId;
+            let drawTime = pageloadInfo.loadTimeInfo.didDrawTime - pageloadInfo.loadTimeInfo.createTime;
+            let loadTime = pageloadInfo.loadTimeInfo.loadTime - pageloadInfo.loadTimeInfo.createTime;
+            if (drawTime < 0) {
+                drawTime = 0;
+            }
+            if (loadTime < 0) {
+                loadTime = 0;
+            }
+            this.refs.chart.getChart().series[0].addPoint({//绘制时间
+                name: axisData,
+                y: drawTime,
+                pageloadInfo: pageloadInfo
+            }, false, true, true);
+            this.refs.chart.getChart().series[1].addPoint({//加载时间
+                name: axisData,
+                y: loadTime,
+                pageloadInfo: pageloadInfo
+            }, false, true, true);
+            this.refs.chart.getChart().redraw(true);
+        }
     }
 
     render() {
-        let dataList = this.state.dataList;
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
-                    <Row>
-                        <Col md={10}><h5>Pageload(页面加载)
-                        </h5></Col>
-                        <Col md={2}
-                             style={{textAlign: 'right'}}><Button
-                            onClick={this.setRefreshStatus}>{this.state.isRefreshing ? "Stop" : "Start"}</Button></Col>
-                    </Row>
+                    <h5>Pageload(页面加载)
+                    </h5>
                 </Panel.Heading>
                 <Panel.Body>
-                    <ReactTable
-                        data={dataList}
-                        columns={[
-                            {
-                                Header: "PageId",
-                                accessor: "pageId",
-                                maxWidth: 100
-                            }, {
-                                Header: "PageName",
-                                accessor: "pageName"
-                            }, {
-                                Header: "Status",
-                                accessor: "pageStatus",
-                                Cell: row => (
-                                    <span>
-                                        <span style={{
-                                            color: row.value === 'created' ? Util.getBlue()
-                                                : row.value === 'destroyed' ? Util.getRed()
-                                                    : row.value === 'didDraw' ? Util.getGreen() : Util.getGrey(),
-                                            transition: 'all .3s ease'
-                                        }}>
-                                          &#x25cf;
-                                        </span> {row.value}</span>
-                                )
-                            }, {
-                                Header: "Time",
-                                id: "pageStatusTime",
-                                accessor: d => {
-                                    return new Date(d.pageStatusTime).toLocaleTimeString();
-                                }
-                            }, {
-                                Header: "Load Detail",
-                                accessor: "loadTimeInfo",
-                                minWidth: 200,
-                                Cell: row => (
-                                    <span>
-                                        PageDrawTime:&nbsp;&nbsp;{
-                                        (row.value && row.value.didDrawTime && row.value.createTime && row.value.didDrawTime > row.value.createTime) ? (row.value.didDrawTime - row.value.createTime) : "**"
-                                    }&nbsp;ms,
-                                        PageLoadTime:&nbsp;&nbsp;{
-                                        (row.value && row.value.loadTime && row.value.createTime && row.value.loadTime > row.value.createTime) ? (row.value.loadTime - row.value.createTime) : "**"
-                                    }&nbsp;ms
-                                    </span>
-                                )
-                            }
-                        ]}
-                        defaultPageSize={10}
-                        className="-striped -highlight"/>
+                    <ReactHighcharts
+                        ref="chart"
+                        config={this.options}
+                    />
                 </Panel.Body>
-            </Panel>
-        );
+                <Modal show={this.state.show} onHide={this.handleClose}>
+                    <Modal.Header>
+                        <Modal.Title>Page load detail</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <JSONPretty id="json-pretty" json={this.state.pageloadInfo}/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.handleClose}>Close</Button>
+                    </Modal.Footer>
+                </Modal>
+            </Panel>);
     }
 }
 

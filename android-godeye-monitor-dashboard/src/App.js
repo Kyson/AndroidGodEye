@@ -18,15 +18,16 @@ import Network from "./network/network";
 import Thread from "./thread/thread";
 import MemoryLeak from "./memoryleak/memoryLeak";
 import RefreshStatus from "./refreshstatus/refreshStatus";
+import Mock from "./MockData";
 
 class App extends Component {
 
     constructor(props) {
         super(props);
         this._onReceiveMessage = this._onReceiveMessage.bind(this);
-        this.refreshMock = this.refreshMock.bind(this);
         this._setCanRefresh = this._setCanRefresh.bind(this);
         this.canRefresh = true;
+        this.mock = new Mock();
     }
 
     componentDidMount() {
@@ -34,7 +35,7 @@ class App extends Component {
         globalWs.start(function (evt) {
             globalWs.sendMessage('{"moduleName": "clientOnline"}')
         });
-        // setInterval(this.refreshMock, 2000);
+        this.mock.start(this._onReceiveMessage);
     }
 
     _onReceiveMessage(moduleName, payload) {
@@ -162,178 +163,6 @@ class App extends Component {
 
         );
     }
-
-    refreshMock() {
-        this._onReceiveMessage("appInfo", {
-            appName: "I am Name",
-            labels: ["label1", "label2", "label3"]
-        });
-        this._onReceiveMessage("startupInfo", {
-            startupType: "cold",
-            startupTime: 1003
-        });
-        this._onReceiveMessage("batteryInfo", {
-            level: 24,
-            status: "ok",
-            plugged: "plugged",
-            present: "present",
-            health: "health",
-            voltage: "voltage",
-            temperature: "temperature",
-            technology: "technology",
-            scale: 100,
-        });
-        this._onReceiveMessage("cpuInfo", {
-            totalUseRatio: 0.56,
-            appCpuRatio: 0.12,
-            userCpuRatio: 0.23,
-            sysCpuRatio: 0.09
-        });
-        this._onReceiveMessage("heapInfo", {
-            freeMemKb: 1024 * 520,
-            allocatedKb: 1024 * 1520,
-            maxMemKb: 1024 * 6000
-        });
-        this._onReceiveMessage("ramInfo", {
-            totalMemKb: 1024 * 1024 * 3,
-            availMemKb: 1024 * 1024 * 1.5
-        });
-        this._onReceiveMessage("pssInfo", {
-            totalPssKb: 1024 * 300,
-            dalvikPssKb: 1024 * 125,
-            nativePssKb: 1024 * 200,
-            otherPssKb: 1024 * 7,
-        });
-        this._onReceiveMessage("fpsInfo", {
-            currentFps: "12",
-            systemFps: "34"
-        });
-        this._onReceiveMessage("pageloadInfo", {
-            pageId: "11",
-            pageName: "ActivityA",
-            pageStatus: "created",
-            pageStatusTime: "2018-03-00",
-            loadTimeInfo: {
-                createTime: 100,
-                didDrawTime: 120,
-                loadTime: 150
-            }
-        });
-        this._onReceiveMessage("crashInfo", {
-            timestampMillis: new Date().getMilliseconds(),
-            throwableMessage: "throwableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessage",
-            throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
-        });
-        this._onReceiveMessage("blockInfo", {
-            blockTime: 200,
-            blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
-        });
-        this._onReceiveMessage("blockInfo", {
-            blockTime: 300,
-            blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
-        });
-        this._onReceiveMessage("networkInfo", {
-            networkInfoConnection: {
-                cipherSuite: "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-                localIp: "10.0.2.15",
-                localPort: 53010,
-                protocol: "h2",
-                remoteIp: "117.184.207.147",
-                remotePort: 443,
-                tlsVersion: "TLSv1.2"
-            },
-            networkInfoRequest: {
-                method: "https://www.trip.com/",
-                url: "GET"
-            },
-            networkSimplePerformance: {
-                connectTimeMillis: 1345,
-                dnsTimeMillis: 41,
-                receiveBodyTimeMillis: 389,
-                receiveHeaderTimeMillis: 713,
-                sendBodyTimeMillis: 0,
-                sendHeaderTimeMillis: 11,
-                totalTimeMillis: 2527
-            },
-            requestBodySizeByte: 0,
-            requestId: "117910124:https://www.trip.com/",
-            responseBodySizeByte: 14133,
-            resultCode: "200"
-        });
-        this._onReceiveMessage("networkInfo", {
-            networkInfoConnection: {
-                cipherSuite: "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
-                localIp: "10.0.2.15",
-                localPort: 53010,
-                protocol: "h2",
-                remoteIp: "117.184.207.147",
-                remotePort: 443,
-                tlsVersion: "TLSv1.2"
-            },
-            networkInfoRequest: {
-                method: "https://www.trip.com/",
-                url: "GET"
-            },
-            networkSimplePerformance: {
-                connectTimeMillis: 1000,
-                dnsTimeMillis: 80,
-                receiveBodyTimeMillis: 300,
-                receiveHeaderTimeMillis: 400,
-                sendBodyTimeMillis: 100,
-                sendHeaderTimeMillis: 100,
-                totalTimeMillis: 3213
-            },
-            requestBodySizeByte: 1222,
-            requestId: "22222222:https://www.baidu.com/",
-            responseBodySizeByte: 10000,
-            resultCode: "200"
-        });
-        this._onReceiveMessage("trafficInfo", {
-            rxTotalRate: 56,
-            txTotalRate: 48,
-            rxUidRate: 34,
-            txUidRate: 42
-        });
-        this._onReceiveMessage("leakInfo", {
-            referenceKey: "referenceKey",
-            leakTime: "leakTime",
-            leakObjectName: "leakObjectName",
-            statusSummary: "statusSummary",
-            pathToGcRoot: ["leakStack", "leakStack", "leakStack", "leakStack", "leakStack"]
-        });
-        this._onReceiveMessage("threadInfo", [
-            {
-                id: 1,
-                name: "name",
-                state: "state",
-                deadlock: "deadlock",
-                priority: "priority",
-                deamon: "deamon",
-                isAlive: "isAlive",
-                isInterrupted: "isInterrupted",
-            },
-            {
-                id: 1,
-                name: "name",
-                state: "state",
-                deadlock: "deadlock",
-                priority: "priority",
-                deamon: "deamon",
-                isAlive: "isAlive",
-                isInterrupted: "isInterrupted",
-            }, {
-                id: 1,
-                name: "name",
-                state: "state",
-                deadlock: "deadlock",
-                priority: "priority",
-                deamon: "deamon",
-                isAlive: "isAlive",
-                isInterrupted: "isInterrupted",
-            }
-        ]);
-    }
-
 }
 
 export default App;
