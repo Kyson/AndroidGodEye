@@ -7,6 +7,7 @@ import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
+import {toast} from 'react-toastify';
 
 exporting(Highcharts);
 
@@ -95,6 +96,9 @@ class Heap extends Component {
             this.refs.chart.getChart().series[1].addPoint([axisData, heapInfo.freeMemKb / 1024], false, true, true);
             this.refs.chart.getChart().series[2].addPoint([axisData, heapInfo.maxMemKb / 1024], false, true, true);
             this.refs.chart.getChart().redraw(true);
+            if ((heapInfo.maxMemKb - heapInfo.allocatedKb) < (heapInfo.maxMemKb * 0.9)) {
+                toast.error("Heap memory is running out.(堆内存即将耗尽)")
+            }
         }
     }
 

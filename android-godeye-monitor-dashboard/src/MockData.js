@@ -37,7 +37,7 @@ class Mock {
             scale: 100,
         });
         this.recvFun("cpuInfo", {
-            totalUseRatio: 0.56,
+            totalUseRatio: 0.91,
             appCpuRatio: 0.12,
             userCpuRatio: 0.23,
             sysCpuRatio: 0.09

@@ -7,6 +7,7 @@ import {Row, Col, Clearfix, Grid, Panel, Modal, Button} from 'react-bootstrap'
 import Highcharts from '../../node_modules/highcharts/highstock';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import JSONPretty from '../../node_modules/react-json-pretty';
+import {toast} from 'react-toastify';
 
 /**
  * Block
@@ -105,6 +106,9 @@ class Block extends Component {
                 blockInfo: blockInfo
             }, false, true, true);
             this.refs.chart.getChart().redraw(true);
+            if (blockInfo.blockTime >= 2000) {
+                toast.error("Block!(发生卡顿)");
+            }
         }
     }
 

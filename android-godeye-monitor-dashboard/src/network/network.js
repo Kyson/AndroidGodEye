@@ -8,6 +8,7 @@ import JSONPretty from '../../node_modules/react-json-pretty';
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
+import {toast} from 'react-toastify';
 
 exporting(Highcharts);
 
@@ -200,6 +201,7 @@ class Network extends Component {
                     y: 1000,
                     networkInfo: networkInfo
                 }, false, true, true);
+                toast.error("Network fail.(请求失败)");
             }
             this.refs.chart.getChart().redraw(true);
         }

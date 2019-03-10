@@ -4,6 +4,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import {Row, Col, Clearfix, Grid, Panel, Button, Modal} from 'react-bootstrap'
 import JSONPretty from '../../node_modules/react-json-pretty';
+import {toast} from 'react-toastify';
 
 /**
  * Crash
@@ -22,6 +23,7 @@ class Crash extends Component {
 
     refresh(crashInfo) {
         this.setState({crashInfo});
+        toast.error("Crash!(发生崩溃)");
     }
 
     handleCrashDetailClick(e) {
@@ -52,7 +54,7 @@ class Crash extends Component {
                         <strong>Message(异常信息):&nbsp;</strong>{crashInfo.throwableMessage ? crashInfo.throwableMessage : "**"}
                     </p>
                     <p><strong>Stacktrace(异常堆栈)</strong></p>
-                    {this.renderStacktraceItem(crashInfo.throwableStacktrace)}
+                    {Crash.renderStacktraceItem(crashInfo.throwableStacktrace)}
                 </Panel.Body>
                 <Modal show={this.state.show} onHide={this.handleClose}>
                     <Modal.Header>
@@ -68,7 +70,7 @@ class Crash extends Component {
             </Panel>);
     }
 
-    renderStacktraceItem(throwableStacktraces) {
+    static renderStacktraceItem(throwableStacktraces) {
         if (throwableStacktraces) {
             let items = [];
             for (let i = 0; i < throwableStacktraces.length; i++) {

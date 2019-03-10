@@ -7,6 +7,7 @@ import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
+import {toast} from 'react-toastify';
 
 exporting(Highcharts);
 /**
@@ -95,7 +96,6 @@ class Cpu extends Component {
         return this.index;
     }
 
-
     refresh(cpuInfo) {
         if (cpuInfo) {
             let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
@@ -104,6 +104,9 @@ class Cpu extends Component {
             this.refs.chart.getChart().series[2].addPoint([axisData, cpuInfo.userCpuRatio * 100], false, true, true);
             this.refs.chart.getChart().series[3].addPoint([axisData, cpuInfo.sysCpuRatio * 100], false, true, true);
             this.refs.chart.getChart().redraw(true);
+        }
+        if (cpuInfo.appCpuRatio >= 0.9 || cpuInfo.totalUseRatio >= 0.9) {
+            toast.error("CPU overload(CPU负载过重)!!!");
         }
     }
 

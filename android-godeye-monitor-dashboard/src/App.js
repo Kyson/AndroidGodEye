@@ -19,6 +19,8 @@ import Thread from "./thread/thread";
 import MemoryLeak from "./memoryleak/memoryLeak";
 import RefreshStatus from "./refreshstatus/refreshStatus";
 import Mock from "./MockData";
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class App extends Component {
 
@@ -112,6 +114,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
+                <ToastContainer autoClose={2000}/>
                 <Grid>
                     <Row style={{marginBottom: 30}}>
                         <Col md={12}><AppInfo ref="appInfo"/></Col>
@@ -160,7 +163,6 @@ class App extends Component {
                     </Row>
                 </Grid>
             </div>
-
         );
     }
 }

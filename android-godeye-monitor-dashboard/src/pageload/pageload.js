@@ -8,6 +8,8 @@ import JSONPretty from '../../node_modules/react-json-pretty';
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
+import {toast} from 'react-toastify';
+
 
 exporting(Highcharts);
 
@@ -136,6 +138,9 @@ class Pageload extends Component {
                 pageloadInfo: pageloadInfo
             }, false, true, true);
             this.refs.chart.getChart().redraw(true);
+            if (drawTime >= 1000) {
+                toast.error("Page rendering performance poor.(页面绘制性能差)");
+            }
         }
     }
 

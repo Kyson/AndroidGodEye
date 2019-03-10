@@ -4,6 +4,8 @@ import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 import Util from '../libs/util'
+import {toast} from 'react-toastify';
+
 
 /**
  * Fps
@@ -13,13 +15,21 @@ class Fps extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fpsInfo: {}
+            fpsInfo: {},
+            level: 0
         };
         this.fpsLevelColor = [Util.getGrey(), Util.getRed(), Util.getOrange(), Util.getGreen()];
     }
 
     refresh(fpsInfo) {
-        this.setState({fpsInfo});
+        const level = Fps._parseFpsLevel(fpsInfo);
+        if (level === 1) {
+            toast.error("Low fps.(掉帧严重)");
+        }
+        this.setState({
+            fpsInfo: fpsInfo,
+            level: level
+        });
     }
 
     static _parseFpsLevel(fpsInfo) {
@@ -36,7 +46,7 @@ class Fps extends Component {
     }
 
     render() {
-        let fpsLevel = Fps._parseFpsLevel(this.state.fpsInfo);
+        let fpsLevel = this.state.level;
         return (
             <Panel style={{textAlign: "left"}}>
                 <Panel.Heading>
