@@ -63,6 +63,9 @@ class MemoryLeak extends Component {
                 </Panel.Heading>
                 <Panel.Body>
                     <ReactTable
+                        sortable={true}
+                        resizable={true}
+                        filterable={true}
                         data={dataList}
                         columns={[
                             {

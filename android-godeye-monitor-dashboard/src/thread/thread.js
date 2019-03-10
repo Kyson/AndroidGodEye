@@ -51,6 +51,9 @@ class Thread extends Component {
                 </Panel.Heading>
                 <Panel.Body>
                     <ReactTable
+                        sortable={true}
+                        resizable={true}
+                        filterable={true}
                         data={dataList}
                         columns={[
                             {
@@ -65,22 +68,22 @@ class Thread extends Component {
                             }, {
                                 Header: "Deadlock",
                                 id: "deadlock",
-                                accessor: d => d.deadlock+""
+                                accessor: d => d.deadlock + ""
                             }, {
                                 Header: "Priority",
                                 accessor: "priority"
                             }, {
                                 Header: "Deamon",
                                 id: "deamon",
-                                accessor: d => d.deamon+""
+                                accessor: d => d.deamon + ""
                             }, {
                                 Header: "IsAlive",
                                 id: "isAlive",
-                                accessor: d => d.isAlive+""
+                                accessor: d => d.isAlive + ""
                             }, {
                                 Header: "IsInterrupted",
                                 id: "isInterrupted",
-                                accessor: d => d.isInterrupted+""
+                                accessor: d => d.isInterrupted + ""
                             }
                         ]}
                         SubComponent={row => {
