@@ -126,15 +126,15 @@ GodEyeMonitor.shutDown()
 
 完成！开始使用：
 
-手机与pc连接同一网段，在pc浏览器中访问`手机ip+端口+/index.html`。或者如果你是用USB连接的话，执行`adb forward tcp:5390 tcp:5390`，然后pc浏览器中访问`http://localhost:5390/index.html`。
-
-即可看到Debug面板!
+手机和电脑用USB连接，并执行`adb forward tcp:5390 tcp:5390`，然后在pc浏览器中访问`http://localhost:5390/index.html`(**注意：/index.html 是必须加上的**)就可以看到开发者面板了。如果没有USB线，也可以直接访问`http://手机ip+端口+/index.html`，当然，必须确保手机和pc在同一局域网网段。
 
 > 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390/index.html" ] in your browser...' 中包含了访问地址。
 
-**好吧，如果你懒得自己编译这个项目的话，你也可以先下载 [APK](https://fir.im/5k67) 看看效果。**
+#### 可选部分
 
-**注意：/index.html 是必须的!!!**
+每次执行`adb forward tcp:5390 tcp:5390`命令并打开浏览器比较繁琐，可以直接安装AndroidStudio插件，插件在`android-godeye-idea-plugin/godeye.jar`。
+
+**好吧，如果你懒得自己编译这个项目的话，你也可以先下载 [APK](https://fir.im/5k67) 看看效果。**
 
 ## Debug开发者面板
 
