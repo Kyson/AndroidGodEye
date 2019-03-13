@@ -50,6 +50,6 @@ public class FpsMonitor implements Choreographer.FrameCallback {
         mStartFrameTimeNanos = 0;
         mCurrentFrameTimeNanos = 0;
         mCurrentFrameCount = 0;
-        return (int) fps;
+        return (int) Math.round(fps);
     }
 }
