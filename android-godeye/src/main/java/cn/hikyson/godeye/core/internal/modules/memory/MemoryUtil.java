@@ -31,6 +31,7 @@ public class MemoryUtil {
         return heapInfo;
     }
 
+    private static ActivityManager sActivityManager;
 
     /**
      * 获取应用实际占用RAM
@@ -40,8 +41,10 @@ public class MemoryUtil {
      */
     public static PssInfo getAppPssInfo(Context context) {
         final int pid = ProcessUtils.getCurrentPid();
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        Debug.MemoryInfo memoryInfo = am.getProcessMemoryInfo(new int[]{pid})[0];
+        if (sActivityManager == null) {
+            sActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        }
+        Debug.MemoryInfo memoryInfo = sActivityManager.getProcessMemoryInfo(new int[]{pid})[0];
         PssInfo pssInfo = new PssInfo();
         pssInfo.totalPssKb = memoryInfo.getTotalPss();
         pssInfo.dalvikPssKb = memoryInfo.dalvikPss;
@@ -51,14 +54,16 @@ public class MemoryUtil {
     }
 
     public static RamInfo getRamInfo(Context context) {
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (sActivityManager == null) {
+            sActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        }
         final ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-        am.getMemoryInfo(mi);
+        sActivityManager.getMemoryInfo(mi);
         final RamInfo ramMemoryInfo = new RamInfo();
         ramMemoryInfo.availMemKb = mi.availMem / 1024;
         ramMemoryInfo.isLowMemory = mi.lowMemory;
         ramMemoryInfo.lowMemThresholdKb = mi.threshold / 1024;
-        ramMemoryInfo.totalMemKb = getRamTotalMem(am);
+        ramMemoryInfo.totalMemKb = getRamTotalMem(sActivityManager);
         return ramMemoryInfo;
     }
 
@@ -98,9 +103,8 @@ public class MemoryUtil {
             String subMemoryLine = memoryLine.substring(memoryLine
                     .indexOf("MemTotal:"));
             br.close();
-            long totalMemorySize = Integer.parseInt(subMemoryLine.replaceAll(
+            return (long) Integer.parseInt(subMemoryLine.replaceAll(
                     "\\D+", ""));
-            return totalMemorySize;
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -26,34 +26,32 @@ public class LongBlockInfo {
      * 如果线程消耗时间远小于实际时间，那么说明这个线程正在等待资源（等待资源耗时）
      */
     public long threadTimeCost;
-    //内存详情
-    public MemoryInfo memoryDetailInfo;
     //cpu是否繁忙
     public boolean cpuBusy;
     //cpu使用情况
-    public List<CpuInfo> cpuRateInfos = new ArrayList<>();
-    //线程的堆栈情况(去重并且转换为字符串显示)
-    public Map<String, List<String>> threadStackEntriesForExport = new LinkedHashMap<>();
+    public List<CpuInfo> cpuRateInfos;
     //原始的堆栈信息
-    public Map<Long, List<StackTraceElement>> mThreadStackEntries = new LinkedHashMap<>();
+    public transient Map<Long, List<StackTraceElement>> mThreadStackEntries;
+    //线程的堆栈情况(去重并且转换为字符串显示)
+    public Map<String, List<String>> threadStackEntriesForExport;
+    //内存详情
+    public MemoryInfo memoryDetailInfo;
 
-    public static LongBlockInfo create(long realTimeStart, long realTimeEnd, long threadTime, long blockTime, boolean cpuBusy, List<CpuInfo> crs, Map<Long, List<StackTraceElement>> ts, MemoryInfo memoryInfo) {
-        LongBlockInfo blockBaseinfo = new LongBlockInfo();
-        blockBaseinfo.timeStart = realTimeStart;
-        blockBaseinfo.timeEnd = realTimeEnd;
-        blockBaseinfo.threadTimeCost = threadTime;
-        blockBaseinfo.blockTime = blockTime;
-        blockBaseinfo.cpuBusy = cpuBusy;
-        blockBaseinfo.cpuRateInfos = crs;
-        blockBaseinfo.mThreadStackEntries = ts;
-        blockBaseinfo.threadStackEntriesForExport = StacktraceUtil.convertToStackString(blockBaseinfo.mThreadStackEntries);
-        blockBaseinfo.memoryDetailInfo = memoryInfo;
-        return blockBaseinfo;
+    public LongBlockInfo(long timeStart, long timeEnd, long threadTimeCost, long blockTime, boolean cpuBusy, List<CpuInfo> cpuRateInfos, Map<Long, List<StackTraceElement>> threadStackEntries, MemoryInfo memoryDetailInfo) {
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
+        this.blockTime = blockTime;
+        this.threadTimeCost = threadTimeCost;
+        this.memoryDetailInfo = memoryDetailInfo;
+        this.cpuBusy = cpuBusy;
+        this.cpuRateInfos = cpuRateInfos;
+        this.mThreadStackEntries = threadStackEntries;
+        this.threadStackEntriesForExport = StacktraceUtil.convertToStackString(threadStackEntries);
     }
 
     @Override
     public String toString() {
-        return "BlockBaseinfo{" +
+        return "LongBlockInfo{" +
                 "timeStart=" + timeStart +
                 ", timeEnd=" + timeEnd +
                 ", blockTime=" + blockTime +
@@ -70,6 +68,8 @@ public class LongBlockInfo {
      * 根据数据生成特征值，同一种卡顿特征相同，用于筛选卡顿是否为同一个
      * 根据卡顿堆栈的第一个堆栈，计算其hashcode
      * 如果没有堆栈，则没有特征值
+     *
+     * @deprecated
      */
     public String generateKey() {
         Iterator<Map.Entry<Long, List<StackTraceElement>>> iterator = mThreadStackEntries.entrySet().iterator();

@@ -48,8 +48,8 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
 
             @WorkerThread
             @Override
-            public void onShortBlock(Context context, long blockTimeMillis) {
-                produce(new BlockInfo(new ShortBlockInfo(blockTimeMillis)));
+            public void onShortBlock(Context context, ShortBlockInfo shortBlockInfo) {
+                produce(new BlockInfo(shortBlockInfo));
             }
 
             @WorkerThread

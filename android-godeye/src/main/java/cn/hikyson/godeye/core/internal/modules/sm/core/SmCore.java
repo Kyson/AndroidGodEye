@@ -55,36 +55,30 @@ public final class SmCore {
                 HandlerThreadFactory.getObtainDumpThreadHandler().post(new Runnable() {
                     @Override
                     public void run() {
-                        if (!longBlock) {//短卡顿
+                        if (longBlock) {//短卡顿
+                            //如果是长卡顿，那么需要记录很多信息
+                            final boolean cpuBusy = cpuSampler.isCpuBusy(eventStartTimeMilliis, eventEndTimeMillis);
+                            //这里短卡顿基本是dump不到数据的，因为dump延时一般都会比短卡顿时间久
+                            final List<CpuInfo> cpuInfos = cpuSampler.getCpuRateInfo(eventStartTimeMilliis, eventEndTimeMillis);
+                            final Map<Long, List<StackTraceElement>> threadStackEntries = stackSampler.getThreadStackEntries(eventStartTimeMilliis, eventEndTimeMillis);
+                            final MemoryInfo memoryInfo = new MemoryInfo(MemoryUtil.getAppHeapInfo(), MemoryUtil.getAppPssInfo(mContext), MemoryUtil.getRamInfo(mContext));
+                            LongBlockInfo blockBaseinfo = new LongBlockInfo(eventStartTimeMilliis, eventEndTimeMillis, threadBlockTimeMillis,
+                                    blockTimeMillis, cpuBusy, cpuInfos, threadStackEntries, memoryInfo);
                             if (!mInterceptorChain.isEmpty()) {
                                 for (BlockInterceptor interceptor : mInterceptorChain) {
-                                    interceptor.onShortBlock(context, blockTimeMillis);
+                                    interceptor.onLongBlock(context, blockBaseinfo);
                                 }
                             }
-                            return;
+                        } else {
+                            final MemoryInfo memoryInfo = new MemoryInfo(MemoryUtil.getAppHeapInfo(), MemoryUtil.getAppPssInfo(mContext), MemoryUtil.getRamInfo(mContext));
+                            ShortBlockInfo shortBlockInfo = new ShortBlockInfo(eventStartTimeMilliis, eventEndTimeMillis, threadBlockTimeMillis,
+                                    blockTimeMillis, memoryInfo);
+                            if (!mInterceptorChain.isEmpty()) {
+                                for (BlockInterceptor interceptor : mInterceptorChain) {
+                                    interceptor.onShortBlock(context, shortBlockInfo);
+                                }
+                            }
                         }
-                        //如果是长卡顿，那么需要记录很多信息
-                        final boolean cpuBusy = cpuSampler.isCpuBusy(eventStartTimeMilliis, eventEndTimeMillis);
-                        //这里短卡顿基本是dump不到数据的，因为dump延时一般都会比短卡顿时间久
-                        final List<CpuInfo> cpuInfos = cpuSampler.getCpuRateInfo(eventStartTimeMilliis, eventEndTimeMillis);
-                        final Map<Long, List<StackTraceElement>> threadStackEntries = stackSampler.getThreadStackEntries(eventStartTimeMilliis, eventEndTimeMillis);
-                        Disposable disposable = Observable.fromCallable(new Callable<MemoryInfo>() {
-                            @Override
-                            public MemoryInfo call() throws Exception {
-                                return new MemoryInfo(MemoryUtil.getAppHeapInfo(), MemoryUtil.getAppPssInfo(mContext), MemoryUtil.getRamInfo(mContext));
-                            }
-                        }).subscribe(new Consumer<MemoryInfo>() {
-                            @Override
-                            public void accept(MemoryInfo memoryInfo) throws Exception {
-                                LongBlockInfo blockBaseinfo = LongBlockInfo.create(eventStartTimeMilliis, eventEndTimeMillis, threadBlockTimeMillis,
-                                        blockTimeMillis, cpuBusy, cpuInfos, threadStackEntries, memoryInfo);
-                                if (!mInterceptorChain.isEmpty()) {
-                                    for (BlockInterceptor interceptor : mInterceptorChain) {
-                                        interceptor.onLongBlock(context, blockBaseinfo);
-                                    }
-                                }
-                            }
-                        });
                     }
                 });
             }

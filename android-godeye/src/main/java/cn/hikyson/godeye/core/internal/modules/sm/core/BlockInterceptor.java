@@ -13,10 +13,10 @@ public interface BlockInterceptor {
      * 短卡顿
      *
      * @param context
-     * @param blockTimeMillis
+     * @param shortBlockInfo
      */
     @WorkerThread
-    void onShortBlock(Context context, long blockTimeMillis);
+    void onShortBlock(Context context, ShortBlockInfo shortBlockInfo);
 
     /**
      * 长卡顿 当认为block的时候调用 在线程obtain-dump中
