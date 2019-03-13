@@ -36,21 +36,18 @@ public abstract class AbstractSampler {
     }
 
     public void start() {
-        if (mShouldSample.get()) {
+        if (mShouldSample.getAndSet(true)) {
             return;
         }
-        mShouldSample.set(true);
-
         HandlerThreadFactory.getDoDumpThreadHandler().removeCallbacks(mRunnable);
         HandlerThreadFactory.getDoDumpThreadHandler().postDelayed(mRunnable,
                 Sm.core().getSampleDelay());
     }
 
     public void stop() {
-        if (!mShouldSample.get()) {
+        if (!mShouldSample.getAndSet(false)) {
             return;
         }
-        mShouldSample.set(false);
         HandlerThreadFactory.getDoDumpThreadHandler().removeCallbacks(mRunnable);
     }
 

@@ -1,7 +1,10 @@
 package cn.hikyson.godeye.core.internal.modules.sm.core;
 
+import android.os.Debug;
 import android.os.SystemClock;
 import android.util.Printer;
+
+import cn.hikyson.godeye.core.helper.AndroidDebug;
 
 public class LooperMonitor implements Printer {
     public static final String TAG = "LooperMonitor";
@@ -59,6 +62,9 @@ public class LooperMonitor implements Printer {
 
     @Override
     public void println(String x) {
+        if (AndroidDebug.isDebugging()) {
+            return;
+        }
         if (!mEventStart) {// 事件开始
             mThisEventStartTime = System.currentTimeMillis();
             mThisEventStartThreadTime = SystemClock.currentThreadTimeMillis();
