@@ -27,7 +27,7 @@ AndroidGodEye is a performance monitor tool for Android(not limited to performan
 It is divided into 3 parts:
 
 1. Core provide all performance modules and produce performance datas.
-2. Debug Monitor provide a panel to show these performance datas.
+2. Debug Monitor provide a dashboard to show these performance datas.
 3. Toolbox make developers easy to use this library.
 
 AndroidGodEye prodive several modules, such as cpu, heap, block, leak memory and so on.
@@ -104,11 +104,11 @@ GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe()
 
 > Just like we will mention later,Debug Monitor is one of these consumers.
 
-### Step3 Install Performance Visualization Panel
+### Step3 Install Performance Visualization Dashboard
                   
 GodEyeMonitor class is entrance for this step.
 
-Start performance visualization panel:
+Start performance visualization dashboard:
 
 ```java
 GodEyeMonitor.work(context)
@@ -122,7 +122,7 @@ GodEyeMonitor.shutDown()
 
 ### Install IDE Plugin
 
-It's tedious to execute commands `adb forward tcp:5390 tcp:5390` and open browsers every time. You can install Android Studio plug-in(`android-godeye-idea-plugin/android-godeye-idea-plugin.jar`).
+Install Android Studio plug-in(`android-godeye-idea-plugin/android-godeye-idea-plugin.jar`),Then you can find AndroidGodEye in main toolbar,click it and it will open dashboard in browser.
 
 Connect mobile phones and computers with USB, run `adb forward tcp:5390 tcp:5390`, then open `http://localhost:port/index.html`(**Note that /index.html is necessary!!!**) on PC. If you don't have a USB, you can also open `http://mobile ip:port/index.html` directly, ensure that mobile phones and PC are in the same LAN segment of course.
 
@@ -132,7 +132,7 @@ Now enjoy it!
 
 **If you just want to see the results, you can install [APK](https://fir.im/5k67) directly.**
 
-## Performance Visualization Panel
+## Performance Visualization Dashboard
 
 ###### Click  ↓  to preview
 
