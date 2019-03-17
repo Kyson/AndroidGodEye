@@ -28,7 +28,7 @@ public class OpenAction extends AnAction {
                 return;
             }
             final String commandTcpProxy = String.format("%s/platform-tools/adb forward tcp:%s tcp:%s", path, PORT, PORT);
-            mLogger.info("Exec " + commandTcpProxy + ".");
+            mLogger.info("Exec [" + commandTcpProxy + "].");
             Runtime.getRuntime().exec(commandTcpProxy);
             mLogger.info("Current os name is " + SystemUtils.OS_NAME);
             String commandOpenUrl = "";
@@ -37,7 +37,7 @@ public class OpenAction extends AnAction {
             } else {
                 commandOpenUrl = String.format("open http://localhost:%s/index.html", PORT);
             }
-            mLogger.info("Exec " + commandOpenUrl + ".");
+            mLogger.info("Exec [" + commandOpenUrl + "].");
             Runtime.getRuntime().exec(commandOpenUrl);
         } catch (Throwable e) {
             mLogger.error(e);
