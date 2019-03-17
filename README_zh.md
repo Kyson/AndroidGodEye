@@ -37,9 +37,9 @@ AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存�
 
 参考Demo:[https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
 
-### STEP1
+### STEP1 依赖引入
 
-引入依赖，使用gradle
+使用gradle
 
 ```
 dependencies {
@@ -52,7 +52,7 @@ dependencies {
 
 > VERSION_NAME可以看github的release名称
 
-### STEP2
+### STEP2 初始化并安装所需模块
 
 Application中初始化:
 
@@ -87,7 +87,7 @@ if (isMainProcess(this)) {//安装只能在主进程
     }
 ```
 
-#### 可选部分
+#### 可选部分 卸载模块
 
 不需要的时候卸载模块(不推荐)：
 
@@ -106,37 +106,39 @@ GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe()
 
 > 就像我们之后会提到的Debug Monitor，也是通过消费这些数据进行展示的
 
-### STEP3
+### STEP3 安装性能可视化面板
 
-Debug面板安装，GodEyeMonitor类是AndroidGodEye的Debug监控面板的主要类，用来开始或者停止Debug面板的监控。
+GodEyeMonitor类是AndroidGodEye的性能可视化面板的主要类，用来开始或者停止性能可视化面板的监控。
 
-开始消费GodEye各个模块数据并输出到Debug面板：
+开启性能可视化面板，不建议在生产包中开启：
 
 ```java
 GodEyeMonitor.work(context)
 ```
 
-结束消费，关闭Debug面板：
+关闭面板：
 
 ```java
 GodEyeMonitor.shutDown()
 ```
 
-### STEP4
+usb连上你的手机，接下来可以开始运行项目了！
 
-完成！开始使用：
+### STEP4 安装IDE插件
 
-手机和电脑用USB连接，并执行`adb forward tcp:5390 tcp:5390`，然后在pc浏览器中访问`http://localhost:5390/index.html`(**注意：/index.html 是必须加上的**)就可以看到开发者面板了。如果没有USB线，也可以直接访问`http://手机ip+端口+/index.html`，当然，必须确保手机和pc在同一局域网网段。
-
-> 端口默认是5390，也可以在`GodEyeMonitor.work(context)`中指定，一般在开发者在调用`GodEyeMonitor.work(context)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390/index.html" ] in your browser...' 中包含了访问地址。
+在AndroidStudio中安装AndroidGodEye插件，插件位置在`android-godeye-idea-plugin/android-godeye-idea-plugin.jar`中，安装完之后会在工具栏中出现AndroidGodEye的icon，点击即可在浏览器中打开性能监控面板。
 
 #### 可选部分
 
-每次执行`adb forward tcp:5390 tcp:5390`命令并打开浏览器比较繁琐，可以直接安装AndroidStudio插件，插件在`android-godeye-idea-plugin/godeye.jar`。
+手机和电脑用USB连接，并执行`adb forward tcp:5390 tcp:5390`，然后在pc浏览器中访问`http://localhost:5390/index.html`(**注意：/index.html 是必须加上的**)就可以看到开发者面板了。如果没有USB线，也可以直接访问`http://手机ip+端口+/index.html`，当然，必须确保手机和pc在同一局域网网段。
 
-**好吧，如果你懒得自己编译这个项目的话，你也可以先下载 [APK](https://fir.im/5k67) 看看效果。**
+> 端口默认是5390，也可以在`GodEyeMonitor.work(context,port)`中指定，一般在开发者在调用`GodEyeMonitor.work(context,port)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://ip:port/index.html" ] in your browser...' 中包含了访问地址。
 
-## Debug开发者面板
+Done!
+
+**如果你懒得自己编译这个项目的话，你也可以先下载 [APK](https://fir.im/5k67) 看看效果。**
+
+## 性能可视化面板
 
 ###### 点击下面预览↓
 
@@ -171,7 +173,7 @@ GodEyeMonitor.shutDown()
 |cpu|是|内置|定时|无|
 |battery|是|内置|定时|无|
 |fps|是|内置|定时|无|
-|leakDetector|是|内置|发生时|WRITE_EXTERNAL_STORAGE|
+|leakDetector|是|内置|发生时|无|
 |heap|是|内置|定时|无|
 |pss|是|内置|定时|无|
 |ram|是|内置|定时|无|
@@ -181,7 +183,6 @@ GodEyeMonitor.shutDown()
 |traffic|是|外部驱动|定时|无|
 |crash|是|外部驱动|安装后，一次性|无|
 |thread dump|是|内置|定时|无|
-|deadlock|是|内置|定时并发生时|无|
 |pageload|yes|internal|happen|无|
 
 ## 框架

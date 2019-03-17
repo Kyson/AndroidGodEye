@@ -36,7 +36,7 @@ AndroidGodEye prodive several modules, such as cpu, heap, block, leak memory and
 
 Demo:[https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
 
-### Step1
+### Step1 Dependencies
 
 In your build.gradle:
 
@@ -51,7 +51,7 @@ dependencies {
 
 > You can find VERSION_NAME in the github release.
 
-### Step2
+### Step2 Initialize And Install Modules
 
 Init first in your application:
 
@@ -86,7 +86,7 @@ if (isMainProcess(this)) {//can not install modules in sub process
 
 > Recommend install in application.
 
-#### Optional
+#### Optional Uninstall Modules
 
 Uninstall modules when you don't need it(not recommend):
 
@@ -104,11 +104,11 @@ GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe()
 
 > Just like we will mention later,Debug Monitor is one of these consumers.
 
-### Step3
+### Step3 Install Performance Visualization Panel
+                  
+GodEyeMonitor class is entrance for this step.
 
-Install debug monitor,GodEyeMonitor class is entrance for this step.
-
-Consume data produced by GodEye modules:
+Start performance visualization panel:
 
 ```java
 GodEyeMonitor.work(context)
@@ -120,25 +120,19 @@ Stop it:
 GodEyeMonitor.shutDown()
 ```
 
-### Step4
+### Install IDE Plugin
 
-You're good to go!
+It's tedious to execute commands `adb forward tcp:5390 tcp:5390` and open browsers every time. You can install Android Studio plug-in(`android-godeye-idea-plugin/android-godeye-idea-plugin.jar`).
 
-Connect mobile phones and computers with USB, run `adb forward tcp:5390 tcp:5390`, then open `http://localhost:5390/index.html` on PC. If you don't have a USB, you can also open `http://PhoneIp:5390/index.html` directly, ensure that mobile phones and PC are in the same LAN segment of course.
+Connect mobile phones and computers with USB, run `adb forward tcp:5390 tcp:5390`, then open `http://localhost:port/index.html`(**Note that /index.html is necessary!!!**) on PC. If you don't have a USB, you can also open `http://mobile ip:port/index.html` directly, ensure that mobile phones and PC are in the same LAN segment of course.
 
-> Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context)`, log is like:'Open AndroidGodEye dashboard [ http://xxx.xxx.xxx.xxx:5390/index.html" ] in your browser...'.
+> Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context,port)`, log is like:'Open AndroidGodEye dashboard [ http://ip:port/index.html" ] in your browser...'.
 
-#### Optional
+Now enjoy it!
 
-It's tedious to execute commands `adb forward tcp:5390 tcp:5390` and open browsers every time. You can install Android Studio plug-in(`android-godeye-idea-plugin/godeye.jar`).
+**If you just want to see the results, you can install [APK](https://fir.im/5k67) directly.**
 
-now enjoy it!
-
-**Okay...If you just want to see the results, you can install [APK](https://fir.im/5k67) directly.**
-
-**Note that /index.html is necessary!!!**
-
-## Debug Monitor
+## Performance Visualization Panel
 
 ###### Click  ↓  to preview
 
@@ -173,7 +167,7 @@ and more...
 |cpu|yes|internal|interval|no|
 |battery|yes|internal|interval|no|
 |fps|yes|internal|interval|no|
-|leakDetector|yes|internal|happen|WRITE_EXTERNAL_STORAGE|
+|leakDetector|yes|internal|happen|no|
 |heap|yes|internal|interval|no|
 |pss|yes|internal|interval|no|
 |ram|yes|internal|interval|no|
@@ -183,7 +177,6 @@ and more...
 |traffic|yes|external|interval|no|
 |crash|yes|external|after install,one time|no|
 |thread dump|yes|internal|interval|no|
-|deadlock|yes|internal|interval&happen|no|
 |pageload|yes|internal|happen|no|
 
 ## Framework
