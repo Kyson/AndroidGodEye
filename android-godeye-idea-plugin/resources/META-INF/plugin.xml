@@ -1,14 +1,13 @@
 <idea-plugin>
   <id>cn.hikyson.godeye.ideaplugin</id>
   <name>AndroidGodEye</name>
-  <version>1.0</version>
+  <version>1.1</version>
   <vendor email="qian_xx@ctrip.com" url="https://github.com/Xiangxingqian">qian_xx</vendor>
 
   <description>AndroidGodEye</description>
 
   <change-notes><![CDATA[
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+       Initial release of the plugin.<br>
     ]]>
   </change-notes>
 
