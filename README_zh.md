@@ -126,7 +126,7 @@ usb连上你的手机，接下来可以开始运行项目了！
 
 ### STEP4 安装IDE插件
 
-在AndroidStudio中安装AndroidGodEye插件，插件位置在`android-godeye-idea-plugin/android-godeye-idea-plugin.jar`中，安装完之后会在工具栏中出现AndroidGodEye的icon，点击即可在浏览器中打开性能监控面板。
+在AndroidStudio中安装AndroidGodEye插件，在AndroidStudio plugin中直接搜索AndroidGodEye即可，安装完之后会在工具栏中出现AndroidGodEye的icon，点击即可在浏览器中打开性能监控面板。
 
 #### 可选部分
 
