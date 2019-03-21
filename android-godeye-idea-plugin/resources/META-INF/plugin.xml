@@ -1,37 +1,42 @@
 <idea-plugin>
-  <id>cn.hikyson.godeye.ideaplugin</id>
-  <name>AndroidGodEye</name>
-  <version>1.1</version>
-  <vendor email="qian_xx@ctrip.com" url="https://github.com/Xiangxingqian">qian_xx</vendor>
+    <id>cn.hikyson.godeye.ideaplugin</id>
+    <name>AndroidGodEye</name>
+    <version>1.2</version>
+    <vendor email="qian_xx@ctrip.com" url="https://github.com/Xiangxingqian">qian_xx</vendor>
 
-  <description>AndroidGodEye</description>
+    <description><![CDATA[
+       AndroidGodEye<br>
+       <img src="https://github.com/Kyson/AndroidGodEye/blob/master/ART/android-godeye-plugin-position.png" alt="" /><br>
+       <a href="https://github.com/Kyson/AndroidGodEye" target="_blank">https://github.com/Kyson/AndroidGodEye</a>
+    ]]>
+    </description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
        Initial release of the plugin.<br>
     ]]>
-  </change-notes>
+    </change-notes>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="162.0"/>
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="162.0"/>
 
-  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
 
-  <actions>
-    <action id="AndroidGodEye"
-            class="cn.hikyson.godeye.ideaplugin.OpenAction"
-            text="AndroidGodEye"
-            icon="/icons/android_god_eye_logo.png"
-            description="AndroidGodEye">
-      <add-to-group group-id="MainToolBar" anchor="last"/>
-    </action>
-  </actions>
+    <actions>
+        <action id="AndroidGodEye"
+                class="cn.hikyson.godeye.ideaplugin.OpenAction"
+                text="AndroidGodEye"
+                icon="/icons/android_god_eye_logo.png"
+                description="AndroidGodEye">
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+        </action>
+    </actions>
 
 </idea-plugin>
