@@ -1,12 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.fps;
 
-import android.content.Context;
-
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
+ * fps模块可能会影响ui性能
  * Created by kysonchao on 2017/11/22.
  */
 public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsContext> {

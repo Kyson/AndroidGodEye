@@ -9,7 +9,10 @@ import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Observable;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import cn.hikyson.godeye.core.utils.L;
 
@@ -32,21 +35,17 @@ public class GodEyeMonitorServer {
     public GodEyeMonitorServer(int port) {
         mPort = port;
         mServer = new AsyncHttpServer();
-        mWebSockets = new ArrayList<>();
+        mWebSockets = Collections.synchronizedList(new ArrayList<WebSocket>());
         mServer.websocket("/refresh", new AsyncHttpServer.WebSocketRequestCallback() {
             @Override
             public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {
-                synchronized (mWebSockets) {
-                    mWebSockets.add(webSocket);
-                    L.d("connection build. current count:" + mWebSockets.size());
-                }
+                mWebSockets.add(webSocket);
+                L.d("connection build. current count:" + mWebSockets.size());
                 webSocket.setClosedCallback(new CompletedCallback() {
                     @Override
                     public void onCompleted(Exception ex) {
-                        synchronized (mWebSockets) {
-                            mWebSockets.remove(webSocket);
-                            L.d("connection released. current count:" + mWebSockets.size());
-                        }
+                        mWebSockets.remove(webSocket);
+                        L.d("connection released. current count:" + mWebSockets.size());
                     }
                 });
                 webSocket.setStringCallback(new WebSocket.StringCallback() {
@@ -83,9 +82,13 @@ public class GodEyeMonitorServer {
     }
 
     public void sendMessage(String message) {
-        synchronized (mWebSockets) {
-            for (WebSocket socket : mWebSockets) {
-                socket.send(message);
+        Object[] wss = mWebSockets.toArray();
+        if (wss != null) {
+            for (Object s : wss) {
+                WebSocket webSocket = (WebSocket) s;
+                if (webSocket.isOpen()) {
+                    webSocket.send(message);
+                }
             }
         }
     }

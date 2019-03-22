@@ -36,13 +36,13 @@ public class LoadLeaks implements Runnable {
     private static final Executor backgroundExecutor = newSingleThreadExecutor("LoadLeaks");
 
     private final LeakDirectoryProvider leakDirectoryProvider;
-    private final Handler mainHandler;
+    //    private final Handler mainHandler;
     private final String mReferenceKey;
     private OnLeakCallback mOnLeakCallback;
 
     public LoadLeaks(LeakDirectoryProvider leakDirectoryProvider, String referenceKey, OnLeakCallback onLeakCallback) {
         this.leakDirectoryProvider = leakDirectoryProvider;
-        mainHandler = new Handler(Looper.getMainLooper());
+//        mainHandler = new Handler(Looper.getMainLooper());
         this.mReferenceKey = referenceKey;
         this.mOnLeakCallback = onLeakCallback;
     }
@@ -106,35 +106,30 @@ public class LoadLeaks implements Runnable {
                         .compareTo(lhs.resultFile.lastModified());
             }
         });
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (leaks.isEmpty()) {
-                    mOnLeakCallback.onLeakNull("leaks file is empty");
-                    return;
-                }
-                final Leak visibleLeak = getVisibleLeak(leaks, mReferenceKey);
-                if (visibleLeak == null) {
-                    mOnLeakCallback.onLeakNull("visibleLeak is null");
-                    return;
-                }
-                AnalysisResult result = visibleLeak.result;
-                if (result.failure != null) {
-                    mOnLeakCallback.onLeakNull("leak analysis failed");
-                    return;
-                }
-                List<LeakTraceElement> elements = new ArrayList<>(result.leakTrace.elements);
-                if (elements.isEmpty()) {
-                    mOnLeakCallback.onLeakNull("leak elements stack is null or empty");
-                    return;
-                }
-                ArrayList<String> elementStack = new ArrayList<String>();
-                for (LeakTraceElement leakTraceElement : elements) {
-                    elementStack.add(String.valueOf(leakTraceElement));
-                }
-                mOnLeakCallback.onLeak(elementStack);
-            }
-        });
+        if (leaks.isEmpty()) {
+            mOnLeakCallback.onLeakNull("leaks file is empty");
+            return;
+        }
+        final Leak visibleLeak = getVisibleLeak(leaks, mReferenceKey);
+        if (visibleLeak == null) {
+            mOnLeakCallback.onLeakNull("visibleLeak is null");
+            return;
+        }
+        AnalysisResult result = visibleLeak.result;
+        if (result.failure != null) {
+            mOnLeakCallback.onLeakNull("leak analysis failed");
+            return;
+        }
+        List<LeakTraceElement> elements = new ArrayList<>(result.leakTrace.elements);
+        if (elements.isEmpty()) {
+            mOnLeakCallback.onLeakNull("leak elements stack is null or empty");
+            return;
+        }
+        ArrayList<String> elementStack = new ArrayList<String>();
+        for (LeakTraceElement leakTraceElement : elements) {
+            elementStack.add(String.valueOf(leakTraceElement));
+        }
+        mOnLeakCallback.onLeak(elementStack);
     }
 
     private Leak getVisibleLeak(List<Leak> leaks, String leakRefKey) {

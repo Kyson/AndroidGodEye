@@ -10,6 +10,7 @@ import cn.hikyson.godeye.core.internal.modules.sm.core.LongBlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.core.ShortBlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.core.SmCore;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 
 
 public final class Sm extends ProduceableSubject<BlockInfo> implements Install<SmContext> {
@@ -49,12 +50,14 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
             @WorkerThread
             @Override
             public void onShortBlock(Context context, ShortBlockInfo shortBlockInfo) {
+                ThreadUtil.ensureWorkThread("Sm onShortBlock");
                 produce(new BlockInfo(shortBlockInfo));
             }
 
             @WorkerThread
             @Override
             public void onLongBlock(Context context, LongBlockInfo blockInfo) {
+                ThreadUtil.ensureWorkThread("Sm onLongBlock");
                 produce(new BlockInfo(blockInfo));
             }
         });

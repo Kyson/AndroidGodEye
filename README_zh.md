@@ -128,6 +128,8 @@ usb连上你的手机，接下来可以开始运行项目了！
 
 在AndroidStudio中安装AndroidGodEye插件，在AndroidStudio plugin中直接搜索AndroidGodEye即可，安装完之后会在工具栏中出现AndroidGodEye的icon，点击即可在浏览器中打开性能监控面板。
 
+![https://github.com/Kyson/AndroidGodEye/blob/master/ART/android-godeye-plugin-position.png](https://github.com/Kyson/AndroidGodEye/blob/master/ART/android-godeye-plugin-position.png)
+
 #### 可选部分
 
 手机和电脑用USB连接，并执行`adb forward tcp:5390 tcp:5390`，然后在pc浏览器中访问`http://localhost:5390/index.html`(**注意：/index.html 是必须加上的**)就可以看到开发者面板了。如果没有USB线，也可以直接访问`http://手机ip+端口+/index.html`，当然，必须确保手机和pc在同一局域网网段。

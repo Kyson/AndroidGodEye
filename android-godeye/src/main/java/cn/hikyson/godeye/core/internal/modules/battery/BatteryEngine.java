@@ -12,11 +12,13 @@ import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.internal.exception.GodEyeInvalidDataException;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -36,40 +38,36 @@ public class BatteryEngine implements Engine {
 
     @Override
     public void work() {
-        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).
-                concatMap(new Function<Long, ObservableSource<BatteryInfo>>() {
+        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
+                .map(new Function<Long, BatteryInfo>() {
                     @Override
-                    public ObservableSource<BatteryInfo> apply(Long aLong) throws Exception {
-                        return create();
+                    public BatteryInfo apply(Long aLong) throws Exception {
+                        ThreadUtil.ensureWorkThread("BatteryEngine apply");
+                        return getBatteryInfo(mContext);
                     }
-                }).subscribe(new Consumer<BatteryInfo>() {
-            @Override
-            public void accept(BatteryInfo food) throws Exception {
-                if(food == BatteryInfo.INVALID){
-                    return;
-                }
-                mProducer.produce(food);
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                L.e(String.valueOf(throwable));
-            }
-        }));
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.computation())
+                .subscribe(new Consumer<BatteryInfo>() {
+                    @Override
+                    public void accept(BatteryInfo food) throws Exception {
+                        ThreadUtil.ensureWorkThread("BatteryEngine accept");
+                        if (food == BatteryInfo.INVALID) {
+                            return;
+                        }
+                        mProducer.produce(food);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        L.e(String.valueOf(throwable));
+                    }
+                }));
     }
 
     @Override
     public void shutdown() {
         mCompositeDisposable.dispose();
-    }
-
-    private Observable<BatteryInfo> create() {
-        return Observable.fromCallable(new Callable<BatteryInfo>() {
-            @Override
-            public BatteryInfo call() throws Exception {
-                return getBatteryInfo(mContext);
-            }
-        });
     }
 
     private static final class BatteryIntentFilterHolder {

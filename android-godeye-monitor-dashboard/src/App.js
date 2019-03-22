@@ -152,8 +152,10 @@ class App extends Component {
                         <Col md={12}><Pageload ref="pageloadInfo"/></Col>
                     </Row>
                     <Row>
-                        <Col md={6}><Block ref="blockInfo"/></Col>
-                        <Col md={6}><Network ref="networkInfo"/></Col>
+                        <Col md={12}><Network ref="networkInfo"/></Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}><Block ref="blockInfo"/></Col>
                     </Row>
                     <Row>
                         <Col md={12}><Thread ref="threadInfo"/></Col>

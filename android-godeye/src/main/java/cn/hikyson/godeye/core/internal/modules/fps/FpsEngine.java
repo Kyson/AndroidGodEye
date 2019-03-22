@@ -15,6 +15,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -38,20 +39,22 @@ public class FpsEngine implements Engine {
     public void work() {
         if (ThreadUtil.isMainThread()) {
             startInMain();
+        } else {
+            ThreadUtil.sMain.execute(new Runnable() {
+                @Override
+                public void run() {
+                    startInMain();
+                }
+            });
         }
-        ThreadUtil.sMain.execute(new Runnable() {
-            @Override
-            public void run() {
-                startInMain();
-            }
-        });
     }
 
     @UiThread
     private void startInMain() {
         mFpsMonitor.start();
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.computation())
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {

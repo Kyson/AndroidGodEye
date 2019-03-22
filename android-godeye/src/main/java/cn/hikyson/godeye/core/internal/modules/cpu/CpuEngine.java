@@ -12,6 +12,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -35,23 +36,27 @@ public class CpuEngine implements Engine {
                 concatMap(new Function<Long, ObservableSource<CpuInfo>>() {
                     @Override
                     public ObservableSource<CpuInfo> apply(Long aLong) throws Exception {
-                        ThreadUtil.ensureWorkThread("cpu");
+                        ThreadUtil.ensureWorkThread("CpuEngine apply");
                         return create();
                     }
-                }).subscribe(new Consumer<CpuInfo>() {
-            @Override
-            public void accept(CpuInfo food) throws Exception {
-                if (food == CpuInfo.INVALID) {
-                    return;
-                }
-                mProducer.produce(food);
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                L.e(String.valueOf(throwable));
-            }
-        }));
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(Schedulers.computation())
+                .subscribe(new Consumer<CpuInfo>() {
+                    @Override
+                    public void accept(CpuInfo food) throws Exception {
+                        ThreadUtil.ensureWorkThread("CpuEngine accept");
+                        if (food == CpuInfo.INVALID) {
+                            return;
+                        }
+                        mProducer.produce(food);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        L.e(String.valueOf(throwable));
+                    }
+                }));
     }
 
     @Override

@@ -10,26 +10,36 @@ import com.squareup.leakcanary.HeapDump;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HeapAnalyzer;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.internal.LoadLeaks;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android.output.OutputLeakService;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
 public class LeakOutputReceiver extends BroadcastReceiver {
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_START.equals(intent.getAction())) {
-            onLeakDumpStart(intent);
-        } else if (HeapAnalyzer.OUTPUT_BOARDCAST_ACTION_PROGRESS.equals(intent.getAction())) {
-            onLeakDumpProgress(intent);
-        } else if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_RETRY.equals(intent.getAction())) {
-            onLeakDumpRetry(intent);
-        } else if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_DONE.equals(intent.getAction())) {
-            onLeakDumpDone(intent);
-        }
+    public void onReceive(Context context, final Intent intent) {
+        Observable.fromCallable(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_START.equals(intent.getAction())) {
+                    onLeakDumpStart(intent);
+                } else if (HeapAnalyzer.OUTPUT_BOARDCAST_ACTION_PROGRESS.equals(intent.getAction())) {
+                    onLeakDumpProgress(intent);
+                } else if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_RETRY.equals(intent.getAction())) {
+                    onLeakDumpRetry(intent);
+                } else if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_DONE.equals(intent.getAction())) {
+                    onLeakDumpDone(intent);
+                }
+                return true;
+            }
+        }).subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation()).subscribe();
     }
 
     private void onLeakDumpStart(Intent intent) {
@@ -74,6 +84,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         new LoadLeaks(LeakDetector.getLeakDirectoryProvider(), heapDump.referenceKey, new LoadLeaks.OnLeakCallback() {
             @Override
             public void onLeak(List<String> list) {
+                ThreadUtil.ensureWorkThread("LoadLeaks onLeak");
                 L.d("onLeakDumpDone:" + refrenceKey + " , leak:" + analysisResult.className);
                 Map<String, Object> map = new ArrayMap<>();
                 map.put(LeakQueue.LeakMemoryInfo.Fields.LEAK_OBJ_NAME, analysisResult.className + (analysisResult.excludedLeak ? "[Excluded]" : ""));
@@ -88,6 +99,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
 
             @Override
             public void onLeakNull(String s) {
+                ThreadUtil.ensureWorkThread("LoadLeaks onLeakNull");
                 L.d("onLeakDumpDone:" + s);
                 Map<String, Object> map = new ArrayMap<>();
                 map.put(LeakQueue.LeakMemoryInfo.Fields.LEAK_OBJ_NAME, analysisResult.className + (analysisResult.excludedLeak ? "[Excluded]" : ""));

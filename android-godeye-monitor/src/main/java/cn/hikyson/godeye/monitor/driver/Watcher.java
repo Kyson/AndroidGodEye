@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.GodEye;
@@ -40,6 +41,7 @@ import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
 import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
@@ -47,11 +49,13 @@ import cn.hikyson.godeye.monitor.processors.Messager;
 import cn.hikyson.godeye.monitor.processors.Processor;
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * monitor数据引擎，用于生产各项数据
@@ -75,8 +79,11 @@ public class Watcher implements Processor {
     public void observeAll() {
         GodEye godEye = GodEye.instance();
         mCompositeDisposable.addAll(
+                //应用基础数据发射不一定在子线程，这里强制切换到子线程
                 Observable.just(new AppInfo())
                         .map(this.<AppInfo>createConvertServerMessageFunction("appInfo"))
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
                         .subscribe(createSendMessageConsumer()),
                 godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject()
                         .map(this.<BatteryInfo>createConvertServerMessageFunction("batteryInfo"))
@@ -97,11 +104,17 @@ public class Watcher implements Processor {
                         .map(blockMap())
                         .map(this.<BlockSimpleInfo>createConvertServerMessageFunction("blockInfo"))
                         .subscribe(this.createSendMessageConsumer()),
+                //网络数据发射不一定在子线程，这里强制切换到子线程
                 godEye.<Network>getModule(GodEye.ModuleName.NETWORK).subject()
                         .map(this.<RequestBaseInfo>createConvertServerMessageFunction("networkInfo"))
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
                         .subscribe(this.createSendMessageConsumer()),
+                //启动数据发射不一定在子线程，这里强制切换到子线程
                 godEye.<Startup>getModule(GodEye.ModuleName.STARTUP).subject()
                         .map(this.<StartupInfo>createConvertServerMessageFunction("startupInfo"))
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
                         .subscribe(this.createSendMessageConsumer()),
                 godEye.<Ram>getModule(GodEye.ModuleName.RAM).subject()
                         .map(this.<RamInfo>createConvertServerMessageFunction("ramInfo"))
@@ -116,7 +129,10 @@ public class Watcher implements Processor {
                         .map(threadMap())
                         .map(this.<List<ThreadInfo>>createConvertServerMessageFunction("threadInfo"))
                         .subscribe(this.createSendMessageConsumer()),
+                //crash发射数据不一定是子线程，所以这里强制切换到子线程
                 godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject()
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
                         .filter(crashPredicate())
                         .map(firstCrashMap())
                         .map(this.<CrashInfo>createConvertServerMessageFunction("crashInfo"))
@@ -133,6 +149,7 @@ public class Watcher implements Processor {
 
     @Override
     public void process(WebSocket webSocket, String msg) {
+        ThreadUtil.ensureWorkThread("Watcher process:" + msg);
         ClientMessage clientMessage = GsonUtil.fromJson(msg, ClientMessage.class);
         if ("clientOnline".equals(clientMessage.moduleName)) {//if a client get online,send init message to it
             for (Map.Entry<String, Object> entry : mMessageCache.copy().entrySet()) {

@@ -21,6 +21,8 @@ class Network extends Component {
         super(props);
         this.handleClose = this.handleClose.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        Network.isRedirect = Network.isRedirect.bind(this);
+        Network.isSuccessful = Network.isSuccessful.bind(this);
         this.options = {
             credits: {
                 enabled: false
@@ -123,7 +125,7 @@ class Network extends Component {
 
     static initSeries() {
         let data = [];
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 30; i++) {
             data.push({
                 x: i,
                 y: 0
@@ -137,11 +139,19 @@ class Network extends Component {
         return this.index;
     }
 
+    static isRedirect(resultCode) {
+        return resultCode === 307 || resultCode === 308 || resultCode === 300 || resultCode === 301 || resultCode === 302 || resultCode === 303
+    }
+
+    static isSuccessful(resultCode) {
+        return resultCode >= 200 && resultCode < 300;
+    }
+
     refresh(networkInfo) {
         if (networkInfo) {
             const resultCode = parseInt(networkInfo.resultCode);
             let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
-            if (!isNaN(resultCode) && resultCode >= 200 && resultCode < 300) {//request success
+            if (!isNaN(resultCode) && (Network.isSuccessful(resultCode) || Network.isRedirect(resultCode))) {//request success
                 this.refs.chart.getChart().series[0].addPoint({//dns
                     name: axisData,
                     y: networkInfo.networkSimplePerformance.dnsTimeMillis,
@@ -175,12 +185,12 @@ class Network extends Component {
                 this.refs.chart.getChart().series[6].addPoint({//other
                     name: axisData,
                     y: (networkInfo.networkSimplePerformance.totalTimeMillis -
-                    (networkInfo.networkSimplePerformance.dnsTimeMillis
-                    + networkInfo.networkSimplePerformance.connectTimeMillis
-                    + networkInfo.networkSimplePerformance.sendHeaderTimeMillis
-                    + networkInfo.networkSimplePerformance.sendBodyTimeMillis
-                    + networkInfo.networkSimplePerformance.receiveHeaderTimeMillis
-                    + networkInfo.networkSimplePerformance.receiveBodyTimeMillis)),
+                        (networkInfo.networkSimplePerformance.dnsTimeMillis
+                            + networkInfo.networkSimplePerformance.connectTimeMillis
+                            + networkInfo.networkSimplePerformance.sendHeaderTimeMillis
+                            + networkInfo.networkSimplePerformance.sendBodyTimeMillis
+                            + networkInfo.networkSimplePerformance.receiveHeaderTimeMillis
+                            + networkInfo.networkSimplePerformance.receiveBodyTimeMillis)),
                     networkInfo: networkInfo
                 }, false, true, true);
                 this.refs.chart.getChart().series[7].addPoint({//error

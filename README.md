@@ -124,6 +124,8 @@ GodEyeMonitor.shutDown()
 
 Install Android Studio plug-in(Search AndroidGodEye in Android Studio plugin setting),Then you can find AndroidGodEye in main toolbar,click it and it will open dashboard in browser.
 
+![https://github.com/Kyson/AndroidGodEye/blob/master/ART/android-godeye-plugin-position.png](https://github.com/Kyson/AndroidGodEye/blob/master/ART/android-godeye-plugin-position.png)
+
 Connect mobile phones and computers with USB, run `adb forward tcp:5390 tcp:5390`, then open `http://localhost:port/index.html`(**Note that /index.html is necessary!!!**) on PC. If you don't have a USB, you can also open `http://mobile ip:port/index.html` directly, ensure that mobile phones and PC are in the same LAN segment of course.
 
 > Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context,port)`, log is like:'Open AndroidGodEye dashboard [ http://ip:port/index.html" ] in your browser...'.

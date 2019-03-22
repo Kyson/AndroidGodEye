@@ -35,12 +35,14 @@ class Pageload extends Component {
             tooltip: {
                 shared: true,
                 formatter: function () {
-                    let point = this.points[0].point;
-                    if (point.pageloadInfo) {
-                        return point.pageloadInfo.pageId + ' ' + point.pageloadInfo.pageName + '<br/>'
-                            + point.pageloadInfo.pageStatus + '<br/>';
+                    let firstPoint = this.points[0].point;
+                    let pageId = "unknown";
+                    let pageName = "unknown";
+                    if (firstPoint && firstPoint.pageloadInfo) {
+                        pageId = firstPoint.pageloadInfo.pageId;
+                        pageName = firstPoint.pageloadInfo.pageName;
                     }
-                    return "";
+                    return pageId + '<br/>' + pageName + '<br/>';
                 }
             },
             xAxis: {
