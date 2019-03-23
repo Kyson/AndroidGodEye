@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
@@ -25,25 +26,53 @@ public class PageloadEngine implements Engine {
     private PageloadContext mPageloadContext;
     private Application.ActivityLifecycleCallbacks mActivityLifecycleCallbacks;
     private final Handler mHandler;
-    private Scheduler mPageloadScheduler;
+    private final Object mLockPageloadExecutor;
+    private ExecutorService mPageloadExecutor;
 
     public PageloadEngine(Producer<PageloadInfo> producer, PageloadContext config) {
         mProducer = producer;
         mPageloadContext = config;
         mHandler = new Handler(Looper.getMainLooper());
-        mPageloadScheduler = Schedulers.from(Executors.newSingleThreadExecutor());
+        mLockPageloadExecutor = new Object();
     }
+
+    private void createPageloadExecutor() {
+        synchronized (mLockPageloadExecutor) {
+            if (mPageloadExecutor == null) {
+                mPageloadExecutor = Executors.newSingleThreadExecutor();
+            }
+        }
+    }
+
+    private void executeOnPageloadExecutor(Runnable runnable) {
+        synchronized (mLockPageloadExecutor) {
+            if (mPageloadExecutor != null) {
+                mPageloadExecutor.execute(runnable);
+            }
+        }
+    }
+
+    private void shutdownPageloadExecutor() {
+        synchronized (mLockPageloadExecutor) {
+            if (mPageloadExecutor != null) {
+                mPageloadExecutor.shutdown();
+                mPageloadExecutor = null;
+            }
+        }
+    }
+
 
     @Override
     public void work() {
         if (mActivityStack == null) {
             mActivityStack = new PageloadActivityStack();
         }
+        createPageloadExecutor();
         if (mActivityLifecycleCallbacks == null) {
             mActivityLifecycleCallbacks = new SimpleActivityLifecycleCallbacks() {
                 @Override
                 public void onActivityCreated(final Activity activity, Bundle savedInstanceState) {
-                    mPageloadScheduler.scheduleDirect(new Runnable() {
+                    executeOnPageloadExecutor(new Runnable() {
                         @Override
                         public void run() {
                             ThreadUtil.ensureWorkThread("PageloadEngine onActivityCreated");
@@ -53,26 +82,21 @@ public class PageloadEngine implements Engine {
                             mProducer.produce(pageloadInfo);
                         }
                     });
+
                 }
 
                 @Override
                 public void onActivityStarted(final Activity activity) {
-                    mPageloadScheduler.scheduleDirect(new Runnable() {
+                    measureActivityDidAppear(activity, new OnActivityDidAppearCallback() {
                         @Override
-                        public void run() {
-                            ThreadUtil.ensureWorkThread("PageloadEngine onActivityStarted");
-                            measureActivityDidAppear(activity, new OnActivityDidAppearCallback() {
+                        public void didAppear() {
+                            executeOnPageloadExecutor(new Runnable() {
                                 @Override
-                                public void didAppear() {
-                                    mPageloadScheduler.scheduleDirect(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            final long time = System.currentTimeMillis();
-                                            PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "didDraw", time);
-                                            pageloadInfo.loadTimeInfo = mActivityStack.onDidDraw(activity, time);
-                                            mProducer.produce(pageloadInfo);
-                                        }
-                                    });
+                                public void run() {
+                                    final long time = System.currentTimeMillis();
+                                    PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "didDraw", time);
+                                    pageloadInfo.loadTimeInfo = mActivityStack.onDidDraw(activity, time);
+                                    mProducer.produce(pageloadInfo);
                                 }
                             });
                         }
@@ -81,7 +105,7 @@ public class PageloadEngine implements Engine {
 
                 @Override
                 public void onActivityDestroyed(final Activity activity) {
-                    mPageloadScheduler.scheduleDirect(new Runnable() {
+                    executeOnPageloadExecutor(new Runnable() {
                         @Override
                         public void run() {
                             ThreadUtil.ensureWorkThread("PageloadEngine onActivityDestroyed");
@@ -92,40 +116,22 @@ public class PageloadEngine implements Engine {
                         }
                     });
                 }
+
             };
         }
-        if (ThreadUtil.isMainThread()) {
-            mPageloadContext.application().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
-        } else {
-            ThreadUtil.sMain.execute(new Runnable() {
-                @Override
-                public void run() {
-                    mPageloadContext.application().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
-                }
-            });
-        }
+        mPageloadContext.application().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
     }
 
     @Override
     public void shutdown() {
-        if (ThreadUtil.isMainThread()) {
-            mPageloadContext.application().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
-            mActivityLifecycleCallbacks = null;
-            mActivityStack = null;
-        } else {
-            ThreadUtil.sMain.execute(new Runnable() {
-                @Override
-                public void run() {
-                    mPageloadContext.application().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
-                    mActivityLifecycleCallbacks = null;
-                    mActivityStack = null;
-                }
-            });
-        }
+        mPageloadContext.application().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
+        mActivityLifecycleCallbacks = null;
+        mActivityStack = null;
+        shutdownPageloadExecutor();
     }
 
     void onPageLoaded(final Activity activity) {
-        mPageloadScheduler.scheduleDirect(new Runnable() {
+        executeOnPageloadExecutor(new Runnable() {
             @Override
             public void run() {
                 long time = System.currentTimeMillis();
@@ -138,6 +144,7 @@ public class PageloadEngine implements Engine {
 
     public interface OnActivityDidAppearCallback {
         void didAppear();
+
     }
 
     private void measureActivityDidAppear(final Activity activity, final OnActivityDidAppearCallback onActivityDidAppearCallback) {

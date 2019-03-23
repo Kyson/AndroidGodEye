@@ -42,8 +42,8 @@ public class ThreadEngine implements Engine {
                 ThreadUtil.ensureWorkThread("ThreadEngine apply");
                 return dump(mThreadFilter);
             }
-        }).subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.computation())
+        }).subscribeOn(ThreadUtil.sComputationScheduler)
+                .observeOn(ThreadUtil.sComputationScheduler)
                 .subscribe(new Consumer<List<Thread>>() {
                     @Override
                     public void accept(List<Thread> food) throws Exception {

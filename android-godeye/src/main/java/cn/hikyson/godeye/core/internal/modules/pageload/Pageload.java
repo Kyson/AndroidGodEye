@@ -1,7 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
 import android.app.Activity;
-import android.app.Application;
 
 
 import cn.hikyson.godeye.core.internal.Install;
@@ -9,6 +8,9 @@ import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
+ * 页面加载模块
+ * 安装卸载可以任意线程
+ * 发射数据在主线程
  * Created by kysonchao on 2018/1/25.
  */
 public class Pageload extends ProduceableSubject<PageloadInfo> implements Install<PageloadContext> {
@@ -17,14 +19,14 @@ public class Pageload extends ProduceableSubject<PageloadInfo> implements Instal
     /**
      * 外部在需要的时候（页面全部加载结束）调用
      */
-    public void onPageLoaded(Activity activity) {
+    public synchronized void onPageLoaded(Activity activity) {
         if (mPageloadEngine != null) {
             mPageloadEngine.onPageLoaded(activity);
         }
     }
 
     @Override
-    public void install(PageloadContext config) {
+    public synchronized void install(PageloadContext config) {
         if (mPageloadEngine != null) {
             L.d("pageload already installed, ignore.");
             return;
@@ -35,7 +37,7 @@ public class Pageload extends ProduceableSubject<PageloadInfo> implements Instal
     }
 
     @Override
-    public void uninstall() {
+    public synchronized void uninstall() {
         if (mPageloadEngine == null) {
             L.d("pageload already uninstalled, ignore.");
             return;

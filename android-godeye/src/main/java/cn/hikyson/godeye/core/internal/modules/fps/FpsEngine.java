@@ -1,7 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.fps;
 
 import android.content.Context;
-import android.support.annotation.UiThread;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -12,10 +11,8 @@ import cn.hikyson.godeye.core.internal.Producer;
 
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -37,27 +34,15 @@ public class FpsEngine implements Engine {
 
     @Override
     public void work() {
-        if (ThreadUtil.isMainThread()) {
-            startInMain();
-        } else {
-            ThreadUtil.sMain.execute(new Runnable() {
-                @Override
-                public void run() {
-                    startInMain();
-                }
-            });
-        }
-    }
-
-    @UiThread
-    private void startInMain() {
+        ThreadUtil.ensureMainThread("FpsEngine work");
         mFpsMonitor.start();
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
-                .observeOn(Schedulers.computation())
-                .subscribeOn(Schedulers.computation())
+                .observeOn(ThreadUtil.sComputationScheduler)
+                .subscribeOn(ThreadUtil.sComputationScheduler)
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(Long aLong) throws Exception {
+                        ThreadUtil.ensureWorkThread("FpsEngine accept");
                         int fps = mFpsMonitor.exportThenReset();
                         mProducer.produce(new FpsInfo(fps, mSystemRate));
                     }
@@ -66,19 +51,7 @@ public class FpsEngine implements Engine {
 
     @Override
     public void shutdown() {
-        if (ThreadUtil.isMainThread()) {
-            stopInMain();
-        }
-        ThreadUtil.sMain.execute(new Runnable() {
-            @Override
-            public void run() {
-                stopInMain();
-            }
-        });
-    }
-
-    @UiThread
-    private void stopInMain() {
+        ThreadUtil.ensureMainThread("FpsEngine work");
         mCompositeDisposable.dispose();
         mFpsMonitor.stop();
     }

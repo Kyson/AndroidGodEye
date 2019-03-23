@@ -19,9 +19,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     public CrashHandler(final Producer<List<CrashInfo>> producer, CrashProvider crashProvider, Thread.UncaughtExceptionHandler defaultHandler) {
         mDefaultHandler = defaultHandler;
         mCrashProvider = crashProvider;
-        Observable.fromCallable(new Callable<Boolean>() {
+        ThreadUtil.sComputationScheduler.scheduleDirect(new Runnable() {
             @Override
-            public Boolean call() throws Exception {
+            public void run() {
                 ThreadUtil.ensureWorkThread("CrashHandler call");
                 try {
                     if (mCrashProvider != null) {
@@ -30,9 +30,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 } catch (Throwable throwable) {
                     L.e(String.valueOf(throwable));
                 }
-                return true;
             }
-        }).subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation()).subscribe();
+        });
     }
 
     @Override

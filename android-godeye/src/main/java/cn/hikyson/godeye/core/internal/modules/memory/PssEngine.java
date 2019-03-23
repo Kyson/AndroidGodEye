@@ -39,8 +39,8 @@ public class PssEngine implements Engine {
                 ThreadUtil.ensureWorkThread("PssEngine accept");
                 return MemoryUtil.getAppPssInfo(mContext);
             }
-        }).subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.computation())
+        }).subscribeOn(ThreadUtil.sComputationScheduler)
+                .observeOn(ThreadUtil.sComputationScheduler)
                 .subscribe(new Consumer<PssInfo>() {
                     @Override
                     public void accept(PssInfo food) throws Exception {

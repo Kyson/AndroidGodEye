@@ -11,7 +11,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.functions.Predicate;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -31,29 +31,28 @@ public class CpuEngine implements Engine {
 
     @Override
     public void work() {
-        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).
-                concatMap(new Function<Long, ObservableSource<CpuInfo>>() {
+        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
+                .subscribeOn(ThreadUtil.sComputationScheduler)
+                .observeOn(ThreadUtil.sComputationScheduler)
+                .concatMap(new Function<Long, ObservableSource<CpuInfo>>() {
                     @Override
                     public ObservableSource<CpuInfo> apply(Long aLong) throws Exception {
                         ThreadUtil.ensureWorkThread("CpuEngine apply");
                         return create();
                     }
                 })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.computation())
+                .filter(new Predicate<CpuInfo>() {
+                            @Override
+                            public boolean test(CpuInfo cpuInfo) throws Exception {
+                                return CpuInfo.INVALID != cpuInfo;
+                            }
+                        }
+                )
                 .subscribe(new Consumer<CpuInfo>() {
                     @Override
                     public void accept(CpuInfo food) throws Exception {
                         ThreadUtil.ensureWorkThread("CpuEngine accept");
-                        if (food == CpuInfo.INVALID) {
-                            return;
-                        }
                         mProducer.produce(food);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        L.e(String.valueOf(throwable));
                     }
                 }));
     }

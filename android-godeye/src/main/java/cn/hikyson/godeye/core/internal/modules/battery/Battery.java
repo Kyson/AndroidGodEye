@@ -6,7 +6,11 @@ import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 
-
+/**
+ * 电池模块
+ * 安装卸载可以任意线程
+ * 发射数据子线程和主线程都有可能
+ */
 public class Battery extends ProduceableSubject<BatteryInfo> implements Install<BatteryContext> {
     private BatteryEngine mBatteryEngine;
 

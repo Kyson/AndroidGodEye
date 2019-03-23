@@ -40,8 +40,8 @@ public class RamEngine implements Engine {
                 return MemoryUtil.getRamInfo(mContext);
             }
         })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.computation())
+                .subscribeOn(ThreadUtil.sComputationScheduler)
+                .observeOn(ThreadUtil.sComputationScheduler)
                 .subscribe(new Consumer<RamInfo>() {
                     @Override
                     public void accept(RamInfo food) throws Exception {

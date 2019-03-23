@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
 
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.AnalysisResult;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.canary.analyzer.leakcanary.HeapAnalyzer;
@@ -25,21 +26,23 @@ public class LeakOutputReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, final Intent intent) {
-        Observable.fromCallable(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_START.equals(intent.getAction())) {
-                    onLeakDumpStart(intent);
-                } else if (HeapAnalyzer.OUTPUT_BOARDCAST_ACTION_PROGRESS.equals(intent.getAction())) {
-                    onLeakDumpProgress(intent);
-                } else if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_RETRY.equals(intent.getAction())) {
-                    onLeakDumpRetry(intent);
-                } else if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_DONE.equals(intent.getAction())) {
-                    onLeakDumpDone(intent);
+        Executor executor = LeakDetector.instance().getsSingleForLeakExecutor();
+        if (executor != null) {
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_START.equals(intent.getAction())) {
+                        onLeakDumpStart(intent);
+                    } else if (HeapAnalyzer.OUTPUT_BOARDCAST_ACTION_PROGRESS.equals(intent.getAction())) {
+                        onLeakDumpProgress(intent);
+                    } else if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_RETRY.equals(intent.getAction())) {
+                        onLeakDumpRetry(intent);
+                    } else if (OutputLeakService.OUTPUT_BOARDCAST_ACTION_DONE.equals(intent.getAction())) {
+                        onLeakDumpDone(intent);
+                    }
                 }
-                return true;
-            }
-        }).subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation()).subscribe();
+            });
+        }
     }
 
     private void onLeakDumpStart(Intent intent) {

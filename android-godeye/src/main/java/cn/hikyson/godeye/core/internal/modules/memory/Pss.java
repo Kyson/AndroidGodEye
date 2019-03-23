@@ -1,12 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.memory;
 
-import android.content.Context;
-
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
+ * pss模块
+ * 安装卸载可以任意线程
+ * 发射数据在子线程
  * Created by kysonchao on 2017/11/22.
  */
 public class Pss extends ProduceableSubject<PssInfo> implements Install<PssContext> {

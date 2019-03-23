@@ -6,8 +6,6 @@ import android.os.BatteryManager;
  * Created by kysonchao on 2017/11/22.
  */
 public class BatteryInfo {
-    public static final BatteryInfo INVALID = new BatteryInfo();
-
     // int类型，状态，定义值是BatteryManager.BATTERY_STATUS_XXX / 正在充电、充满等等
     public int status;
     // int类型，健康，定义值是BatteryManager.BATTERY_HEALTH_XXX。
@@ -31,16 +29,15 @@ public class BatteryInfo {
 
     @Override
     public String toString() {
-        return new StringBuilder().append("statusSummary: ").append(getDisplayStatus()).append(SPILT)
-                .append("health: ").append(getDisplayHealth()).append(SPILT)
-                .append("present: ").append(present).append(SPILT)
-                .append("level: ").append(level).append(SPILT)
-                .append("scale: ").append(scale).append(SPILT)
-                .append("plugged: ").append(getDisplayPlugged()).append(SPILT)
-                .append("voltage: ").append(voltage / 1000.0).append(SPILT)
-                .append("temperature: ").append(temperature / 10.0).append(SPILT)
-                .append("technology: ").append(technology)
-                .toString();
+        return "statusSummary: " + getDisplayStatus() + SPILT +
+                "health: " + getDisplayHealth() + SPILT +
+                "present: " + present + SPILT +
+                "level: " + level + SPILT +
+                "scale: " + scale + SPILT +
+                "plugged: " + getDisplayPlugged() + SPILT +
+                "voltage: " + voltage / 1000.0 + SPILT +
+                "temperature: " + temperature / 10.0 + SPILT +
+                "technology: " + technology;
     }
 
     public String getDisplayStatus() {

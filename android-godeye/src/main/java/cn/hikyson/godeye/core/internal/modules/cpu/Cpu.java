@@ -6,6 +6,9 @@ import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
+ * cpu模块
+ * 安装卸载可以任意线程
+ * 发射数据在子线程
  * Created by kysonchao on 2017/5/19.
  */
 public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuContext> {
