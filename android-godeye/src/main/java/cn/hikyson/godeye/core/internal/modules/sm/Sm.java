@@ -12,7 +12,11 @@ import cn.hikyson.godeye.core.internal.modules.sm.core.SmCore;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 
-
+/**
+ * 卡顿模块
+ * 安装卸载可以在任意线程
+ * 发射数据在子线程
+ */
 public final class Sm extends ProduceableSubject<BlockInfo> implements Install<SmContext> {
 
     private SmCore mBlockCore;
