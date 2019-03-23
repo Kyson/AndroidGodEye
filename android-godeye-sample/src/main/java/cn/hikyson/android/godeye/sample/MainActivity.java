@@ -360,42 +360,48 @@ public class MainActivity extends Activity implements Loggable {
     }
 
     private void onClickInstall() {
-        if (mActivityMainCpu.isChecked()) {
-            GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).install(new GodEyeConfig.CpuConfig());
-        }
-        if (mActivityMainBattery.isChecked()) {
-            GodEye.instance().<Battery>getModule(GodEye.ModuleName.BATTERY).install(new GodEyeConfig.BatteryConfig());
-        }
-        if (mActivityMainFps.isChecked()) {
-            GodEye.instance().<Fps>getModule(GodEye.ModuleName.FPS).install(new GodEyeConfig.FpsConfig());
-        }
-        if (mActivityMainLeak.isChecked()) {
-            GodEye.instance().<LeakDetector>getModule(GodEye.ModuleName.LEAK).install(new GodEyeConfig.LeakConfig());
-        }
-        if (mActivityMainHeap.isChecked()) {
-            GodEye.instance().<Heap>getModule(GodEye.ModuleName.HEAP).install(new GodEyeConfig.HeapConfig());
-        }
-        if (mActivityMainPss.isChecked()) {
-            GodEye.instance().<Pss>getModule(GodEye.ModuleName.PSS).install(new GodEyeConfig.PssConfig());
-        }
-        if (mActivityMainRam.isChecked()) {
-            GodEye.instance().<Ram>getModule(GodEye.ModuleName.RAM).install(new GodEyeConfig.RamConfig());
-        }
-        if (mActivityMainSm.isChecked()) {
-            GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).install(new GodEyeConfig.SmConfig());
-        }
-        if (mActivityMainTraffic.isChecked()) {
-            GodEye.instance().<Traffic>getModule(GodEye.ModuleName.TRAFFIC).install(new GodEyeConfig.TrafficConfig());
-        }
-        if (mActivityMainCrash.isChecked()) {
-            GodEye.instance().<Crash>getModule(GodEye.ModuleName.CRASH).install(new GodEyeConfig.CrashConfig());
-        }
-        if (mActivityMainThread.isChecked()) {
-            GodEye.instance().<ThreadDump>getModule(GodEye.ModuleName.THREAD).install(new GodEyeConfig.ThreadConfig());
-        }
-        if (mActivityMainPageload.isChecked()) {
-            GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).install(new GodEyeConfig.PageloadConfig());
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mActivityMainCpu.isChecked()) {
+                    GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).install(new GodEyeConfig.CpuConfig());
+                }
+                if (mActivityMainBattery.isChecked()) {
+                    GodEye.instance().<Battery>getModule(GodEye.ModuleName.BATTERY).install(new GodEyeConfig.BatteryConfig());
+                }
+                if (mActivityMainFps.isChecked()) {
+                    GodEye.instance().<Fps>getModule(GodEye.ModuleName.FPS).install(new GodEyeConfig.FpsConfig());
+                }
+                if (mActivityMainLeak.isChecked()) {
+                    GodEye.instance().<LeakDetector>getModule(GodEye.ModuleName.LEAK).install(new GodEyeConfig.LeakConfig());
+                }
+                if (mActivityMainHeap.isChecked()) {
+                    GodEye.instance().<Heap>getModule(GodEye.ModuleName.HEAP).install(new GodEyeConfig.HeapConfig());
+                }
+                if (mActivityMainPss.isChecked()) {
+                    GodEye.instance().<Pss>getModule(GodEye.ModuleName.PSS).install(new GodEyeConfig.PssConfig());
+                }
+                if (mActivityMainRam.isChecked()) {
+                    GodEye.instance().<Ram>getModule(GodEye.ModuleName.RAM).install(new GodEyeConfig.RamConfig());
+                }
+                if (mActivityMainSm.isChecked()) {
+                    GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).install(new GodEyeConfig.SmConfig());
+                }
+                if (mActivityMainTraffic.isChecked()) {
+                    GodEye.instance().<Traffic>getModule(GodEye.ModuleName.TRAFFIC).install(new GodEyeConfig.TrafficConfig());
+                }
+                if (mActivityMainCrash.isChecked()) {
+                    GodEye.instance().<Crash>getModule(GodEye.ModuleName.CRASH).install(new GodEyeConfig.CrashConfig());
+                }
+                if (mActivityMainThread.isChecked()) {
+                    GodEye.instance().<ThreadDump>getModule(GodEye.ModuleName.THREAD).install(new GodEyeConfig.ThreadConfig());
+                }
+                if (mActivityMainPageload.isChecked()) {
+                    GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).install(new GodEyeConfig.PageloadConfig());
+                }
+            }
+        }).start();
+
     }
 
     @Override

@@ -8,5 +8,4 @@ import android.content.Context;
 
 public interface BatteryContext {
     Context context();
-    long intervalMillis();
 }

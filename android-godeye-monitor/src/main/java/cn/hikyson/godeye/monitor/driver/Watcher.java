@@ -82,11 +82,13 @@ public class Watcher implements Processor {
                 //应用基础数据发射不一定在子线程，这里强制切换到子线程
                 Observable.just(new AppInfo())
                         .map(this.<AppInfo>createConvertServerMessageFunction("appInfo"))
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(Schedulers.computation())
+                        .subscribeOn(ThreadUtil.sComputationScheduler)
+                        .observeOn(ThreadUtil.sComputationScheduler)
                         .subscribe(createSendMessageConsumer()),
                 godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject()
                         .map(this.<BatteryInfo>createConvertServerMessageFunction("batteryInfo"))
+                        .subscribeOn(ThreadUtil.sComputationScheduler)
+                        .observeOn(ThreadUtil.sComputationScheduler)
                         .subscribe(this.createSendMessageConsumer()),
                 godEye.<Cpu>getModule(GodEye.ModuleName.CPU).subject()
                         .map(this.<CpuInfo>createConvertServerMessageFunction("cpuInfo"))
@@ -107,14 +109,14 @@ public class Watcher implements Processor {
                 //网络数据发射不一定在子线程，这里强制切换到子线程
                 godEye.<Network>getModule(GodEye.ModuleName.NETWORK).subject()
                         .map(this.<RequestBaseInfo>createConvertServerMessageFunction("networkInfo"))
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(Schedulers.computation())
+                        .subscribeOn(ThreadUtil.sComputationScheduler)
+                        .observeOn(ThreadUtil.sComputationScheduler)
                         .subscribe(this.createSendMessageConsumer()),
                 //启动数据发射不一定在子线程，这里强制切换到子线程
                 godEye.<Startup>getModule(GodEye.ModuleName.STARTUP).subject()
                         .map(this.<StartupInfo>createConvertServerMessageFunction("startupInfo"))
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(Schedulers.computation())
+                        .subscribeOn(ThreadUtil.sComputationScheduler)
+                        .observeOn(ThreadUtil.sComputationScheduler)
                         .subscribe(this.createSendMessageConsumer()),
                 godEye.<Ram>getModule(GodEye.ModuleName.RAM).subject()
                         .map(this.<RamInfo>createConvertServerMessageFunction("ramInfo"))
@@ -131,8 +133,8 @@ public class Watcher implements Processor {
                         .subscribe(this.createSendMessageConsumer()),
                 //crash发射数据不一定是子线程，所以这里强制切换到子线程
                 godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject()
-                        .subscribeOn(Schedulers.computation())
-                        .observeOn(Schedulers.computation())
+                        .subscribeOn(ThreadUtil.sComputationScheduler)
+                        .observeOn(ThreadUtil.sComputationScheduler)
                         .filter(crashPredicate())
                         .map(firstCrashMap())
                         .map(this.<CrashInfo>createConvertServerMessageFunction("crashInfo"))

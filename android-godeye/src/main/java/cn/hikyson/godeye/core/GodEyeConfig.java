@@ -38,11 +38,7 @@ public class GodEyeConfig {
                     .parse(context.getAssets().open(path)).getDocumentElement();
             Element element = getFirstElementByTagInRoot(root, "battery");
             if (element != null) {
-                final String intervalMillisString = element.getAttribute("intervalMillis");
                 BatteryConfig batteryConfig = new BatteryConfig();
-                if (!TextUtils.isEmpty(intervalMillisString)) {
-                    batteryConfig.intervalMillis = Long.parseLong(intervalMillisString);
-                }
                 builder.withBatteryConfig(batteryConfig);
             }
             element = getFirstElementByTagInRoot(root, "cpu");
@@ -170,24 +166,13 @@ public class GodEyeConfig {
     }
 
     public static class BatteryConfig implements BatteryContext {
-        public long intervalMillis;
-
-        public BatteryConfig(long intervalMillis) {
-            this.intervalMillis = intervalMillis;
-        }
 
         public BatteryConfig() {
-            this.intervalMillis = 5000;
         }
 
         @Override
         public Context context() {
             return GodEye.instance().getApplication();
-        }
-
-        @Override
-        public long intervalMillis() {
-            return intervalMillis;
         }
     }
 
