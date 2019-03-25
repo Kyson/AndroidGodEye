@@ -3,6 +3,7 @@ package cn.hikyson.godeye.core.internal.modules.traffic;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Producer;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
@@ -26,18 +27,22 @@ public class TrafficEngine {
     }
 
     public void work() {
-        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).
-                concatMap(new Function<Long, ObservableSource<TrafficInfo>>() {
+        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
+                .subscribeOn(ThreadUtil.sComputationScheduler)
+                .observeOn(ThreadUtil.sComputationScheduler)
+                .concatMap(new Function<Long, ObservableSource<TrafficInfo>>() {
                     @Override
                     public ObservableSource<TrafficInfo> apply(Long aLong) throws Exception {
+                        ThreadUtil.ensureWorkThread("TrafficEngine apply");
                         return create();
                     }
                 }).subscribe(new Consumer<TrafficInfo>() {
-            @Override
-            public void accept(TrafficInfo food) throws Exception {
-                mProducer.produce(food);
-            }
-        }));
+                    @Override
+                    public void accept(TrafficInfo food) throws Exception {
+                        ThreadUtil.ensureWorkThread("TrafficEngine accept");
+                        mProducer.produce(food);
+                    }
+                }));
     }
 
     public void shutdown() {

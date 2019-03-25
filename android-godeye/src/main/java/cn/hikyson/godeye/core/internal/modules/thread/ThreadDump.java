@@ -7,14 +7,13 @@ import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
+ * 线程模块
+ * 安装卸载可以任意线程
+ * 发射数据在子线程
  * Created by kysonchao on 2018/1/14.
  */
 public class ThreadDump extends ProduceableSubject<List<Thread>> implements Install<ThreadContext> {
     private ThreadEngine mThreadEngine;
-
-    public synchronized void install() {
-        install(new ThreadContextImpl());
-    }
 
     @Override
     public synchronized void install(ThreadContext config) {
