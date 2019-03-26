@@ -25,6 +25,7 @@ import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
+import cn.hikyson.godeye.core.internal.modules.deadlock.A;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
@@ -135,6 +136,8 @@ public class MainActivity extends Activity implements Loggable {
     CheckBox mActivityMainFollow;
     @BindView(R.id.activity_main_make_clear)
     Button mActivityMainClear;
+    @BindView(R.id.activity_main_test)
+    Button mActivityMainTest;
 
     CheckBox[] installableCbs;
     private CompositeDisposable mCompositeDisposable;
@@ -196,11 +199,14 @@ public class MainActivity extends Activity implements Loggable {
             R.id.activity_main_consumer_thread, R.id.activity_main_consumer_deadlock, R.id.activity_main_consumer_pageload,
             R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak,
             R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear,
-            R.id.activity_main_make_deadlock, R.id.activity_main_make_pageload})
+            R.id.activity_main_make_deadlock, R.id.activity_main_make_pageload,R.id.activity_main_test})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_main_all:
                 checkAllInstall();
+                break;
+            case R.id.activity_main_test:
+                A.send();
                 break;
             case R.id.activity_main_cancel_all:
                 cancelCheckAllInstall();
