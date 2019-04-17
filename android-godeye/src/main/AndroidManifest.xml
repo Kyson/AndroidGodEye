@@ -17,11 +17,11 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".internal.modules.leakdetector.canary.android.internal.HeapAnalyzerService"
+            android:name=".internal.modules.leakdetector.GodEyeHeapAnalyzerService"
             android:enabled="false"
             android:process=":leakcanary"/>
         <service
-            android:name=".internal.modules.leakdetector.canary.android.output.OutputLeakService"
+            android:name=".internal.modules.leakdetector.OutputLeakService"
             android:enabled="false"
             android:process=":leakcanary"/>
     </application>

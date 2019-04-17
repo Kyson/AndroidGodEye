@@ -9,5 +9,5 @@ import android.app.Application;
 public interface LeakContext {
     Application application();
 
-    boolean debugNotify();
+    boolean enableRelease();
 }

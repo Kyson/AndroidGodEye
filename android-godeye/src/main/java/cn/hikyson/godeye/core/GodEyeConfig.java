@@ -83,10 +83,10 @@ public class GodEyeConfig {
             }
             element = getFirstElementByTagInRoot(root, "leakMemory");
             if (element != null) {
-                final String debugNotifyString = element.getAttribute("debugNotify");
+                final String enableRelease = element.getAttribute("enableRelease");
                 LeakConfig leakConfig = new LeakConfig();
-                if (!TextUtils.isEmpty(debugNotifyString)) {
-                    leakConfig.debugNotify = Boolean.parseBoolean(debugNotifyString);
+                if (!TextUtils.isEmpty(enableRelease)) {
+                    leakConfig.enableRelease = Boolean.parseBoolean(enableRelease);
                 }
                 builder.withLeakConfig(leakConfig);
             }
@@ -263,14 +263,14 @@ public class GodEyeConfig {
     }
 
     public static class LeakConfig implements LeakContext {
-        public boolean debugNotify;
+        public boolean enableRelease;
 
-        public LeakConfig(boolean debugNotify) {
-            this.debugNotify = debugNotify;
+        public LeakConfig(boolean enableRelease) {
+            this.enableRelease = enableRelease;
         }
 
         public LeakConfig() {
-            this.debugNotify = true;
+            this.enableRelease = false;
         }
 
         @Override
@@ -279,8 +279,8 @@ public class GodEyeConfig {
         }
 
         @Override
-        public boolean debugNotify() {
-            return debugNotify;
+        public boolean enableRelease() {
+            return enableRelease;
         }
     }
 
