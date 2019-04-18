@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.DebuggerControl;
+import com.squareup.leakcanary.GcTrigger;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.leakcanary.internal.LeakCanaryInternals;
@@ -15,7 +16,6 @@ import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.debug.GodEyeDebugHeapDumpListener;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.debug.GodEyeDebugHeapDumper;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.release.GodEyeReleaseGcTrigger;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.release.GodEyeReleaseHeapDumpListener;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.release.GodEyeReleaseHeapDumper;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.watcher.AndroidOFragmentRefWatcher;
@@ -33,7 +33,7 @@ public class LeakEngine implements Engine {
     private RefWatcher createDebugRefWatcher() {
         return LeakCanary.refWatcher(mConfig.application()).listenerServiceClass(GodEyeDisplayLeakService.class)
                 .heapDumper(new GodEyeDebugHeapDumper(LeakCanaryInternals.getLeakDirectoryProvider(mConfig.application())))
-                .heapDumpListener(new GodEyeDebugHeapDumpListener(mConfig.application()))
+                .heapDumpListener(new GodEyeDebugHeapDumpListener(mConfig.application(), mConfig.debugNotification()))
                 .excludedRefs(AndroidExcludedRefs.createAppDefaults().build())
                 .build();
     }
@@ -46,7 +46,7 @@ public class LeakEngine implements Engine {
                         return false;
                     }
                 })
-                .gcTrigger(new GodEyeReleaseGcTrigger())
+                .gcTrigger(GcTrigger.DEFAULT)
                 .heapDumper(new GodEyeReleaseHeapDumper(mConfig.application()))
                 .heapDumpListener(new GodEyeReleaseHeapDumpListener())
                 .excludedRefs(AndroidExcludedRefs.createAppDefaults().build()).build();

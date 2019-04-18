@@ -10,14 +10,16 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 public class GodEyeDebugHeapDumpListener implements HeapDump.Listener {
 
     private final Context context;
+    private final boolean showNotification;
 
-    public GodEyeDebugHeapDumpListener(@NonNull final Context context) {
+    public GodEyeDebugHeapDumpListener(@NonNull final Context context, boolean showNotification) {
         this.context = context;
+        this.showNotification = showNotification;
     }
 
     @Override
     public void analyze(HeapDump heapDump) {
         GodEyeCanaryLog.d("开始分析...");
-        GodEyeHeapAnalyzerService.runAnalysis(context, heapDump);
+        GodEyeHeapAnalyzerService.runAnalysis(context, heapDump, showNotification);
     }
 }
