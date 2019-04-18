@@ -1,22 +1,16 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
-import com.squareup.leakcanary.LeakDirectoryProvider;
-import com.squareup.leakcanary.internal.LeakCanaryInternals;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
+import cn.hikyson.godeye.core.utils.L;
 
 public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> implements Install<LeakContext> {
 
     private LeakEngine mLeakEngine;
-
-    private LeakDirectoryProvider mLeakDirectoryProvider;
-
-    private volatile boolean mHasStarted;
-
+    private boolean mInstalled;
     private LeakDetector() {
     }
 
@@ -32,21 +26,18 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
 
     @Override
     public synchronized void install(LeakContext config) {
-        if (mHasStarted) {
+        if (mInstalled) {
+            L.d("crash already installed , ignore");
             return;
         }
         sSingleForLeakExecutor = Executors.newSingleThreadExecutor();
-        mLeakDirectoryProvider = LeakCanaryInternals.getLeakDirectoryProvider(config.application());
-        mLeakEngine = new LeakEngine(mLeakDirectoryProvider, config.application(), config.enableRelease());
+        mLeakEngine = new LeakEngine(config);
         mLeakEngine.work();
-        mHasStarted = true;
+        mInstalled = true;
     }
 
     @Override
     public synchronized void uninstall() {
-        if (!mHasStarted) {
-            return;
-        }
         if (mLeakEngine != null) {
             mLeakEngine.shutdown();
         }
@@ -54,12 +45,8 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
         sSingleForLeakExecutor = null;
     }
 
-    ExecutorService getsSingleForLeakExecutor() {
+    public ExecutorService getsSingleForLeakExecutor() {
         return sSingleForLeakExecutor;
-    }
-
-    LeakDirectoryProvider getLeakDirectoryProvider() {
-        return mLeakDirectoryProvider;
     }
 }
 

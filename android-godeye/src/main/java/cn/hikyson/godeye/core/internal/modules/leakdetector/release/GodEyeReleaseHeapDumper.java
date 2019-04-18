@@ -1,0 +1,22 @@
+package cn.hikyson.godeye.core.internal.modules.leakdetector.release;
+
+import android.content.Context;
+
+import com.squareup.leakcanary.HeapDumper;
+
+import java.io.File;
+
+public class GodEyeReleaseHeapDumper implements HeapDumper {
+
+    private File mFile;
+
+    public GodEyeReleaseHeapDumper(Context context) {
+        mFile = new File(context.getCacheDir(), "leakcanary");
+    }
+
+    @Override
+    public File dumpHeap() {
+        //只返回空的file，不dump文件
+        return mFile;
+    }
+}

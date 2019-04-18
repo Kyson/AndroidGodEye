@@ -1,13 +1,22 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
+
+import cn.hikyson.godeye.core.internal.modules.leakdetector.release.LeakRefNameProvider;
 
 /**
  * Created by kysonchao on 2017/11/24.
  */
 
 public interface LeakContext {
+    @NonNull
     Application application();
 
-    boolean enableRelease();
+    boolean debug();
+
+    boolean debugNotification();
+
+    @NonNull
+    LeakRefNameProvider leakRefNameProvider();
 }
