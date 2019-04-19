@@ -38,13 +38,14 @@ public class LeakQueue {
         }
 
         @Retention(RetentionPolicy.SOURCE)
-        @IntDef({Status.STATUS_INVALID, Status.STATUS_START, Status.STATUS_PROGRESS, Status.STATUS_RETRY, Status.STATUS_DONE})
+        @IntDef({Status.STATUS_INVALID, Status.STATUS_DETECT, Status.STATUS_START, Status.STATUS_PROGRESS, Status.STATUS_RETRY, Status.STATUS_DONE})
         public @interface Status {
             public static final int STATUS_INVALID = -1;
-            public static final int STATUS_START = 0;
-            public static final int STATUS_PROGRESS = 1;
-            public static final int STATUS_RETRY = 2;
-            public static final int STATUS_DONE = 3;
+            public static final int STATUS_DETECT = 0;
+            public static final int STATUS_START = 1;
+            public static final int STATUS_PROGRESS = 2;
+            public static final int STATUS_RETRY = 3;
+            public static final int STATUS_DONE = 4;
         }
 
         public String referenceKey = "";
