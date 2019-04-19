@@ -26,13 +26,13 @@ public class LeakOutputReceiver extends BroadcastReceiver {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (GodEyeHeapAnalyzerService.OUTPUT_BOARDCAST_ACTION_START.equals(intent.getAction())) {
+                    if (DebugHeapAnalyzerService.OUTPUT_BOARDCAST_ACTION_START.equals(intent.getAction())) {
                         onLeakDumpStart(intent);
-                    } else if (GodEyeHeapAnalyzerService.OUTPUT_BOARDCAST_ACTION_PROGRESS.equals(intent.getAction())) {
+                    } else if (DebugHeapAnalyzerService.OUTPUT_BOARDCAST_ACTION_PROGRESS.equals(intent.getAction())) {
                         onLeakDumpProgress(intent);
-                    } else if (GodEyeHeapAnalyzerService.OUTPUT_BOARDCAST_ACTION_DONE.equals(intent.getAction())) {
+                    } else if (DebugHeapAnalyzerService.OUTPUT_BOARDCAST_ACTION_DONE.equals(intent.getAction())) {
                         onLeakDumpDone(intent);
-                    } else if (GodEyeHeapAnalyzerService.OUTPUT_BOARDCAST_ACTION_FAILURE.equals(intent.getAction())) {
+                    } else if (DebugHeapAnalyzerService.OUTPUT_BOARDCAST_ACTION_FAILURE.equals(intent.getAction())) {
                         onLeakDumpFailure(intent);
                     }
                 }

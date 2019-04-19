@@ -6,11 +6,11 @@ import com.squareup.leakcanary.HeapDumper;
 
 import java.io.File;
 
-public class GodEyeReleaseHeapDumper implements HeapDumper {
+public class ReleaseHeapDumper implements HeapDumper {
 
     private File mFile;
 
-    public GodEyeReleaseHeapDumper(Context context) {
+    public ReleaseHeapDumper(Context context) {
         mFile = new File(context.getCacheDir(), "leakcanary");
     }
 

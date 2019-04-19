@@ -25,7 +25,7 @@ import android.view.View;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.leakcanary.internal.FragmentRefWatcher;
 
-import cn.hikyson.godeye.core.internal.modules.leakdetector.release.LeakRefNameProvider;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefNameProvider;
 
 @RequiresApi(Build.VERSION_CODES.O)
 public class AndroidOFragmentRefWatcher implements FragmentRefWatcher {

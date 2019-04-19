@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import cn.hikyson.godeye.core.R;
+import cn.hikyson.godeye.core.helper.Notifier;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 
 import static android.text.format.Formatter.formatShortFileSize;
@@ -30,7 +31,7 @@ import static com.squareup.leakcanary.internal.LeakCanaryInternals.classSimpleNa
 import static com.squareup.leakcanary.internal.LeakCanaryInternals.setEnabledBlocking;
 
 
-public class GodEyeHeapAnalyzerService extends IntentService implements AnalyzerProgressListener {
+public class DebugHeapAnalyzerService extends IntentService implements AnalyzerProgressListener {
 
     private static final String HEAPDUMP_EXTRA = "heapdump_extra";
 
@@ -44,21 +45,13 @@ public class GodEyeHeapAnalyzerService extends IntentService implements Analyzer
     private String referenceKey;
     private String referenceName;
 
-    public final int NOTIFICATION_ID = UUID.randomUUID().hashCode();
-
-    public GodEyeHeapAnalyzerService() {
+    public DebugHeapAnalyzerService() {
         super("内存泄漏分析服务");
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-    }
-
     public static void runAnalysis(Context context, HeapDump heapDump, boolean showNotification) {
-        setEnabledBlocking(context, GodEyeHeapAnalyzerService.class, true);
-        Intent intent = new Intent(context, GodEyeHeapAnalyzerService.class);
+        setEnabledBlocking(context, DebugHeapAnalyzerService.class, true);
+        Intent intent = new Intent(context, DebugHeapAnalyzerService.class);
         intent.putExtra(HEAPDUMP_EXTRA, heapDump);
         intent.putExtra(SHOW_NOTIFICATION, showNotification);
         context.startService(intent);
@@ -71,8 +64,9 @@ public class GodEyeHeapAnalyzerService extends IntentService implements Analyzer
             return;
         }
         boolean showNotification = intent.getBooleanExtra(SHOW_NOTIFICATION, false);
+        int id = Notifier.getId();
         if (showNotification) {
-            showNotification(NOTIFICATION_ID);
+            showNotification(id);
         }
         GodEyeCanaryLog.d("开始分析dump");
         HeapDump heapDump = (HeapDump) intent.getSerializableExtra(HEAPDUMP_EXTRA);
@@ -92,7 +86,7 @@ public class GodEyeHeapAnalyzerService extends IntentService implements Analyzer
         heapDump.heapDumpFile.delete();
         GodEyeCanaryLog.d("dump文件删除");
         if (showNotification) {
-            cancelNotification(NOTIFICATION_ID);
+            cancelNotification(id);
         }
     }
 
@@ -110,7 +104,7 @@ public class GodEyeHeapAnalyzerService extends IntentService implements Analyzer
         builder.setSmallIcon(R.drawable.ic_remove_red_eye)
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher))
                 .setContentTitle("内存泄漏分析服务").setContentText("AndroidGodEye").build();
-        notificationManager.notify(id, builder.build());
+        startForeground(id, builder.build());
     }
 
     private void cancelNotification(int id) {

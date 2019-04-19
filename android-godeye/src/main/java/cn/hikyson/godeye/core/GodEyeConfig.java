@@ -21,7 +21,7 @@ import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefNameProvider;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.release.LeakRefNameProvider;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefNameProvider;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapContext;
 import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
 import cn.hikyson.godeye.core.internal.modules.memory.RamContext;

@@ -17,7 +17,7 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".internal.modules.leakdetector.debug.GodEyeHeapAnalyzerService"
+            android:name=".internal.modules.leakdetector.debug.DebugHeapAnalyzerService"
             android:enabled="false"
             android:process=":leakcanary" />
     </application>

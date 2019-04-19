@@ -13,10 +13,10 @@
         android:text="Leak will happen when you finish this activity and wait for a moment." />
 
     <Button
-        android:id="@+id/btn_fragment"
+        android:id="@+id/btn_fragment_v4"
         android:layout_width="wrap_content"
         android:layout_height="64dp"
-        android:text="Show app fragment (Android O and above)" />
+        android:text="Show v4 fragment" />
 
     <FrameLayout
         android:id="@+id/frame_layout"

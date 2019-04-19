@@ -10,11 +10,11 @@ import java.io.File;
 
 import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 
-public class GodEyeDebugHeapDumper implements HeapDumper {
+public class DebugHeapDumper implements HeapDumper {
 
     private final LeakDirectoryProvider leakDirectoryProvider;
 
-    public GodEyeDebugHeapDumper(
+    public DebugHeapDumper(
             @NonNull LeakDirectoryProvider leakDirectoryProvider) {
         this.leakDirectoryProvider = leakDirectoryProvider;
     }

@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.core.internal.modules.leakdetector.release;
+package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;

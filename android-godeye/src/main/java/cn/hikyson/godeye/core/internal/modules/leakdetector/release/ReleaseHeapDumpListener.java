@@ -6,7 +6,7 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 
-public class GodEyeReleaseHeapDumpListener implements HeapDump.Listener {
+public class ReleaseHeapDumpListener implements HeapDump.Listener {
     @Override
     public void analyze(HeapDump heapDump) {
         GodEyeCanaryLog.d("%s发生内存泄漏", heapDump.referenceName);

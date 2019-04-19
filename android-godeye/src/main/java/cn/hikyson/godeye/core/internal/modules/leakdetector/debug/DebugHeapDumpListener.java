@@ -7,19 +7,20 @@ import com.squareup.leakcanary.HeapDump;
 
 import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 
-public class GodEyeDebugHeapDumpListener implements HeapDump.Listener {
+public class DebugHeapDumpListener implements HeapDump.Listener {
 
     private final Context context;
     private final boolean showNotification;
 
-    public GodEyeDebugHeapDumpListener(@NonNull final Context context, boolean showNotification) {
+    public DebugHeapDumpListener(@NonNull final Context context, boolean showNotification) {
         this.context = context;
         this.showNotification = showNotification;
     }
 
     @Override
     public void analyze(HeapDump heapDump) {
+        GodEyeCanaryLog.d("%s发生内存泄漏", heapDump.referenceName);
         GodEyeCanaryLog.d("开始分析...");
-        GodEyeHeapAnalyzerService.runAnalysis(context, heapDump, showNotification);
+        DebugHeapAnalyzerService.runAnalysis(context, heapDump, showNotification);
     }
 }
