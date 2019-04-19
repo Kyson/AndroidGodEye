@@ -19,7 +19,6 @@ import com.squareup.leakcanary.HeapDump;
 import com.squareup.leakcanary.LeakTraceElement;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import cn.hikyson.godeye.core.R;
 import cn.hikyson.godeye.core.helper.Notifier;

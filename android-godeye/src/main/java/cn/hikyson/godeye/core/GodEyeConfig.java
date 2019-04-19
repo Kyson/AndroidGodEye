@@ -99,7 +99,7 @@ public class GodEyeConfig {
                     leakConfig.debugNotification = Boolean.parseBoolean(debugNotification);
                 }
                 if (!TextUtils.isEmpty(leakRefNameProvider)) {
-                    leakConfig.leakRefNameProvider = (DefaultLeakRefNameProvider) Class.forName(leakRefNameProvider).newInstance();
+                    leakConfig.leakRefNameProvider = (LeakRefNameProvider) Class.forName(leakRefNameProvider).newInstance();
                 }
                 builder.withLeakConfig(leakConfig);
             }
