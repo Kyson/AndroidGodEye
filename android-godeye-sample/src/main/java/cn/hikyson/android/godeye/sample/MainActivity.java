@@ -129,6 +129,8 @@ public class MainActivity extends Activity implements Loggable {
     Button mActivityMainMakeRequest;
     @BindView(R.id.activity_main_make_leak)
     Button mActivityMainMakeLeak;
+    @BindView(R.id.activity_main_make_leak_v4)
+    Button mActivityMainMakeLeakV4;
     @BindView(R.id.activity_main_consumer_cancel_watch)
     Button mActivityMainCancelWatch;
     @BindView(R.id.activity_main_make_follow)
@@ -194,7 +196,7 @@ public class MainActivity extends Activity implements Loggable {
             R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm,
             R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash,
             R.id.activity_main_consumer_thread, R.id.activity_main_consumer_deadlock, R.id.activity_main_consumer_pageload,
-            R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak,
+            R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_leak_v4,
             R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear,
             R.id.activity_main_make_deadlock, R.id.activity_main_make_pageload})
     public void onClick(View v) {
@@ -286,6 +288,9 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_make_leak:
                 jumpToLeak();
                 break;
+            case R.id.activity_main_make_leak_v4:
+                jumpToLeakV4();
+                break;
             case R.id.activity_main_make_crash:
                 throw new RuntimeException("this is a crash made by AndroidGodEye");
             case R.id.activity_main_make_deadlock:
@@ -343,6 +348,11 @@ public class MainActivity extends Activity implements Loggable {
 
     private void jumpToLeak() {
         Intent intent = new Intent(MainActivity.this, LeakActivity.class);
+        startActivity(intent);
+    }
+
+    private void jumpToLeakV4() {
+        Intent intent = new Intent(MainActivity.this, LeakActivityV4.class);
         startActivity(intent);
     }
 

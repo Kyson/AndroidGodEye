@@ -1,8 +1,8 @@
-package cn.hikyson.godeye.core.internal.modules.leakdetector.canary.android;
+package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.util.Log;
 
-public final class CanaryLog {
+public final class GodEyeCanaryLog {
 
     private static volatile Logger logger = new DefaultLogger();
 
@@ -44,12 +44,12 @@ public final class CanaryLog {
     }
 
     public static void setLogger(Logger logger) {
-        CanaryLog.logger = logger;
+        GodEyeCanaryLog.logger = logger;
     }
 
     public static void d(String message, Object... args) {
         // Local variable to prevent the ref from becoming null after the null check.
-        Logger logger = CanaryLog.logger;
+        Logger logger = GodEyeCanaryLog.logger;
         if (logger == null) {
             return;
         }
@@ -58,14 +58,14 @@ public final class CanaryLog {
 
     public static void d(Throwable throwable, String message, Object... args) {
         // Local variable to prevent the ref from becoming null after the null check.
-        Logger logger = CanaryLog.logger;
+        Logger logger = GodEyeCanaryLog.logger;
         if (logger == null) {
             return;
         }
         logger.d(throwable, message, args);
     }
 
-    private CanaryLog() {
+    private GodEyeCanaryLog() {
         throw new AssertionError();
     }
 }

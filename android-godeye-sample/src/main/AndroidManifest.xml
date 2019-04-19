@@ -15,8 +15,8 @@
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
         </activity>
-        <activity android:name=".LeakActivity">
-        </activity>
+        <activity android:name=".LeakActivity"/>
+        <activity android:name=".LeakActivityV4"/>
         <activity
             android:name=".SplashActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
