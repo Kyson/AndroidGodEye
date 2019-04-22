@@ -25,17 +25,18 @@ import android.view.View;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.leakcanary.internal.FragmentRefWatcher;
 
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefNameProvider;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefInfo;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefInfoProvider;
 
 @RequiresApi(Build.VERSION_CODES.O)
 public class AndroidOFragmentRefWatcher implements FragmentRefWatcher {
 
     private final RefWatcher refWatcher;
-    private final LeakRefNameProvider referenceNameConverter;
+    private final LeakRefInfoProvider leakRefInfoProvider;
 
-    public AndroidOFragmentRefWatcher(RefWatcher refWatcher, LeakRefNameProvider referenceNameConverter) {
+    public AndroidOFragmentRefWatcher(RefWatcher refWatcher, LeakRefInfoProvider leakRefInfoProvider) {
         this.refWatcher = refWatcher;
-        this.referenceNameConverter = referenceNameConverter;
+        this.leakRefInfoProvider = leakRefInfoProvider;
     }
 
     private final FragmentManager.FragmentLifecycleCallbacks fragmentLifecycleCallbacks =
@@ -44,14 +45,18 @@ public class AndroidOFragmentRefWatcher implements FragmentRefWatcher {
                 @Override
                 public void onFragmentViewDestroyed(FragmentManager fm, Fragment fragment) {
                     View view = fragment.getView();
-                    if (view != null) {
-                        refWatcher.watch(view, referenceNameConverter.convertFragment(fragment));
+                    LeakRefInfo leakRefInfo = leakRefInfoProvider.getInfoByFragment(fragment);
+                    if (view != null && !leakRefInfo.isExcludeRef()) {
+                        refWatcher.watch(view, leakRefInfo.getExtraInfo());
                     }
                 }
 
                 @Override
                 public void onFragmentDestroyed(FragmentManager fm, Fragment fragment) {
-                    refWatcher.watch(fragment, referenceNameConverter.convertFragment(fragment));
+                    LeakRefInfo leakRefInfo = leakRefInfoProvider.getInfoByFragment(fragment);
+                    if (!leakRefInfo.isExcludeRef()) {
+                        refWatcher.watch(fragment, leakRefInfo.getExtraInfo());
+                    }
                 }
             };
 

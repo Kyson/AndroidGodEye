@@ -19,9 +19,9 @@ import cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefNameProvider;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefNameProvider;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapContext;
 import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
 import cn.hikyson.godeye.core.internal.modules.memory.RamContext;
@@ -88,7 +88,7 @@ public class GodEyeConfig {
             if (element != null) {
                 final String debug = element.getAttribute("debug");
                 final String debugNotification = element.getAttribute("debugNotification");
-                final String leakRefNameProvider = element.getAttribute("leakRefNameProvider");
+                final String leakRefInfoProvider = element.getAttribute("leakRefInfoProvider");
                 LeakConfig leakConfig = new LeakConfig();
                 if (!TextUtils.isEmpty(debug)) {
                     leakConfig.debug = Boolean.parseBoolean(debug);
@@ -98,8 +98,8 @@ public class GodEyeConfig {
                 if (!TextUtils.isEmpty(debugNotification)) {
                     leakConfig.debugNotification = Boolean.parseBoolean(debugNotification);
                 }
-                if (!TextUtils.isEmpty(leakRefNameProvider)) {
-                    leakConfig.leakRefNameProvider = (LeakRefNameProvider) Class.forName(leakRefNameProvider).newInstance();
+                if (!TextUtils.isEmpty(leakRefInfoProvider)) {
+                    leakConfig.leakRefInfoProvider = (LeakRefInfoProvider) Class.forName(leakRefInfoProvider).newInstance();
                 }
                 builder.withLeakConfig(leakConfig);
             }
@@ -279,7 +279,7 @@ public class GodEyeConfig {
 
         public boolean debug = true;
         public boolean debugNotification = true;
-        public LeakRefNameProvider leakRefNameProvider;
+        public LeakRefInfoProvider leakRefInfoProvider;
 
         @NonNull
         @Override
@@ -299,8 +299,8 @@ public class GodEyeConfig {
 
         @NonNull
         @Override
-        public LeakRefNameProvider leakRefNameProvider() {
-            return leakRefNameProvider == null ? new DefaultLeakRefNameProvider() : leakRefNameProvider;
+        public LeakRefInfoProvider leakRefInfoProvider() {
+            return leakRefInfoProvider == null ? new DefaultLeakRefInfoProvider() : leakRefInfoProvider;
         }
     }
 

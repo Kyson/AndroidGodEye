@@ -2,7 +2,6 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.app.Activity;
 import android.app.Application;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 
@@ -63,10 +62,10 @@ public class LeakEngine implements Engine {
         final RefWatcher watcher = mConfig.debug() ? createDebugRefWatcher() : createReleaseRefWatcher();
         FragmentRefWatcher appFragmentWatcher = null;
         if (SDK_INT >= O) {
-            appFragmentWatcher = new AndroidOFragmentRefWatcher(watcher, mConfig.leakRefNameProvider());
+            appFragmentWatcher = new AndroidOFragmentRefWatcher(watcher, mConfig.leakRefInfoProvider());
         }
         final FragmentRefWatcher finalAppFragmentWatcher = appFragmentWatcher;
-        final FragmentRefWatcher supportFragmentWatcher = new SupportFragmentRefWatcher(watcher, mConfig.leakRefNameProvider());
+        final FragmentRefWatcher supportFragmentWatcher = new SupportFragmentRefWatcher(watcher, mConfig.leakRefInfoProvider());
         lifecycleCallbacks = new SimpleActivityLifecycleCallbacks() {
             @RequiresApi(api = O)
             @Override
@@ -79,7 +78,10 @@ public class LeakEngine implements Engine {
 
             @Override
             public void onActivityDestroyed(Activity activity) {
-                watcher.watch(activity, mConfig.leakRefNameProvider().convertActivity(activity));
+                LeakRefInfo leakRefInfo = mConfig.leakRefInfoProvider().getInfoByActivity(activity);
+                if (!leakRefInfo.isExcludeRef()) {
+                    watcher.watch(activity, leakRefInfo.getExtraInfo());
+                }
             }
         };
         mConfig.application().registerActivityLifecycleCallbacks(lifecycleCallbacks);
