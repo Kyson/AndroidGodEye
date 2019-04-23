@@ -17,6 +17,7 @@ import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.debug.DebugHeapDumpListener;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.debug.DebugHeapDumper;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.release.ReleaseGcTrigger;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.release.ReleaseHeapDumpListener;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.release.ReleaseHeapDumper;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.watcher.AndroidOFragmentRefWatcher;
@@ -50,7 +51,7 @@ public class LeakEngine implements Engine {
                         return false;
                     }
                 })
-                .gcTrigger(GcTrigger.DEFAULT)
+                .gcTrigger(new ReleaseGcTrigger())
                 .heapDumper(new ReleaseHeapDumper(mConfig.application()))
                 .heapDumpListener(new ReleaseHeapDumpListener())
                 .excludedRefs(AndroidExcludedRefs.createAppDefaults().build()).build();
