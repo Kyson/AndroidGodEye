@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -18,7 +19,9 @@ import cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapContext;
 import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
 import cn.hikyson.godeye.core.internal.modules.memory.RamContext;
@@ -83,10 +86,20 @@ public class GodEyeConfig {
             }
             element = getFirstElementByTagInRoot(root, "leakMemory");
             if (element != null) {
-                final String debugNotifyString = element.getAttribute("debugNotify");
+                final String debug = element.getAttribute("debug");
+                final String debugNotification = element.getAttribute("debugNotification");
+                final String leakRefInfoProvider = element.getAttribute("leakRefInfoProvider");
                 LeakConfig leakConfig = new LeakConfig();
-                if (!TextUtils.isEmpty(debugNotifyString)) {
-                    leakConfig.debugNotify = Boolean.parseBoolean(debugNotifyString);
+                if (!TextUtils.isEmpty(debug)) {
+                    leakConfig.debug = Boolean.parseBoolean(debug);
+                } else {
+                    leakConfig.debug = true;
+                }
+                if (!TextUtils.isEmpty(debugNotification)) {
+                    leakConfig.debugNotification = Boolean.parseBoolean(debugNotification);
+                }
+                if (!TextUtils.isEmpty(leakRefInfoProvider)) {
+                    leakConfig.leakRefInfoProvider = (LeakRefInfoProvider) Class.forName(leakRefInfoProvider).newInstance();
                 }
                 builder.withLeakConfig(leakConfig);
             }
@@ -263,24 +276,31 @@ public class GodEyeConfig {
     }
 
     public static class LeakConfig implements LeakContext {
-        public boolean debugNotify;
 
-        public LeakConfig(boolean debugNotify) {
-            this.debugNotify = debugNotify;
-        }
+        public boolean debug = true;
+        public boolean debugNotification = true;
+        public LeakRefInfoProvider leakRefInfoProvider;
 
-        public LeakConfig() {
-            this.debugNotify = true;
-        }
-
+        @NonNull
         @Override
         public Application application() {
             return GodEye.instance().getApplication();
         }
 
         @Override
-        public boolean debugNotify() {
-            return debugNotify;
+        public boolean debug() {
+            return debug;
+        }
+
+        @Override
+        public boolean debugNotification() {
+            return debugNotification;
+        }
+
+        @NonNull
+        @Override
+        public LeakRefInfoProvider leakRefInfoProvider() {
+            return leakRefInfoProvider == null ? new DefaultLeakRefInfoProvider() : leakRefInfoProvider;
         }
     }
 

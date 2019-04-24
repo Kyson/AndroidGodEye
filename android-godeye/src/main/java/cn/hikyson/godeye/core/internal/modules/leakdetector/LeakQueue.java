@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.util.ArrayMap;
 
@@ -37,16 +38,19 @@ public class LeakQueue {
         }
 
         @Retention(RetentionPolicy.SOURCE)
-        @IntDef({Status.STATUS_INVALID, Status.STATUS_START, Status.STATUS_PROGRESS, Status.STATUS_RETRY, Status.STATUS_DONE})
+        @IntDef({Status.STATUS_INVALID, Status.STATUS_DETECT, Status.STATUS_START, Status.STATUS_PROGRESS, Status.STATUS_RETRY, Status.STATUS_DONE})
         public @interface Status {
             public static final int STATUS_INVALID = -1;
-            public static final int STATUS_START = 0;
-            public static final int STATUS_PROGRESS = 1;
-            public static final int STATUS_RETRY = 2;
-            public static final int STATUS_DONE = 3;
+            public static final int STATUS_DETECT = 0;
+            public static final int STATUS_START = 1;
+            public static final int STATUS_PROGRESS = 2;
+            public static final int STATUS_RETRY = 3;
+            public static final int STATUS_DONE = 4;
         }
 
         public String referenceKey = "";
+        @Nullable
+        public String referenceName = null;
         public String leakTime = "";
         public String statusSummary = "";
         public @Status
@@ -58,8 +62,9 @@ public class LeakQueue {
         //泄漏字节
         public long leakMemoryBytes = 0L;
 
-        public LeakMemoryInfo(String referenceKey) {
+        public LeakMemoryInfo(String referenceKey, @Nullable String referenceName) {
             this.referenceKey = referenceKey;
+            this.referenceName = referenceName;
         }
 
         @Override
@@ -79,6 +84,7 @@ public class LeakQueue {
         public String toString() {
             return "LeakMemoryInfo{" +
                     "referenceKey='" + referenceKey + '\'' +
+                    ", referenceName='" + referenceName + '\'' +
                     ", leakTime='" + leakTime + '\'' +
                     ", statusSummary='" + statusSummary + '\'' +
                     ", status=" + status +
@@ -130,8 +136,8 @@ public class LeakQueue {
         mLeakMemoryInfoArrayMap.put(refKey, curMap);
     }
 
-    public synchronized LeakMemoryInfo generateLeakMemoryInfo(String refKey) {
-        LeakMemoryInfo leakMemoryInfo = new LeakMemoryInfo(refKey);
+    public synchronized LeakMemoryInfo generateLeakMemoryInfo(String refKey, String refName) {
+        LeakMemoryInfo leakMemoryInfo = new LeakMemoryInfo(refKey, refName);
         Map<String, Object> detailMap = mLeakMemoryInfoArrayMap.get(refKey);
         leakMemoryInfo.referenceKey = refKey;
         Object leakTimeObj = detailMap.get(LeakMemoryInfo.Fields.LEAK_TIME);

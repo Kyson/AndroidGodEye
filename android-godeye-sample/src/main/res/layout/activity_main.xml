@@ -415,6 +415,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="To Leak Activity"/>
+
+                <Button
+                    android:id="@+id/activity_main_make_leak_v4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="To Leak V4 Activity"/>
             </LinearLayout>
 
             <LinearLayout
