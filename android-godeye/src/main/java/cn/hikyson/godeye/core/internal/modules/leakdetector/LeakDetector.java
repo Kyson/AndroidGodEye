@@ -29,22 +29,31 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
     @Override
     public synchronized void install(LeakContext config) {
         if (mInstalled) {
-            L.d("crash already installed , ignore");
+            L.d("leak already installed , ignore");
             return;
         }
         sSingleForLeakExecutor = Executors.newSingleThreadExecutor(new ThreadUtil.NamedThreadFactory("godeye-leak-"));
         mLeakEngine = new LeakEngine(config);
         mLeakEngine.work();
         mInstalled = true;
+        L.d("leak installed");
     }
 
     @Override
     public synchronized void uninstall() {
+        if (!mInstalled) {
+            L.d("leak already uninstalled , ignore.");
+            return;
+        }
         if (mLeakEngine != null) {
             mLeakEngine.shutdown();
         }
-        sSingleForLeakExecutor.shutdown();
-        sSingleForLeakExecutor = null;
+        if (sSingleForLeakExecutor != null) {
+            sSingleForLeakExecutor.shutdown();
+            sSingleForLeakExecutor = null;
+        }
+        mInstalled = false;
+        L.d("leak uninstalled");
     }
 
     public ExecutorService getsSingleForLeakExecutor() {
