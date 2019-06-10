@@ -1,5 +1,9 @@
 # Deploy
 
+1. 修改gradle.properties文件中的版本号
+2. 改动合并到master，并打版本号命名的tag
+3. PUSH即可
+
 ## MAVEN CENTRAL 太难用了...弃用
 
 install gpg: brew install -v gpg
@@ -12,7 +16,7 @@ SONATYPE_NEXUS_PASSWORD=
 cd .buildscript
 sh deploy_release.sh
 
-## jcenter
+## jcenter，不需要手动调用
 
 bintrayKey:https://bintray.com/profile/edit API Key
 
