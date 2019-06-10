@@ -6,11 +6,13 @@ import java.util.concurrent.Executors;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 
 public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> implements Install<LeakContext> {
 
     private LeakEngine mLeakEngine;
     private boolean mInstalled;
+
     private LeakDetector() {
     }
 
@@ -30,7 +32,7 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
             L.d("crash already installed , ignore");
             return;
         }
-        sSingleForLeakExecutor = Executors.newSingleThreadExecutor();
+        sSingleForLeakExecutor = Executors.newSingleThreadExecutor(new ThreadUtil.NamedThreadFactory("godeye-leak-"));
         mLeakEngine = new LeakEngine(config);
         mLeakEngine.work();
         mInstalled = true;

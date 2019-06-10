@@ -192,7 +192,7 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
         intent.setAction(OUTPUT_BOARDCAST_ACTION_DONE);
         intent.putExtra("referenceKey", referenceKey);
         intent.putExtra("referenceName", referenceName);
-        intent.putExtra("result", result);
+        intent.putExtra("result", new AnalysisResultWrapper(result));
         intent.putExtra("summary", summary);
         intent.putStringArrayListExtra("elementStack", elementStack);
         context.sendBroadcast(intent);
@@ -200,10 +200,10 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
 
     private void sendOutputBroadcastFailure(Context context, String referenceKey, String referenceName, AnalysisResult result, String summary) {
         Intent intent = new Intent(context, LeakOutputReceiver.class);
-        intent.setAction(OUTPUT_BOARDCAST_ACTION_DONE);
+        intent.setAction(OUTPUT_BOARDCAST_ACTION_FAILURE);
         intent.putExtra("referenceKey", referenceKey);
         intent.putExtra("referenceName", referenceName);
-        intent.putExtra("result", result);
+        intent.putExtra("result", new AnalysisResultWrapper(result));
         intent.putExtra("summary", summary);
         context.sendBroadcast(intent);
     }

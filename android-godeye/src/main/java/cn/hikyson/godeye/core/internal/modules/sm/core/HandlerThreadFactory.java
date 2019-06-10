@@ -8,11 +8,11 @@ public final class HandlerThreadFactory {
     /**
      * dump线程
      */
-    private static HandlerThreadWrapper sDoDumpThread = new HandlerThreadWrapper("do-dump");
+    private static HandlerThreadWrapper sDoDumpThread = new HandlerThreadWrapper("godeye-sm-do-dump");
     /**
      * 获取dump数据线程
      */
-    private static HandlerThreadWrapper sObtainDumpThread = new HandlerThreadWrapper("obtain-dump");
+    private static HandlerThreadWrapper sObtainDumpThread = new HandlerThreadWrapper("godeye-sm-obtain-dump");
 
     private HandlerThreadFactory() {
         throw new InstantiationError("can not init this class");

@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -49,4 +51,29 @@ public class ThreadUtil {
             sHandler.post(command);
         }
     };
+
+    public static class NamedThreadFactory implements ThreadFactory {
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        public NamedThreadFactory(String namePrefix) {
+            SecurityManager s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() :
+                    Thread.currentThread().getThreadGroup();
+            this.namePrefix = namePrefix;
+        }
+
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(group, r,
+                    namePrefix + threadNumber.getAndIncrement(), 0);
+            if (t.isDaemon()) t.setDaemon(false);
+            if (t.getPriority() != Thread.NORM_PRIORITY) {
+                t.setPriority(Thread.NORM_PRIORITY);
+            }
+            return t;
+        }
+
+    }
+
 }

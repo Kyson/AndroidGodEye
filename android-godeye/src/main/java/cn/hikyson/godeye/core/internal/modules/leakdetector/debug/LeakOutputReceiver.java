@@ -66,10 +66,9 @@ public class LeakOutputReceiver extends BroadcastReceiver {
 
 
     private void onLeakDumpDone(Intent intent) {
-        ThreadUtil.ensureWorkThread("LoadLeaks onLeak");
         String referenceKey = intent.getStringExtra("referenceKey");
         String referenceName = intent.getStringExtra("referenceName");
-        AnalysisResult analysisResult = (AnalysisResult) intent.getSerializableExtra("result");
+        AnalysisResultWrapper analysisResult = (AnalysisResultWrapper) intent.getSerializableExtra("result");
         String summary = intent.getStringExtra("summary");
         ArrayList<String> elementStack = intent.getStringArrayListExtra("elementStack");
         GodEyeCanaryLog.d("onLeakDumpDone:" + referenceKey + " , leak:" + analysisResult.className + " , summary:" + summary);
@@ -87,17 +86,15 @@ public class LeakOutputReceiver extends BroadcastReceiver {
     private void onLeakDumpFailure(Intent intent) {
         String referenceKey = intent.getStringExtra("referenceKey");
         String referenceName = intent.getStringExtra("referenceName");
-        AnalysisResult analysisResult = (AnalysisResult) intent.getSerializableExtra("result");
+        AnalysisResultWrapper analysisResult = (AnalysisResultWrapper) intent.getSerializableExtra("result");
         String summary = intent.getStringExtra("summary");
-        GodEyeCanaryLog.d("onLeakDumpDone:" + summary);
-        ThreadUtil.ensureWorkThread("LoadLeaks onLeakNull");
-        GodEyeCanaryLog.d("onLeakDumpDone:" + referenceKey + " , leak:" + analysisResult.className + " , summary:" + summary);
+        GodEyeCanaryLog.d("onLeakDumpFailure:" + referenceKey + " , leak:" + analysisResult.className + " , summary:" + summary);
         Map<String, Object> map = new ArrayMap<>();
         map.put(LeakQueue.LeakMemoryInfo.Fields.LEAK_OBJ_NAME, analysisResult.className + (analysisResult.excludedLeak ? "[Excluded]" : ""));
         //因为计算对象引用的所有对象大小很耗时导致分析失败，所以分析跳过了这步，这里永远是0
         map.put(LeakQueue.LeakMemoryInfo.Fields.LEAK_MEMORY_BYTES, analysisResult.retainedHeapSize);
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_DONE);
-        map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "leak null.");
+        map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "Leak null.");
         LeakQueue.instance().createOrUpdateIfExsist(referenceKey, map);
         LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(referenceKey, referenceName));
     }
