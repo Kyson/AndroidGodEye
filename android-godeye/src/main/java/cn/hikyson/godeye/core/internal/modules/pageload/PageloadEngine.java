@@ -27,7 +27,6 @@ public class PageloadEngine implements Engine {
     private Application.ActivityLifecycleCallbacks mActivityLifecycleCallbacks;
     private final Handler mHandler;
     private ExecutorService mPageloadExecutor;
-    private final Object mActivityStackLock;
     private final Object mPageloadExecutorLock;
 
     public PageloadEngine(Producer<PageloadInfo> producer, PageloadContext config) {
@@ -35,7 +34,7 @@ public class PageloadEngine implements Engine {
         mPageloadContext = config;
         mHandler = new Handler(Looper.getMainLooper());
         mPageloadExecutorLock = new Object();
-        mActivityStackLock = new Object();
+        mActivityStack = new PageloadActivityStack();
     }
 
     private void createPageloadExecutor() {
@@ -65,11 +64,6 @@ public class PageloadEngine implements Engine {
 
     @Override
     public void work() {
-        synchronized (mActivityStackLock) {
-            if (mActivityStack == null) {
-                mActivityStack = new PageloadActivityStack();
-            }
-        }
         createPageloadExecutor();
         if (mActivityLifecycleCallbacks == null) {
             mActivityLifecycleCallbacks = new SimpleActivityLifecycleCallbacks() {
@@ -81,11 +75,9 @@ public class PageloadEngine implements Engine {
                             ThreadUtil.ensureWorkThread("PageloadEngine onActivityCreated");
                             final long time = System.currentTimeMillis();
                             PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "created", time);
-                            synchronized (mActivityStackLock) {
-                                if (mActivityStack != null) {
-                                    pageloadInfo.loadTimeInfo = mActivityStack.onCreate(activity, time);
-                                    mProducer.produce(pageloadInfo);
-                                }
+                            if (mActivityStack != null) {
+                                pageloadInfo.loadTimeInfo = mActivityStack.onCreate(activity, time);
+                                mProducer.produce(pageloadInfo);
                             }
                         }
                     });
@@ -102,11 +94,9 @@ public class PageloadEngine implements Engine {
                                 public void run() {
                                     final long time = System.currentTimeMillis();
                                     PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "didDraw", time);
-                                    synchronized (mActivityStackLock) {
-                                        if (mActivityStack != null) {
-                                            pageloadInfo.loadTimeInfo = mActivityStack.onDidDraw(activity, time);
-                                            mProducer.produce(pageloadInfo);
-                                        }
+                                    if (mActivityStack != null) {
+                                        pageloadInfo.loadTimeInfo = mActivityStack.onDidDraw(activity, time);
+                                        mProducer.produce(pageloadInfo);
                                     }
                                 }
                             });
@@ -122,11 +112,9 @@ public class PageloadEngine implements Engine {
                             ThreadUtil.ensureWorkThread("PageloadEngine onActivityDestroyed");
                             final long time = System.currentTimeMillis();
                             PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "destroyed", time);
-                            synchronized (mActivityStackLock) {
-                                if (mActivityStack != null) {
-                                    pageloadInfo.loadTimeInfo = mActivityStack.onDestory(activity);
-                                    mProducer.produce(pageloadInfo);
-                                }
+                            if (mActivityStack != null) {
+                                pageloadInfo.loadTimeInfo = mActivityStack.onDestory(activity);
+                                mProducer.produce(pageloadInfo);
                             }
                         }
                     });
@@ -140,9 +128,6 @@ public class PageloadEngine implements Engine {
     public void shutdown() {
         mPageloadContext.application().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         mActivityLifecycleCallbacks = null;
-        synchronized (mActivityStackLock) {
-            mActivityStack = null;
-        }
         shutdownPageloadExecutor();
     }
 
@@ -160,7 +145,6 @@ public class PageloadEngine implements Engine {
 
     public interface OnActivityDidAppearCallback {
         void didAppear();
-
     }
 
     private void measureActivityDidAppear(final Activity activity, final OnActivityDidAppearCallback onActivityDidAppearCallback) {
