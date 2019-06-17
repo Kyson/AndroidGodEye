@@ -109,7 +109,6 @@ public class PageloadEngine implements Engine {
                     executeOnPageloadExecutor(new Runnable() {
                         @Override
                         public void run() {
-                            ThreadUtil.ensureWorkThread("PageloadEngine onActivityDestroyed");
                             PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "destroyed", time);
                             if (mActivityStack != null) {
                                 pageloadInfo.loadTimeInfo = mActivityStack.onDestory(activity);
