@@ -69,11 +69,10 @@ public class PageloadEngine implements Engine {
             mActivityLifecycleCallbacks = new SimpleActivityLifecycleCallbacks() {
                 @Override
                 public void onActivityCreated(final Activity activity, Bundle savedInstanceState) {
+                    final long time = System.currentTimeMillis();
                     executeOnPageloadExecutor(new Runnable() {
                         @Override
                         public void run() {
-                            ThreadUtil.ensureWorkThread("PageloadEngine onActivityCreated");
-                            final long time = System.currentTimeMillis();
                             PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "created", time);
                             if (mActivityStack != null) {
                                 pageloadInfo.loadTimeInfo = mActivityStack.onCreate(activity, time);
@@ -89,10 +88,10 @@ public class PageloadEngine implements Engine {
                     measureActivityDidAppear(activity, new OnActivityDidAppearCallback() {
                         @Override
                         public void didAppear() {
+                            final long time = System.currentTimeMillis();
                             executeOnPageloadExecutor(new Runnable() {
                                 @Override
                                 public void run() {
-                                    final long time = System.currentTimeMillis();
                                     PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "didDraw", time);
                                     if (mActivityStack != null) {
                                         pageloadInfo.loadTimeInfo = mActivityStack.onDidDraw(activity, time);
@@ -106,11 +105,11 @@ public class PageloadEngine implements Engine {
 
                 @Override
                 public void onActivityDestroyed(final Activity activity) {
+                    final long time = System.currentTimeMillis();
                     executeOnPageloadExecutor(new Runnable() {
                         @Override
                         public void run() {
                             ThreadUtil.ensureWorkThread("PageloadEngine onActivityDestroyed");
-                            final long time = System.currentTimeMillis();
                             PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "destroyed", time);
                             if (mActivityStack != null) {
                                 pageloadInfo.loadTimeInfo = mActivityStack.onDestory(activity);
@@ -132,10 +131,10 @@ public class PageloadEngine implements Engine {
     }
 
     void onPageLoaded(final Activity activity) {
+        final long time = System.currentTimeMillis();
         executeOnPageloadExecutor(new Runnable() {
             @Override
             public void run() {
-                long time = System.currentTimeMillis();
                 PageloadInfo pageloadInfo = new PageloadInfo(activity, String.valueOf(activity.hashCode()), activity.getClass().getSimpleName(), "loaded", time);
                 pageloadInfo.loadTimeInfo = mActivityStack.onLoaded(activity, time);
                 mProducer.produce(pageloadInfo);
