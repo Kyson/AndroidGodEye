@@ -1,6 +1,5 @@
 package cn.hikyson.android.godeye.toolbox;
 
-import android.util.Log;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -91,10 +90,19 @@ public class OkNetworkCollector extends EventListener {
             cipherSuite = handshake.cipherSuite().javaName();
             tlsVersion = handshake.tlsVersion().javaName();
         }
-        String localIp = connection.socket().getLocalAddress().getHostAddress();
-        int localPort = connection.socket().getLocalPort();
-        String remoteIp = connection.socket().getInetAddress().getHostAddress();
-        int remotePort = connection.socket().getPort();
+        Socket socket = connection.socket();
+        int localPort = socket.getLocalPort();
+        int remotePort = socket.getPort();
+        String localIp = "";
+        String remoteIp = "";
+        InetAddress localAddress = socket.getLocalAddress();
+        if (localAddress != null) {
+            localIp = localAddress.getHostAddress();
+        }
+        InetAddress remoteAddress = socket.getInetAddress();
+        if (remoteAddress != null) {
+            remoteIp = remoteAddress.getHostAddress();
+        }
         requestBaseInfoBuilder.withNetworkInfoConnection(
                 new NetworkInfoConnection(protocol, cipherSuite, tlsVersion, localIp, localPort, remoteIp, remotePort));
         L.d(String.format("[%s]:connectionAcquired", requestBaseInfoBuilder.requestId));
