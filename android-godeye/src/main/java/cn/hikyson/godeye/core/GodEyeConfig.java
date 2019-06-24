@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,14 +32,18 @@ import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
+import cn.hikyson.godeye.core.utils.IoUtil;
 
 public class GodEyeConfig {
-    public static GodEyeConfig fromAssets(String path) {
-        Context context = GodEye.instance().getApplication();
+
+    public static GodEyeConfig fromInputStream(InputStream is) {
         GodEyeConfigBuilder builder = GodEyeConfigBuilder.godEyeConfig();
         try {
+            if (is == null) {
+                throw new IllegalStateException("GodEyeConfig fromInputStream InputStream is null.");
+            }
             Element root = DocumentBuilderFactory.newInstance().newDocumentBuilder()
-                    .parse(context.getAssets().open(path)).getDocumentElement();
+                    .parse(is).getDocumentElement();
             Element element = getFirstElementByTagInRoot(root, "battery");
             if (element != null) {
                 BatteryConfig batteryConfig = new BatteryConfig();
@@ -176,6 +181,18 @@ public class GodEyeConfig {
             e.printStackTrace();
         }
         return builder.build();
+    }
+
+    public static GodEyeConfig fromAssets(String path) {
+        InputStream is = null;
+        try {
+            is = GodEye.instance().getApplication().getAssets().open(path);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        GodEyeConfig godEyeConfig = fromInputStream(is);
+        IoUtil.closeSilently(is);
+        return godEyeConfig;
     }
 
     public static class BatteryConfig implements BatteryContext {
