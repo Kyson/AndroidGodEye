@@ -1,9 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.app.Activity;
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
+@Keep
 public class DefaultLeakRefInfoProvider implements LeakRefInfoProvider {
 
     @NonNull
