@@ -10,7 +10,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import butterknife.BindView;
@@ -201,7 +204,7 @@ public class MainActivity extends Activity implements Loggable {
             R.id.activity_main_consumer_thread, R.id.activity_main_consumer_deadlock, R.id.activity_main_consumer_pageload,
             R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_leak_v4,
             R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear,
-            R.id.activity_main_make_deadlock, R.id.activity_main_make_pageload,R.id.activity_main_test})
+            R.id.activity_main_make_deadlock, R.id.activity_main_make_pageload, R.id.activity_main_test})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_main_all:
@@ -225,7 +228,27 @@ public class MainActivity extends Activity implements Loggable {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+                        String content = "<config>\n" +
+                                "    <battery />\n" +
+                                "    <cpu intervalMillis=\"2000\" sampleMillis=\"1000\"/>\n" +
+                                "    <crash crashProvider=\"cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider\"/>\n" +
+                                "    <fps intervalMillis=\"2000\"/>\n" +
+                                "    <heap intervalMillis=\"2000\"/>\n" +
+                                "    <leakMemory debug=\"true\" debugNotification=\"true\" leakRefInfoProvider=\"cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider\"/>\n" +
+                                "    <pageload/>\n" +
+                                "    <pss intervalMillis=\"2000\"/>\n" +
+                                "    <ram intervalMillis=\"2000\"/>\n" +
+                                "    <sm debugNotify=\"true\"\n" +
+                                "        dumpIntervalMillis=\"500\"\n" +
+                                "        longBlockThresholdMillis=\"300\"\n" +
+                                "        shortBlockThresholdMillis=\"100\"/>\n" +
+                                "    <thread intervalMillis=\"3000\"\n" +
+                                "            threadFilter=\"cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter\"/>\n" +
+                                "    <traffic intervalMillis=\"2000\" sampleMillis=\"1000\"/>\n" +
+                                "</config>";
+                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes(Charset.forName("utf-8")));
+                        GodEye.instance().install(GodEyeConfig.fromInputStream(byteArrayInputStream));
+//                        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
                     }
                 }).start();
                 break;
