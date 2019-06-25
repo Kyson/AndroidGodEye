@@ -31,6 +31,7 @@ class App extends Component {
         super(props);
         this._onReceiveMessage = this._onReceiveMessage.bind(this);
         this._setCanRefresh = this._setCanRefresh.bind(this);
+        this._getModuleRef = this._getModuleRef.bind(this);
         this.canRefresh = true;
         this.mock = new Mock();
     }
@@ -43,80 +44,35 @@ class App extends Component {
         this.mock.start(this._onReceiveMessage);
     }
 
-    _getModuleRef(moduleName){
 
+    _getModuleRef(moduleName) {
+        const moduleMap = {
+            "appInfo": this.refs.appInfo,
+            "startupInfo": this.refs.startupInfo,
+            "fpsInfo": this.refs.fpsInfo,
+            "cpuInfo": this.refs.cpuInfo,
+            "heapInfo": this.refs.heapInfo,
+            "batteryInfo": this.refs.batteryInfo,
+            "ramInfo": this.refs.ramInfo,
+            "pssInfo": this.refs.pssInfo,
+            "pageloadInfo": this.refs.pageloadInfo,
+            "trafficInfo": this.refs.trafficInfo,
+            "crashInfo": this.refs.crashInfo,
+            "blockInfo": this.refs.blockInfo,
+            "networkInfo": this.refs.networkInfo,
+            "threadInfo": this.refs.threadInfo,
+            "leakInfo": this.refs.leakInfo,
+            "methodCanary": this.refs.methodCanary
+        };
+        return moduleMap[moduleName];
     }
-
-
 
     _onReceiveMessage(moduleName, payload) {
         if (!this.canRefresh) {
             return;
         }
         this.refs.refreshStatus.refresh(new Date());
-        if ("appInfo" === moduleName) {
-            this.refs.appInfo.refresh(payload);
-            return;
-        }
-        if ("startupInfo" === moduleName) {
-            this.refs.startupInfo.refresh(payload);
-            return;
-        }
-        if ("fpsInfo" === moduleName) {
-            this.refs.fpsInfo.refresh(payload);
-            return;
-        }
-        if ("cpuInfo" === moduleName) {
-            this.refs.cpuInfo.refresh(payload);
-            return;
-        }
-        if ("heapInfo" === moduleName) {
-            this.refs.heapInfo.refresh(payload);
-            return;
-        }
-        if ("batteryInfo" === moduleName) {
-            this.refs.batteryInfo.refresh(payload);
-            return;
-        }
-        if ("ramInfo" === moduleName) {
-            this.refs.ramInfo.refresh(payload);
-            return;
-        }
-        if ("pssInfo" === moduleName) {
-            this.refs.pssInfo.refresh(payload);
-            return;
-        }
-        if ("pageloadInfo" === moduleName) {
-            this.refs.pageloadInfo.refresh(payload);
-            return;
-        }
-        if ("trafficInfo" === moduleName) {
-            this.refs.trafficInfo.refresh(payload);
-            return;
-        }
-        if ("crashInfo" === moduleName) {
-            this.refs.crashInfo.refresh(payload);
-            return;
-        }
-        if ("blockInfo" === moduleName) {
-            this.refs.blockInfo.refresh(payload);
-            return;
-        }
-        if ("networkInfo" === moduleName) {
-            this.refs.networkInfo.refresh(payload);
-            return;
-        }
-        if ("threadInfo" === moduleName) {
-            this.refs.threadInfo.refresh(payload);
-            return;
-        }
-        if ("leakInfo" === moduleName) {
-            this.refs.leakInfo.refresh(payload);
-            return;
-        }
-        if ("methodCanary" === moduleName) {
-            this.refs.methodCanary.refresh(payload);
-        }
+        this._getModuleRef(moduleName).refresh(payload);
     }
 
     _setCanRefresh(canRefresh) {

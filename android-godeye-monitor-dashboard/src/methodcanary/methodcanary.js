@@ -3,7 +3,6 @@ import '../App.css';
 
 import {Card, Button} from 'antd'
 import ReactHighcharts from '../../node_modules/react-highcharts'
-import RefreshStatus from "../refreshstatus/refreshStatus";
 
 class MethodCanary extends Component {
 
@@ -20,12 +19,44 @@ class MethodCanary extends Component {
             chart: {
                 type: 'bar'
             },
+            title: {
+                text: null
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
             yAxis: {
+                title: {
+                    text: null
+                },
                 min: 0,
+            },
+            xAxis: {
+                title: {
+                    text: null
+                },
+                categories: ['']
             },
             plotOptions: {
                 series: {
-                    stacking: 'normal'
+                    stacking: 'percent',
+                    events: {
+                        click: function (event) {
+                            alert(
+                                this.name + ' 被点击了\n' +
+                                '最近点：' + event.point.category + '\n' +
+                                'Alt 键: ' + event.altKey + '\n' +
+                                'Ctrl 键: ' + event.ctrlKey + '\n' +
+                                'Meta 键（win 键）： ' + event.metaKey + '\n' +
+                                'Shift 键：' + event.shiftKey
+                            );
+                        }
+                    },
+                    pointPadding: 0,
+                    groupPadding: 0
                 }
             },
             series: []
@@ -85,18 +116,32 @@ class MethodCanary extends Component {
     }
 
     refresh(methodEventsMap) {
+        let i;
         this.methodEventsMap = methodEventsMap;
         const threadSeries = [];
-        for (const key in this.methodEventsMap) {
-            const methodEventCount = this.methodEventsMap[key].length;
-            const threadInfo = key;
-
+        for (let i = 0; i < this.methodEventsMap.length; i++) {
+            const methodEventCount = this.methodEventsMap[i].methodEvents.length;
+            const threadInfo = this.methodEventsMap[i].threadInfo;
             threadSeries.push({name: (threadInfo.id + threadInfo.name), data: [methodEventCount]})
         }
         this.optionsForSummary.series = threadSeries;
-        this.refs.chartForSummary.getChart().update(this.optionsForSummary);
 
-        // for (let i = 0; i < this.methodEvents.length; i++) {
+
+        const diff = this.refs.chartForSummary.getChart().series.length - threadSeries.length;
+        if (diff > 0) {
+            for (i = this.refs.chartForSummary.getChart().series.length; i > diff; i--) {
+                this.refs.chartForSummary.getChart().series[i - 1].remove(true);
+            }
+        } else if (diff < 0) {
+            for (i = this.refs.chartForSummary.getChart().series.length; i < threadSeries.length; i++) {
+                this.refs.chartForSummary.getChart().addSeries({});
+            }
+        }
+
+        this.refs.chartForSummary.getChart().update({
+            series: threadSeries
+        })
+        ;        // for (let i = 0; i < this.methodEvents.length; i++) {
         //     const stack = methodEvents[i].stack;
         //     const start = methodEvents[i].start;
         //     const end = methodEvents[i].end;
@@ -112,10 +157,6 @@ class MethodCanary extends Component {
                 <ReactHighcharts
                     ref="chartForSummary"
                     config={this.optionsForSummary}
-                />
-                <ReactHighcharts
-                    ref="chart"
-                    config={this.options}
                 />
             </Card>);
     }
