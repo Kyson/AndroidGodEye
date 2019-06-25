@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import '../App.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel, Button, Modal} from 'react-bootstrap'
+// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import {Row, Col, Clearfix, Grid, Panel, Button, Modal} from 'react-bootstrap'
 import JSONPretty from '../../node_modules/react-json-pretty';
 import {toast} from 'react-toastify';
+
+import {Card, Modal, Button} from 'antd'
 
 /**
  * Crash
@@ -37,16 +39,8 @@ class Crash extends Component {
     render() {
         let crashInfo = this.state.crashInfo;
         return (
-            <Panel style={{textAlign: "left"}}>
-                <Panel.Heading>
-                    <Row>
-                        <Col md={10}><h5>Last Crash Info(最新一次崩溃)</h5></Col>
-                        <Col md={2}
-                             style={{textAlign: 'right'}}><Button
-                            onClick={this.handleCrashDetailClick}>Detail</Button></Col>
-                    </Row>
-                </Panel.Heading>
-                <Panel.Body>
+            <Card title="Last Crash Info(最新一次崩溃)" extra={<Button onClick={this.handleCrashDetailClick}>Detail</Button>}>
+                <div>
                     <p>
                         <strong>Time(崩溃时间):&nbsp;</strong>{crashInfo.timestampMillis ? new Date(crashInfo.timestampMillis).toLocaleTimeString() : "**"}
                     </p>
@@ -55,19 +49,11 @@ class Crash extends Component {
                     </p>
                     <p><strong>Stacktrace(异常堆栈)</strong></p>
                     {Crash.renderStacktraceItem(crashInfo.throwableStacktrace)}
-                </Panel.Body>
-                <Modal show={this.state.show} onHide={this.handleClose}>
-                    <Modal.Header>
-                        <Modal.Title>Crash detail</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <JSONPretty id="json-pretty" json={this.state.crashInfo}/>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.handleClose}>Close</Button>
-                    </Modal.Footer>
+                </div>
+                <Modal visible={this.state.show} onCancel={this.handleClose} title="Crash detail" closable={true} onOk={this.handleClose}>
+                    <JSONPretty id="json-pretty" json={this.state.crashInfo}/>
                 </Modal>
-            </Panel>);
+            </Card>);
     }
 
     static renderStacktraceItem(throwableStacktraces) {

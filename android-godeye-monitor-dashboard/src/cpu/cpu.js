@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import '../App.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
+import {Card} from 'antd'
 
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
@@ -10,6 +8,7 @@ import ReactHighcharts from '../../node_modules/react-highcharts'
 import {toast} from 'react-toastify';
 
 exporting(Highcharts);
+
 /**
  * Cpu
  */
@@ -112,18 +111,12 @@ class Cpu extends Component {
 
     render() {
         return (
-            <Panel style={{textAlign: "left"}}>
-                <Panel.Heading>
-                    <h5>Cpu(处理器)
-                    </h5>
-                </Panel.Heading>
-                <Panel.Body>
-                    <ReactHighcharts
-                        ref="chart"
-                        config={this.options}
-                    />
-                </Panel.Body>
-            </Panel>);
+            <Card title="Cpu(处理器)">
+                <ReactHighcharts
+                    ref="chart"
+                    config={this.options}
+                />
+            </Card>);
     }
 }
 

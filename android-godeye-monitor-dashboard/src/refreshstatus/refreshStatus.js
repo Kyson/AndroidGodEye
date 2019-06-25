@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import '../App.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Button} from 'react-bootstrap'
+// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import {Button} from 'react-bootstrap'
+import {Button} from 'antd'
 
 /**
  * 刷新状态
@@ -32,13 +33,13 @@ class RefreshStatus extends Component {
 
     render() {
         return (
-            <div className="span12">
-                <p>
+            <div className="span12" style={{paddingLeft: 16, paddingRight: 16}}>
+                <span>
                     Status:{this.state.canRefresh ? "Refreshing..." : "Stopped."} |
                     Last update time:{this.state.lastUpdateTime.toISOString()}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <Button
                         onClick={this._handleRefreshStatus}>{this.state.canRefresh ? "Stop" : "Start"}</Button>
-                </p>
+                </span>
             </div>
         );
     }

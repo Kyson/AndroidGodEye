@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import '../App.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
+// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
+import {Card} from 'antd'
 
 exporting(Highcharts);
 
@@ -100,18 +101,12 @@ class Traffic extends Component {
 
     render() {
         return (
-            <Panel style={{textAlign: "left"}}>
-                <Panel.Heading>
-                    <h5>Traffic(流量)
-                    </h5>
-                </Panel.Heading>
-                <Panel.Body>
-                    <ReactHighcharts
-                        ref="chart"
-                        config={this.options}
-                    />
-                </Panel.Body>
-            </Panel>);
+            <Card title="Traffic(流量)">
+                <ReactHighcharts
+                    ref="chart"
+                    config={this.options}
+                />
+            </Card>);
     }
 }
 

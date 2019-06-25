@@ -1,6 +1,6 @@
 class Util {
     static getCommonColors() {
-        return ["#EB4334", "#4586F3", "#FBBD06", "#35AA53", "#999999"];
+        return ["#EB4334", "#4586F3", "#FBBD06", "#93c756", "#999999"];
     }
 
     static getRed() {

@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import '../App.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
+// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 import Util from '../libs/util'
 import {toast} from 'react-toastify';
-
+import {Card} from 'antd'
 
 /**
  * Fps
@@ -48,21 +48,19 @@ class Fps extends Component {
     render() {
         let fpsLevel = this.state.level;
         return (
-            <Panel style={{textAlign: "left"}}>
-                <Panel.Heading>
-                    <h5>FPS(帧率)
-                    </h5>
-                </Panel.Heading>
-                <Panel.Body>
-                    <h1 style={{
-                        textAlign: "center",
-                        color: this.fpsLevelColor[fpsLevel]
-                    }}>{(this.state.fpsInfo && this.state.fpsInfo.currentFps) ? this.state.fpsInfo.currentFps : "**"}</h1>
-                    <p ><span
-                        style={{fontSize: 8}}>SystemRefreshRate(系统帧率):&nbsp;&nbsp;</span><strong>{(this.state.fpsInfo && this.state.fpsInfo.systemFps) ? this.state.fpsInfo.systemFps : "**"}</strong>
-                    </p>
-                </Panel.Body>
-            </Panel>);
+            <Card>
+                <Card.Meta
+                    title="FPS(帧率)"
+                    description={"SystemRefreshRate(系统帧率):" + ((this.state.fpsInfo && this.state.fpsInfo.systemFps) ? this.state.fpsInfo.systemFps : "**")}
+                />
+                <div style={{textAlign: "center"}}>
+                <span style={{
+                    padding: 16,
+                    fontSize: 48,
+                    color: this.fpsLevelColor[fpsLevel]
+                }}>{(this.state.fpsInfo && this.state.fpsInfo.currentFps) ? this.state.fpsInfo.currentFps : "**"}</span>
+                </div>
+            </Card>);
     }
 }
 

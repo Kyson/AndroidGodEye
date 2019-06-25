@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import '../App.css';
-import {Row, Badge} from 'react-bootstrap';
-import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import {Row, Badge} from 'react-bootstrap';
+
+import {Tag} from 'antd'
+
+// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Util from '../libs/util'
 
 /**
@@ -25,13 +28,14 @@ class AppInfo extends Component {
     render() {
         return (
             <div>
-                <h1>
+                <h1 style={{color: 'white', textAlign: "center", marginTop: 16}}>
                     {this.state.appInfo ? this.state.appInfo.appName : "**"}
                 </h1>
-                <Row style={{
+                <div style={{
                     paddingTop: 10,
-                    paddingBottom: 10
-                }}>{this.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</Row>
+                    paddingBottom: 10,
+                    textAlign: "center"
+                }}>{this.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</div>
             </div>
         );
     }
@@ -42,8 +46,8 @@ class AppInfo extends Component {
             let styles = Util.getCommonColors();
             let styleCount = styles.length;
             for (let i = 0; i < labels.length; i++) {
-                items.push(<Badge style={{marginRight: 5, backgroundColor: styles[i % styleCount]}}
-                                  key={"appinfo" + i}>{labels[i]}</Badge>);
+                items.push(<Tag style={{marginRight: 5, color: styles[i % styleCount]}}
+                                key={"appinfo" + i}>{labels[i]}</Tag>);
             }
             return items;
         }

@@ -30,6 +30,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
+import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
@@ -141,7 +142,10 @@ public class Watcher implements Processor {
                         .subscribe(this.createSendMessageConsumer()),
                 godEye.<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject()
                         .map(this.<PageloadInfo>createConvertServerMessageFunction("pageloadInfo"))
-                        .subscribe(this.createSendMessageConsumer())
+                        .subscribe(this.createSendMessageConsumer()),
+                godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).subject()
+                .map(this.<>)
+
         );
     }
 
@@ -216,5 +220,6 @@ public class Watcher implements Processor {
             }
         };
     }
+
 
 }

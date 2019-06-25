@@ -19,6 +19,7 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.memory.Heap;
 import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
+import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
@@ -36,7 +37,7 @@ public class GodEye {
     @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
             ModuleName.HEAP, ModuleName.PSS, ModuleName.TRAFFIC, ModuleName.CRASH,
             ModuleName.THREAD, ModuleName.RAM, ModuleName.NETWORK, ModuleName.SM,
-            ModuleName.STARTUP, ModuleName.DEADLOCK, ModuleName.PAGELOAD
+            ModuleName.STARTUP, ModuleName.DEADLOCK, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY
     })
     public @interface ModuleName {
         public static final String CPU = "CPU";
@@ -54,6 +55,7 @@ public class GodEye {
         public static final String THREAD = "THREAD";
         public static final String DEADLOCK = "DEADLOCK";
         public static final String PAGELOAD = "PAGELOAD";
+        public static final String METHOD_CANARY = "METHOD_CANARY";
     }
 
     private GodEye() {
@@ -92,6 +94,7 @@ public class GodEye {
         mModules.put(ModuleName.CRASH, new Crash());
         mModules.put(ModuleName.THREAD, new ThreadDump());
         mModules.put(ModuleName.PAGELOAD, new Pageload());
+        mModules.put(ModuleName.METHOD_CANARY, new MethodCanary());
     }
 
     public GodEye install(final GodEyeConfig godEyeConfig) {
@@ -130,6 +133,9 @@ public class GodEye {
         }
         if (godEyeConfig.getPageloadConfig() != null) {
             ((Pageload) mModules.get(ModuleName.PAGELOAD)).install(godEyeConfig.getPageloadConfig());
+        }
+        if (godEyeConfig.getMethodCanaryConfig() != null) {
+            ((MethodCanary) mModules.get(ModuleName.METHOD_CANARY)).install(godEyeConfig.getMethodCanaryConfig());
         }
         return this;
     }

@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import '../App.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
+// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
 import Highcharts from '../../node_modules/highcharts/highstock';
 import ReactHighcharts from '../../node_modules/react-highcharts'
+
+import {Card} from 'antd'
 
 /**
  * RAM信息
@@ -59,7 +61,7 @@ class Ram extends Component {
         };
     }
 
-    createSeriresData(name, value) {
+    static createSeriresData(name, value) {
         return {
             name: name,
             y: value
@@ -70,8 +72,8 @@ class Ram extends Component {
         let datas = [];
         if (info) {
             let allocatedKb = info.totalMemKb - info.availMemKb;
-            datas.push(this.createSeriresData("allocated", allocatedKb));
-            datas.push(this.createSeriresData("free", info.availMemKb));
+            datas.push(Ram.createSeriresData("allocated", allocatedKb));
+            datas.push(Ram.createSeriresData("free", info.availMemKb));
             let title = "Total:" + (info.totalMemKb / 1024).toFixed(1) + "M";
             this.options.title.text = title;
         } else {
@@ -83,18 +85,12 @@ class Ram extends Component {
 
     render() {
         return (
-            <Panel style={{textAlign: "left"}}>
-                <Panel.Heading>
-                    <h5>Ram(运行时内存)
-                    </h5>
-                </Panel.Heading>
-                <Panel.Body>
-                    <ReactHighcharts
-                        ref="chart"
-                        config={this.options}
-                    />
-                </Panel.Body>
-            </Panel>);
+            <Card title="Ram(运行时内存)">
+                <ReactHighcharts
+                    ref="chart"
+                    config={this.options}
+                />
+            </Card>);
     }
 }
 

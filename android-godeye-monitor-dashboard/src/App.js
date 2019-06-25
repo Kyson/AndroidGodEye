@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import './App.css';
+import {Row, Col, Layout} from 'antd'
+import 'antd/dist/antd.css';
 import AppInfo from "./appinfo/appInfo";
-import {Row, Col, Grid} from 'react-bootstrap'
+// import {Row, Col, Grid} from 'react-bootstrap'
 import globalWs from './communication/websocket'
 import BatteryInfo from "./batteryinfo/batteryInfo";
 import Startup from "./startup/startup";
@@ -18,6 +20,7 @@ import Network from "./network/network";
 import Thread from "./thread/thread";
 import MemoryLeak from "./memoryleak/memoryLeak";
 import RefreshStatus from "./refreshstatus/refreshStatus";
+import MethodCanary from "./methodcanary/methodcanary";
 import Mock from "./MockData";
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -37,8 +40,14 @@ class App extends Component {
         globalWs.start(function (evt) {
             globalWs.sendMessage('{"moduleName": "clientOnline"}')
         });
-//        this.mock.start(this._onReceiveMessage);
+        this.mock.start(this._onReceiveMessage);
     }
+
+    _getModuleRef(moduleName){
+
+    }
+
+
 
     _onReceiveMessage(moduleName, payload) {
         if (!this.canRefresh) {
@@ -105,6 +114,9 @@ class App extends Component {
             this.refs.leakInfo.refresh(payload);
             return;
         }
+        if ("methodCanary" === moduleName) {
+            this.refs.methodCanary.refresh(payload);
+        }
     }
 
     _setCanRefresh(canRefresh) {
@@ -113,58 +125,68 @@ class App extends Component {
 
     render() {
         return (
-            <div className="App">
-                <ToastContainer autoClose={2000}/>
-                <Grid>
-                    <Row style={{marginBottom: 30}}>
-                        <Col md={12}><AppInfo ref="appInfo"/></Col>
+            <Layout>
+                <Layout.Content>
+                    <Row align="top" style={{backgroundColor: '#93c756'}}>
+                        <Col span={24}>
+                            <AppInfo ref="appInfo"/>
+                        </Col>
                     </Row>
-                    <Row>
-                        <Col md={12}>
+                    <ToastContainer autoClose={2000}/>
+                    <Row gutter={16} align="top" style={{textAlign: 'right', marginTop: 30}}>
+                        <Col span={24}>
                             <RefreshStatus ref="refreshStatus" setCanRefresh={this._setCanRefresh}/>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col md={9}> <Startup ref="startupInfo"/>
-                        </Col>
-                        <Col md={3}> <Fps ref="fpsInfo"/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={4}> <Ram ref="ramInfo"/>
-                        </Col>
-                        <Col md={4}> <Pss ref="pssInfo"/>
-                        </Col>
-                        <Col md={4}> <BatteryInfo ref="batteryInfo"/>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={24}>
+                            <MethodCanary ref="methodCanary"/>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col md={6}> <Cpu ref="cpuInfo"/>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={8}>
+                            <Startup ref="startupInfo"/>
                         </Col>
-                        <Col md={6}> <Heap ref="heapInfo"/>
+                        <Col span={6}>
+                            <Fps ref="fpsInfo"/>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col md={6}><Traffic ref="trafficInfo"/></Col>
-                        <Col md={6}><Crash ref="crashInfo"/></Col>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={6}> <Ram ref="ramInfo"/>
+                        </Col>
+                        <Col span={6}> <Pss ref="pssInfo"/>
+                        </Col>
+                        <Col span={6}> <BatteryInfo ref="batteryInfo"/>
+                        </Col>
                     </Row>
-                    <Row>
-                        <Col md={12}><Pageload ref="pageloadInfo"/></Col>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={8}> <Cpu ref="cpuInfo"/>
+                        </Col>
+                        <Col span={8}> <Heap ref="heapInfo"/>
+                        </Col>
+                        <Col span={8}><Traffic ref="trafficInfo"/></Col>
                     </Row>
-                    <Row>
-                        <Col md={12}><Network ref="networkInfo"/></Col>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={12}><Crash ref="crashInfo"/></Col>
                     </Row>
-                    <Row>
-                        <Col md={12}><Block ref="blockInfo"/></Col>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={24}><Pageload ref="pageloadInfo"/></Col>
                     </Row>
-                    <Row>
-                        <Col md={12}><Thread ref="threadInfo"/></Col>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={24}><Network ref="networkInfo"/></Col>
                     </Row>
-                    <Row>
-                        <Col md={12}><MemoryLeak ref="leakInfo"/></Col>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={24}><Block ref="blockInfo"/></Col>
                     </Row>
-                </Grid>
-            </div>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={24}><Thread ref="threadInfo"/></Col>
+                    </Row>
+                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                        <Col span={24}><MemoryLeak ref="leakInfo"/></Col>
+                    </Row>
+                </Layout.Content>
+                <Layout.Footer>Footer</Layout.Footer>
+            </Layout>
         );
     }
 }

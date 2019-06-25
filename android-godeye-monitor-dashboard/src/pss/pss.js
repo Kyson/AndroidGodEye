@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import '../App.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
+// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
 import Highcharts from '../../node_modules/highcharts/highstock';
 import ReactHighcharts from '../../node_modules/react-highcharts'
+import {Card} from 'antd'
 
 /**
  * PSS信息
@@ -62,7 +63,7 @@ class Pss extends Component {
         };
     }
 
-    createSeriresData(name, value) {
+    static createSeriresData(name, value) {
         return {
             name: name,
             y: value
@@ -73,10 +74,10 @@ class Pss extends Component {
         let datas = [];
         if (info) {
             let unknownPssKb = info.totalPssKb - info.dalvikPssKb - info.nativePssKb - info.otherPssKb;
-            datas.push(this.createSeriresData("dalvik", info.dalvikPssKb));
-            datas.push(this.createSeriresData("native", info.nativePssKb));
-            datas.push(this.createSeriresData("other", info.otherPssKb));
-            datas.push(this.createSeriresData("unknown", unknownPssKb));
+            datas.push(Pss.createSeriresData("dalvik", info.dalvikPssKb));
+            datas.push(Pss.createSeriresData("native", info.nativePssKb));
+            datas.push(Pss.createSeriresData("other", info.otherPssKb));
+            datas.push(Pss.createSeriresData("unknown", unknownPssKb));
             let title = "Total:" + (info.totalPssKb / 1024).toFixed(2) + "M";
             this.options.title.text = title;
         } else {
@@ -88,18 +89,12 @@ class Pss extends Component {
 
     render() {
         return (
-            <Panel style={{textAlign: "left"}}>
-                <Panel.Heading>
-                    <h5>Pss(共享比例物理内存)
-                    </h5>
-                </Panel.Heading>
-                <Panel.Body>
-                    <ReactHighcharts
-                        ref="chart"
-                        config={this.options}
-                    />
-                </Panel.Body>
-            </Panel>);
+            <Card title="Pss(共享比例物理内存)">
+                <ReactHighcharts
+                    ref="chart"
+                    config={this.options}
+                />
+            </Card>);
     }
 }
 

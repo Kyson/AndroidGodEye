@@ -26,6 +26,7 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapContext;
 import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
 import cn.hikyson.godeye.core.internal.modules.memory.RamContext;
+import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryContext;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadContext;
 import cn.hikyson.godeye.core.internal.modules.sm.SmContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
@@ -176,6 +177,15 @@ public class GodEyeConfig {
                     trafficConfig.sampleMillis = Long.parseLong(sampleMillisString);
                 }
                 builder.withTrafficConfig(trafficConfig);
+            }
+            element = getFirstElementByTagInRoot(root, "methodCanary");
+            if (element != null) {
+                final String methodEventCountThresholdString = element.getAttribute("methodEventCountThreshold");
+                MethodCanaryConfig methodCanaryConfig = new MethodCanaryConfig();
+                if (!TextUtils.isEmpty(methodEventCountThresholdString)) {
+                    methodCanaryConfig.methodEventCountThreshold = Integer.parseInt(methodEventCountThresholdString);
+                }
+                builder.withMethodCanaryConfig(methodCanaryConfig);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -471,6 +481,28 @@ public class GodEyeConfig {
         }
     }
 
+    public static class MethodCanaryConfig implements MethodCanaryContext {
+        public int methodEventCountThreshold;
+
+        public MethodCanaryConfig() {
+            this.methodEventCountThreshold = 1000;
+        }
+
+        public MethodCanaryConfig(int methodEventCountThreshold) {
+            this.methodEventCountThreshold = methodEventCountThreshold;
+        }
+
+        @Override
+        public int methodEventCountThreshold() {
+            return methodEventCountThreshold;
+        }
+
+        @Override
+        public Application app() {
+            return GodEye.instance().getApplication();
+        }
+    }
+
     private BatteryConfig mBatteryConfig;
     private CpuConfig mCpuConfig;
     private CrashConfig mCrashConfig;
@@ -483,6 +515,7 @@ public class GodEyeConfig {
     private SmConfig mSmConfig;
     private ThreadConfig mThreadConfig;
     private TrafficConfig mTrafficConfig;
+    private MethodCanaryConfig mMethodCanaryConfig;
 
     public BatteryConfig getBatteryConfig() {
         return mBatteryConfig;
@@ -490,6 +523,14 @@ public class GodEyeConfig {
 
     public void setBatteryConfig(BatteryConfig batteryConfig) {
         mBatteryConfig = batteryConfig;
+    }
+
+    public MethodCanaryConfig getMethodCanaryConfig() {
+        return mMethodCanaryConfig;
+    }
+
+    public void setMethodCanaryConfig(MethodCanaryConfig methodCanaryConfig) {
+        mMethodCanaryConfig = methodCanaryConfig;
     }
 
     public CpuConfig getCpuConfig() {
@@ -589,6 +630,7 @@ public class GodEyeConfig {
         return null;
     }
 
+
     public static final class GodEyeConfigBuilder {
         private BatteryConfig mBatteryConfig;
         private CpuConfig mCpuConfig;
@@ -602,6 +644,7 @@ public class GodEyeConfig {
         private SmConfig mSmConfig;
         private ThreadConfig mThreadConfig;
         private TrafficConfig mTrafficConfig;
+        private MethodCanaryConfig mMethodCanaryConfig;
 
         private GodEyeConfigBuilder() {
         }
@@ -610,80 +653,86 @@ public class GodEyeConfig {
             return new GodEyeConfigBuilder();
         }
 
-        public GodEyeConfigBuilder withBatteryConfig(BatteryConfig BatteryConfig) {
-            this.mBatteryConfig = BatteryConfig;
+        public GodEyeConfigBuilder withBatteryConfig(BatteryConfig mBatteryConfig) {
+            this.mBatteryConfig = mBatteryConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withCpuConfig(CpuConfig CpuConfig) {
-            this.mCpuConfig = CpuConfig;
+        public GodEyeConfigBuilder withCpuConfig(CpuConfig mCpuConfig) {
+            this.mCpuConfig = mCpuConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withCrashConfig(CrashConfig CrashConfig) {
-            this.mCrashConfig = CrashConfig;
+        public GodEyeConfigBuilder withCrashConfig(CrashConfig mCrashConfig) {
+            this.mCrashConfig = mCrashConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withFpsConfig(FpsConfig FpsConfig) {
-            this.mFpsConfig = FpsConfig;
+        public GodEyeConfigBuilder withFpsConfig(FpsConfig mFpsConfig) {
+            this.mFpsConfig = mFpsConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withHeapConfig(HeapConfig HeapConfig) {
-            this.mHeapConfig = HeapConfig;
+        public GodEyeConfigBuilder withHeapConfig(HeapConfig mHeapConfig) {
+            this.mHeapConfig = mHeapConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withLeakConfig(LeakConfig LeakConfig) {
-            this.mLeakConfig = LeakConfig;
+        public GodEyeConfigBuilder withLeakConfig(LeakConfig mLeakConfig) {
+            this.mLeakConfig = mLeakConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withPageloadConfig(PageloadConfig PageloadConfig) {
-            this.mPageloadConfig = PageloadConfig;
+        public GodEyeConfigBuilder withPageloadConfig(PageloadConfig mPageloadConfig) {
+            this.mPageloadConfig = mPageloadConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withPssConfig(PssConfig PssConfig) {
-            this.mPssConfig = PssConfig;
+        public GodEyeConfigBuilder withPssConfig(PssConfig mPssConfig) {
+            this.mPssConfig = mPssConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withRamConfig(RamConfig RamConfig) {
-            this.mRamConfig = RamConfig;
+        public GodEyeConfigBuilder withRamConfig(RamConfig mRamConfig) {
+            this.mRamConfig = mRamConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withSmConfig(SmConfig SmConfig) {
-            this.mSmConfig = SmConfig;
+        public GodEyeConfigBuilder withSmConfig(SmConfig mSmConfig) {
+            this.mSmConfig = mSmConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withThreadConfig(ThreadConfig ThreadConfig) {
-            this.mThreadConfig = ThreadConfig;
+        public GodEyeConfigBuilder withThreadConfig(ThreadConfig mThreadConfig) {
+            this.mThreadConfig = mThreadConfig;
             return this;
         }
 
-        public GodEyeConfigBuilder withTrafficConfig(TrafficConfig TrafficConfig) {
-            this.mTrafficConfig = TrafficConfig;
+        public GodEyeConfigBuilder withTrafficConfig(TrafficConfig mTrafficConfig) {
+            this.mTrafficConfig = mTrafficConfig;
+            return this;
+        }
+
+        public GodEyeConfigBuilder withMethodCanaryConfig(MethodCanaryConfig mMethodCanaryConfig) {
+            this.mMethodCanaryConfig = mMethodCanaryConfig;
             return this;
         }
 
         public GodEyeConfig build() {
             GodEyeConfig godEyeConfig = new GodEyeConfig();
-            godEyeConfig.mThreadConfig = this.mThreadConfig;
-            godEyeConfig.mCpuConfig = this.mCpuConfig;
-            godEyeConfig.mBatteryConfig = this.mBatteryConfig;
-            godEyeConfig.mSmConfig = this.mSmConfig;
-            godEyeConfig.mPageloadConfig = this.mPageloadConfig;
-            godEyeConfig.mPssConfig = this.mPssConfig;
-            godEyeConfig.mLeakConfig = this.mLeakConfig;
-            godEyeConfig.mHeapConfig = this.mHeapConfig;
             godEyeConfig.mRamConfig = this.mRamConfig;
-            godEyeConfig.mTrafficConfig = this.mTrafficConfig;
+            godEyeConfig.mSmConfig = this.mSmConfig;
+            godEyeConfig.mThreadConfig = this.mThreadConfig;
+            godEyeConfig.mMethodCanaryConfig = this.mMethodCanaryConfig;
+            godEyeConfig.mPssConfig = this.mPssConfig;
+            godEyeConfig.mBatteryConfig = this.mBatteryConfig;
+            godEyeConfig.mHeapConfig = this.mHeapConfig;
+            godEyeConfig.mCpuConfig = this.mCpuConfig;
+            godEyeConfig.mLeakConfig = this.mLeakConfig;
             godEyeConfig.mCrashConfig = this.mCrashConfig;
             godEyeConfig.mFpsConfig = this.mFpsConfig;
+            godEyeConfig.mTrafficConfig = this.mTrafficConfig;
+            godEyeConfig.mPageloadConfig = this.mPageloadConfig;
             return godEyeConfig;
         }
     }

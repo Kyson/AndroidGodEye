@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import '../App.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Row, Col, Clearfix, Grid, Panel, Modal, Button} from 'react-bootstrap'
+// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
+// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// import {Row, Col, Clearfix, Grid, Panel, Modal, Button} from 'react-bootstrap'
 import JSONPretty from '../../node_modules/react-json-pretty';
 
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import {toast} from 'react-toastify';
+import {Card, Modal} from 'antd'
 
 exporting(Highcharts);
 
@@ -219,29 +220,15 @@ class Network extends Component {
 
     render() {
         return (
-            <Panel style={{textAlign: "left"}}>
-                <Panel.Heading>
-                    <h5>Network(网络)
-                    </h5>
-                </Panel.Heading>
-                <Panel.Body>
-                    <ReactHighcharts
-                        ref="chart"
-                        config={this.options}
-                    />
-                </Panel.Body>
-                <Modal show={this.state.show} onHide={this.handleClose}>
-                    <Modal.Header>
-                        <Modal.Title>Network detail</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <JSONPretty id="json-pretty" json={this.state.networkInfo}/>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.handleClose}>Close</Button>
-                    </Modal.Footer>
+            <Card title="Network(网络)">
+                <ReactHighcharts
+                    ref="chart"
+                    config={this.options}
+                />
+                <Modal visible={this.state.show} onCancel={this.handleClose} title="Network detail" closable={true} onOk={this.handleClose}>
+                    <JSONPretty id="json-pretty" json={this.state.networkInfo}/>
                 </Modal>
-            </Panel>);
+            </Card>);
     }
 }
 
