@@ -21,3 +21,7 @@ sh deploy_release.sh
 bintrayKey:https://bintray.com/profile/edit API Key
 
 ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=BINTRAY_KEY -PdryRun=false
+
+## react-boostrap vs antd
+
+6.8M

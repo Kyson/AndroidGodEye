@@ -13,7 +13,7 @@ import cn.hikyson.methodcanary.lib.MethodCanaryOutputCallback;
 import cn.hikyson.methodcanary.lib.MethodEvent;
 import cn.hikyson.methodcanary.lib.ThreadInfo;
 
-public class MethodCanary extends ProduceableSubject<Map<ThreadInfo, List<MethodEvent>>> implements Install<MethodCanaryContext> {
+public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implements Install<MethodCanaryContext> {
     private boolean mInstalled = false;
 
     @Override
@@ -27,21 +27,26 @@ public class MethodCanary extends ProduceableSubject<Map<ThreadInfo, List<Method
                 .methodEventThreshold(methodCanaryContext.methodEventCountThreshold())
                 .methodCanaryOutputCallback(new MethodCanaryOutputCallback() {
                     @Override
-                    public void output(File recordFile) {
-                        produce(MethodCanaryConverter.convertToStructure(recordFile));
+                    public void output(long startTimeNanos, long stopTimeNanos, File methodEventsFile) {
+                        long start = System.currentTimeMillis();
+                        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startTimeNanos, stopTimeNanos, methodEventsFile);
+                        L.d("convertToMethodsRecordInfo cost " + (System.currentTimeMillis() - start) + "ms");
+                        produce(methodsRecordInfo);
                     }
                 }).build());
         this.mInstalled = true;
+        L.d("method canary installed.");
     }
 
     @Override
     public void uninstall() {
         if (!mInstalled) {
-            L.d("method canary  already uninstalled, ignore.");
+            L.d("method canary already uninstalled, ignore.");
             return;
         }
         mInstalled = false;
         MethodCanaryInject.uninstall();
+        L.d("method canary uninstalled.");
     }
 
     public void startMonitor() {

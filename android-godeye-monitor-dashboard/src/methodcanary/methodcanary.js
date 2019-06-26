@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import '../App.css';
 
-import {Card, Button} from 'antd'
-import ReactHighcharts from '../../node_modules/react-highcharts'
+import {Card, Button, Row, Col} from 'antd'
+import xrange from 'highcharts/modules/xrange';
+import ReactHighcharts from 'react-highcharts'
+
+(xrange)(ReactHighcharts.Highcharts);
 
 class MethodCanary extends Component {
 
@@ -11,13 +14,15 @@ class MethodCanary extends Component {
         this.state = {
             isMonitoring: false
         };
-        this.methodEventsMap = {};
+        this.record = {};
         this.toggleIsMonitor = this.toggleIsMonitor.bind(this);
-        this.openLastRecord = this.openLastRecord.bind(this);
+        this.openThread = this.openThread.bind(this);
+        const functionOpenThread = this.openThread;
 
         this.optionsForSummary = {
             chart: {
-                type: 'bar'
+                type: 'bar',
+                height: 60
             },
             title: {
                 text: null
@@ -28,78 +33,75 @@ class MethodCanary extends Component {
             exporting: {
                 enabled: false
             },
+            credits: {
+                enabled: false
+            },
             yAxis: {
                 title: {
                     text: null
                 },
                 min: 0,
+                gridLineWidth: 0
             },
             xAxis: {
-                title: {
-                    text: null
-                },
-                categories: ['']
+                visible: false
             },
             plotOptions: {
                 series: {
                     stacking: 'percent',
                     events: {
                         click: function (event) {
-                            alert(
-                                this.name + ' 被点击了\n' +
-                                '最近点：' + event.point.category + '\n' +
-                                'Alt 键: ' + event.altKey + '\n' +
-                                'Ctrl 键: ' + event.ctrlKey + '\n' +
-                                'Meta 键（win 键）： ' + event.metaKey + '\n' +
-                                'Shift 键：' + event.shiftKey
-                            );
+                            functionOpenThread(this.name);
                         }
                     },
+                    borderRadius: 0,
                     pointPadding: 0,
-                    groupPadding: 0
+                    groupPadding: 0,
+                    pointWidth: 40
                 }
             },
             series: []
         };
-        this.options = {
+        this.optionsForThread = {
             chart: {
-                type: 'xrange'
+                type: 'xrange',
+                height: 1
+            },
+            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00',
+                '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+            title: {
+                text: null
+            },
+            legend: {
+                enabled: false
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                title: {
+                    text: null
+                },
+                gridLineWidth: 0
             },
             yAxis: {
-                title: {
-                    text: ''
-                },
-                categories: ['1', '2', '3'],
+                visible: false,
                 reversed: true
             },
-            series: [{
-                name: '1111',
-                pointPadding: 0,
-                groupPadding: 0,
-                data: [{
-                    x: 10,
-                    x2: 15,
-                    y: 0
-                }, {
-                    x: 16,
-                    x2: 18,
-                    y: 1
-                }, {
-                    x: 5,
-                    x2: 7,
-                    y: 2
-                }, {
-                    x: 19,
-                    x2: 24,
-                    y: 1
-                }, {
-                    x: 8,
-                    x2: 12,
-                    y: 2
-                }],
-                dataLabels: {
-                    enabled: true
+            plotOptions: {
+                series: {
+                    borderRadius: 0,
+                    pointPadding: 0,
+                    groupPadding: 0,
+                    pointWidth: 20
+                },
+                column: {
+                    colorByPoint: true
                 }
+            },
+            series: [{
+                name: '',
+                data: [{}]
             }]
         };
     }
@@ -107,26 +109,107 @@ class MethodCanary extends Component {
     toggleIsMonitor() {
         this.setState((prevState, props) => ({
             isMonitoring: !prevState.isMonitoring,
-        }));
-        // TODO KYSON send command to phone
+        }), () => {
+            if (this.state.isMonitoring) {
+                this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"start"}')
+            } else {
+                this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"stop"}')
+            }
+        });
     }
 
-    openLastRecord() {
-
-    }
-
-    refresh(methodEventsMap) {
-        let i;
-        this.methodEventsMap = methodEventsMap;
-        const threadSeries = [];
-        for (let i = 0; i < this.methodEventsMap.length; i++) {
-            const methodEventCount = this.methodEventsMap[i].methodEvents.length;
-            const threadInfo = this.methodEventsMap[i].threadInfo;
-            threadSeries.push({name: (threadInfo.id + threadInfo.name), data: [methodEventCount]})
+    openThread(threadName) {
+        let methodInfos = {};
+        for (let i = 0; i < this.record.methodInfoOfThreadInfos.length; i++) {
+            if (threadName === MethodCanary.getThreadNameByThreadInfo(this.record.methodInfoOfThreadInfos[i].threadInfo)) {
+                methodInfos = this.record.methodInfoOfThreadInfos[i].methodInfos
+            }
         }
-        this.optionsForSummary.series = threadSeries;
+        const datas = [];
+        let maxStack = 0;
+        for (let i = 0; i < methodInfos.length; i++) {
+            datas.push({
+                x: methodInfos[i].start,
+                x2: methodInfos[i].end,
+                y: methodInfos[i].stack,
+                methodEvent: methodInfos[i]
+            });
+            if (methodInfos[i].stack > maxStack) {
+                maxStack = methodInfos[i].stack
+            }
+        }
+        const categories = [];
+        let height = 50;
+        for (let i = 0; i < (maxStack + 1); i++) {
+            categories.push("");
+            height = height + 20
+        }
+        const min = this.record.start;
+        const max = this.record.end;
+        this.refs.chartForThread.getChart().update({
+            chart: {
+                type: 'xrange',
+                height: height
+            },
+            tooltip: {
+                formatter: function () {
+                    return this.point.methodEvent.className + "#" + this.point.methodEvent.methodName + " ,from "
+                        + this.point.methodEvent.start + " to " + this.point.methodEvent.end + ", cost " + (this.point.methodEvent.end - this.point.methodEvent.start) / 1000000 + "ms"
+                }
+            },
+            series: [{
+                name: '',
+                pointPadding: 0,
+                groupPadding: 0,
+                pointWidth: 20,
+                data: datas,
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontSize: 10,
+                        fontWeight: "regular",
+                        textOutline: "0px 0px contrast",
+                        color: "black"
+                    },
+                    formatter: function () {
+                        return this.point.methodEvent.className + "#" + this.point.methodEvent.methodName
+                    }
+                }
+            }],
+            yAxis: {
+                title: {
+                    text: null
+                },
+                reversed: true,
+                categories: categories
+            },
+            xAxis: {
+                title: {
+                    text: null
+                },
+                gridLineWidth: 0,
+                min: min,
+                max: max
+            },
+        });
+    }
 
+    static getThreadNameByThreadInfo(threadInfo) {
+        return "id:[" + threadInfo.id + "],name:[" + threadInfo.name + "]"
+    }
 
+    refresh(record) {
+        let i;
+        this.record = record;
+        const threadSeries = [];
+        for (let i = 0; i < this.record.methodInfoOfThreadInfos.length; i++) {
+            const methodEventCount = this.record.methodInfoOfThreadInfos[i].methodInfos.length;
+            const threadInfo = this.record.methodInfoOfThreadInfos[i].threadInfo;
+            threadSeries.push({
+                name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
+                data: [methodEventCount],
+            })
+        }
         const diff = this.refs.chartForSummary.getChart().series.length - threadSeries.length;
         if (diff > 0) {
             for (i = this.refs.chartForSummary.getChart().series.length; i > diff; i--) {
@@ -137,27 +220,31 @@ class MethodCanary extends Component {
                 this.refs.chartForSummary.getChart().addSeries({});
             }
         }
-
         this.refs.chartForSummary.getChart().update({
             series: threadSeries
-        })
-        ;        // for (let i = 0; i < this.methodEvents.length; i++) {
-        //     const stack = methodEvents[i].stack;
-        //     const start = methodEvents[i].start;
-        //     const end = methodEvents[i].end;
-        // }
-        // this.refs.chart.getChart().update(this.options);
+        });
     }
+
 
     render() {
         return (
-            <Card title="MethodCanary" extra={<div><Button
-                onClick={this.toggleIsMonitor}>{this.state.isMonitoring ? "Stop" : "Start"}</Button>
-                <Button onClick={this.openLastRecord}>Open</Button></div>}>
-                <ReactHighcharts
-                    ref="chartForSummary"
-                    config={this.optionsForSummary}
-                />
+            <Card title="MethodCanary" extra={<Button
+                onClick={this.toggleIsMonitor}>{this.state.isMonitoring ? "Stop" : "Start"}</Button>}>
+                <Row>
+                    <Col span={24}>
+                        <ReactHighcharts
+                            ref="chartForSummary"
+                            config={this.optionsForSummary}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <ReactHighcharts
+                            ref="chartForThread"
+                            config={this.optionsForThread}
+                        />
+                    </Col>
+                </Row>
             </Card>);
     }
 }

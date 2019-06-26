@@ -39,6 +39,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
+import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
@@ -61,6 +62,8 @@ public class MainActivity extends Activity implements Loggable {
     private static final String TAG = "AndroidGodEye";
     @BindView(R.id.activity_main_logview)
     LogView mActivityMainLogview;
+    @BindView(R.id.activity_main_methodcanary)
+    CheckBox mActivityMainMethodCanary;
     @BindView(R.id.activity_main_cpu)
     CheckBox mActivityMainCpu;
     @BindView(R.id.activity_main_battery)
@@ -101,6 +104,8 @@ public class MainActivity extends Activity implements Loggable {
     Button mActivityMainMonitorWork;
     @BindView(R.id.activity_main_monitor_shutdown)
     Button mActivityMainMonitorShutdown;
+    @BindView(R.id.activity_main_consumer_methodcanary)
+    Button mActivityMainConsumerMethodCanary;
     @BindView(R.id.activity_main_consumer_cpu)
     Button mActivityMainConsumerCpu;
     @BindView(R.id.activity_main_consumer_battery)
@@ -131,6 +136,8 @@ public class MainActivity extends Activity implements Loggable {
     Button mActivityMainMakeBlock;
     @BindView(R.id.activity_main_make_request)
     Button mActivityMainMakeRequest;
+    @BindView(R.id.activity_main_make_invocations)
+    Button mActivityMainMakeInvocations;
     @BindView(R.id.activity_main_make_leak)
     Button mActivityMainMakeLeak;
     @BindView(R.id.activity_main_make_leak_v4)
@@ -156,20 +163,21 @@ public class MainActivity extends Activity implements Loggable {
         mZygote = new OkHttpClient.Builder().eventListenerFactory(new OkNetworkCollectorFactory(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK))).build();
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
-        installableCbs = new CheckBox[13];
-        installableCbs[0] = mActivityMainCpu;
-        installableCbs[1] = mActivityMainBattery;
-        installableCbs[2] = mActivityMainFps;
-        installableCbs[3] = mActivityMainLeak;
-        installableCbs[4] = mActivityMainHeap;
-        installableCbs[5] = mActivityMainPss;
-        installableCbs[6] = mActivityMainRam;
-        installableCbs[7] = mActivityMainSm;
-        installableCbs[8] = mActivityMainTraffic;
-        installableCbs[9] = mActivityMainCrash;
-        installableCbs[10] = mActivityMainThread;
-        installableCbs[11] = mActivityMainDeadLock;
-        installableCbs[12] = mActivityMainPageload;
+        installableCbs = new CheckBox[14];
+        installableCbs[0] = mActivityMainMethodCanary;
+        installableCbs[1] = mActivityMainCpu;
+        installableCbs[2] = mActivityMainBattery;
+        installableCbs[3] = mActivityMainFps;
+        installableCbs[4] = mActivityMainLeak;
+        installableCbs[5] = mActivityMainHeap;
+        installableCbs[6] = mActivityMainPss;
+        installableCbs[7] = mActivityMainRam;
+        installableCbs[8] = mActivityMainSm;
+        installableCbs[9] = mActivityMainTraffic;
+        installableCbs[10] = mActivityMainCrash;
+        installableCbs[11] = mActivityMainThread;
+        installableCbs[12] = mActivityMainDeadLock;
+        installableCbs[13] = mActivityMainPageload;
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -197,12 +205,12 @@ public class MainActivity extends Activity implements Loggable {
 
     @OnClick({R.id.activity_main_all, R.id.activity_main_cancel_all, R.id.activity_main_install, R.id.activity_main_install_with_assets,
             R.id.activity_main_uninstall, R.id.activity_main_monitor_work, R.id.activity_main_monitor_shutdown,
-            R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps,
+            R.id.activity_main_consumer_methodcanary, R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps,
             R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss,
             R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm,
             R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash,
             R.id.activity_main_consumer_thread, R.id.activity_main_consumer_deadlock, R.id.activity_main_consumer_pageload,
-            R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_leak_v4,
+            R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_leak_v4, R.id.activity_main_make_invocations,
             R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear,
             R.id.activity_main_make_deadlock, R.id.activity_main_make_pageload, R.id.activity_main_test})
     public void onClick(View v) {
@@ -228,27 +236,7 @@ public class MainActivity extends Activity implements Loggable {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String content = "<config>\n" +
-                                "    <battery />\n" +
-                                "    <cpu intervalMillis=\"2000\" sampleMillis=\"1000\"/>\n" +
-                                "    <crash crashProvider=\"cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider\"/>\n" +
-                                "    <fps intervalMillis=\"2000\"/>\n" +
-                                "    <heap intervalMillis=\"2000\"/>\n" +
-                                "    <leakMemory debug=\"true\" debugNotification=\"true\" leakRefInfoProvider=\"cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider\"/>\n" +
-                                "    <pageload/>\n" +
-                                "    <pss intervalMillis=\"2000\"/>\n" +
-                                "    <ram intervalMillis=\"2000\"/>\n" +
-                                "    <sm debugNotify=\"true\"\n" +
-                                "        dumpIntervalMillis=\"500\"\n" +
-                                "        longBlockThresholdMillis=\"300\"\n" +
-                                "        shortBlockThresholdMillis=\"100\"/>\n" +
-                                "    <thread intervalMillis=\"3000\"\n" +
-                                "            threadFilter=\"cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter\"/>\n" +
-                                "    <traffic intervalMillis=\"2000\" sampleMillis=\"1000\"/>\n" +
-                                "</config>";
-                        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes(Charset.forName("utf-8")));
-                        GodEye.instance().install(GodEyeConfig.fromInputStream(byteArrayInputStream));
-//                        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+                        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
                     }
                 }).start();
                 break;
@@ -265,6 +253,9 @@ public class MainActivity extends Activity implements Loggable {
                 break;
             case R.id.activity_main_monitor_shutdown:
                 GodEyeMonitor.shutDown();
+                break;
+            case R.id.activity_main_consumer_methodcanary:
+                mCompositeDisposable.add(GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).subject().subscribe(new LogObserver<>("methodCanary", this)));
                 break;
             case R.id.activity_main_consumer_cpu:
                 mCompositeDisposable.add(GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe(new LogObserver<>("cpu", this)));
@@ -314,6 +305,9 @@ public class MainActivity extends Activity implements Loggable {
             case R.id.activity_main_make_request:
                 request();
                 break;
+            case R.id.activity_main_make_invocations:
+                makeInvocations();
+                break;
             case R.id.activity_main_make_leak:
                 jumpToLeak();
                 break;
@@ -339,6 +333,49 @@ public class MainActivity extends Activity implements Loggable {
             default:
                 break;
         }
+    }
+
+    private void methodA() throws InterruptedException {
+        methodB();
+        methodB();
+        methodB();
+        int j = 0;
+        String m = "m" + j;
+    }
+
+    private void methodB() throws InterruptedException {
+        Thread.sleep(200);
+        int i = 0;
+    }
+
+    private void makeInvocations() {
+        GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).startMonitor();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 10; i++) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    request();
+                }
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    try {
+                        methodA();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).stopMonitor();
+            }
+        }).start();
     }
 
     private void request() {
@@ -402,6 +439,9 @@ public class MainActivity extends Activity implements Loggable {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                if (mActivityMainMethodCanary.isChecked()) {
+                    GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).install(new GodEyeConfig.MethodCanaryConfig());
+                }
                 if (mActivityMainCpu.isChecked()) {
                     GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).install(new GodEyeConfig.CpuConfig());
                 }

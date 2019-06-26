@@ -3,7 +3,6 @@ import './App.css';
 import {Row, Col, Layout} from 'antd'
 import 'antd/dist/antd.css';
 import AppInfo from "./appinfo/appInfo";
-// import {Row, Col, Grid} from 'react-bootstrap'
 import globalWs from './communication/websocket'
 import BatteryInfo from "./batteryinfo/batteryInfo";
 import Startup from "./startup/startup";
@@ -41,9 +40,8 @@ class App extends Component {
         globalWs.start(function (evt) {
             globalWs.sendMessage('{"moduleName": "clientOnline"}')
         });
-        this.mock.start(this._onReceiveMessage);
+        // this.mock.start(this._onReceiveMessage);
     }
-
 
     _getModuleRef(moduleName) {
         const moduleMap = {
@@ -96,7 +94,7 @@ class App extends Component {
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 30}}>
                         <Col span={24}>
-                            <MethodCanary ref="methodCanary"/>
+                            <MethodCanary ref="methodCanary" globalWs={globalWs}/>
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 30}}>

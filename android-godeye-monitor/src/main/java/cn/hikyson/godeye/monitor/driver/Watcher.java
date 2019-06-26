@@ -31,6 +31,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
+import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodsRecordInfo;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
@@ -144,8 +145,8 @@ public class Watcher implements Processor {
                         .map(this.<PageloadInfo>createConvertServerMessageFunction("pageloadInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).subject()
-                .map(this.<>)
-
+                        .map(this.<MethodsRecordInfo>createConvertServerMessageFunction("methodCanary"))
+                        .subscribe(this.createSendMessageConsumer())
         );
     }
 
@@ -160,6 +161,12 @@ public class Watcher implements Processor {
         if ("clientOnline".equals(clientMessage.moduleName)) {//if a client get online,send init message to it
             for (Map.Entry<String, Object> entry : mMessageCache.copy().entrySet()) {
                 webSocket.send(new ServerMessage(entry.getKey(), entry.getValue()).toString());
+            }
+        } else if ("methodCanary".equals(clientMessage.moduleName)) {
+            if ("start".equals(String.valueOf(clientMessage.payload))) {
+                GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).startMonitor();
+            } else if ("stop".equals(String.valueOf(clientMessage.payload))) {
+                GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).stopMonitor();
             }
         }
     }
