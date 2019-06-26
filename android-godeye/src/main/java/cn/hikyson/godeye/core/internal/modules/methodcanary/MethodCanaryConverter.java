@@ -16,6 +16,7 @@ import cn.hikyson.methodcanary.lib.ThreadInfo;
 
 public class MethodCanaryConverter {
 
+    // TODO KYSON IMPL TEST
     static MethodsRecordInfo convertToMethodsRecordInfo(long startTimeNanos, long stopTimeNanos, File methodEventsFile) {
         MethodsRecordInfo methodsRecordInfo = new MethodsRecordInfo(startTimeNanos, stopTimeNanos, new ArrayList<MethodsRecordInfo.MethodInfoOfThreadInfo>());
         if (!methodEventsFile.exists() || methodEventsFile.isDirectory()) {
