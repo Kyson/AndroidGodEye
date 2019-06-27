@@ -22,7 +22,7 @@ class MethodCanary extends Component {
         this.optionsForSummary = {
             chart: {
                 type: 'bar',
-                height: 60
+                height: 100
             },
             title: {
                 text: null
@@ -57,7 +57,7 @@ class MethodCanary extends Component {
                     borderRadius: 0,
                     pointPadding: 0,
                     groupPadding: 0,
-                    pointWidth: 40
+                    pointWidth: 30
                 }
             },
             series: []
@@ -65,7 +65,12 @@ class MethodCanary extends Component {
         this.optionsForThread = {
             chart: {
                 type: 'xrange',
-                height: 1
+                height: 1,
+                zoomType: 'x',
+                panning: true,
+                panKey: 'shift',
+                marginTop: 30,
+                marginBottom: 60,
             },
             colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00',
                 '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
@@ -78,13 +83,27 @@ class MethodCanary extends Component {
             credits: {
                 enabled: false
             },
+            tooltip: {
+                formatter: function () {
+                    return "cost " + (this.point.methodEvent.end - this.point.methodEvent.start) / 1000000 + " ms, " + this.point.methodEvent.className + "#" + this.point.methodEvent.methodName + " ,from "
+                        + this.point.methodEvent.start + " to " + this.point.methodEvent.end
+                }
+            },
             xAxis: {
                 title: {
                     text: null
                 },
-                gridLineWidth: 0
+                gridLineWidth: 0,
+                labels: {
+                    formatter: function () {
+                        return (this.value / 1000000).toFixed(4) + "ms";
+                    }
+                }
             },
             yAxis: {
+                title: {
+                    text: null
+                },
                 visible: false,
                 reversed: true
             },
@@ -101,6 +120,21 @@ class MethodCanary extends Component {
             },
             series: [{
                 name: '',
+                pointPadding: 0,
+                groupPadding: 0,
+                pointWidth: 30,
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        fontSize: 12,
+                        fontWeight: "regular",
+                        textOutline: "0px 0px contrast",
+                        color: "black"
+                    },
+                    formatter: function () {
+                        return this.point.methodEvent.className + "#" + this.point.methodEvent.methodName
+                    }
+                },
                 data: [{}]
             }]
         };
@@ -125,12 +159,14 @@ class MethodCanary extends Component {
                 methodInfos = this.record.methodInfoOfThreadInfos[i].methodInfos
             }
         }
+        const min = this.record.start;
+        const max = this.record.end;
         const datas = [];
         let maxStack = 0;
         for (let i = 0; i < methodInfos.length; i++) {
             datas.push({
                 x: methodInfos[i].start,
-                x2: methodInfos[i].end,
+                x2: (methodInfos[i].end === 0 ? max : methodInfos[i].end),
                 y: methodInfos[i].stack,
                 methodEvent: methodInfos[i]
             });
@@ -139,55 +175,22 @@ class MethodCanary extends Component {
             }
         }
         const categories = [];
-        let height = 50;
+        let height = 90;
         for (let i = 0; i < (maxStack + 1); i++) {
             categories.push("");
-            height = height + 20
+            height = height + 35
         }
-        const min = this.record.start;
-        const max = this.record.end;
         this.refs.chartForThread.getChart().update({
             chart: {
-                type: 'xrange',
                 height: height
             },
-            tooltip: {
-                formatter: function () {
-                    return this.point.methodEvent.className + "#" + this.point.methodEvent.methodName + " ,from "
-                        + this.point.methodEvent.start + " to " + this.point.methodEvent.end + ", cost " + (this.point.methodEvent.end - this.point.methodEvent.start) / 1000000 + "ms"
-                }
-            },
             series: [{
-                name: '',
-                pointPadding: 0,
-                groupPadding: 0,
-                pointWidth: 20,
                 data: datas,
-                dataLabels: {
-                    enabled: true,
-                    style: {
-                        fontSize: 10,
-                        fontWeight: "regular",
-                        textOutline: "0px 0px contrast",
-                        color: "black"
-                    },
-                    formatter: function () {
-                        return this.point.methodEvent.className + "#" + this.point.methodEvent.methodName
-                    }
-                }
             }],
             yAxis: {
-                title: {
-                    text: null
-                },
-                reversed: true,
                 categories: categories
             },
             xAxis: {
-                title: {
-                    text: null
-                },
-                gridLineWidth: 0,
                 min: min,
                 max: max
             },

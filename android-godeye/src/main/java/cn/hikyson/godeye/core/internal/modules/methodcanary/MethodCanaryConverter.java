@@ -9,14 +9,19 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import cn.hikyson.godeye.core.utils.IoUtil;
 import cn.hikyson.methodcanary.lib.ThreadInfo;
+import cn.hikyson.methodcanary.lib.Util;
 
-public class MethodCanaryConverter {
+class MethodCanaryConverter {
 
-    // TODO KYSON IMPL TEST
+    static MethodsRecordInfo filterMethodsRecordInfo(MethodsRecordInfo methodsRecordInfo, MethodCanaryContext methodCanaryContext) {
+        for () {//TODO KYSON IMPL
+
+        }
+    }
+
     static MethodsRecordInfo convertToMethodsRecordInfo(long startTimeNanos, long stopTimeNanos, File methodEventsFile) {
         MethodsRecordInfo methodsRecordInfo = new MethodsRecordInfo(startTimeNanos, stopTimeNanos, new ArrayList<MethodsRecordInfo.MethodInfoOfThreadInfo>());
         if (!methodEventsFile.exists() || methodEventsFile.isDirectory()) {
@@ -29,9 +34,8 @@ public class MethodCanaryConverter {
             MethodsRecordInfo.MethodInfoOfThreadInfo methodInfoOfCurrentThread = null;
             Stack<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodEventsStackOfCurrentThread = null;
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("[THREAD]")) {
-                    Pattern r = Pattern.compile("^\\[THREAD]id=(\\d*);name=(.*);priority=(\\d*)$");
-                    Matcher m = r.matcher(line);
+                if (line.startsWith(Util.START_THREAD)) {
+                    Matcher m = Util.PATTERN_THREAD.matcher(line);
                     if (m.find()) {
                         long id = Long.parseLong(m.group(1));
                         String name = m.group(2);
@@ -42,9 +46,8 @@ public class MethodCanaryConverter {
                     } else {
                         throw new IllegalStateException("illegal format for [THREAD] line:" + line);
                     }
-                } else if (line.startsWith("PUSH:")) {
-                    Pattern r = Pattern.compile("^PUSH:et=(\\d*);cn=(.*);ma=(-?\\d*);mn=(.*);md=(.*)$");
-                    Matcher m = r.matcher(line);
+                } else if (line.startsWith(Util.START_METHOD_ENTER)) {
+                    Matcher m = Util.PATTERN_METHOD_ENTER.matcher(line);
                     if (m.find()) {
                         long eventTime = Long.parseLong(m.group(1));
                         String className = m.group(2);
@@ -65,9 +68,8 @@ public class MethodCanaryConverter {
                     } else {
                         throw new IllegalStateException("illegal format for PUSH line:" + line);
                     }
-                } else if (line.startsWith("POP:")) {
-                    Pattern r = Pattern.compile("^POP:et=(\\d*);cn=(.*);ma=(-?\\d*);mn=(.*);md=(.*)$");
-                    Matcher m = r.matcher(line);
+                } else if (line.startsWith(Util.START_METHOD_EXIT)) {
+                    Matcher m = Util.PATTERN_METHOD_EXIT.matcher(line);
                     if (m.find()) {
                         long eventTime = Long.parseLong(m.group(1));
                         String className = m.group(2);

@@ -339,6 +339,8 @@ public class MainActivity extends Activity implements Loggable {
         methodB();
         methodB();
         methodB();
+        methodC();
+        methodD();
         int j = 0;
         String m = "m" + j;
     }
@@ -348,8 +350,22 @@ public class MainActivity extends Activity implements Loggable {
         int i = 0;
     }
 
+    private int[] methodC() {
+        int[] i = new int[1000];
+        for (int m = 0; m < i.length; m++) {
+            i[m] = m;
+        }
+        return i;
+    }
+
+    private void methodD() {
+        String[] i = new String[1000];
+        for (int m = 0; m < i.length; m++) {
+            i[m] = m + "this is a string";
+        }
+    }
+
     private void makeInvocations() {
-        GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).startMonitor();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -359,7 +375,7 @@ public class MainActivity extends Activity implements Loggable {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    request();
+//                    request();
                 }
             }
         }).start();
@@ -373,9 +389,12 @@ public class MainActivity extends Activity implements Loggable {
                         e.printStackTrace();
                     }
                 }
-                GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).stopMonitor();
             }
         }).start();
+        for (int i = 0; i < 1000; i++) {
+            methodC();
+            methodD();
+        }
     }
 
     private void request() {

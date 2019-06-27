@@ -17,7 +17,7 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
     private boolean mInstalled = false;
 
     @Override
-    public void install(MethodCanaryContext methodCanaryContext) {
+    public void install(final MethodCanaryContext methodCanaryContext) {
         if (mInstalled) {
             L.d("method canary already installed, ignore.");
             return;
@@ -30,6 +30,7 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
                     public void output(long startTimeNanos, long stopTimeNanos, File methodEventsFile) {
                         long start = System.currentTimeMillis();
                         MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startTimeNanos, stopTimeNanos, methodEventsFile);
+                        methodsRecordInfo = MethodCanaryConverter.filterMethodsRecordInfo(methodsRecordInfo, methodCanaryContext);
                         L.d("convertToMethodsRecordInfo cost " + (System.currentTimeMillis() - start) + "ms");
                         produce(methodsRecordInfo);
                     }

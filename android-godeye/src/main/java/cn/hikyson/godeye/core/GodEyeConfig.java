@@ -181,9 +181,13 @@ public class GodEyeConfig {
             element = getFirstElementByTagInRoot(root, "methodCanary");
             if (element != null) {
                 final String methodEventCountThresholdString = element.getAttribute("methodEventCountThreshold");
+                final String lowCostMethodThresholdString = element.getAttribute("lowCostMethodThreshold");
                 MethodCanaryConfig methodCanaryConfig = new MethodCanaryConfig();
                 if (!TextUtils.isEmpty(methodEventCountThresholdString)) {
                     methodCanaryConfig.methodEventCountThreshold = Integer.parseInt(methodEventCountThresholdString);
+                }
+                if (!TextUtils.isEmpty(lowCostMethodThresholdString)) {
+                    methodCanaryConfig.lowCostMethodThreshold = Long.parseLong(lowCostMethodThresholdString);
                 }
                 builder.withMethodCanaryConfig(methodCanaryConfig);
             }
@@ -483,18 +487,26 @@ public class GodEyeConfig {
 
     public static class MethodCanaryConfig implements MethodCanaryContext {
         public int methodEventCountThreshold;
+        public long lowCostMethodThreshold;
 
         public MethodCanaryConfig() {
             this.methodEventCountThreshold = 1000;
+            this.lowCostMethodThreshold = 10L;
         }
 
-        public MethodCanaryConfig(int methodEventCountThreshold) {
+        public MethodCanaryConfig(int methodEventCountThreshold, int lowCostMethodThreshold) {
             this.methodEventCountThreshold = methodEventCountThreshold;
+            this.lowCostMethodThreshold = lowCostMethodThreshold;
         }
 
         @Override
         public int methodEventCountThreshold() {
             return methodEventCountThreshold;
+        }
+
+        @Override
+        public long lowCostMethodThreshold() {
+            return lowCostMethodThreshold;
         }
 
         @Override

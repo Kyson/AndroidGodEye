@@ -30,7 +30,7 @@ dependencies {
     implementation project(':android-godeye-monitor')
     implementation project(':android-godeye')
     implementation project(':android-godeye-toolbox')
-    implementation "cn.hikyson.methodcanary:lib:0.10.5"
+    implementation "cn.hikyson.methodcanary:lib:0.10.6"
 }
 
 apply plugin: 'cn.hikyson.methodcanary.plugin'
