@@ -24,14 +24,16 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
         }
         MethodCanaryInject.install(MethodCanaryConfig.MethodCanaryConfigBuilder
                 .aMethodCanaryConfig().app(methodCanaryContext.app())
-                .methodEventThreshold(methodCanaryContext.methodEventCountThreshold())
+                .methodEventThreshold(300)
                 .methodCanaryOutputCallback(new MethodCanaryOutputCallback() {
                     @Override
                     public void output(long startTimeNanos, long stopTimeNanos, File methodEventsFile) {
-                        long start = System.currentTimeMillis();
+                        long start0 = System.currentTimeMillis();
                         MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startTimeNanos, stopTimeNanos, methodEventsFile);
-                        methodsRecordInfo = MethodCanaryConverter.filterMethodsRecordInfo(methodsRecordInfo, methodCanaryContext);
-                        L.d("convertToMethodsRecordInfo cost " + (System.currentTimeMillis() - start) + "ms");
+                        long start1 = System.currentTimeMillis();
+                        MethodCanaryConverter.filter(methodsRecordInfo, methodCanaryContext);
+                        long end = System.currentTimeMillis();
+                        L.d(String.format("MethodCanary convertToMethodsRecordInfo cost %s ms, filter cost %s ms", end - start0, end - start1));
                         produce(methodsRecordInfo);
                     }
                 }).build());

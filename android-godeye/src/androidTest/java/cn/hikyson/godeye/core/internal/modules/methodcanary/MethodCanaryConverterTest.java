@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.methodcanary;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
@@ -80,6 +81,55 @@ public class MethodCanaryConverterTest {
         Gson gson = new Gson();
         String c = gson.toJson(methodsRecordInfo);
         System.out.println("methodsRecordInfo:\n" + c);
+    }
+
+    @Test
+    public void filter() throws IOException {
+        final Context context = InstrumentationRegistry.getTargetContext();
+        File file = new File(context.getCacheDir(), "methodcanary.txt");
+        if (file.getParentFile() != null && !file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        String content = "[THREAD]id=2;name=main;priority=5\n" +
+                "PUSH:et=3284436162929793;cn=cn/hikyson/methodcanary/sample/MainActivity;ma=1;mn=<init>;md=()V\n" +
+                "POP:et=3284436163062866;cn=cn/hikyson/methodcanary/sample/MainActivity;ma=1;mn=<init>;md=()V\n" +
+                "PUSH:et=3284436172374273;cn=cn/hikyson/methodcanary/sample/MainActivity;ma=4;mn=onCreate;md=(Landroid/os/Bundle;)V\n" +
+                "PUSH:et=3284436240967658;cn=cn/hikyson/methodcanary/sample/MainActivity$onCreate$1;ma=8;mn=<clinit>;md=()V\n" +
+                "PUSH:et=3284436241070366;cn=cn/hikyson/methodcanary/sample/MainActivity$onCreate$1;ma=0;mn=<init>;md=()V\n" +
+                "POP:et=3284436241089950;cn=cn/hikyson/methodcanary/sample/MainActivity$onCreate$1;ma=0;mn=<init>;md=()V\n" +
+                "[THREAD]id=147350;name=Thread-19;priority=5\n" +
+                "PUSH:et=3284440487128854;cn=cn/hikyson/methodcanary/sample/SampleAppClassA$1;ma=1;mn=run;md=()V\n" +
+                "[THREAD]id=147351;name=Thread-20;priority=5\n" +
+                "PUSH:et=3284440700503229;cn=cn/hikyson/methodcanary/sample/SampleAppClassA$1;ma=1;mn=run;md=()V\n";
+        writeFileFromBytesByStream(file, content.getBytes(Charset.forName("utf-8")), false);
+        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(3284436152929793L, 3284440700503230L, file);
+        Gson gson = new Gson();
+        String c = gson.toJson(methodsRecordInfo);
+        System.out.println("methodsRecordInfo0:\n" + c);
+
+        MethodCanaryConverter.filter(methodsRecordInfo, new MethodCanaryContext() {
+
+            @Override
+            public long lowCostMethodThresholdMillis() {
+                return 500;
+            }
+
+            @Override
+            public int maxMethodCountSingleThreadByCost() {
+                return 0;
+            }
+
+            @Override
+            public Application app() {
+                return (Application) context.getApplicationContext();
+            }
+        });
+        c = gson.toJson(methodsRecordInfo);
+        System.out.println("methodsRecordInfo1:\n" + c);
+
     }
 
 

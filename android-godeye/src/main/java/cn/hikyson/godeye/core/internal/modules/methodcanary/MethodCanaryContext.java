@@ -4,18 +4,18 @@ import android.app.Application;
 
 public interface MethodCanaryContext {
     /**
-     * 超过阈值则存储到文件
+     * 低于阈值认为是短耗时方法，短耗时方法会丢弃
      *
-     * @return
+     * @return <=0 for all methods,单位ms
      */
-    int methodEventCountThreshold();
+    long lowCostMethodThresholdMillis();
 
     /**
-     * 低于阈值认为是短耗时方法，短耗时方法会丢掉
+     * 单个线程最大的方法数，如果超出会根据end-start小的方法进行丢弃
      *
-     * @return <=0 for all method,单位ms
+     * @return <=0 for all methods
      */
-    long lowCostMethodThreshold();
+    int maxMethodCountSingleThreadByCost();
 
     Application app();
 }

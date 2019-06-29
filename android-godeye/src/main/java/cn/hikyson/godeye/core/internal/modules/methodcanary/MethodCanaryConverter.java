@@ -6,7 +6,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.EmptyStackException;
+import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 
@@ -15,12 +18,6 @@ import cn.hikyson.methodcanary.lib.ThreadInfo;
 import cn.hikyson.methodcanary.lib.Util;
 
 class MethodCanaryConverter {
-
-    static MethodsRecordInfo filterMethodsRecordInfo(MethodsRecordInfo methodsRecordInfo, MethodCanaryContext methodCanaryContext) {
-        for () {//TODO KYSON IMPL
-
-        }
-    }
 
     static MethodsRecordInfo convertToMethodsRecordInfo(long startTimeNanos, long stopTimeNanos, File methodEventsFile) {
         MethodsRecordInfo methodsRecordInfo = new MethodsRecordInfo(startTimeNanos, stopTimeNanos, new ArrayList<MethodsRecordInfo.MethodInfoOfThreadInfo>());
@@ -100,5 +97,71 @@ class MethodCanaryConverter {
         }
     }
 
+    static void filter(MethodsRecordInfo methodsRecordInfo, MethodCanaryContext methodCanaryContext) {
+        long lowCostMethodThresholdMillis = methodCanaryContext.lowCostMethodThresholdMillis();
+        if (lowCostMethodThresholdMillis <= 0) {
+            lowCostMethodThresholdMillis = Long.MAX_VALUE;
+        }
+        int maxMethodCountSingleThreadByCost = methodCanaryContext.maxMethodCountSingleThreadByCost();
+        Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator = methodInfoCostComparator(methodsRecordInfo.start, methodsRecordInfo.end);
+        List<MethodsRecordInfo.MethodInfoOfThreadInfo> methodInfoOfThreadInfos = methodsRecordInfo.methodInfoOfThreadInfos;
+        if (methodInfoOfThreadInfos != null && !methodInfoOfThreadInfos.isEmpty()) {
+            for (MethodsRecordInfo.MethodInfoOfThreadInfo methodInfoOfThreadInfo : methodInfoOfThreadInfos) {
+                List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos = methodInfoOfThreadInfo.methodInfos;
+                if (methodInfos != null && !methodInfos.isEmpty()) {
+                    filterByLowCostMethodThreshold(methodsRecordInfo.start, methodsRecordInfo.end, lowCostMethodThresholdMillis, methodInfos);
+                    filterByTopX(maxMethodCountSingleThreadByCost, methodInfoCostComparator, methodInfos);
+                }
+            }
+        }
+    }
+
+    private static void filterByLowCostMethodThreshold(final long start, final long end, final long lowCostMethodThresholdMillis, List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos) {
+        List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> delete = new ArrayList<>();
+        for (MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo : methodInfos) {
+            long cost = computeMethodCost(start, end, methodInfo);
+            if ((cost / 1000000) <= lowCostMethodThresholdMillis) {
+                delete.add(methodInfo);
+            }
+        }
+        methodInfos.removeAll(delete);
+    }
+
+    private static void filterByTopX(int maxMethodCountSingleThreadByCost, Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator, List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos) {
+        if (maxMethodCountSingleThreadByCost <= 0) {
+            return;
+        }
+        int size = methodInfos.size();
+        if (size <= maxMethodCountSingleThreadByCost) {
+            return;
+        }
+        Collections.sort(methodInfos, methodInfoCostComparator);
+        int deleteCount = size - maxMethodCountSingleThreadByCost;
+        for (int i = 0; i < deleteCount; i++) {
+            methodInfos.remove(methodInfos.size() - 1);
+        }
+    }
+
+    private static Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator(final long start, final long end) {
+        return new Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo>() {
+            @Override
+            public int compare(MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo o1, MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo o2) {
+                return longCompare(computeMethodCost(start, end, o1), computeMethodCost(start, end, o2));
+            }
+        };
+    }
+
+    private static int longCompare(long x, long y) {
+        return (x < y) ? -1 : ((x == y) ? 0 : 1);
+    }
+
+    private static long computeMethodCost(long start, long end, MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo) {
+        if (methodInfo == null) {
+            return 0L;
+        }
+        long methodStart = Math.max(start, methodInfo.start);
+        long methodEnd = methodInfo.end <= 0 ? end : Math.min(end, methodInfo.end);
+        return Math.max(methodEnd - methodStart, 0L);
+    }
 
 }

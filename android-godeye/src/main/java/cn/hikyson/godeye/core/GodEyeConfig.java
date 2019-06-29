@@ -180,14 +180,14 @@ public class GodEyeConfig {
             }
             element = getFirstElementByTagInRoot(root, "methodCanary");
             if (element != null) {
-                final String methodEventCountThresholdString = element.getAttribute("methodEventCountThreshold");
-                final String lowCostMethodThresholdString = element.getAttribute("lowCostMethodThreshold");
+                final String maxMethodCountSingleThreadByCostString = element.getAttribute("maxMethodCountSingleThreadByCost");
+                final String lowCostMethodThresholdMillisString = element.getAttribute("lowCostMethodThresholdMillis");
                 MethodCanaryConfig methodCanaryConfig = new MethodCanaryConfig();
-                if (!TextUtils.isEmpty(methodEventCountThresholdString)) {
-                    methodCanaryConfig.methodEventCountThreshold = Integer.parseInt(methodEventCountThresholdString);
+                if (!TextUtils.isEmpty(maxMethodCountSingleThreadByCostString)) {
+                    methodCanaryConfig.maxMethodCountSingleThreadByCost = Integer.parseInt(maxMethodCountSingleThreadByCostString);
                 }
-                if (!TextUtils.isEmpty(lowCostMethodThresholdString)) {
-                    methodCanaryConfig.lowCostMethodThreshold = Long.parseLong(lowCostMethodThresholdString);
+                if (!TextUtils.isEmpty(lowCostMethodThresholdMillisString)) {
+                    methodCanaryConfig.lowCostMethodThresholdMillis = Long.parseLong(lowCostMethodThresholdMillisString);
                 }
                 builder.withMethodCanaryConfig(methodCanaryConfig);
             }
@@ -486,27 +486,27 @@ public class GodEyeConfig {
     }
 
     public static class MethodCanaryConfig implements MethodCanaryContext {
-        public int methodEventCountThreshold;
-        public long lowCostMethodThreshold;
+        public int maxMethodCountSingleThreadByCost;
+        public long lowCostMethodThresholdMillis;
 
         public MethodCanaryConfig() {
-            this.methodEventCountThreshold = 1000;
-            this.lowCostMethodThreshold = 10L;
+            this.maxMethodCountSingleThreadByCost = 100;
+            this.lowCostMethodThresholdMillis = 10L;
         }
 
-        public MethodCanaryConfig(int methodEventCountThreshold, int lowCostMethodThreshold) {
-            this.methodEventCountThreshold = methodEventCountThreshold;
-            this.lowCostMethodThreshold = lowCostMethodThreshold;
-        }
-
-        @Override
-        public int methodEventCountThreshold() {
-            return methodEventCountThreshold;
+        public MethodCanaryConfig(int maxMethodCountByCost, int lowCostMethodThresholdMillis) {
+            this.maxMethodCountSingleThreadByCost = maxMethodCountByCost;
+            this.lowCostMethodThresholdMillis = lowCostMethodThresholdMillis;
         }
 
         @Override
-        public long lowCostMethodThreshold() {
-            return lowCostMethodThreshold;
+        public long lowCostMethodThresholdMillis() {
+            return lowCostMethodThresholdMillis;
+        }
+
+        @Override
+        public int maxMethodCountSingleThreadByCost() {
+            return maxMethodCountSingleThreadByCost;
         }
 
         @Override
