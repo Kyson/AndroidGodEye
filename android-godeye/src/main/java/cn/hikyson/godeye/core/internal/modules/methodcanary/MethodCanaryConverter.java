@@ -116,18 +116,18 @@ class MethodCanaryConverter {
         }
     }
 
-    private static void filterByLowCostMethodThreshold(final long start, final long end, final long lowCostMethodThresholdMillis, List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos) {
+    static void filterByLowCostMethodThreshold(final long start, final long end, final long lowCostMethodThresholdMillis, List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos) {
         List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> delete = new ArrayList<>();
         for (MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo : methodInfos) {
             long cost = computeMethodCost(start, end, methodInfo);
-            if ((cost / 1000000) <= lowCostMethodThresholdMillis) {
+            if ((cost / 1000000.0) <= lowCostMethodThresholdMillis) {
                 delete.add(methodInfo);
             }
         }
         methodInfos.removeAll(delete);
     }
 
-    private static void filterByTopX(int maxMethodCountSingleThreadByCost, Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator, List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos) {
+    static void filterByTopX(int maxMethodCountSingleThreadByCost, Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator, List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos) {
         if (maxMethodCountSingleThreadByCost <= 0) {
             return;
         }
@@ -142,11 +142,11 @@ class MethodCanaryConverter {
         }
     }
 
-    private static Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator(final long start, final long end) {
+    static Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator(final long start, final long end) {
         return new Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo>() {
             @Override
             public int compare(MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo o1, MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo o2) {
-                return longCompare(computeMethodCost(start, end, o1), computeMethodCost(start, end, o2));
+                return longCompare(computeMethodCost(start, end, o2), computeMethodCost(start, end, o1));
             }
         };
     }

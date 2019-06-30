@@ -96,7 +96,7 @@ class MethodCanary extends Component {
                 gridLineWidth: 0,
                 labels: {
                     formatter: function () {
-                        return (this.value / 1000000).toFixed(4) + "ms";
+                        return (this.value / 1000000000).toFixed(3) + "s";
                     }
                 }
             },
@@ -210,7 +210,7 @@ class MethodCanary extends Component {
             const threadInfo = this.record.methodInfoOfThreadInfos[i].threadInfo;
             threadSeries.push({
                 name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
-                data: [methodEventCount],
+                data: [methodEventCount]
             })
         }
         const diff = this.refs.chartForSummary.getChart().series.length - threadSeries.length;
@@ -231,8 +231,12 @@ class MethodCanary extends Component {
 
     render() {
         return (
-            <Card title="MethodCanary" extra={<Button
-                onClick={this.toggleIsMonitor}>{this.state.isMonitoring ? "Stop" : "Start"}</Button>}>
+            <Card title="MethodCanary" extra={
+                <div>
+                <span>this is instruction of method canary&nbsp;&nbsp;</span>
+                <Button
+                onClick={this.toggleIsMonitor}>{this.state.isMonitoring ? "Stop" : "Start"}</Button></div>
+            }>
                 <Row>
                     <Col span={24}>
                         <ReactHighcharts

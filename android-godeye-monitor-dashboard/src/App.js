@@ -40,7 +40,7 @@ class App extends Component {
         globalWs.start(function (evt) {
             globalWs.sendMessage('{"moduleName": "clientOnline"}')
         });
-        // this.mock.start(this._onReceiveMessage);
+        this.mock.start(this._onReceiveMessage);
     }
 
     _getModuleRef(moduleName) {

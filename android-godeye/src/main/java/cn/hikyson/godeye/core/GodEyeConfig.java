@@ -490,8 +490,8 @@ public class GodEyeConfig {
         public long lowCostMethodThresholdMillis;
 
         public MethodCanaryConfig() {
-            this.maxMethodCountSingleThreadByCost = 100;
-            this.lowCostMethodThresholdMillis = 10L;
+            this.maxMethodCountSingleThreadByCost = 200;
+            this.lowCostMethodThresholdMillis = 5L;
         }
 
         public MethodCanaryConfig(int maxMethodCountByCost, int lowCostMethodThresholdMillis) {
