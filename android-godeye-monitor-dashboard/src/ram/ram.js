@@ -22,7 +22,10 @@ class Ram extends Component {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                margin: [0, 0, 0, 0]
+                spacing: 0
+            },
+            credits: {
+                enabled: false
             },
             title: {
                 text: "Ram",

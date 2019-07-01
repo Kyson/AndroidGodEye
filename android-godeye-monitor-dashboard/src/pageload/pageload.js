@@ -23,14 +23,16 @@ class Pageload extends Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.options = {
-            credits: {
-                enabled: false
-            },
             chart: {
-                type: 'column'
+                type: 'column',
+                spacingLeft: 0,
+                spacingRight: 0,
             },
             title: {
                 text: null
+            },
+            credits: {
+                enabled: false
             },
             tooltip: {
                 shared: true,
@@ -147,6 +149,19 @@ class Pageload extends Component {
     }
 
     render() {
+        let drawTime = 0;
+        let loadTime = 0;
+        if (this.state.pageloadInfo && this.state.pageloadInfo.loadTimeInfo) {
+            drawTime = this.state.pageloadInfo.loadTimeInfo.didDrawTime - this.state.pageloadInfo.loadTimeInfo.createTime;
+            loadTime = this.state.pageloadInfo.loadTimeInfo.loadTime - this.state.pageloadInfo.loadTimeInfo.createTime;
+            if (drawTime < 0) {
+                drawTime = 0;
+            }
+            if (loadTime < 0) {
+                loadTime = 0;
+            }
+        }
+        const content = `Page ${this.state.pageloadInfo.pageName} draw cost ${drawTime}ms, load cost ${loadTime}ms`;
         return (
             <Card title="Pageload(页面加载)">
                 <ReactHighcharts
@@ -155,6 +170,7 @@ class Pageload extends Component {
                 />
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Pageload detail" closable={true}
                        onOk={this.handleClose}>
+                    <span><strong>{content}</strong></span><br/>
                     <JSONPretty id="json-pretty" json={this.state.pageloadInfo}/>
                 </Modal>
             </Card>);

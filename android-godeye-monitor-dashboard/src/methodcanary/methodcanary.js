@@ -12,7 +12,8 @@ class MethodCanary extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMonitoring: false
+            isMonitoring: false,
+            methodCanaryConfig: {}
         };
         this.record = {};
         this.toggleIsMonitor = this.toggleIsMonitor.bind(this);
@@ -22,7 +23,7 @@ class MethodCanary extends Component {
         this.optionsForSummary = {
             chart: {
                 type: 'bar',
-                height: 100
+                height: 1
             },
             title: {
                 text: null
@@ -85,7 +86,7 @@ class MethodCanary extends Component {
             },
             tooltip: {
                 formatter: function () {
-                    return "cost " + (this.point.methodEvent.end - this.point.methodEvent.start) / 1000000 + " ms, " + this.point.methodEvent.className + "#" + this.point.methodEvent.methodName + " ,from "
+                    return "cost " + ((this.point.methodEvent.end - this.point.methodEvent.start) / 1000000).toFixed(2) + " ms, " + this.point.methodEvent.className + "#" + this.point.methodEvent.methodName + " ,from "
                         + this.point.methodEvent.start + " to " + this.point.methodEvent.end
                 }
             },
@@ -145,9 +146,10 @@ class MethodCanary extends Component {
             isMonitoring: !prevState.isMonitoring,
         }), () => {
             if (this.state.isMonitoring) {
-                this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"start"}')
+                this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"start"}');
+                this.props.globalWs.sendMessage('{"moduleName": "methodCanaryConfig"}');
             } else {
-                this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"stop"}')
+                this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"stop"}');
             }
         });
     }
@@ -201,6 +203,12 @@ class MethodCanary extends Component {
         return "id:[" + threadInfo.id + "],name:[" + threadInfo.name + "]"
     }
 
+    refreshConfig(record) {
+        this.setState({
+            methodCanaryConfig: record
+        });
+    }
+
     refresh(record) {
         let i;
         this.record = record;
@@ -224,18 +232,21 @@ class MethodCanary extends Component {
             }
         }
         this.refs.chartForSummary.getChart().update({
+            chart: {
+                height: 100
+            },
             series: threadSeries
         });
     }
 
-
     render() {
+        const instruction = `Wait a minute after stop... | Current config lowCostMethodThresholdMillis: ${this.state.methodCanaryConfig.lowCostMethodThresholdMillis}ms, maxMethodCountSingleThreadByCost: ${this.state.methodCanaryConfig.maxMethodCountSingleThreadByCost}`
         return (
             <Card title="MethodCanary" extra={
                 <div>
-                <span>this is instruction of method canary&nbsp;&nbsp;</span>
-                <Button
-                onClick={this.toggleIsMonitor}>{this.state.isMonitoring ? "Stop" : "Start"}</Button></div>
+                    <span>{instruction}&nbsp;&nbsp;</span>
+                    <Button
+                        onClick={this.toggleIsMonitor}>{this.state.isMonitoring ? "Stop" : "Start"}</Button></div>
             }>
                 <Row>
                     <Col span={24}>

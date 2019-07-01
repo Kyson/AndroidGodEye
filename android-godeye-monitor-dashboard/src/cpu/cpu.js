@@ -17,14 +17,16 @@ class Cpu extends Component {
     constructor(props) {
         super(props);
         this.options = {
-            credits: {
-                enabled: false
-            },
             chart: {
-                type: 'area'
+                type: 'area',
+                spacingLeft: 0,
+                spacingRight: 0,
             },
             title: {
                 text: null
+            },
+            credits: {
+                enabled: false
             },
             tooltip: {
                 shared: true,

@@ -15,15 +15,17 @@ import cn.hikyson.methodcanary.lib.ThreadInfo;
 
 public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implements Install<MethodCanaryContext> {
     private boolean mInstalled = false;
+    private MethodCanaryContext mMethodCanaryContext;
 
     @Override
-    public void install(final MethodCanaryContext methodCanaryContext) {
+    public synchronized void install(final MethodCanaryContext methodCanaryContext) {
         if (mInstalled) {
             L.d("method canary already installed, ignore.");
             return;
         }
         MethodCanaryInject.install(MethodCanaryConfig.MethodCanaryConfigBuilder
                 .aMethodCanaryConfig().app(methodCanaryContext.app())
+                // 方法到阈值就记录到文件，外部无感知
                 .methodEventThreshold(300)
                 .methodCanaryOutputCallback(new MethodCanaryOutputCallback() {
                     @Override
@@ -37,12 +39,13 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
                         produce(methodsRecordInfo);
                     }
                 }).build());
+        this.mMethodCanaryContext = methodCanaryContext;
         this.mInstalled = true;
         L.d("method canary installed.");
     }
 
     @Override
-    public void uninstall() {
+    public synchronized void uninstall() {
         if (!mInstalled) {
             L.d("method canary already uninstalled, ignore.");
             return;
@@ -50,6 +53,10 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
         mInstalled = false;
         MethodCanaryInject.uninstall();
         L.d("method canary uninstalled.");
+    }
+
+    public MethodCanaryContext getMethodCanaryContext() {
+        return mMethodCanaryContext;
     }
 
     public void startMonitor() {

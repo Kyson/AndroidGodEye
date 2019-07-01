@@ -19,11 +19,15 @@ class Traffic extends Component {
     constructor(props) {
         super(props);
         this.options = {
-            credits: {
-                enabled: false
+            chart: {
+                spacingLeft: 0,
+                spacingRight: 0,
             },
             title: {
                 text: null
+            },
+            credits: {
+                enabled: false
             },
             exporting: {
                 chartOptions: {},

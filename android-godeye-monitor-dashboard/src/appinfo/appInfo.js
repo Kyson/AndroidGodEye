@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import {Row, Badge} from 'react-bootstrap';
 
 import {Tag} from 'antd'
 
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Util from '../libs/util'
+import globalWs from "../communication/websocket";
 
 /**
  * 应用基本信息
@@ -15,10 +13,21 @@ class AppInfo extends Component {
 
     constructor(props) {
         super(props);
-        this.renderLabel = this.renderLabel.bind(this);
+        AppInfo.renderLabel = AppInfo.renderLabel.bind(this);
         this.state = {
             appInfo: {}
         }
+    }
+
+    componentDidMount() {
+        this.onWsOpenCallback = () => {
+            this.props.globalWs.sendMessage('{"moduleName": "appInfo"}');
+        };
+        this.props.globalWs.registerCallback(this.onWsOpenCallback);
+    }
+
+    componentWillUnmount() {
+        this.props.globalWs.unregisterCallback(this.onWsOpenCallback);
     }
 
     refresh(appInfo) {
@@ -35,12 +44,12 @@ class AppInfo extends Component {
                     paddingTop: 10,
                     paddingBottom: 10,
                     textAlign: "center"
-                }}>{this.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</div>
+                }}>{AppInfo.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</div>
             </div>
         );
     }
 
-    renderLabel(labels) {
+    static renderLabel(labels) {
         if (labels) {
             let items = [];
             let styles = Util.getCommonColors();

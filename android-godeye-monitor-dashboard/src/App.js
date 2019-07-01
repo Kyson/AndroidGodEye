@@ -37,10 +37,16 @@ class App extends Component {
 
     componentDidMount() {
         globalWs.setReceiveMessageCallback(this._onReceiveMessage);
-        globalWs.start(function (evt) {
+        this.onWsOpenCallback = () => {
             globalWs.sendMessage('{"moduleName": "clientOnline"}')
-        });
-        this.mock.start(this._onReceiveMessage);
+        };
+        globalWs.registerCallback(this.onWsOpenCallback);
+        globalWs.start();
+        // this.mock.start(this._onReceiveMessage);
+    }
+
+    componentWillUnmount() {
+        globalWs.unregisterCallback(this.onWsOpenCallback)
     }
 
     _getModuleRef(moduleName) {
@@ -70,7 +76,11 @@ class App extends Component {
             return;
         }
         this.refs.refreshStatus.refresh(new Date());
-        this._getModuleRef(moduleName).refresh(payload);
+        if ("methodCanaryConfig" === moduleName) {
+            this.refs.methodCanary.refreshConfig(payload);
+        } else {
+            this._getModuleRef(moduleName).refresh(payload);
+        }
     }
 
     _setCanRefresh(canRefresh) {
@@ -80,10 +90,10 @@ class App extends Component {
     render() {
         return (
             <Layout>
-                <Layout.Content>
-                    <Row align="top" style={{backgroundColor: '#93c756'}}>
+                <Layout.Content style={{marginLeft: 16, marginRight: 16}}>
+                    <Row align="top" style={{backgroundColor: '#93c756', marginLeft: -16, marginRight: -16}}>
                         <Col span={24}>
-                            <AppInfo ref="appInfo"/>
+                            <AppInfo ref="appInfo" globalWs={globalWs}/>
                         </Col>
                     </Row>
                     <ToastContainer autoClose={2000}/>
@@ -139,7 +149,10 @@ class App extends Component {
                         <Col span={24}><MemoryLeak ref="leakInfo"/></Col>
                     </Row>
                 </Layout.Content>
-                <Layout.Footer>Footer</Layout.Footer>
+                <Layout.Footer style={{textAlign: "center"}}>
+                    <span>Powered by <a href="https://github.com/Kyson/AndroidGodEye"
+                                        target="_blank">AndroidGodEye</a></span>
+                </Layout.Footer>
             </Layout>
         );
     }

@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel, Modal, Button} from 'react-bootstrap'
 import JSONPretty from '../../node_modules/react-json-pretty';
 
 import Highcharts from '../../node_modules/highcharts/highcharts';
@@ -25,14 +22,16 @@ class Network extends Component {
         Network.isRedirect = Network.isRedirect.bind(this);
         Network.isSuccessful = Network.isSuccessful.bind(this);
         this.options = {
-            credits: {
-                enabled: false
-            },
             chart: {
-                type: 'column'
+                type: 'column',
+                spacingLeft: 0,
+                spacingRight: 0,
             },
             title: {
                 text: null
+            },
+            credits: {
+                enabled: false
             },
             tooltip: {
                 shared: true,
@@ -225,7 +224,8 @@ class Network extends Component {
                     ref="chart"
                     config={this.options}
                 />
-                <Modal visible={this.state.show} onCancel={this.handleClose} title="Network detail" closable={true} onOk={this.handleClose}>
+                <Modal visible={this.state.show} onCancel={this.handleClose} title="Network detail" closable={true}
+                       onOk={this.handleClose}>
                     <JSONPretty id="json-pretty" json={this.state.networkInfo}/>
                 </Modal>
             </Card>);

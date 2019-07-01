@@ -1,17 +1,12 @@
 package cn.hikyson.godeye.monitor.driver;
 
-import android.util.Pair;
-
 import com.koushikdutta.async.http.WebSocket;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
+
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
@@ -31,6 +26,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
+import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryContext;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodsRecordInfo;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
@@ -46,18 +42,15 @@ import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
 import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
+import cn.hikyson.godeye.monitor.modulemodel.MethodCanaryConfig;
 import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
 import cn.hikyson.godeye.monitor.processors.Messager;
 import cn.hikyson.godeye.monitor.processors.Processor;
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * monitor数据引擎，用于生产各项数据
@@ -81,12 +74,6 @@ public class Watcher implements Processor {
     public void observeAll() {
         GodEye godEye = GodEye.instance();
         mCompositeDisposable.addAll(
-                //应用基础数据发射不一定在子线程，这里强制切换到子线程
-                Observable.just(new AppInfo())
-                        .map(this.<AppInfo>createConvertServerMessageFunction("appInfo"))
-                        .subscribeOn(ThreadUtil.sComputationScheduler)
-                        .observeOn(ThreadUtil.sComputationScheduler)
-                        .subscribe(createSendMessageConsumer()),
                 godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject()
                         .map(this.<BatteryInfo>createConvertServerMessageFunction("batteryInfo"))
                         .subscribeOn(ThreadUtil.sComputationScheduler)
@@ -162,12 +149,17 @@ public class Watcher implements Processor {
             for (Map.Entry<String, Object> entry : mMessageCache.copy().entrySet()) {
                 webSocket.send(new ServerMessage(entry.getKey(), entry.getValue()).toString());
             }
+        } else if ("appInfo".equals(clientMessage.moduleName)) {
+            webSocket.send(new ServerMessage("appInfo", new AppInfo()).toString());
         } else if ("methodCanary".equals(clientMessage.moduleName)) {
             if ("start".equals(String.valueOf(clientMessage.payload))) {
                 GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).startMonitor();
             } else if ("stop".equals(String.valueOf(clientMessage.payload))) {
                 GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).stopMonitor();
             }
+        } else if ("methodCanaryConfig".equals(clientMessage.moduleName)) {
+            MethodCanaryContext methodCanaryContext = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).getMethodCanaryContext();
+            webSocket.send(new ServerMessage("methodCanaryConfig", new MethodCanaryConfig(methodCanaryContext)).toString());
         }
     }
 
