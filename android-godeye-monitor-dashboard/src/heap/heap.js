@@ -26,9 +26,10 @@ class Heap extends Component {
                 type: 'area',
                 spacingLeft: 0,
                 spacingRight: 0,
+                height: 300,
             },
             title: {
-                text: null
+                text: "Heap(堆内存)"
             },
             credits: {
                 enabled: false
@@ -108,7 +109,7 @@ class Heap extends Component {
 
     render() {
         return (
-            <Card title="Heap(堆内存)">
+            <Card>
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}

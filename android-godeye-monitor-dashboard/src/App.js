@@ -108,19 +108,26 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 30}}>
-                        <Col span={8}>
-                            <Startup ref="startupInfo"/>
+                        <Col span={15}>
+                            <Row gutter={16} align="top">
+                                <Col span={14}>
+                                    <Startup ref="startupInfo"/>
+                                </Col>
+                                <Col span={10}>
+                                    <Fps ref="fpsInfo"/>
+                                </Col>
+                            </Row>
+                            <Row gutter={16} align="top" style={{marginTop: 30}}>
+                                <Col span={8}> <Ram ref="ramInfo"/>
+                                </Col>
+                                <Col span={8}> <Pss ref="pssInfo"/>
+                                </Col>
+                                <Col span={8}> <BatteryInfo ref="batteryInfo"/>
+                                </Col>
+                            </Row>
                         </Col>
-                        <Col span={6}>
-                            <Fps ref="fpsInfo"/>
-                        </Col>
-                    </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
-                        <Col span={6}> <Ram ref="ramInfo"/>
-                        </Col>
-                        <Col span={6}> <Pss ref="pssInfo"/>
-                        </Col>
-                        <Col span={6}> <BatteryInfo ref="batteryInfo"/>
+                        <Col span={9}>
+                            <Crash ref="crashInfo"/>
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 30}}>
@@ -129,9 +136,6 @@ class App extends Component {
                         <Col span={8}> <Heap ref="heapInfo"/>
                         </Col>
                         <Col span={8}><Traffic ref="trafficInfo"/></Col>
-                    </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
-                        <Col span={12}><Crash ref="crashInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 30}}>
                         <Col span={24}><Pageload ref="pageloadInfo"/></Col>

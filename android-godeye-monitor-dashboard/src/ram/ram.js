@@ -19,19 +19,19 @@ class Ram extends Component {
         this.options = {
             chart: {
                 height: 200,
-                plotBackgroundColor: null,
-                plotBorderWidth: 0,
-                plotShadow: false,
-                spacing: 0
+                spacing: [0, 0, 0, 0]
+            },
+            title: {
+                floating: true,
+                text: 'Ram',
+                align: 'center',
+                verticalAlign: 'middle',
+                style: {
+                    fontSize: 13
+                }
             },
             credits: {
                 enabled: false
-            },
-            title: {
-                text: "Ram",
-                align: 'center',
-                verticalAlign: 'middle',
-                y: 80
             },
             tooltip: {
                 formatter: function () {
@@ -46,19 +46,15 @@ class Ram extends Component {
             plotOptions: {
                 pie: {
                     dataLabels: {
-                        enabled: true,
-                        distance: -20,
+                        enabled: false,
                         format: '<b>{point.name}</b>'
                     },
-                    startAngle: -90,
-                    endAngle: 90,
-                    center: ['50%', '75%']
                 }
             },
             series: [{
                 type: 'pie',
                 name: 'ram',
-                innerSize: '70%',
+                innerSize: '80%',
                 data: []
             }]
         };
@@ -77,7 +73,7 @@ class Ram extends Component {
             let allocatedKb = info.totalMemKb - info.availMemKb;
             datas.push(Ram.createSeriresData("allocated", allocatedKb));
             datas.push(Ram.createSeriresData("free", info.availMemKb));
-            let title = "Total:" + (info.totalMemKb / 1024).toFixed(1) + "M";
+            let title = "Ram(运行时内存)<br/>" + (info.totalMemKb / 1024).toFixed(1) + "M";
             this.options.title.text = title;
         } else {
             this.options.title.text = "**";
@@ -88,7 +84,7 @@ class Ram extends Component {
 
     render() {
         return (
-            <Card title="Ram(运行时内存)">
+            <Card>
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}

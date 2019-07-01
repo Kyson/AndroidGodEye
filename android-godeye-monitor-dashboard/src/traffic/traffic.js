@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
@@ -22,9 +19,10 @@ class Traffic extends Component {
             chart: {
                 spacingLeft: 0,
                 spacingRight: 0,
+                height: 300,
             },
             title: {
-                text: null
+                text: "Traffic(流量)"
             },
             credits: {
                 enabled: false
@@ -105,7 +103,7 @@ class Traffic extends Component {
 
     render() {
         return (
-            <Card title="Traffic(流量)">
+            <Card>
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}

@@ -240,7 +240,12 @@ class MethodCanary extends Component {
     }
 
     render() {
-        const instruction = `Wait a minute after stop... | Current config lowCostMethodThresholdMillis: ${this.state.methodCanaryConfig.lowCostMethodThresholdMillis}ms, maxMethodCountSingleThreadByCost: ${this.state.methodCanaryConfig.maxMethodCountSingleThreadByCost}`
+        let instruction = "";
+        if (this.state.isMonitoring) {
+            instruction = `Wait a minute after stop... | lowCostMethodThresholdMillis: ${this.state.methodCanaryConfig.lowCostMethodThresholdMillis}ms, maxMethodCountSingleThreadByCost: ${this.state.methodCanaryConfig.maxMethodCountSingleThreadByCost}`
+        } else {
+            instruction = `Select to zoom in, hold shift and drag(框选放大，按住shift左右拖动)`
+        }
         return (
             <Card title="MethodCanary" extra={
                 <div>

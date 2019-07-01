@@ -18,19 +18,19 @@ class Pss extends Component {
         this.options = {
             chart: {
                 height: 200,
-                plotBackgroundColor: null,
-                plotBorderWidth: 0,
-                plotShadow: false,
-                spacing: 0
+                spacing: [0, 0, 0, 0]
+            },
+            title: {
+                floating: true,
+                text: 'Pss',
+                align: 'center',
+                verticalAlign: 'middle',
+                style: {
+                    fontSize: 13
+                }
             },
             credits: {
                 enabled: false
-            },
-            title: {
-                text: "Pss",
-                align: 'center',
-                verticalAlign: 'middle',
-                y: 80
             },
             tooltip: {
                 formatter: function () {
@@ -45,22 +45,18 @@ class Pss extends Component {
             plotOptions: {
                 pie: {
                     dataLabels: {
-                        enabled: true,
-                        distance: -20,
+                        enabled: false,
                         format: '<b>{point.name}</b>',
                         style: {
                             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                         }
                     },
-                    startAngle: -90,
-                    endAngle: 90,
-                    center: ['50%', '75%']
                 }
             },
             series: [{
                 type: 'pie',
                 name: 'pss',
-                innerSize: '70%',
+                innerSize: '80%',
                 data: []
             }]
         };
@@ -81,7 +77,7 @@ class Pss extends Component {
             datas.push(Pss.createSeriresData("native", info.nativePssKb));
             datas.push(Pss.createSeriresData("other", info.otherPssKb));
             datas.push(Pss.createSeriresData("unknown", unknownPssKb));
-            let title = "Total:" + (info.totalPssKb / 1024).toFixed(2) + "M";
+            let title = "Pss(共享比例物理内存)<br/>" + (info.totalPssKb / 1024).toFixed(2) + "M";
             this.options.title.text = title;
         } else {
             this.options.title.text = "**";
@@ -92,7 +88,7 @@ class Pss extends Component {
 
     render() {
         return (
-            <Card title="Pss(共享比例物理内存)">
+            <Card>
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}

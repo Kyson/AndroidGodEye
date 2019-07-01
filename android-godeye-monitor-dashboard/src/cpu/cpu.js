@@ -21,9 +21,10 @@ class Cpu extends Component {
                 type: 'area',
                 spacingLeft: 0,
                 spacingRight: 0,
+                height: 300,
             },
             title: {
-                text: null
+                text: "CPU"
             },
             credits: {
                 enabled: false
@@ -113,7 +114,7 @@ class Cpu extends Component {
 
     render() {
         return (
-            <Card title="Cpu(处理器)">
+            <Card>
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}
