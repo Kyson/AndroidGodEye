@@ -24,4 +24,4 @@ bintrayKey:https://bintray.com/profile/edit API Key
 
 ## react-boostrap vs antd
 
-6.8M
+6.8M vs 19.9M
