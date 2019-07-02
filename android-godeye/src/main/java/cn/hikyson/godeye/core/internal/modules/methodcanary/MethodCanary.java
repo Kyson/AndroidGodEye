@@ -7,9 +7,9 @@ import java.util.Map;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.methodcanary.lib.MethodCanaryCallback;
 import cn.hikyson.methodcanary.lib.MethodCanaryConfig;
 import cn.hikyson.methodcanary.lib.MethodCanaryInject;
-import cn.hikyson.methodcanary.lib.MethodCanaryOutputCallback;
 import cn.hikyson.methodcanary.lib.MethodEvent;
 import cn.hikyson.methodcanary.lib.ThreadInfo;
 
@@ -26,16 +26,32 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
         MethodCanaryInject.install(MethodCanaryConfig.MethodCanaryConfigBuilder
                 .aMethodCanaryConfig().app(methodCanaryContext.app())
                 // 方法到阈值就记录到文件，外部无感知
-                .methodEventThreshold(300)
-                .methodCanaryOutputCallback(new MethodCanaryOutputCallback() {
+                .methodEventThreshold(methodCanaryContext.maxMethodCountForSyncFile())
+                .methodCanaryCallback(new MethodCanaryCallback() {
                     @Override
-                    public void output(long startTimeNanos, long stopTimeNanos, File methodEventsFile) {
+                    public void onStopped() {
+
+                    }
+
+                    @Override
+                    public void outputToMemory(long startTimeNanos, long stopTimeNanos, Map<ThreadInfo, List<MethodEvent>> methodEventMap) {
+                        long start0 = System.currentTimeMillis();
+                        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startTimeNanos, stopTimeNanos, methodEventMap);
+                        long start1 = System.currentTimeMillis();
+                        MethodCanaryConverter.filter(methodsRecordInfo, methodCanaryContext);
+                        long end = System.currentTimeMillis();
+                        L.d(String.format("MethodCanary outputToMemory cost %s ms, filter cost %s ms", end - start0, end - start1));
+                        produce(methodsRecordInfo);
+                    }
+
+                    @Override
+                    public void outputToFile(long startTimeNanos, long stopTimeNanos, File methodEventsFile) {
                         long start0 = System.currentTimeMillis();
                         MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startTimeNanos, stopTimeNanos, methodEventsFile);
                         long start1 = System.currentTimeMillis();
                         MethodCanaryConverter.filter(methodsRecordInfo, methodCanaryContext);
                         long end = System.currentTimeMillis();
-                        L.d(String.format("MethodCanary convertToMethodsRecordInfo cost %s ms, filter cost %s ms", end - start0, end - start1));
+                        L.d(String.format("MethodCanary outputToFile cost %s ms, filter cost %s ms", end - start0, end - start1));
                         produce(methodsRecordInfo);
                     }
                 }).build());

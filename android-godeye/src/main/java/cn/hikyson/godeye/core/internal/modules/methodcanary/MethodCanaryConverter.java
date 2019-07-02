@@ -10,14 +10,54 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EmptyStackException;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Matcher;
 
 import cn.hikyson.godeye.core.utils.IoUtil;
+import cn.hikyson.methodcanary.lib.MethodEnterEvent;
+import cn.hikyson.methodcanary.lib.MethodEvent;
+import cn.hikyson.methodcanary.lib.MethodExitEvent;
 import cn.hikyson.methodcanary.lib.ThreadInfo;
 import cn.hikyson.methodcanary.lib.Util;
 
 class MethodCanaryConverter {
+
+    static MethodsRecordInfo convertToMethodsRecordInfo(long startTimeNanos, long stopTimeNanos, Map<ThreadInfo, List<MethodEvent>> methodEventMap) {
+        MethodsRecordInfo methodsRecordInfo = new MethodsRecordInfo(startTimeNanos, stopTimeNanos, new ArrayList<MethodsRecordInfo.MethodInfoOfThreadInfo>());
+        if (methodEventMap == null || methodEventMap.isEmpty()) {
+            return methodsRecordInfo;
+        }
+        for (Map.Entry<ThreadInfo, List<MethodEvent>> entry : methodEventMap.entrySet()) {
+            List<MethodEvent> methodEvents = entry.getValue();
+            List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos = new ArrayList<>(methodEvents.size());
+            Stack<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodEventsStackOfCurrentThread = new Stack<>();
+            for (MethodEvent methodEvent : methodEvents) {
+                if (methodEvent instanceof MethodEnterEvent) {
+                    MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo = new MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo();
+                    methodInfo.className = methodEvent.className;
+                    methodInfo.methodAccessFlag = methodEvent.methodAccessFlag;
+                    methodInfo.methodName = methodEvent.methodName;
+                    methodInfo.methodDesc = methodEvent.methodDesc;
+                    methodInfo.start = methodEvent.eventNanoTime;
+                    methodInfo.stack = methodEventsStackOfCurrentThread.size();
+                    methodInfos.add(methodInfo);
+                    methodEventsStackOfCurrentThread.push(methodInfo);
+                } else if (methodEvent instanceof MethodExitEvent) {
+                    MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo = null;
+                    try {
+                        methodInfo = methodEventsStackOfCurrentThread.pop();
+                    } catch (EmptyStackException ignore) {
+                    }
+                    if (methodInfo != null) {
+                        methodInfo.end = methodEvent.eventNanoTime;
+                    }
+                }
+            }
+            methodsRecordInfo.methodInfoOfThreadInfos.add(new MethodsRecordInfo.MethodInfoOfThreadInfo(entry.getKey(), methodInfos));
+        }
+        return methodsRecordInfo;
+    }
 
     static MethodsRecordInfo convertToMethodsRecordInfo(long startTimeNanos, long stopTimeNanos, File methodEventsFile) {
         MethodsRecordInfo methodsRecordInfo = new MethodsRecordInfo(startTimeNanos, stopTimeNanos, new ArrayList<MethodsRecordInfo.MethodInfoOfThreadInfo>());
@@ -69,10 +109,10 @@ class MethodCanaryConverter {
                     Matcher m = Util.PATTERN_METHOD_EXIT.matcher(line);
                     if (m.find()) {
                         long eventTime = Long.parseLong(m.group(1));
-                        String className = m.group(2);
-                        int methodAccessFlag = Integer.parseInt(m.group(3));
-                        String methodName = m.group(4);
-                        String methodDesc = m.group(5);
+//                        String className = m.group(2);
+//                        int methodAccessFlag = Integer.parseInt(m.group(3));
+//                        String methodName = m.group(4);
+//                        String methodDesc = m.group(5);
                         if (methodEventsStackOfCurrentThread != null) {
                             MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo = null;
                             try {

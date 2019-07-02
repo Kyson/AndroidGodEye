@@ -167,7 +167,7 @@ class MethodCanary extends Component {
         let maxStack = 0;
         for (let i = 0; i < methodInfos.length; i++) {
             datas.push({
-                x: methodInfos[i].start,
+                x: methodInfos[i].start === 0 ? min : methodInfos[i].start,
                 x2: (methodInfos[i].end === 0 ? max : methodInfos[i].end),
                 y: methodInfos[i].stack,
                 methodEvent: methodInfos[i]
@@ -242,7 +242,7 @@ class MethodCanary extends Component {
     render() {
         let instruction = "";
         if (this.state.isMonitoring) {
-            instruction = `Wait a minute after stop... | lowCostMethodThresholdMillis: ${this.state.methodCanaryConfig.lowCostMethodThresholdMillis}ms, maxMethodCountSingleThreadByCost: ${this.state.methodCanaryConfig.maxMethodCountSingleThreadByCost}`
+            instruction = `Wait a minute after stop... | lowCostMethod: ${this.state.methodCanaryConfig.lowCostMethodThresholdMillis}ms, maxSingleThread: ${this.state.methodCanaryConfig.maxMethodCountSingleThreadByCost}, maxToFile: ${this.state.methodCanaryConfig.maxMethodCountForSyncFile}`
         } else {
             instruction = `Select to zoom in, hold shift and drag(框选放大，按住shift左右拖动)`
         }

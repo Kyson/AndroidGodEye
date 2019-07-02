@@ -182,12 +182,16 @@ public class GodEyeConfig {
             if (element != null) {
                 final String maxMethodCountSingleThreadByCostString = element.getAttribute("maxMethodCountSingleThreadByCost");
                 final String lowCostMethodThresholdMillisString = element.getAttribute("lowCostMethodThresholdMillis");
+                final String maxMethodCountForSyncFileString = element.getAttribute("maxMethodCountForSyncFile");
                 MethodCanaryConfig methodCanaryConfig = new MethodCanaryConfig();
                 if (!TextUtils.isEmpty(maxMethodCountSingleThreadByCostString)) {
                     methodCanaryConfig.maxMethodCountSingleThreadByCost = Integer.parseInt(maxMethodCountSingleThreadByCostString);
                 }
                 if (!TextUtils.isEmpty(lowCostMethodThresholdMillisString)) {
                     methodCanaryConfig.lowCostMethodThresholdMillis = Long.parseLong(lowCostMethodThresholdMillisString);
+                }
+                if (!TextUtils.isEmpty(maxMethodCountForSyncFileString)) {
+                    methodCanaryConfig.maxMethodCountForSyncFile = Integer.parseInt(maxMethodCountForSyncFileString);
                 }
                 builder.withMethodCanaryConfig(methodCanaryConfig);
             }
@@ -488,15 +492,18 @@ public class GodEyeConfig {
     public static class MethodCanaryConfig implements MethodCanaryContext {
         public int maxMethodCountSingleThreadByCost;
         public long lowCostMethodThresholdMillis;
+        public int maxMethodCountForSyncFile;
 
         public MethodCanaryConfig() {
-            this.maxMethodCountSingleThreadByCost = 200;
-            this.lowCostMethodThresholdMillis = 5L;
+            this.maxMethodCountSingleThreadByCost = 300;
+            this.lowCostMethodThresholdMillis = 10L;
+            this.maxMethodCountForSyncFile = 0;
         }
 
-        public MethodCanaryConfig(int maxMethodCountByCost, int lowCostMethodThresholdMillis) {
-            this.maxMethodCountSingleThreadByCost = maxMethodCountByCost;
+        public MethodCanaryConfig(int maxMethodCountSingleThreadByCost, long lowCostMethodThresholdMillis, int maxMethodCountForSyncFile) {
+            this.maxMethodCountSingleThreadByCost = maxMethodCountSingleThreadByCost;
             this.lowCostMethodThresholdMillis = lowCostMethodThresholdMillis;
+            this.maxMethodCountForSyncFile = maxMethodCountForSyncFile;
         }
 
         @Override
@@ -507,6 +514,11 @@ public class GodEyeConfig {
         @Override
         public int maxMethodCountSingleThreadByCost() {
             return maxMethodCountSingleThreadByCost;
+        }
+
+        @Override
+        public int maxMethodCountForSyncFile() {
+            return maxMethodCountForSyncFile;
         }
 
         @Override
