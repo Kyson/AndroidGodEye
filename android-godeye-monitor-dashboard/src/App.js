@@ -76,8 +76,8 @@ class App extends Component {
             return;
         }
         this.refs.refreshStatus.refresh(new Date());
-        if ("methodCanaryConfig" === moduleName) {
-            this.refs.methodCanary.refreshConfig(payload);
+        if ("MethodCanaryStatus" === moduleName) {
+            this.refs.methodCanary.refreshStatus(payload);
         } else {
             this._getModuleRef(moduleName).refresh(payload);
         }

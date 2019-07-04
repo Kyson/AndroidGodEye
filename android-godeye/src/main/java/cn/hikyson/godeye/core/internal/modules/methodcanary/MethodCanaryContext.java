@@ -17,11 +17,5 @@ public interface MethodCanaryContext {
      */
     int maxMethodCountSingleThreadByCost();
 
-    /**
-     * 在内存中的最大方法数，超过则同步到文件
-     * @return
-     */
-    int maxMethodCountForSyncFile();
-
     Application app();
 }

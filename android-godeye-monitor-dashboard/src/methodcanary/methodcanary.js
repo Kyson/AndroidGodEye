@@ -12,8 +12,7 @@ class MethodCanary extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMonitoring: false,
-            methodCanaryConfig: {}
+            MethodCanaryStatus: {}
         };
         this.record = {};
         this.toggleIsMonitor = this.toggleIsMonitor.bind(this);
@@ -141,17 +140,23 @@ class MethodCanary extends Component {
         };
     }
 
+    componentDidMount() {
+        this.onWsOpenCallback = () => {
+            this.props.globalWs.sendMessage('{"moduleName": "MethodCanaryStatus"}');
+        };
+        this.props.globalWs.registerCallback(this.onWsOpenCallback);
+    }
+
+    componentWillUnmount() {
+        this.props.globalWs.unregisterCallback(this.onWsOpenCallback);
+    }
+
     toggleIsMonitor() {
-        this.setState((prevState, props) => ({
-            isMonitoring: !prevState.isMonitoring,
-        }), () => {
-            if (this.state.isMonitoring) {
-                this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"start"}');
-                this.props.globalWs.sendMessage('{"moduleName": "methodCanaryConfig"}');
-            } else {
-                this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"stop"}');
-            }
-        });
+        if (this.state.MethodCanaryStatus.isInstalled && !this.state.MethodCanaryStatus.isMonitoring) {
+            this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"start"}');
+        } else if (this.state.MethodCanaryStatus.isInstalled && this.state.MethodCanaryStatus.isMonitoring) {
+            this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"stop"}');
+        }
     }
 
     openThread(threadName) {
@@ -203,9 +208,9 @@ class MethodCanary extends Component {
         return "id:[" + threadInfo.id + "],name:[" + threadInfo.name + "]"
     }
 
-    refreshConfig(record) {
+    refreshStatus(record) {
         this.setState({
-            methodCanaryConfig: record
+            MethodCanaryStatus: record
         });
     }
 
@@ -241,8 +246,10 @@ class MethodCanary extends Component {
 
     render() {
         let instruction = "";
-        if (this.state.isMonitoring) {
-            instruction = `Wait a minute after stop... | lowCostMethod: ${this.state.methodCanaryConfig.lowCostMethodThresholdMillis}ms, maxSingleThread: ${this.state.methodCanaryConfig.maxMethodCountSingleThreadByCost}, maxToFile: ${this.state.methodCanaryConfig.maxMethodCountForSyncFile}`
+        if(!this.state.MethodCanaryStatus.isInstalled){
+            instruction = "Please install method canary first."
+        } else if (this.state.MethodCanaryStatus.isMonitoring) {
+            instruction = `Monitoring... | lowCostMethod: ${this.state.MethodCanaryStatus.lowCostMethodThresholdMillis}ms, maxSingleThread: ${this.state.MethodCanaryStatus.maxMethodCountSingleThreadByCost}`
         } else {
             instruction = `Select to zoom in, hold shift and drag(框选放大，按住shift左右拖动)`
         }
@@ -251,7 +258,8 @@ class MethodCanary extends Component {
                 <div>
                     <span>{instruction}&nbsp;&nbsp;</span>
                     <Button
-                        onClick={this.toggleIsMonitor}>{this.state.isMonitoring ? "Stop" : "Start"}</Button></div>
+                        onClick={this.toggleIsMonitor}>{this.state.MethodCanaryStatus.isMonitoring ? "Stop" : "Start"}</Button>
+                </div>
             }>
                 <Row>
                     <Col span={24}>

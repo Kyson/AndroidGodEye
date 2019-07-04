@@ -26,7 +26,6 @@ import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
-import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryContext;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodsRecordInfo;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
@@ -42,12 +41,11 @@ import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
 import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
-import cn.hikyson.godeye.monitor.modulemodel.MethodCanaryConfig;
+import cn.hikyson.godeye.monitor.modulemodel.MethodCanaryStatus;
 import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
 import cn.hikyson.godeye.monitor.processors.Messager;
 import cn.hikyson.godeye.monitor.processors.Processor;
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
-import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -152,14 +150,18 @@ public class Watcher implements Processor {
         } else if ("appInfo".equals(clientMessage.moduleName)) {
             webSocket.send(new ServerMessage("appInfo", new AppInfo()).toString());
         } else if ("methodCanary".equals(clientMessage.moduleName)) {
+            MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
             if ("start".equals(String.valueOf(clientMessage.payload))) {
-                GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).startMonitor();
+                methodCanary.startMonitor();
             } else if ("stop".equals(String.valueOf(clientMessage.payload))) {
-                GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).stopMonitor();
+                methodCanary.stopMonitor();
             }
-        } else if ("methodCanaryConfig".equals(clientMessage.moduleName)) {
-            MethodCanaryContext methodCanaryContext = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).getMethodCanaryContext();
-            webSocket.send(new ServerMessage("methodCanaryConfig", new MethodCanaryConfig(methodCanaryContext)).toString());
+            webSocket.send(new ServerMessage("MethodCanaryStatus",
+                    new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring())).toString());
+        } else if ("MethodCanaryStatus".equals(clientMessage.moduleName)) {
+            MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
+            webSocket.send(new ServerMessage("MethodCanaryStatus",
+                    new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring())).toString());
         }
     }
 

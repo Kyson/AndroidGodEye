@@ -75,33 +75,6 @@ public class MethodCanaryConverterTest {
     }
 
     @Test
-    public void filterByLowCostMethodThreshold() {
-        File file = createMethodCanaryRecordFile();
-        long start = 3284436152929793L;
-        long end = 3284440700503230L;
-
-        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, end, file);
-        MethodCanaryConverter.filterByLowCostMethodThreshold(start, end, 0, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos);
-        assertEquals("filterByLowCostMethodThreshold0", 4, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.size());
-
-        methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, end, file);
-        MethodCanaryConverter.filterByLowCostMethodThreshold(start, end, 1, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos);
-        assertEquals("filterByLowCostMethodThreshold1", 2, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.size());
-
-        methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, end, file);
-        MethodCanaryConverter.filterByLowCostMethodThreshold(start, end, 4459, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos);
-        assertEquals("filterByLowCostMethodThreshold4459", 2, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.size());
-
-        methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, end, file);
-        MethodCanaryConverter.filterByLowCostMethodThreshold(start, end, 4460, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos);
-        assertEquals("filterByLowCostMethodThreshold4460", 1, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.size());
-
-        methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, end, file);
-        MethodCanaryConverter.filterByLowCostMethodThreshold(start, end, 4529, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos);
-        assertEquals("filterByLowCostMethodThreshold4529", 0, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.size());
-    }
-
-    @Test
     public void filterByTopX() {
         File file = createMethodCanaryRecordFile();
         long start = 3284436152929793L;

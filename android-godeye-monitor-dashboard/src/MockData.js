@@ -186,9 +186,11 @@ class Mock {
             }
         ]);
 
-        this.recvFun("methodCanaryConfig", {
+        this.recvFun("MethodCanaryStatus", {
             lowCostMethodThresholdMillis: 10,
-            maxMethodCountSingleThreadByCost: 200
+            maxMethodCountSingleThreadByCost: 200,
+            isMonitoring:true,
+            isInstalled:true
         });
 
 
