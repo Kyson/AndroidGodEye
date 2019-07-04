@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core.internal.modules.sm.core;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Process;
 
 public final class HandlerThreadFactory {
 
@@ -30,7 +31,7 @@ public final class HandlerThreadFactory {
         private Handler handler = null;
 
         public HandlerThreadWrapper(String threadName) {
-            HandlerThread handlerThread = new HandlerThread(threadName);
+            HandlerThread handlerThread = new HandlerThread(threadName, Process.THREAD_PRIORITY_BACKGROUND);
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
