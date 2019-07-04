@@ -47,8 +47,11 @@ import cn.hikyson.godeye.monitor.processors.Messager;
 import cn.hikyson.godeye.monitor.processors.Processor;
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.Subject;
 
 /**
  * monitor数据引擎，用于生产各项数据
@@ -133,6 +136,17 @@ public class Watcher implements Processor {
                         .map(this.<MethodsRecordInfo>createConvertServerMessageFunction("methodCanary"))
                         .subscribe(this.createSendMessageConsumer())
         );
+        Subject<String> methodCanaryStatusSubject = godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject();
+        if (methodCanaryStatusSubject != null) {
+            mCompositeDisposable.add(methodCanaryStatusSubject.map(new Function<String, ServerMessage>() {
+                @Override
+                public ServerMessage apply(String s) throws Exception {
+                    MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
+                    return new ServerMessage("MethodCanaryStatus",
+                            new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring()));
+                }
+            }).subscribe(this.createSendMessageConsumer()));
+        }
     }
 
     public void cancelAllObserve() {
@@ -140,7 +154,7 @@ public class Watcher implements Processor {
     }
 
     @Override
-    public void process(WebSocket webSocket, String msg) {
+    public void process(final WebSocket webSocket, String msg) {
         ThreadUtil.ensureWorkThread("Watcher process:" + msg);
         ClientMessage clientMessage = GsonUtil.fromJson(msg, ClientMessage.class);
         if ("clientOnline".equals(clientMessage.moduleName)) {//if a client get online,send init message to it
@@ -150,18 +164,17 @@ public class Watcher implements Processor {
         } else if ("appInfo".equals(clientMessage.moduleName)) {
             webSocket.send(new ServerMessage("appInfo", new AppInfo()).toString());
         } else if ("methodCanary".equals(clientMessage.moduleName)) {
-            MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
+            final MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
             if ("start".equals(String.valueOf(clientMessage.payload))) {
                 methodCanary.startMonitor();
             } else if ("stop".equals(String.valueOf(clientMessage.payload))) {
                 methodCanary.stopMonitor();
             }
-            webSocket.send(new ServerMessage("MethodCanaryStatus",
-                    new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring())).toString());
         } else if ("MethodCanaryStatus".equals(clientMessage.moduleName)) {
-            MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
-            webSocket.send(new ServerMessage("MethodCanaryStatus",
-                    new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring())).toString());
+            Subject<String> methodCanaryStatusSubject = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject();
+            if (methodCanaryStatusSubject != null && !methodCanaryStatusSubject.hasComplete() && !methodCanaryStatusSubject.hasThrowable()) {
+                methodCanaryStatusSubject.onNext("GET");
+            }
         }
     }
 
