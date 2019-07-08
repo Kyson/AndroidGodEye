@@ -9,7 +9,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath 'com.novoda:bintray-release:0.9.1'
-        classpath "cn.hikyson.methodcanary:plugin:0.11.0"
+        classpath "cn.hikyson.methodcanary:plugin:0.11.1"
     }
 }
 
