@@ -44,7 +44,8 @@ class MethodCanary extends Component {
                 gridLineWidth: 0
             },
             xAxis: {
-                visible: false
+                visible: false,
+                categories: ['执行方法数']
             },
             plotOptions: {
                 series: {
@@ -54,10 +55,16 @@ class MethodCanary extends Component {
                             functionOpenThread(this.name);
                         }
                     },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function () {
+                            return this.series.name
+                        }
+                    },
                     borderRadius: 0,
                     pointPadding: 0,
                     groupPadding: 0,
-                    pointWidth: 30
+                    pointWidth: 30,
                 }
             },
             series: []
@@ -246,7 +253,7 @@ class MethodCanary extends Component {
 
     render() {
         let instruction = "";
-        if(!this.state.MethodCanaryStatus.isInstalled){
+        if (!this.state.MethodCanaryStatus.isInstalled) {
             instruction = "Please install method canary first."
         } else if (this.state.MethodCanaryStatus.isMonitoring) {
             instruction = `Monitoring... | lowCostMethod: ${this.state.MethodCanaryStatus.lowCostMethodThresholdMillis}ms, maxSingleThread: ${this.state.MethodCanaryStatus.maxMethodCountSingleThreadByCost}`

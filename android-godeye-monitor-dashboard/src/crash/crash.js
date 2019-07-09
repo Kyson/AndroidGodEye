@@ -42,7 +42,7 @@ class Crash extends Component {
             <Card title="Last Crash Info(最新一次崩溃)" extra={<Button onClick={this.handleCrashDetailClick}>Detail</Button>}>
                 <div>
                     <p>
-                        <strong>Time(崩溃时间):&nbsp;</strong>{crashInfo.timestampMillis ? new Date(crashInfo.timestampMillis).toLocaleTimeString() : "**"}
+                        <strong>Time(崩溃时间):&nbsp;</strong>{crashInfo.timestampMillis ? new Date(crashInfo.timestampMillis).toISOString() : "**"}
                     </p>
                     <p style={{wordWrap: "break-word", wordBreak: "break-all"}}>
                         <strong>Message(异常信息):&nbsp;</strong>{crashInfo.throwableMessage ? crashInfo.throwableMessage : "**"}
