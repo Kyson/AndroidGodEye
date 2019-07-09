@@ -38,9 +38,9 @@ Demo:[https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/Andro
 
 ### Step1 Dependencies
 
-In your build.gradle:
+#### Module Project `build.gradle`
 
-```
+```groovy
 dependencies {
   implementation 'cn.hikyson.godeye:godeye-core:VERSION_NAME'
   debugImplementation 'cn.hikyson.godeye:godeye-monitor:VERSION_NAME'
@@ -49,7 +49,28 @@ dependencies {
 }
 ```
 
-> You can find VERSION_NAME in the github release.
+> Find VERSION_NAME in github release
+
+#### Root Project `build.gradle`
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "cn.hikyson.methodcanary:plugin:PLUGIN_VERSION_NAME"
+    }
+}
+```
+
+> Find PLUGIN_VERSION_NAME in [MethodCanary](https://github.com/Kyson/MethodCanary) github release
+
+#### Module Project `'com.android.application'` `build.gradle`
+
+```groovy
+apply plugin: 'cn.hikyson.methodcanary.plugin'
+```
 
 ### Step2 Initialize And Install Modules
 
@@ -59,7 +80,7 @@ Init first in your application:
 GodEye.instance().init(this);
 ```
 
-Install modules , GodEye class is entrance for this step, all modules are provided by it.
+Install modules in `application onCreate`, GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
 if (isMainProcess(this)) {//can not install modules in sub process
@@ -84,7 +105,29 @@ if (isMainProcess(this)) {//can not install modules in sub process
     }
 ```
 
-> Recommend install in application.
+assets目录下放模块的配置文件`android-godeye-config/install.config`，内容如下：
+
+```xml
+<config>
+    <battery />
+    <cpu intervalMillis="2000" sampleMillis="1000"/>
+    <crash crashProvider="cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider"/>
+    <fps intervalMillis="2000"/>
+    <heap intervalMillis="2000"/>
+    <leakMemory debug="true" debugNotification="true" leakRefInfoProvider="cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider"/>
+    <pageload/>
+    <pss intervalMillis="2000"/>
+    <ram intervalMillis="2000"/>
+    <sm debugNotify="true"
+        dumpIntervalMillis="500"
+        longBlockThresholdMillis="300"
+        shortBlockThresholdMillis="100"/>
+    <thread intervalMillis="3000"
+            threadFilter="cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter"/>
+    <traffic intervalMillis="2000" sampleMillis="1000"/>
+    <methodCanary maxMethodCountSingleThreadByCost="300" lowCostMethodThresholdMillis="10"/>
+</config>
+```
 
 #### Optional Uninstall Modules
 
@@ -164,22 +207,23 @@ and more...
 
 ## Modules
 
-|Module Name|Need Install|Engine|Data produce time|permissions|
-|-----------|------------|------|-----------------|-----------|
-|cpu|yes|internal|interval|no|
-|battery|yes|internal|interval|no|
-|fps|yes|internal|interval|no|
-|leakDetector|yes|internal|happen|no|
-|heap|yes|internal|interval|no|
-|pss|yes|internal|interval|no|
-|ram|yes|internal|interval|no|
-|network|no|external|-|no|
-|sm|yes|internal|happen|no|
-|startup|no|external|-|no|
-|traffic|yes|external|interval|no|
-|crash|yes|external|after install,one time|no|
-|thread dump|yes|internal|interval|no|
-|pageload|yes|internal|happen|no|
+|Module Name|Installable|Data produce time|configuration|more|
+|-----------|------------|----------------|-------------|----|
+|network|no|外部输入时输出|无|-|
+|startup|no|外部输入时输出|无|-|
+|battery|yes|电池变化时输出|无|-|
+|cpu|yes|定时输出|intervalMillis-每隔x毫秒输出数据，sampleMillis-采样间隔|系统版本大于8.0失效|
+|crash|yes|安装后，输出上次崩溃|crashProvider-实现CrashProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider即可|-|
+|fps|yes|定时输出|intervalMillis-输出间隔|-|
+|heap|yes|定时输出|intervalMillis-输出间隔|-|
+|leakDetector(leakMemory)|yes|页面销毁且泄漏时|debug-是否需要解析gc引用链，debugNotification泄漏时是否需要通知，leakRefInfoProvider-实现LeakRefInfoProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider|-|
+|pageload|yes|页面create/draw/destory等输出|无|-|
+|pss|yes|定时输出|intervalMillis-输出间隔|-|
+|ram|yes|定时输出|intervalMillis-输出间隔|-|
+|sm|yes|卡顿时输出|debugNotify-卡顿是否需要通知，dumpIntervalMillis-dump堆栈间隔，longBlockThresholdMillis-长卡顿阈值，shortBlockThresholdMillis-短卡顿阈值|-|
+|thread|yes|定时|intervalMillis-输出间隔，threadFilter-过滤器，实现ThreadFilter类path，一般用内置cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter即可|-|
+|traffic|yes|定时输出|intervalMillis-输出间隔，sampleMillis-采样间隔|-|
+|methodCanary|yes|停止后输出|maxMethodCountSingleThreadByCost-每个线程最多记录的方法数，lowCostMethodThresholdMillis-方法耗时阈值|-|
 
 ## Framework
 

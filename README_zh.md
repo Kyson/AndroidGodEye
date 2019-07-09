@@ -39,9 +39,9 @@ AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存�
 
 ### STEP1 依赖引入
 
-使用gradle
+#### Module Project `build.gradle`
 
-```
+```groovy
 dependencies {
   implementation 'cn.hikyson.godeye:godeye-core:VERSION_NAME'
   debugImplementation 'cn.hikyson.godeye:godeye-monitor:VERSION_NAME'
@@ -50,7 +50,28 @@ dependencies {
 }
 ```
 
-> VERSION_NAME可以看github的release名称
+> VERSION_NAME参考github release
+
+#### Root Project `build.gradle`
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "cn.hikyson.methodcanary:plugin:PLUGIN_VERSION_NAME"
+    }
+}
+```
+
+> PLUGIN_VERSION_NAME参考[MethodCanary](https://github.com/Kyson/MethodCanary) github release
+
+#### Module Project `'com.android.application'` `build.gradle`
+
+```groovy
+apply plugin: 'cn.hikyson.methodcanary.plugin'
+```
 
 ### STEP2 初始化并安装所需模块
 
@@ -62,7 +83,7 @@ GodEye.instance().init(this);
 
 模块安装，GodEye类是AndroidGodEye的核心类，所有模块由它提供。
 
-在需要的时候安装所有模块（建议在application中）：
+在需要的时候安装所有模块（建议在`application onCreate`中）：
 
 ```java
 if (isMainProcess(this)) {//安装只能在主进程
@@ -85,6 +106,30 @@ if (isMainProcess(this)) {//安装只能在主进程
         }
         return application.getPackageName().equals(processName);
     }
+```
+
+assets目录下放模块的配置文件`android-godeye-config/install.config`，内容如下：
+
+```xml
+<config>
+    <battery />
+    <cpu intervalMillis="2000" sampleMillis="1000"/>
+    <crash crashProvider="cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider"/>
+    <fps intervalMillis="2000"/>
+    <heap intervalMillis="2000"/>
+    <leakMemory debug="true" debugNotification="true" leakRefInfoProvider="cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider"/>
+    <pageload/>
+    <pss intervalMillis="2000"/>
+    <ram intervalMillis="2000"/>
+    <sm debugNotify="true"
+        dumpIntervalMillis="500"
+        longBlockThresholdMillis="300"
+        shortBlockThresholdMillis="100"/>
+    <thread intervalMillis="3000"
+            threadFilter="cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter"/>
+    <traffic intervalMillis="2000" sampleMillis="1000"/>
+    <methodCanary maxMethodCountSingleThreadByCost="300" lowCostMethodThresholdMillis="10"/>
+</config>
 ```
 
 #### 可选部分 卸载模块
@@ -170,22 +215,23 @@ Done!
 
 ## 模块详情
 
-|模块名|需要安装|数据引擎|数据生产时机|权限|
-|-----|------|-------|----------|---|
-|cpu|是|内置|定时|无|
-|battery|是|内置|定时|无|
-|fps|是|内置|定时|无|
-|leakDetector|是|内置|发生时|无|
-|heap|是|内置|定时|无|
-|pss|是|内置|定时|无|
-|ram|是|内置|定时|无|
-|network|否|外部驱动|-|无|
-|sm|是|内置|发生时|无|
-|startup|否|外部驱动|-|无|
-|traffic|是|外部驱动|定时|无|
-|crash|是|外部驱动|安装后，一次性|无|
-|thread dump|是|内置|定时|无|
-|pageload|yes|internal|happen|无|
+|模块名|需要安装|数据生产时机|配置|备注|
+|-----|-------|---------|---|----|
+|network|否|外部输入时输出|无|-|
+|startup|否|外部输入时输出|无|-|
+|battery|是|电池变化时输出|无|-|
+|cpu|是|定时输出|intervalMillis-每隔x毫秒输出数据，sampleMillis-采样间隔|系统版本大于8.0失效|
+|crash|是|安装后，输出上次崩溃|crashProvider-实现CrashProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider即可|-|
+|fps|是|定时输出|intervalMillis-输出间隔|-|
+|heap|是|定时输出|intervalMillis-输出间隔|-|
+|leakDetector(leakMemory)|是|页面销毁且泄漏时|debug-是否需要解析gc引用链，debugNotification泄漏时是否需要通知，leakRefInfoProvider-实现LeakRefInfoProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider|-|
+|pageload|是|页面create/draw/destory等输出|无|-|
+|pss|是|定时输出|intervalMillis-输出间隔|-|
+|ram|是|定时输出|intervalMillis-输出间隔|-|
+|sm|是|卡顿时输出|debugNotify-卡顿是否需要通知，dumpIntervalMillis-dump堆栈间隔，longBlockThresholdMillis-长卡顿阈值，shortBlockThresholdMillis-短卡顿阈值|-|
+|thread|是|定时|intervalMillis-输出间隔，threadFilter-过滤器，实现ThreadFilter类path，一般用内置cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter即可|-|
+|traffic|是|定时输出|intervalMillis-输出间隔，sampleMillis-采样间隔|-|
+|methodCanary|是|停止后输出|maxMethodCountSingleThreadByCost-每个线程最多记录的方法数，lowCostMethodThresholdMillis-方法耗时阈值|-|
 
 ## 框架
 
