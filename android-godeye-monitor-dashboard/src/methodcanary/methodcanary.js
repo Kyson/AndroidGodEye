@@ -27,6 +27,8 @@ class MethodCanary extends Component {
             title: {
                 text: null
             },
+            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00',
+                '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
             legend: {
                 enabled: false
             },
@@ -228,10 +230,18 @@ class MethodCanary extends Component {
         for (let i = 0; i < this.record.methodInfoOfThreadInfos.length; i++) {
             const methodEventCount = this.record.methodInfoOfThreadInfos[i].methodInfos.length;
             const threadInfo = this.record.methodInfoOfThreadInfos[i].threadInfo;
-            threadSeries.push({
-                name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
-                data: [methodEventCount]
-            })
+            if (threadInfo.id === 2 && threadInfo.name === 'main') {
+                threadSeries.push({
+                    name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
+                    data: [methodEventCount],
+                    color: 'black'
+                })
+            } else {
+                threadSeries.push({
+                    name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
+                    data: [methodEventCount]
+                })
+            }
         }
         const diff = this.refs.chartForSummary.getChart().series.length - threadSeries.length;
         if (diff > 0) {
