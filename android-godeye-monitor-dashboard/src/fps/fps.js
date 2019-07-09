@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
+
 import Util from '../libs/util'
 import {toast} from 'react-toastify';
 import {Card} from 'antd'
@@ -36,7 +34,7 @@ class Fps extends Component {
         if (fpsInfo && fpsInfo.currentFps && fpsInfo.systemFps) {
             if (fpsInfo.currentFps >= fpsInfo.systemFps * 5 / 6) {
                 return 3;
-            } else if (fpsInfo.currentFps >= fpsInfo.systemFps / 2) {
+            } else if (fpsInfo.currentFps >= fpsInfo.systemFps / 3) {
                 return 2;
             } else {
                 return 1;

@@ -4,7 +4,6 @@ import '../App.css';
 import {Tag} from 'antd'
 
 import Util from '../libs/util'
-import globalWs from "../communication/websocket";
 
 /**
  * 应用基本信息

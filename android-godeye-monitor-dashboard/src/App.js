@@ -21,7 +21,7 @@ import MemoryLeak from "./memoryleak/memoryLeak";
 import RefreshStatus from "./refreshstatus/refreshStatus";
 import MethodCanary from "./methodcanary/methodcanary";
 import Mock from "./MockData";
-import {ToastContainer} from 'react-toastify';
+import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 class App extends Component {
@@ -96,7 +96,7 @@ class App extends Component {
                             <AppInfo ref="appInfo" globalWs={globalWs}/>
                         </Col>
                     </Row>
-                    <ToastContainer autoClose={2000}/>
+                    <ToastContainer autoClose={2000} position={toast.POSITION.TOP_LEFT}/>
                     <Row gutter={16} align="top" style={{textAlign: 'right', marginTop: 30}}>
                         <Col span={24}>
                             <RefreshStatus ref="refreshStatus" setCanRefresh={this._setCanRefresh}/>
