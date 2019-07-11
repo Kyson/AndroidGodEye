@@ -2,7 +2,9 @@ package cn.hikyson.godeye.monitor;
 
 import android.content.Context;
 
-import java.util.Map;
+import java.util.List;
+
+import cn.hikyson.godeye.monitor.modulemodel.AppInfoLabel;
 
 /**
  * Created by kysonchao on 2017/11/27.
@@ -12,7 +14,7 @@ public class GodEyeMonitor {
     public interface AppInfoConext {
         Context getContext();
 
-        Map<String, Object> getAppInfo();
+        List<AppInfoLabel> getAppInfo();
     }
 
     public static void work(Context context) {

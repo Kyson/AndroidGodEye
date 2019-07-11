@@ -17,7 +17,7 @@ public class AppInfo {
     }
 
     public String appName;
-    public List<String> labels;
+    public List<AppInfoLabel> labels;
 
     public AppInfo() {
         if (sAppInfoConext == null) {
@@ -27,10 +27,8 @@ public class AppInfo {
         PackageManager pm = context.getPackageManager();
         this.appName = context.getApplicationInfo().loadLabel(pm).toString();
         this.labels = new ArrayList<>();
-        if (sAppInfoConext.getAppInfo() != null && !sAppInfoConext.getAppInfo().isEmpty()) {
-            for (Map.Entry<String, Object> entry : sAppInfoConext.getAppInfo().entrySet()) {
-                this.labels.add(entry.getKey() + " : " + entry.getValue());
-            }
+        if (sAppInfoConext.getAppInfo() != null) {
+            this.labels = sAppInfoConext.getAppInfo();
         }
     }
 }

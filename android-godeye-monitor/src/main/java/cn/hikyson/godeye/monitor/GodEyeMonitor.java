@@ -3,18 +3,18 @@ package cn.hikyson.godeye.monitor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 import com.koushikdutta.async.http.WebSocket;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 
-import java.util.Map;
+import java.util.List;
 
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.driver.Watcher;
 import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
+import cn.hikyson.godeye.monitor.modulemodel.AppInfoLabel;
 import cn.hikyson.godeye.monitor.processors.StaticProcessor;
 import cn.hikyson.godeye.monitor.processors.WebSocketProcessor;
 import cn.hikyson.godeye.monitor.server.GodEyeMonitorServer;
@@ -31,7 +31,7 @@ public class GodEyeMonitor {
     public interface AppInfoConext {
         Context getContext();
 
-        Map<String, Object> getAppInfo();
+        List<AppInfoLabel> getAppInfo();
     }
 
     /**

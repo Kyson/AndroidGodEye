@@ -1,16 +1,16 @@
 package cn.hikyson.android.godeye.sample;
 
 import android.content.Context;
-import android.support.v4.util.ArrayMap;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
+import cn.hikyson.godeye.monitor.modulemodel.AppInfoLabel;
 
 /**
  * Created by kysonchao on 2017/12/9.
  */
-
 public class AppInfoProxyImpl implements GodEyeMonitor.AppInfoConext {
     private Context mContext;
 
@@ -24,15 +24,15 @@ public class AppInfoProxyImpl implements GodEyeMonitor.AppInfoConext {
     }
 
     @Override
-    public Map<String, Object> getAppInfo() {
-        Map<String, Object> map = new ArrayMap<>();
-        map.put("VersionName", BuildConfig.VERSION_NAME);
-        map.put("VersionCode", BuildConfig.VERSION_CODE);
-        map.put("BuildType", BuildConfig.BUILD_TYPE);
-        map.put("Debuggable", BuildConfig.DEBUG);
-        map.put("Email", "kysonchao@gmail.com");
-        map.put("ProjectUrl", "https://github.com/Kyson/AndroidGodEye");
-        map.put("Blog", "tech.hikyson.cn");
-        return map;
+    public List<AppInfoLabel> getAppInfo() {
+        List<AppInfoLabel> appInfoLabels = new ArrayList<>();
+        appInfoLabels.add(new AppInfoLabel("VersionName:" + BuildConfig.VERSION_NAME, ""));
+        appInfoLabels.add(new AppInfoLabel("VersionCode:" + BuildConfig.VERSION_CODE, ""));
+        appInfoLabels.add(new AppInfoLabel("BuildType:" + BuildConfig.BUILD_TYPE, ""));
+        appInfoLabels.add(new AppInfoLabel("Debuggable:" + BuildConfig.DEBUG, ""));
+        appInfoLabels.add(new AppInfoLabel("Email:kysonchao@gmail.com", "mailto:kysonchao@gmail.com"));
+        appInfoLabels.add(new AppInfoLabel("ProjectUrl:https://github.com/Kyson/AndroidGodEye", "https://github.com/Kyson/AndroidGodEye"));
+        appInfoLabels.add(new AppInfoLabel("Blog:tech.hikyson.cn", "https://tech.hikyson.cn"));
+        return appInfoLabels;
     }
 }

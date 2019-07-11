@@ -19,7 +19,18 @@ class Mock {
         this.pageId = this.pageId + 1;
         this.recvFun("appInfo", {
             appName: "I am Name",
-            labels: ["label1", "label2", "label3"]
+            labels: [
+                {name: "lablel1", url: "http://www.ctrip.com"},
+                {name: "lablel2", url: "http://www.trip.com"},
+                {
+                    name: "lablel3"
+                },{
+                    name: "lablel3"
+                },{
+                    name: "lablel3"
+                },{
+                    name: "lablel3"
+                }]
         });
         this.recvFun("startupInfo", {
             startupType: "cold",
@@ -189,8 +200,8 @@ class Mock {
         this.recvFun("MethodCanaryStatus", {
             lowCostMethodThresholdMillis: 10,
             maxMethodCountSingleThreadByCost: 200,
-            isMonitoring:true,
-            isInstalled:true
+            isMonitoring: true,
+            isInstalled: true
         });
 
 

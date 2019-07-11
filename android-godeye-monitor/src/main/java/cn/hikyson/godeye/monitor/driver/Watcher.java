@@ -47,10 +47,8 @@ import cn.hikyson.godeye.monitor.processors.Messager;
 import cn.hikyson.godeye.monitor.processors.Processor;
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.Subject;
 
 /**

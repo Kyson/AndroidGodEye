@@ -21,12 +21,16 @@ class AppInfo extends Component {
     componentDidMount() {
         this.onWsOpenCallback = () => {
             this.props.globalWs.sendMessage('{"moduleName": "appInfo"}');
+            this.intervalId = setInterval(() => {
+                this.props.globalWs.sendMessage('{"moduleName": "appInfo"}');
+            }, 5000);
         };
         this.props.globalWs.registerCallback(this.onWsOpenCallback);
     }
 
     componentWillUnmount() {
         this.props.globalWs.unregisterCallback(this.onWsOpenCallback);
+        clearInterval(this.intervalId);
     }
 
     refresh(appInfo) {
@@ -40,8 +44,8 @@ class AppInfo extends Component {
                     {this.state.appInfo ? this.state.appInfo.appName : "**"}
                 </h1>
                 <div style={{
-                    paddingTop: 10,
-                    paddingBottom: 10,
+                    paddingTop: 8,
+                    paddingBottom: 8,
                     textAlign: "center"
                 }}>{AppInfo.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</div>
             </div>
@@ -54,8 +58,15 @@ class AppInfo extends Component {
             let styles = Util.getCommonColors();
             let styleCount = styles.length;
             for (let i = 0; i < labels.length; i++) {
-                items.push(<Tag style={{marginRight: 5, color: styles[i % styleCount]}}
-                                key={"appinfo" + i}>{labels[i]}</Tag>);
+                if (labels[i].url) {
+                    items.push(<Tag style={{margin: 2, color: styles[i % styleCount]}}
+                                    key={"appinfo" + i}>
+                        <a href={labels[i].url} target="_blank">{labels[i].name}</a>
+                    </Tag>);
+                } else {
+                    items.push(<Tag style={{margin: 2, color: styles[i % styleCount]}}
+                                    key={"appinfo" + i}>{labels[i].name}</Tag>);
+                }
             }
             return items;
         }

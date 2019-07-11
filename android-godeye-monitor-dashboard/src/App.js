@@ -97,17 +97,17 @@ class App extends Component {
                         </Col>
                     </Row>
                     <ToastContainer autoClose={2000} position={toast.POSITION.TOP_LEFT}/>
-                    <Row gutter={16} align="top" style={{textAlign: 'right', marginTop: 30}}>
+                    <Row gutter={16} align="top" style={{textAlign: 'right', marginTop: 16}}>
                         <Col span={24}>
                             <RefreshStatus ref="refreshStatus" setCanRefresh={this._setCanRefresh}/>
                         </Col>
                     </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}>
                             <MethodCanary ref="methodCanary" globalWs={globalWs}/>
                         </Col>
                     </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={15}>
                             <Row gutter={16} align="top">
                                 <Col span={14}>
@@ -117,7 +117,7 @@ class App extends Component {
                                     <Fps ref="fpsInfo"/>
                                 </Col>
                             </Row>
-                            <Row gutter={16} align="top" style={{marginTop: 30}}>
+                            <Row gutter={16} align="top" style={{marginTop: 16}}>
                                 <Col span={8}> <Ram ref="ramInfo"/>
                                 </Col>
                                 <Col span={8}> <Pss ref="pssInfo"/>
@@ -130,26 +130,26 @@ class App extends Component {
                             <Crash ref="crashInfo"/>
                         </Col>
                     </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={8}> <Cpu ref="cpuInfo"/>
                         </Col>
                         <Col span={8}> <Heap ref="heapInfo"/>
                         </Col>
                         <Col span={8}><Traffic ref="trafficInfo"/></Col>
                     </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Pageload ref="pageloadInfo"/></Col>
                     </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Network ref="networkInfo"/></Col>
                     </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Block ref="blockInfo"/></Col>
                     </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Thread ref="threadInfo"/></Col>
                     </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 30}}>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><MemoryLeak ref="leakInfo"/></Col>
                     </Row>
                 </Layout.Content>
