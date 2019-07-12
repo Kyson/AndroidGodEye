@@ -2,9 +2,13 @@ package cn.hikyson.godeye.core.internal.modules.pageload;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 
 
 import java.util.concurrent.ExecutorService;
@@ -19,6 +23,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kysonchao on 2018/1/25.
+ * TODO KYSON IMPL 支持fragment，支持全流程监听
  */
 public class PageloadEngine implements Engine {
     private PageloadActivityStack mActivityStack;
@@ -80,7 +85,6 @@ public class PageloadEngine implements Engine {
                             }
                         }
                     });
-
                 }
 
                 @Override

@@ -57,7 +57,6 @@ public class LeakEngine implements Engine {
                 .excludedRefs(AndroidExcludedRefs.createAppDefaults().build()).build();
     }
 
-
     @Override
     public void work() {
         final RefWatcher watcher = mConfig.debug() ? createDebugRefWatcher() : createReleaseRefWatcher();
