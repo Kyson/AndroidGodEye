@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment;
 @Keep
 public interface PageInfoProvider {
     @NonNull
-    PageInfo getInfoByActivity(Activity activity);
+    PageInfo<Activity> getInfoByActivity(Activity activity);
+
     @NonNull
-    PageInfo getInfoByV4Fragment(Fragment fragment);
+    PageInfo<Fragment> getInfoByV4Fragment(Fragment fragment);
+
     @NonNull
-    PageInfo getInfoByFragment(android.app.Fragment fragment);
+    PageInfo<android.app.Fragment> getInfoByFragment(android.app.Fragment fragment);
 }

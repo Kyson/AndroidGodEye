@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel, Modal, Button} from 'react-bootstrap'
+
 import JSONPretty from '../../node_modules/react-json-pretty';
 
 import Highcharts from '../../node_modules/highcharts/highcharts';

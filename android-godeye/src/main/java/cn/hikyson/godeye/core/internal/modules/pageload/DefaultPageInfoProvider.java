@@ -11,18 +11,18 @@ public class DefaultPageInfoProvider implements PageInfoProvider {
     @NonNull
     @Override
     public PageInfo getInfoByActivity(Activity activity) {
-        return new PageInfo(activity.getClass().getSimpleName(), activity.hashCode(), null);
+        return new PageInfo<>(activity, null);
     }
 
     @NonNull
     @Override
     public PageInfo getInfoByV4Fragment(Fragment fragment) {
-        return new PageInfo(fragment.getClass().getSimpleName(), fragment.hashCode(), null);
+        return new PageInfo<>(fragment, null);
     }
 
     @NonNull
     @Override
     public PageInfo getInfoByFragment(android.app.Fragment fragment) {
-        return new PageInfo(fragment.getClass().getSimpleName(), fragment.hashCode(), null);
+        return new PageInfo<>(fragment, null);
     }
 }

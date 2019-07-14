@@ -23,23 +23,17 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
 
     @Override
     public synchronized void install(final MethodCanaryContext methodCanaryContext) {
-        if (mInstalled) {
+        if (this.mInstalled) {
             L.d("method canary already installed, ignore.");
             return;
         }
-        mStatusSubject = PublishSubject.create();
+        this.mStatusSubject = PublishSubject.create();
         MethodCanaryInject.install(MethodCanaryConfig.MethodCanaryConfigBuilder
                 .aMethodCanaryConfig()
                 .lowCostThreshold(methodCanaryContext.lowCostMethodThresholdMillis() * 1000000)
                 .methodCanaryCallback(new MethodCanaryCallback() {
                     @Override
                     public void onStopped(long startTimeNanos, long stopTimeNanos) {
-                        Schedulers.computation().scheduleDirect(new Runnable() {
-                            @Override
-                            public void run() {
-                                mStatusSubject.onNext("REAL_STOPPED");
-                            }
-                        });
                     }
 
                     @Override
@@ -60,28 +54,28 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
                     }
                 }).build());
         this.mMethodCanaryContext = methodCanaryContext;
-        mStatusSubject.onNext("INSTALLED");
+        this.mStatusSubject.onNext("INSTALLED");
         this.mInstalled = true;
         L.d("method canary installed.");
     }
 
     @Override
     public synchronized void uninstall() {
-        if (!mInstalled) {
+        if (!this.mInstalled) {
             L.d("method canary already uninstalled, ignore.");
             return;
         }
         this.mMethodCanaryContext = null;
         MethodCanaryInject.uninstall();
-        mStatusSubject.onNext("UNINSTALLED");
-        mStatusSubject.onComplete();
-        mStatusSubject = null;
-        mInstalled = false;
+        this.mStatusSubject.onNext("UNINSTALLED");
+        this.mStatusSubject.onComplete();
+        this.mStatusSubject = null;
+        this.mInstalled = false;
         L.d("method canary uninstalled.");
     }
 
     public synchronized MethodCanaryContext getMethodCanaryContext() {
-        return mMethodCanaryContext;
+        return this.mMethodCanaryContext;
     }
 
     public synchronized boolean isMonitoring() {
@@ -89,14 +83,14 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
     }
 
     public synchronized boolean isInstalled() {
-        return mInstalled;
+        return this.mInstalled;
     }
 
     public void startMonitor() {
         try {
             MethodCanaryInject.startMonitor();
-            if (mStatusSubject != null && !mStatusSubject.hasComplete() && !mStatusSubject.hasThrowable()) {
-                mStatusSubject.onNext("STARTED");
+            if (this.mStatusSubject != null && !this.mStatusSubject.hasComplete() && !this.mStatusSubject.hasThrowable()) {
+                this.mStatusSubject.onNext("STARTED");
             }
             L.d("method canary  start monitor success.");
         } catch (Exception e) {
@@ -106,14 +100,14 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
 
     public void stopMonitor() {
         MethodCanaryInject.stopMonitor();
-        if (mStatusSubject != null && !mStatusSubject.hasComplete() && !mStatusSubject.hasThrowable()) {
-            mStatusSubject.onNext("STOPPED");
+        if (this.mStatusSubject != null && !this.mStatusSubject.hasComplete() && !this.mStatusSubject.hasThrowable()) {
+            this.mStatusSubject.onNext("STOPPED");
         }
         L.d("method canary  stop monitor success.");
     }
 
     public @Nullable
     Subject<String> statusSubject() {
-        return mStatusSubject;
+        return this.mStatusSubject;
     }
 }

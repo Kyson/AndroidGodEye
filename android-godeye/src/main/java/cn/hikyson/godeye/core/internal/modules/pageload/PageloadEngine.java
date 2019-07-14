@@ -18,6 +18,7 @@ import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
+import cn.hikyson.godeye.core.utils.ViewUtil;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 
@@ -89,9 +90,9 @@ public class PageloadEngine implements Engine {
 
                 @Override
                 public void onActivityStarted(final Activity activity) {
-                    measureActivityDidAppear(activity, new OnActivityDidAppearCallback() {
+                    ViewUtil.measureActivityDidDraw(activity, new ViewUtil.OnDrawCallback() {
                         @Override
-                        public void didAppear() {
+                        public void didDraw() {
                             final long time = System.currentTimeMillis();
                             executeOnPageloadExecutor(new Runnable() {
                                 @Override
@@ -145,24 +146,5 @@ public class PageloadEngine implements Engine {
         });
     }
 
-    public interface OnActivityDidAppearCallback {
-        void didAppear();
-    }
-
-    private void measureActivityDidAppear(final Activity activity, final OnActivityDidAppearCallback onActivityDidAppearCallback) {
-        activity.getWindow().getDecorView().post(new Runnable() {
-            @Override
-            public void run() {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (onActivityDidAppearCallback != null) {
-                            onActivityDidAppearCallback.didAppear();
-                        }
-                    }
-                });
-            }
-        });
-    }
 
 }
