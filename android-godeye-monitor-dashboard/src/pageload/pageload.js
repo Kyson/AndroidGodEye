@@ -7,7 +7,7 @@ import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import {toast} from 'react-toastify';
-import {Card, Modal} from 'antd'
+import {Card, Modal, Timeline, Row, Col} from 'antd'
 
 exporting(Highcharts);
 
@@ -25,6 +25,7 @@ class Pageload extends Component {
                 type: 'column',
                 spacingLeft: 0,
                 spacingRight: 0,
+                height: 200
             },
             title: {
                 text: null
@@ -162,10 +163,81 @@ class Pageload extends Component {
         const content = `Page ${this.state.pageloadInfo.pageName} draw cost ${drawTime}ms, load cost ${loadTime}ms`;
         return (
             <Card title="Pageload(页面加载)">
-                <ReactHighcharts
-                    ref="chart"
-                    config={this.options}
-                />
+                <Row gutter={16} align="top">
+                    <Col span={16}>
+                        <ReactHighcharts
+                            ref="chart"
+                            config={this.options}
+                        />
+                    </Col>
+                    <Col span={8} style={{height:200}}>
+                        <Timeline >
+                            <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
+                            <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
+                            <Timeline.Item color="red">
+                                <p>Solve initial network problems 1</p>
+                                <p>Solve initial network problems 2</p>
+                                <p>Solve initial network problems 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                            <Timeline.Item>
+                                <p>Technical testing 1</p>
+                                <p>Technical testing 2</p>
+                                <p>Technical testing 3 2015-09-01</p>
+                            </Timeline.Item>
+                        </Timeline>
+
+                    </Col>
+                </Row>
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Pageload detail" closable={true}
                        onOk={this.handleClose}>
                     <span><strong>{content}</strong></span><br/>
@@ -174,5 +246,7 @@ class Pageload extends Component {
             </Card>);
     }
 }
+
+
 
 export default Pageload;
