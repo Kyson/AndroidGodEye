@@ -25,7 +25,7 @@ class Pageload extends Component {
                 type: 'column',
                 spacingLeft: 0,
                 spacingRight: 0,
-                height: 200
+                height: 400
             },
             title: {
                 text: null
@@ -170,14 +170,14 @@ class Pageload extends Component {
                             config={this.options}
                         />
                     </Col>
-                    <Col span={8} style={{height:200}}>
-                        <Timeline >
+                    <Col span={8} style={{height: 400, overflow: 'auto'}}>
+                        <Timeline>
                             <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
                             <Timeline.Item color="green">Create a services site 2015-09-01</Timeline.Item>
                             <Timeline.Item color="red">
-                                <p>Solve initial network problems 1</p>
-                                <p>Solve initial network problems 2</p>
-                                <p>Solve initial network problems 3 2015-09-01</p>
+                                <p>ClassName@id</p>
+                                <p>CREATE at 2019-09-02 18:00:03</p>
+                                <p>Draw cost 54ms</p>
                             </Timeline.Item>
                             <Timeline.Item>
                                 <p>Technical testing 1</p>
@@ -246,7 +246,6 @@ class Pageload extends Component {
             </Card>);
     }
 }
-
 
 
 export default Pageload;
