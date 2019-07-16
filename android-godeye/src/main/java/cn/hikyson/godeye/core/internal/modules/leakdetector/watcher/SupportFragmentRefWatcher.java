@@ -16,6 +16,7 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector.watcher;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -41,7 +42,7 @@ public class SupportFragmentRefWatcher implements FragmentRefWatcher {
             new FragmentManager.FragmentLifecycleCallbacks() {
 
                 @Override
-                public void onFragmentViewDestroyed(FragmentManager fm, Fragment fragment) {
+                public void onFragmentViewDestroyed(@NonNull FragmentManager fm, Fragment fragment) {
                     View view = fragment.getView();
                     LeakRefInfo leakRefInfo = leakRefInfoProvider.getInfoByV4Fragment(fragment);
                     if (view != null && !leakRefInfo.isExcludeRef()) {
@@ -50,7 +51,7 @@ public class SupportFragmentRefWatcher implements FragmentRefWatcher {
                 }
 
                 @Override
-                public void onFragmentDestroyed(FragmentManager fm, Fragment fragment) {
+                public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment fragment) {
                     LeakRefInfo leakRefInfo = leakRefInfoProvider.getInfoByV4Fragment(fragment);
                     if (!leakRefInfo.isExcludeRef()) {
                         refWatcher.watch(fragment, leakRefInfo.getExtraInfo());
