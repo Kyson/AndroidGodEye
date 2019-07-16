@@ -50,7 +50,7 @@ public class LeakQueue {
 
         public String referenceKey = "";
         @Nullable
-        public String referenceName = null;
+        public String extraInfo = null;
         public String leakTime = "";
         public String statusSummary = "";
         public @Status
@@ -62,9 +62,8 @@ public class LeakQueue {
         //泄漏字节
         public long leakMemoryBytes = 0L;
 
-        public LeakMemoryInfo(String referenceKey, @Nullable String referenceName) {
+        public LeakMemoryInfo(String referenceKey) {
             this.referenceKey = referenceKey;
-            this.referenceName = referenceName;
         }
 
         @Override
@@ -84,7 +83,7 @@ public class LeakQueue {
         public String toString() {
             return "LeakMemoryInfo{" +
                     "referenceKey='" + referenceKey + '\'' +
-                    ", referenceName='" + referenceName + '\'' +
+                    ", extraInfo='" + extraInfo + '\'' +
                     ", leakTime='" + leakTime + '\'' +
                     ", statusSummary='" + statusSummary + '\'' +
                     ", status=" + status +
@@ -136,8 +135,9 @@ public class LeakQueue {
         mLeakMemoryInfoArrayMap.put(refKey, curMap);
     }
 
-    public synchronized LeakMemoryInfo generateLeakMemoryInfo(String refKey, String refName) {
-        LeakMemoryInfo leakMemoryInfo = new LeakMemoryInfo(refKey, refName);
+    public synchronized LeakMemoryInfo generateLeakMemoryInfo(String refKey, String extraInfo) {
+        LeakMemoryInfo leakMemoryInfo = new LeakMemoryInfo(refKey);
+        leakMemoryInfo.extraInfo = extraInfo;
         Map<String, Object> detailMap = mLeakMemoryInfoArrayMap.get(refKey);
         leakMemoryInfo.referenceKey = refKey;
         Object leakTimeObj = detailMap.get(LeakMemoryInfo.Fields.LEAK_TIME);
