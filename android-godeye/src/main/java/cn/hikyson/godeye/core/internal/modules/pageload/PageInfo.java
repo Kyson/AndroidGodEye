@@ -1,13 +1,24 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
+import android.app.Activity;
+import android.support.v4.app.Fragment;
+
 import java.util.Map;
 
 public class PageInfo<T> {
+    public PageType pageType;
     public String pageClassName;
     public int pageHashCode;
     public Map<Object, Object> extraInfo;
 
     public PageInfo(T page, Map<Object, Object> extraInfo) {
+        if (page instanceof Activity) {
+            this.pageType = PageType.ACTIVITY;
+        } else if (page instanceof Fragment || page instanceof android.app.Fragment) {
+            this.pageType = PageType.FRAGMENT;
+        } else {
+            this.pageType = PageType.UNKNOWN;
+        }
         this.pageClassName = page.getClass().getName();
         this.pageHashCode = page.hashCode();
         this.extraInfo = extraInfo;
@@ -21,12 +32,14 @@ public class PageInfo<T> {
         PageInfo<?> pageInfo = (PageInfo<?>) o;
 
         if (pageHashCode != pageInfo.pageHashCode) return false;
-        return pageClassName.equals(pageInfo.pageClassName);
+        if (pageType != pageInfo.pageType) return false;
+        return pageClassName != null ? pageClassName.equals(pageInfo.pageClassName) : pageInfo.pageClassName == null;
     }
 
     @Override
     public int hashCode() {
-        int result = pageClassName.hashCode();
+        int result = pageType != null ? pageType.hashCode() : 0;
+        result = 31 * result + (pageClassName != null ? pageClassName.hashCode() : 0);
         result = 31 * result + pageHashCode;
         return result;
     }
@@ -34,7 +47,8 @@ public class PageInfo<T> {
     @Override
     public String toString() {
         return "PageInfo{" +
-                "pageClassName='" + pageClassName + '\'' +
+                "pageType=" + pageType +
+                ", pageClassName='" + pageClassName + '\'' +
                 ", pageHashCode=" + pageHashCode +
                 ", extraInfo=" + extraInfo +
                 '}';

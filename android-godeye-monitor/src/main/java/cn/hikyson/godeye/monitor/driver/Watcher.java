@@ -5,6 +5,7 @@ import com.koushikdutta.async.http.WebSocket;
 import java.util.Collections;
 import java.util.Comparator;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +30,11 @@ import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodsRecordInfo;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
+import cn.hikyson.godeye.core.internal.modules.pageload.ActivityLifecycleEvent;
+import cn.hikyson.godeye.core.internal.modules.pageload.FragmentLifecycleEvent;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageLifecycleEventInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
-import cn.hikyson.godeye.core.internal.modules.pageload.PageloadInfo;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageloadUtil;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
@@ -42,6 +46,7 @@ import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
 import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modulemodel.MethodCanaryStatus;
+import cn.hikyson.godeye.monitor.modulemodel.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
 import cn.hikyson.godeye.monitor.processors.Messager;
 import cn.hikyson.godeye.monitor.processors.Processor;
@@ -128,7 +133,8 @@ public class Watcher implements Processor {
                         .map(this.<CrashInfo>createConvertServerMessageFunction("crashInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 godEye.<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject()
-                        .map(this.<PageloadInfo>createConvertServerMessageFunction("pageloadInfo"))
+                        .map(this.pageLifecycleMap())
+                        .map(this.<PageLifecycleProcessedEvent>createConvertServerMessageFunction("pageLifecycle"))
                         .subscribe(this.createSendMessageConsumer()),
                 godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).subject()
                         .map(this.<MethodsRecordInfo>createConvertServerMessageFunction("methodCanary"))
@@ -189,6 +195,31 @@ public class Watcher implements Processor {
             @Override
             public boolean test(List<CrashInfo> crashInfos) throws Exception {
                 return crashInfos != null && !crashInfos.isEmpty();
+            }
+        };
+    }
+
+    private Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent> pageLifecycleMap() {
+        return new Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent>() {
+            @Override
+            public PageLifecycleProcessedEvent apply(PageLifecycleEventInfo tPageLifecycleEventInfo) throws Exception {
+                PageLifecycleProcessedEvent pageLifecycleProcessedEvent = new PageLifecycleProcessedEvent<>();
+                pageLifecycleProcessedEvent.pageInfo = tPageLifecycleEventInfo.pageInfo;
+                pageLifecycleProcessedEvent.pageLifecycleEventWithTime = tPageLifecycleEventInfo.currentEvent;
+                pageLifecycleProcessedEvent.processedInfo = new HashMap<>();
+                if (pageLifecycleProcessedEvent.pageLifecycleEventWithTime != null
+                        && (pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_DRAW
+                        || pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_DRAW)) {
+                    long drawTime = PageloadUtil.parsePageDrawTimeMillis(tPageLifecycleEventInfo.allEvents);
+                    pageLifecycleProcessedEvent.processedInfo.put("drawTime", drawTime);
+                }
+                if (pageLifecycleProcessedEvent.pageLifecycleEventWithTime != null
+                        && (pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_LOAD
+                        || pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_LOAD)) {
+                    long loadTime = PageloadUtil.parsePageloadTimeMillis(tPageLifecycleEventInfo.allEvents);
+                    pageLifecycleProcessedEvent.processedInfo.put("loadTime", loadTime);
+                }
+                return pageLifecycleProcessedEvent;
             }
         };
     }

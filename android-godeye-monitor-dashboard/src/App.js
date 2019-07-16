@@ -42,7 +42,7 @@ class App extends Component {
         };
         globalWs.registerCallback(this.onWsOpenCallback);
         globalWs.start();
-        // this.mock.start(this._onReceiveMessage);
+        this.mock.start(this._onReceiveMessage);
     }
 
     componentWillUnmount() {
@@ -59,7 +59,7 @@ class App extends Component {
             "batteryInfo": this.refs.batteryInfo,
             "ramInfo": this.refs.ramInfo,
             "pssInfo": this.refs.pssInfo,
-            "pageloadInfo": this.refs.pageloadInfo,
+            "pageLifecycle": this.refs.pageLifecycle,
             "trafficInfo": this.refs.trafficInfo,
             "crashInfo": this.refs.crashInfo,
             "blockInfo": this.refs.blockInfo,
@@ -138,19 +138,17 @@ class App extends Component {
                         <Col span={8}><Traffic ref="trafficInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={24}><Pageload ref="pageloadInfo"/></Col>
+                        <Col span={10}><Pageload ref="pageLifecycle"/></Col>
+                        <Col span={14}><Block ref="blockInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Network ref="networkInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={24}><Block ref="blockInfo"/></Col>
+                        <Col span={24}><MemoryLeak ref="leakInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Thread ref="threadInfo"/></Col>
-                    </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={24}><MemoryLeak ref="leakInfo"/></Col>
                     </Row>
                 </Layout.Content>
                 <Layout.Footer style={{textAlign: "center"}}>

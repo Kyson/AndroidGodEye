@@ -27,6 +27,8 @@ import cn.hikyson.godeye.core.internal.modules.memory.HeapContext;
 import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
 import cn.hikyson.godeye.core.internal.modules.memory.RamContext;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryContext;
+import cn.hikyson.godeye.core.internal.modules.pageload.DefaultPageInfoProvider;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadContext;
 import cn.hikyson.godeye.core.internal.modules.sm.SmContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
@@ -111,7 +113,12 @@ public class GodEyeConfig {
             }
             element = getFirstElementByTagInRoot(root, "pageload");
             if (element != null) {
-                builder.withPageloadConfig(new PageloadConfig());
+                final String pageInfoProvider = element.getAttribute("pageInfoProvider");
+                PageloadConfig pageloadConfig = new PageloadConfig();
+                if (!TextUtils.isEmpty(pageInfoProvider)) {
+                    pageloadConfig.pageInfoProvider = (PageInfoProvider) Class.forName(pageInfoProvider).newInstance();
+                }
+                builder.withPageloadConfig(pageloadConfig);
             }
             element = getFirstElementByTagInRoot(root, "pss");
             if (element != null) {
@@ -336,12 +343,20 @@ public class GodEyeConfig {
     }
 
     public static class PageloadConfig implements PageloadContext {
+        public PageInfoProvider pageInfoProvider;
+
         public PageloadConfig() {
         }
 
         @Override
         public Application application() {
             return GodEye.instance().getApplication();
+        }
+
+        @NonNull
+        @Override
+        public PageInfoProvider pageInfoProvider() {
+            return pageInfoProvider == null ? new DefaultPageInfoProvider() : pageInfoProvider;
         }
     }
 
