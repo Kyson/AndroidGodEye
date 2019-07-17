@@ -43,7 +43,6 @@ import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
-import cn.hikyson.godeye.core.internal.modules.pageload.PageloadInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
@@ -297,7 +296,7 @@ public class MainActivity extends Activity implements Loggable {
                 mCompositeDisposable.add(GodEye.instance().<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject().subscribe(new LogObserver<List<Thread>>("thread", this)));
                 break;
             case R.id.activity_main_consumer_pageload:
-                mCompositeDisposable.add(GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject().subscribe(new LogObserver<PageloadInfo>("pageload", this)));
+                mCompositeDisposable.add(GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject().subscribe(new LogObserver<>("pageload", this)));
                 break;
             case R.id.activity_main_make_block:
                 block();

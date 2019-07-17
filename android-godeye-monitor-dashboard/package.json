@@ -12,6 +12,8 @@
     "react-json-pretty": "^1.7.6",
     "react-page-visibility": "^3.0.0",
     "react-scripts": "1.1.4",
+    "react-scroll-to-bottom": "^1.3.2",
+    "react-scrollable-feed": "^1.0.4",
     "react-table": "^6.8.5",
     "react-toastify": "^4.5.2",
     "sockette": "^2.0.0"

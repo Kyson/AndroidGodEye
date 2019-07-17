@@ -20,7 +20,7 @@ public class SecondActivity extends Activity {
             @Override
             public void run() {
                 ((TextView)findViewById(R.id.textView)).setText("I am SecondActivity!");
-                GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onPageLoaded(SecondActivity.this);
+                GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onActivityLoad(SecondActivity.this);
             }
         }, 2000);
     }

@@ -90,24 +90,24 @@ class Mock {
                 "loadTime": 2342
             }
         });
-        this.recvFun("pageLifecycle", {
-            pageInfo: {
-                pageType: "Acivity",
-                pageClassName: "ClassName2",
-                pageHashCode: 20000,
-                extraInfo: {
-                    "A2": "2222",
-                    "B2": 2222
-                }
-            },
-            pageLifecycleEventWithTime: {
-                lifecycleEvent: "ON_DRAW",
-                eventTimeMillis: 1469433907836,
-            },
-            processedInfo: {
-                "drawTime": 312
-            }
-        });
+        // this.recvFun("pageLifecycle", {
+        //     pageInfo: {
+        //         pageType: "Acivity",
+        //         pageClassName: "ClassName2",
+        //         pageHashCode: 20000,
+        //         extraInfo: {
+        //             "A2": "2222",
+        //             "B2": 2222
+        //         }
+        //     },
+        //     pageLifecycleEventWithTime: {
+        //         lifecycleEvent: "ON_DRAW",
+        //         eventTimeMillis: 1469433907836,
+        //     },
+        //     processedInfo: {
+        //         "drawTime": 700
+        //     }
+        // });
         // this.recvFun("crashInfo", {
         //     timestampMillis: new Date().getMilliseconds(),
         //     throwableMessage: "throwableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessage",
@@ -228,8 +228,6 @@ class Mock {
         //     isMonitoring: true,
         //     isInstalled: true
         // });
-        //
-        //
         // this.recvFun("methodCanary", {
         //     start: 80,
         //     end: 200,
@@ -305,7 +303,6 @@ class Mock {
         //     ]
         // });
     }
-
 }
 
 

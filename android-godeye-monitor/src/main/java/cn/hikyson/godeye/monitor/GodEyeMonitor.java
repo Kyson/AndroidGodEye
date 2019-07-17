@@ -83,7 +83,6 @@ public class GodEyeMonitor {
         sGodEyeMonitorServer.start();
         sWatcher.observeAll();
         L.d(getAddressLog(context, port));
-        L.d("Leak dump files are in /storage/download/leakcanary-" + context.getPackageName());
         L.d("GodEye monitor is working...");
     }
 
@@ -112,6 +111,6 @@ public class GodEyeMonitor {
                 (ipAddress >> 8 & 0xff),
                 (ipAddress >> 16 & 0xff),
                 (ipAddress >> 24 & 0xff));
-        return "Open AndroidGodEye dashboard [ http://" + formattedIpAddress + ":" + port + "/index.html ] in your browser , if can not open it , make sure device and pc are on the same network segment";
+        return "Open AndroidGodEye dashboard [ http://localhost:" + port + "/index.html ] or [ http://" + formattedIpAddress + ":" + port + "/index.html ] in your browser";
     }
 }

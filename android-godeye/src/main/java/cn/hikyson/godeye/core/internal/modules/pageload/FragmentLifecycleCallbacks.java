@@ -1,13 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 
@@ -16,7 +16,7 @@ import java.util.Map;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.ViewUtil;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
+@TargetApi(Build.VERSION_CODES.O)
 public class FragmentLifecycleCallbacks extends FragmentManager.FragmentLifecycleCallbacks {
     private PageLifecycleRecords mPageLifecycleRecords;
     private PageInfoProvider mPageInfoProvider;

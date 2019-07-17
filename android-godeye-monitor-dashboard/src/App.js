@@ -96,7 +96,7 @@ class App extends Component {
                             <AppInfo ref="appInfo" globalWs={globalWs}/>
                         </Col>
                     </Row>
-                    <ToastContainer autoClose={2000} position={toast.POSITION.TOP_LEFT}/>
+                    <ToastContainer autoClose={1200} position={toast.POSITION.TOP_LEFT}/>
                     <Row gutter={16} align="top" style={{textAlign: 'right', marginTop: 16}}>
                         <Col span={24}>
                             <RefreshStatus ref="refreshStatus" setCanRefresh={this._setCanRefresh}/>
@@ -153,7 +153,7 @@ class App extends Component {
                 </Layout.Content>
                 <Layout.Footer style={{textAlign: "center"}}>
                     <span>Powered by <a href="https://github.com/Kyson/AndroidGodEye"
-                                        target="_blank">AndroidGodEye</a></span>
+                                        target="_blank" rel="noopener noreferrer">AndroidGodEye</a></span>
                 </Layout.Footer>
             </Layout>
         );
