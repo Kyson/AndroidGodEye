@@ -18,7 +18,7 @@ class Ram extends Component {
         super(props);
         this.options = {
             chart: {
-                height: 200,
+                height: 248,
                 spacing: [0, 0, 0, 0]
             },
             title: {

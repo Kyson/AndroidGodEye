@@ -36,41 +36,40 @@ class BatteryInfo extends Component {
                 <div
                     style={{
                         width: '100%',
-                        height: 30,
-                        backgroundColor: '#dadada',
-                        borderRadius: '2px'
+                        height: 15,
+                        backgroundColor: Util.getGrey(),
                     }}>
                     <div
                         style={{
-                            height: 30,
+                            height: 15,
                             width: progress + '%',
                             backgroundColor: Util.getGreen(),
-                            borderRadius: '2px',
                             transition: 'all .2s ease-out'
                         }}/>
                 </div>
-                <div style={{marginTop: 15}}>
-                    <span>Level(电量):&nbsp;&nbsp;&nbsp;</span><strong>{info.level}</strong></div>
-                <div>
-                    <span>StateOfCharge(充电状态):&nbsp;&nbsp;&nbsp;</span><strong>{info.status}</strong>
+                <div style={{marginTop: 8}}>
+                    <small>Level(电量):&nbsp;&nbsp;<strong>{info.level}</strong></small>
                 </div>
                 <div>
-                    <span>TypeOfCharge(充电方式):&nbsp;&nbsp;&nbsp;</span><strong>{info.plugged}</strong>
+                    <small>StateOfCharge(充电状态):&nbsp;&nbsp;<strong>{info.status}</strong></small>
                 </div>
                 <div>
-                    <span>Present(使用状态):&nbsp;&nbsp;&nbsp;</span><strong>{info.present}</strong>
+                    <small>TypeOfCharge(充电方式):&nbsp;&nbsp;<strong>{info.plugged}</strong></small>
                 </div>
                 <div>
-                    <span>Health(健康状态):&nbsp;&nbsp;&nbsp;</span><strong>{info.health}</strong>
+                    <small>Present(使用状态):&nbsp;&nbsp;<strong>{info.present}</strong></small>
                 </div>
                 <div>
-                    <span>Voltage(电压):&nbsp;&nbsp;&nbsp;</span><strong>{info.voltage}</strong>
+                    <small>Health(健康状态):&nbsp;&nbsp;<strong>{info.health}</strong></small>
                 </div>
                 <div>
-                    <span>Temperature(温度):&nbsp;&nbsp;&nbsp;</span><strong>{info.temperature}</strong>
+                    <small>Voltage(电压):&nbsp;&nbsp;<strong>{info.voltage}</strong></small>
                 </div>
                 <div>
-                    <span>Technology(电池类型):&nbsp;&nbsp;&nbsp;</span><strong>{info.technology}</strong>
+                    <small>Temperature(温度):&nbsp;&nbsp;<strong>{info.temperature}</strong></small>
+                </div>
+                <div>
+                    <small>Technology(电池类型):&nbsp;&nbsp;<strong>{info.technology}</strong></small>
                 </div>
             </Card>);
     }

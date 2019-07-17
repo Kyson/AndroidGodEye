@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
 import Highcharts from '../../node_modules/highcharts/highstock';
 import ReactHighcharts from '../../node_modules/react-highcharts'
@@ -17,7 +14,7 @@ class Pss extends Component {
         super(props);
         this.options = {
             chart: {
-                height: 200,
+                height: 248,
                 spacing: [0, 0, 0, 0]
             },
             title: {

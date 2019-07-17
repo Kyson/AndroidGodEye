@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel, Button, Modal} from 'react-bootstrap'
+
 import JSONPretty from '../../node_modules/react-json-pretty';
 import {toast} from 'react-toastify';
 
@@ -50,7 +48,8 @@ class Crash extends Component {
                     <p><strong>Stacktrace(异常堆栈)</strong></p>
                     {Crash.renderStacktraceItem(crashInfo.throwableStacktrace)}
                 </div>
-                <Modal visible={this.state.show} onCancel={this.handleClose} title="Crash detail" closable={true} onOk={this.handleClose}>
+                <Modal visible={this.state.show} onCancel={this.handleClose} title="Crash detail" closable={true}
+                       onOk={this.handleClose}>
                     <JSONPretty id="json-pretty" json={this.state.crashInfo}/>
                 </Modal>
             </Card>);

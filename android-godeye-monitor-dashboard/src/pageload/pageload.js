@@ -5,7 +5,7 @@ import JSONPretty from '../../node_modules/react-json-pretty';
 
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
-import {Card, Modal, Timeline, Button} from 'antd'
+import {Card, Modal, Badge, Button, Tag} from 'antd'
 import Util from "../libs/util";
 import ScrollableFeed from 'react-scrollable-feed';
 
@@ -27,14 +27,6 @@ class Pageload extends Component {
             thisPageLifecycleProcessedEvents: {},
             pageLifecycleProcessedEvents: []
         };
-    }
-
-    componentDidMount() {
-
-    }
-
-    componentDidUpdate() {
-
     }
 
     static isSamePage(pageInfo1, pageInfo2) {
@@ -81,50 +73,66 @@ class Pageload extends Component {
             for (let i = 0; i < pageLifecycleProcessedEvents.length; i++) {
                 const event = pageLifecycleProcessedEvents[i];
                 if (event.pageLifecycleEventWithTime.lifecycleEvent === 'ON_LOAD') {
-                    items.push(<div><Timeline.Item color={Util.getRed()}>
-                        <p>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()} | ${event.pageInfo.pageType}: ${event.pageLifecycleEventWithTime.lifecycleEvent}`}</p>
-                        <p>
+                    items.push(<Card style={{margin:4}}>
+                        <Badge
+                            color={Util.getGreen()}/><span>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()}`}</span>
+                        <br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>{`${event.pageInfo.pageClassName}`}</strong>{`@${event.pageInfo.pageHashCode}`}<Button
-                            type="link"
-                            onClick={() => {
-                                this.handleClick(event);
-                            }
-                            }>Follow This
-                            Page</Button>
-                        </p>
-                        <p>Load cost <strong
-                            style={(event.processedInfo['loadTime'] > Pageload.BAD_LOAD_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['loadTime']}</strong> ms
-                        </p>
-                    </Timeline.Item></div>);
+                                type="link"
+                                onClick={() => {
+                                    this.handleClick(event);
+                                }
+                                }>Follow This Page</Button>
+                         </span>
+                        <br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <Tag color="cyan">{event.pageInfo.pageType}</Tag>
+                            <Tag color="geekblue">{event.pageLifecycleEventWithTime.lifecycleEvent}</Tag>
+                            Load cost <strong
+                                style={(event.processedInfo['loadTime'] > Pageload.BAD_LOAD_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['loadTime']}</strong> ms
+                        </span>
+                    </Card>);
                 } else if (event.pageLifecycleEventWithTime.lifecycleEvent === 'ON_DRAW') {
-                    items.push(<div><Timeline.Item color={Util.getOrange()}>
-                        <p>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()} | ${event.pageInfo.pageType}: ${event.pageLifecycleEventWithTime.lifecycleEvent}`}</p>
-                        <p>
+                    items.push(<Card style={{margin:4}}>
+                        <Badge
+                            color={Util.getGreen()}/><span>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()}`}</span>
+                        <br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>{`${event.pageInfo.pageClassName}`}</strong>{`@${event.pageInfo.pageHashCode}`}<Button
-                            type="link"
-                            onClick={() => {
-                                this.handleClick(event);
-                            }
-                            }>Follow This
-                            Page</Button>
-                        </p>
-                        <p>Draw cost <strong
-                            style={(event.processedInfo['drawTime'] > Pageload.BAD_DRAW_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['drawTime']}</strong> ms
-                        </p>
-                    </Timeline.Item></div>);
+                                type="link"
+                                onClick={() => {
+                                    this.handleClick(event);
+                                }
+                                }>Follow This Page</Button>
+                        </span>
+                        <br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <Tag color="cyan">{event.pageInfo.pageType}</Tag>
+                            <Tag color="geekblue">{event.pageLifecycleEventWithTime.lifecycleEvent}</Tag>
+                            Draw cost <strong
+                                style={(event.processedInfo['drawTime'] > Pageload.BAD_DRAW_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['drawTime']}</strong> ms
+                        </span>
+                    </Card>);
                 } else {
-                    items.push(<div><Timeline.Item color={Util.getGreen()}>
-                        <p>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()} | ${event.pageInfo.pageType}: ${event.pageLifecycleEventWithTime.lifecycleEvent}`}</p>
-                        <p>
+                    items.push(<Card style={{margin:4}}>
+                        <Badge
+                            color={Util.getGreen()}/><span>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()}`}</span>
+                        <br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>{`${event.pageInfo.pageClassName}`}</strong>{`@${event.pageInfo.pageHashCode}`}<Button
-                            type="link"
-                            onClick={() => {
-                                this.handleClick(event);
-                            }
-                            }>Follow This
-                            Page</Button>
-                        </p>
-                    </Timeline.Item></div>);
+                                type="link"
+                                onClick={() => {
+                                    this.handleClick(event);
+                                }
+                                }>Follow This Page</Button>
+                        </span>
+                        <br/>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <Tag color="cyan">{event.pageInfo.pageType}</Tag>
+                            <Tag color="geekblue">{event.pageLifecycleEventWithTime.lifecycleEvent}</Tag>
+                        </span>
+                    </Card>);
                 }
             }
             return items;
@@ -134,14 +142,13 @@ class Pageload extends Component {
     render() {
         return (
             <Card title="Page Lifecycle(页面生命周期)">
-                <div style={{height: 200}}>
+                <div style={{height: 556}}>
                     <ScrollableFeed changeDetectionFilter={(previousProps, newProps) => {
                         const prevChildren = previousProps.children;
                         const newChildren = newProps.children;
                         return prevChildren.length !== newChildren.length;
                     }}>
                         {this.renderTimelines(this.state.pageLifecycleProcessedEvents)}
-
                     </ScrollableFeed>
                 </div>
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Page Lifecycle Event Flow"
