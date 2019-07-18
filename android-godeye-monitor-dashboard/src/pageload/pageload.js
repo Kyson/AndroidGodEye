@@ -20,51 +20,57 @@ class Pageload extends Component {
 
     constructor(props) {
         super(props);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleClick = this.handleClick.bind(this);
+        this.handleFollow = this.handleFollow.bind(this);
+        this.handleUnfollow = this.handleUnfollow.bind(this);
+        this.allPageLifecycleProcessedEvents = [];
         this.state = {
             show: false,
-            thisPageLifecycleProcessedEvents: {},
-            pageLifecycleProcessedEvents: []
+            followPageLifecycleProcessedEvent: null,
+            renderPageLifecycleProcessedEvents: []
         };
     }
 
-    static isSamePage(pageInfo1, pageInfo2) {
+    static isSamePageClass(pageInfo1, pageInfo2) {
         if (pageInfo1 && pageInfo2) {
             return pageInfo1.pageType === pageInfo2.pageType
                 && pageInfo1.pageClassName === pageInfo2.pageClassName
-                && pageInfo1.pageHashCode === pageInfo2.pageHashCode
         }
         return false;
     }
 
     static findThisPageLifecycleEvents(pageLifecycleProcessedEvents, pageLifecycleProcessedEvent) {
-        const thisPageLifecycleEvents = [];
-        pageLifecycleProcessedEvents.forEach((item) => {
-            if (Pageload.isSamePage(item.pageInfo, pageLifecycleProcessedEvent.pageInfo)) {
-                thisPageLifecycleEvents.push(item)
-            }
-        });
-        return thisPageLifecycleEvents;
+        if (pageLifecycleProcessedEvent) {
+            const thisPageLifecycleEvents = [];
+            pageLifecycleProcessedEvents.forEach((item) => {
+                if (Pageload.isSamePageClass(item.pageInfo, pageLifecycleProcessedEvent.pageInfo)) {
+                    thisPageLifecycleEvents.push(item)
+                }
+            });
+            return thisPageLifecycleEvents;
+        }
+        return pageLifecycleProcessedEvents;
     }
 
     refresh(pageLifecycleProcessedEvent) {
-        const events = this.state.pageLifecycleProcessedEvents;
-        events.push(pageLifecycleProcessedEvent);
+        this.allPageLifecycleProcessedEvents.push(pageLifecycleProcessedEvent);
         this.setState({
-            pageLifecycleProcessedEvents: events
+            renderPageLifecycleProcessedEvents: Pageload.findThisPageLifecycleEvents(this.allPageLifecycleProcessedEvents, this.state.followPageLifecycleProcessedEvent)
         });
     }
 
-    handleClick(event) {
+    handleFollow(pageLifecycleProcessedEvent) {
         this.setState({
-            show: true,
-            thisPageLifecycleProcessedEvents: Pageload.findThisPageLifecycleEvents(this.state.pageLifecycleProcessedEvents, event)
+            followPageLifecycleProcessedEvent: pageLifecycleProcessedEvent,
+            renderPageLifecycleProcessedEvents: Pageload.findThisPageLifecycleEvents(this.allPageLifecycleProcessedEvents, pageLifecycleProcessedEvent)
         });
     }
 
-    handleClose() {
-        this.setState({show: false});
+    handleUnfollow() {
+        console.log("handleUnfollow");
+        this.setState({
+            followPageLifecycleProcessedEvent: null,
+            renderPageLifecycleProcessedEvents: Pageload.findThisPageLifecycleEvents(this.allPageLifecycleProcessedEvents, null)
+        });
     }
 
     renderTimelines(pageLifecycleProcessedEvents) {
@@ -73,7 +79,7 @@ class Pageload extends Component {
             for (let i = 0; i < pageLifecycleProcessedEvents.length; i++) {
                 const event = pageLifecycleProcessedEvents[i];
                 if (event.pageLifecycleEventWithTime.lifecycleEvent === 'ON_LOAD') {
-                    items.push(<Card style={{margin:4}}>
+                    items.push(<Card style={{margin: 4}} size="small">
                         <Badge
                             color={Util.getGreen()}/><span>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()}`}</span>
                         <br/>
@@ -81,9 +87,9 @@ class Pageload extends Component {
                             <strong>{`${event.pageInfo.pageClassName}`}</strong>{`@${event.pageInfo.pageHashCode}`}<Button
                                 type="link"
                                 onClick={() => {
-                                    this.handleClick(event);
+                                    this.handleFollow(event);
                                 }
-                                }>Follow This Page</Button>
+                                }>Follow This Class of Page</Button>
                          </span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -94,7 +100,7 @@ class Pageload extends Component {
                         </span>
                     </Card>);
                 } else if (event.pageLifecycleEventWithTime.lifecycleEvent === 'ON_DRAW') {
-                    items.push(<Card style={{margin:4}}>
+                    items.push(<Card style={{margin: 4}} size="small">
                         <Badge
                             color={Util.getGreen()}/><span>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()}`}</span>
                         <br/>
@@ -102,9 +108,9 @@ class Pageload extends Component {
                             <strong>{`${event.pageInfo.pageClassName}`}</strong>{`@${event.pageInfo.pageHashCode}`}<Button
                                 type="link"
                                 onClick={() => {
-                                    this.handleClick(event);
+                                    this.handleFollow(event);
                                 }
-                                }>Follow This Page</Button>
+                                }>Follow This Class of Page</Button>
                         </span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -115,7 +121,7 @@ class Pageload extends Component {
                         </span>
                     </Card>);
                 } else {
-                    items.push(<Card style={{margin:4}}>
+                    items.push(<Card style={{margin: 4}} size="small">
                         <Badge
                             color={Util.getGreen()}/><span>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()}`}</span>
                         <br/>
@@ -123,9 +129,9 @@ class Pageload extends Component {
                             <strong>{`${event.pageInfo.pageClassName}`}</strong>{`@${event.pageInfo.pageHashCode}`}<Button
                                 type="link"
                                 onClick={() => {
-                                    this.handleClick(event);
+                                    this.handleFollow(event);
                                 }
-                                }>Follow This Page</Button>
+                                }>Follow This Class of Page</Button>
                         </span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -139,24 +145,30 @@ class Pageload extends Component {
         }
     }
 
+    renderTip(followClass) {
+        if (followClass) {
+            return (<div><span>Following [{followClass}]&nbsp;&nbsp;</span>
+                <Button onClick={this.handleUnfollow}>Unfollow</Button></div>)
+        }
+        return <div></div>
+    }
+
     render() {
+        let followClass;
+        if (this.state.followPageLifecycleProcessedEvent && this.state.followPageLifecycleProcessedEvent.pageInfo) {
+            followClass = this.state.followPageLifecycleProcessedEvent.pageInfo.pageClassName
+        }
         return (
-            <Card title="Page Lifecycle(页面生命周期)">
+            <Card title="Page Lifecycle(页面生命周期)" extra={this.renderTip(followClass)}>
                 <div style={{height: 556}}>
                     <ScrollableFeed changeDetectionFilter={(previousProps, newProps) => {
                         const prevChildren = previousProps.children;
                         const newChildren = newProps.children;
                         return prevChildren.length !== newChildren.length;
                     }}>
-                        {this.renderTimelines(this.state.pageLifecycleProcessedEvents)}
+                        {this.renderTimelines(this.state.renderPageLifecycleProcessedEvents)}
                     </ScrollableFeed>
                 </div>
-                <Modal visible={this.state.show} onCancel={this.handleClose} title="Page Lifecycle Event Flow"
-                       closable={true}
-                       onOk={this.handleClose}>
-                    <JSONPretty id="json-pretty" json={this.state.thisPageLifecycleProcessedEvents}
-                                style={{fontSize: 8}}/>
-                </Modal>
             </Card>);
     }
 }

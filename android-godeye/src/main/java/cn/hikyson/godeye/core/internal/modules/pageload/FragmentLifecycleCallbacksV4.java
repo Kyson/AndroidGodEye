@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 
 import java.util.Map;
@@ -38,7 +37,6 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
                 mCachePageInfo.put(f, pageInfo);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                Log.d("kyson", "onFragmentAttached:" + pageInfo);
             }
         });
     }
@@ -49,11 +47,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_CREATE, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentCreated:" + pageInfo);
                 }
             }
         });
@@ -65,11 +63,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_VIEW_CREATE, time0);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentViewCreated:" + pageInfo);
                 }
             }
         });
@@ -77,13 +75,13 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             @Override
             public void didDraw() {
                 final long time1 = System.currentTimeMillis();
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_DRAW, time1);
                         mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                        Log.d("kyson", "onFragmentDraw:" + pageInfo);
                     }
                 });
             }
@@ -96,11 +94,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_START, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentStarted:" + pageInfo);
                 }
             }
         });
@@ -112,11 +110,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_RESUME, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentResumed:" + pageInfo);
                 }
             }
         });
@@ -128,11 +126,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_PAUSE, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentPaused:" + pageInfo);
                 }
             }
         });
@@ -144,11 +142,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_STOP, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentStopped:" + pageInfo);
                 }
             }
         });
@@ -160,11 +158,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_VIEW_DESTROY, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentViewDestroyed:" + pageInfo);
                 }
             }
         });
@@ -176,11 +174,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_DESTROY, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentDestroyed:" + pageInfo);
                 }
             }
         });
@@ -192,11 +190,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.remove(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_DETACH, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentDetached:" + pageInfo);
                 }
             }
         });

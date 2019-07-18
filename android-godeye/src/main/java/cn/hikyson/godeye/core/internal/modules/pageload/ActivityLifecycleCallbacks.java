@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,11 +35,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_LOAD, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onActivityLoad:" + pageInfo);
                 }
             }
         });
@@ -51,11 +50,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_SHOW, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentShow:" + pageInfo);
                 }
             }
         });
@@ -66,11 +65,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_HIDE, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentHide:" + pageInfo);
                 }
             }
         });
@@ -81,11 +80,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_LOAD, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentLoad:" + pageInfo);
                 }
             }
         });
@@ -96,11 +95,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<android.app.Fragment> pageInfo = (PageInfo<android.app.Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<android.app.Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_SHOW, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentShow:" + pageInfo);
                 }
             }
         });
@@ -111,11 +110,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<android.app.Fragment> pageInfo = (PageInfo<android.app.Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<android.app.Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_HIDE, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentHide:" + pageInfo);
                 }
             }
         });
@@ -126,11 +125,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 final PageInfo<android.app.Fragment> pageInfo = (PageInfo<android.app.Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<android.app.Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_LOAD, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onFragmentLoad:" + pageInfo);
                 }
             }
         });
@@ -152,7 +151,6 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
                 mCachePageInfo.put(activity, pageInfo);
                 PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_CREATE, time0);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                Log.d("kyson", "onActivityCreated:" + pageInfo);
             }
         });
         ViewUtil.measureActivityDidDraw(activity, new ViewUtil.OnDrawCallback() {
@@ -162,10 +160,10 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        // noinspection unchecked
                         PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
                         PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_DRAW, time1);
                         mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                        Log.d("kyson", "onActivityDraw:" + pageInfo);
                     }
                 });
             }
@@ -178,11 +176,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_START, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onActivityStarted:" + pageInfo);
                 }
             }
         });
@@ -194,11 +192,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_RESUME, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onActivityResumed:" + pageInfo);
                 }
             }
         });
@@ -210,11 +208,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_PAUSE, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onActivityPaused:" + pageInfo);
                 }
             }
         });
@@ -226,11 +224,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_STOP, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onActivityStopped:" + pageInfo);
                 }
             }
         });
@@ -247,11 +245,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                // noinspection unchecked
                 PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.remove(activity);
                 if (pageInfo != null) {
                     PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_DESTROY, time);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    Log.d("kyson", "onActivityDestroyed:" + pageInfo);
                 }
             }
         });
