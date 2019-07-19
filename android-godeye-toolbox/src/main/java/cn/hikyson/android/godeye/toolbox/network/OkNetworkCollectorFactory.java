@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.toolbox;
+package cn.hikyson.android.godeye.toolbox.network;
 
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;

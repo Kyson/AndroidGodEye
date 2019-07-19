@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.hikyson.android.godeye.toolbox;
+package cn.hikyson.android.godeye.toolbox.network;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -31,12 +31,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.internal.http.HttpHeaders;
-import okhttp3.internal.platform.Platform;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.GzipSource;
-
-import static okhttp3.internal.platform.Platform.INFO;
 
 public final class HttpLoggingInterceptor implements Interceptor {
   private static final Charset UTF8 = Charset.forName("UTF-8");
@@ -131,7 +128,6 @@ public final class HttpLoggingInterceptor implements Interceptor {
 
   @Override public Response intercept(Chain chain) throws IOException {
     Level level = this.level;
-
     Request request = chain.request();
     if (level == Level.NONE) {
       return chain.proceed(request);

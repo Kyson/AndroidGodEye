@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.toolbox;
+package cn.hikyson.android.godeye.toolbox.network;
 
 
 import java.io.IOException;
@@ -6,14 +6,13 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import cn.hikyson.godeye.core.internal.Producer;
-import cn.hikyson.godeye.core.internal.modules.network.NetworkInfoConnection;
-import cn.hikyson.godeye.core.internal.modules.network.NetworkInfoRequest;
-import cn.hikyson.godeye.core.internal.modules.network.NetworkPerformance;
+import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkSimplePerformance;
-import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
 import cn.hikyson.godeye.core.utils.L;
 import okhttp3.Call;
 import okhttp3.Connection;
@@ -24,65 +23,66 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class OkNetworkCollector extends EventListener {
-    private Producer<RequestBaseInfo> mRequestBaseInfoProducer;
-    private NetworkPerformance.NetworkPerformanceBuilder networkPerformanceBuilder;
-    private RequestBaseInfo.RequestBaseInfoBuilder requestBaseInfoBuilder;
+    private Producer<NetworkInfo> mNetworkInfoProducer;
+    private NetworkInfo<HttpContent> mNetworkInfo;
     private Response response;
+    private long mCallStartTimeMillis;
+    private long mDnsStartTimeMillis;
+    private long mConnectionStartTimeMillis;
+    private long mRequestHeadersStartTimeMillis;
+    private long mRequestBodyStartTimeMillis;
+    private long mResponseHeadersStartTimeMillis;
+    private long mResponseBodyStartTimeMillis;
 
-    public OkNetworkCollector(Producer<RequestBaseInfo> producer) {
-        this.mRequestBaseInfoProducer = producer;
-        this.networkPerformanceBuilder = NetworkPerformance.NetworkPerformanceBuilder.aNetworkPerformance();
-        this.requestBaseInfoBuilder = RequestBaseInfo.RequestBaseInfoBuilder.aRequestBaseInfo();
+    public OkNetworkCollector(Producer<NetworkInfo> producer) {
+        this.mNetworkInfoProducer = producer;
+        this.mNetworkInfo = new NetworkInfo<>();
+        this.mNetworkInfo.networkTimeMillisMap = new LinkedHashMap<>();
+        this.mNetworkInfo.extraInfo = new HashMap<>();
     }
 
     @Override
     public void callStart(Call call) {
         super.callStart(call);
-        requestBaseInfoBuilder.withRequestId(callToString(call)).withNetworkInfoRequest(new NetworkInfoRequest(call.request().url().toString(), call.request().method()));
-        networkPerformanceBuilder.withStartTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:callStart", requestBaseInfoBuilder.requestId));
+        mCallStartTimeMillis = System.currentTimeMillis();
+        mNetworkInfo.networkContent.httpRequest.method = call.request().method();
+        mNetworkInfo.networkContent.httpRequest.url = call.request().url().toString();
     }
 
     @Override
     public void dnsStart(Call call, String domainName) {
         super.dnsStart(call, domainName);
-        networkPerformanceBuilder.withDnsStartTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:dnsStart", requestBaseInfoBuilder.requestId));
+        mDnsStartTimeMillis = System.currentTimeMillis();
     }
 
     @Override
     public void dnsEnd(Call call, String domainName, List<InetAddress> inetAddressList) {
         super.dnsEnd(call, domainName, inetAddressList);
-        networkPerformanceBuilder.withDnsEndTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:dnsEnd", requestBaseInfoBuilder.requestId));
+        mNetworkInfo.networkTimeMillisMap.put("DnsTime", System.currentTimeMillis() - mDnsStartTimeMillis);
     }
 
     @Override
     public void connectStart(Call call, InetSocketAddress inetSocketAddress, Proxy proxy) {
         super.connectStart(call, inetSocketAddress, proxy);
-        networkPerformanceBuilder.withConnectStartTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:connectStart", requestBaseInfoBuilder.requestId));
+        mConnectionStartTimeMillis = System.currentTimeMillis();
     }
 
     @Override
     public void connectEnd(Call call, InetSocketAddress inetSocketAddress, Proxy proxy, Protocol protocol) {
         super.connectEnd(call, inetSocketAddress, proxy, protocol);
-        networkPerformanceBuilder.withConnectEndTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:connectEnd", requestBaseInfoBuilder.requestId));
+        mNetworkInfo.networkTimeMillisMap.put("ConnectTime", System.currentTimeMillis() - mConnectionStartTimeMillis);
     }
 
     @Override
     public void connectFailed(Call call, InetSocketAddress inetSocketAddress, Proxy proxy, Protocol protocol,
                               IOException ioe) {
         super.connectFailed(call, inetSocketAddress, proxy, protocol, ioe);
-        networkPerformanceBuilder.withConnectEndTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:connectFailed", requestBaseInfoBuilder.requestId));
+        mNetworkInfo.networkTimeMillisMap.put("ConnectTime", System.currentTimeMillis() - mConnectionStartTimeMillis);
     }
 
     @Override
     public void connectionAcquired(Call call, Connection connection) {
         super.connectionAcquired(call, connection);
-        String protocol = connection.protocol().toString();
         Handshake handshake = connection.handshake();
         String cipherSuite = "";
         String tlsVersion = "";
@@ -103,73 +103,68 @@ public class OkNetworkCollector extends EventListener {
         if (remoteAddress != null) {
             remoteIp = remoteAddress.getHostAddress();
         }
-        requestBaseInfoBuilder.withNetworkInfoConnection(
-                new NetworkInfoConnection(protocol, cipherSuite, tlsVersion, localIp, localPort, remoteIp, remotePort));
-        L.d(String.format("[%s]:connectionAcquired", requestBaseInfoBuilder.requestId));
+        mNetworkInfo.networkContent.httpRequest.protocol = connection.protocol().toString();
+        mNetworkInfo.extraInfo.put("cipherSuite", cipherSuite);
+        mNetworkInfo.extraInfo.put("tlsVersion", tlsVersion);
+        mNetworkInfo.extraInfo.put("localIp", localIp);
+        mNetworkInfo.extraInfo.put("localPort", localPort);
+        mNetworkInfo.extraInfo.put("remoteIp", remoteIp);
+        mNetworkInfo.extraInfo.put("remotePort", remotePort);
     }
 
     @Override
     public void requestHeadersStart(Call call) {
         super.requestHeadersStart(call);
-        networkPerformanceBuilder.withSendHeaderStartTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:requestHeadersStart", requestBaseInfoBuilder.requestId));
+        mRequestHeadersStartTimeMillis = System.currentTimeMillis();
     }
 
     @Override
     public void requestHeadersEnd(Call call, Request request) {
         super.requestHeadersEnd(call, request);
-        networkPerformanceBuilder.withSendHeaderEndTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:requestHeadersEnd", requestBaseInfoBuilder.requestId));
+        mNetworkInfo.networkTimeMillisMap.put("RequestHeadersTime", System.currentTimeMillis() - mRequestHeadersStartTimeMillis);
     }
 
     @Override
     public void requestBodyStart(Call call) {
         super.requestBodyStart(call);
-        networkPerformanceBuilder.withSendBodyStartTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:requestBodyStart", requestBaseInfoBuilder.requestId));
+        mRequestBodyStartTimeMillis = System.currentTimeMillis();
     }
 
     @Override
     public void requestBodyEnd(Call call, long byteCount) {
         super.requestBodyEnd(call, byteCount);
-        requestBaseInfoBuilder.withRequestBodySizeByte(byteCount);
-        networkPerformanceBuilder.withSendBodyEndTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:requestBodyEnd", requestBaseInfoBuilder.requestId));
+        mNetworkInfo.networkTimeMillisMap.put("RequestBodyTime", System.currentTimeMillis() - mRequestBodyStartTimeMillis);
     }
 
     @Override
     public void responseHeadersStart(Call call) {
         super.responseHeadersStart(call);
-        networkPerformanceBuilder.withReceiveHeaderStartTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:responseHeadersStart", requestBaseInfoBuilder.requestId));
+        mResponseHeadersStartTimeMillis = System.currentTimeMillis();
     }
 
     @Override
     public void responseHeadersEnd(Call call, Response response) {
         super.responseHeadersEnd(call, response);
         this.response = response;
-        networkPerformanceBuilder.withReceiveHeaderEndTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:responseHeadersEnd", requestBaseInfoBuilder.requestId));
+        mNetworkInfo.networkTimeMillisMap.put("ResponseHeadersTime", System.currentTimeMillis() - mResponseHeadersStartTimeMillis);
     }
 
     @Override
     public void responseBodyStart(Call call) {
         super.responseBodyStart(call);
-        networkPerformanceBuilder.withReceiveBodyStartTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:responseBodyStart", requestBaseInfoBuilder.requestId));
+        mResponseBodyStartTimeMillis = System.currentTimeMillis();
     }
 
     @Override
     public void responseBodyEnd(Call call, long byteCount) {
         super.responseBodyEnd(call, byteCount);
-        requestBaseInfoBuilder.withResponseBodySizeByte(byteCount);
-        networkPerformanceBuilder.withReceiveBodyEndTieMillis(System.currentTimeMillis());
-        L.d(String.format("[%s]:responseBodyEnd", requestBaseInfoBuilder.requestId));
+        mNetworkInfo.networkTimeMillisMap.put("ResponseBodyTime", System.currentTimeMillis() - mResponseBodyStartTimeMillis);
     }
 
     @Override
     public void callEnd(Call call) {
         super.callEnd(call);
+        mNetworkInfo.networkTimeMillisMap.put("TotalTime", System.currentTimeMillis() - mCallStartTimeMillis);
         if (response != null) {
             requestBaseInfoBuilder.withResultCode(String.valueOf(response.code()));
         } else {
@@ -184,18 +179,12 @@ public class OkNetworkCollector extends EventListener {
     @Override
     public void callFailed(Call call, IOException ioe) {
         super.callFailed(call, ioe);
+        mNetworkInfo.networkTimeMillisMap.put("TotalTime", System.currentTimeMillis() - mCallStartTimeMillis);
+
         requestBaseInfoBuilder.withResultCode("IOException");
         networkPerformanceBuilder.withEndTieMillis(System.currentTimeMillis());
         requestBaseInfoBuilder.withNetworkSiplePerformance(new NetworkSimplePerformance(networkPerformanceBuilder.build()));
         L.d(String.format("[%s]:callFailed", requestBaseInfoBuilder.requestId));
         this.mRequestBaseInfoProducer.produce(requestBaseInfoBuilder.build());
     }
-
-    private static String callToString(Call call) {
-        if (call == null) {
-            return "[Unknown]";
-        }
-        return String.format("%s:%s", String.valueOf(call.hashCode()), String.valueOf(call.request().url()));
-    }
-
 }

@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 import '../App.css';
 
-import JSONPretty from '../../node_modules/react-json-pretty';
-
 import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
-import {Card, Modal, Badge, Button, Tag} from 'antd'
+import {Card, Badge, Button, Tag} from 'antd'
 import Util from "../libs/util";
 import ScrollableFeed from 'react-scrollable-feed';
 

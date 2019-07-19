@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.hikyson.android.godeye.toolbox;
+package cn.hikyson.android.godeye.toolbox.network;
 
 import java.io.IOException;
 import java.net.InetAddress;
