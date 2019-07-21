@@ -10,4 +10,12 @@ public class HttpContent implements NetworkContent {
         httpRequest = new HttpRequest();
         httpResponse = new HttpResponse();
     }
+
+    @Override
+    public String toString() {
+        return "HttpContent{" +
+                "httpRequest=" + httpRequest +
+                ", httpResponse=" + httpResponse +
+                '}';
+    }
 }

@@ -8,7 +8,10 @@ android {
         versionCode 1
         versionName "1.0"
     }
-
+    compileOptions {
+        targetCompatibility = "8"
+        sourceCompatibility = "8"
+    }
     buildTypes {
         release {
             minifyEnabled false

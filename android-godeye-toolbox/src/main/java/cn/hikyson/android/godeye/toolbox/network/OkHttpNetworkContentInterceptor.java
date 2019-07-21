@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.utils.IoUtil;
 import okhttp3.Connection;
 import okhttp3.Headers;
@@ -22,8 +23,10 @@ import okio.GzipSource;
 
 public class OkHttpNetworkContentInterceptor implements Interceptor {
     private static final Charset UTF8 = Charset.forName("UTF-8");
+    private HttpContentTimeMapping mHttpContentTimeMapping;
 
-    public OkHttpNetworkContentInterceptor() {
+    public OkHttpNetworkContentInterceptor(HttpContentTimeMapping httpContentTimeMapping) {
+        mHttpContentTimeMapping = httpContentTimeMapping;
     }
 
     @Override
@@ -32,22 +35,23 @@ public class OkHttpNetworkContentInterceptor implements Interceptor {
         RequestBody requestBody = request.body();
         boolean hasRequestBody = requestBody != null;
         Connection connection = chain.connection();
-        HttpRequest httpRequest = new HttpRequest();
-        httpRequest.method = request.method();
-        httpRequest.url = String.valueOf(request.url());
-        httpRequest.protocol = connection != null ? String.valueOf(connection.protocol()) : "NULL";
+        HttpContent httpContent = new HttpContent();
+        mHttpContentTimeMapping.addRecord(chain.call(), httpContent);
+        httpContent.httpRequest.method = request.method();
+        httpContent.httpRequest.url = String.valueOf(request.url());
+        httpContent.httpRequest.protocol = connection != null ? String.valueOf(connection.protocol()) : "NULL";
         String requestLine = request.method() + ' ' + request.url() + (connection != null ? " " + connection.protocol() : "");
-        httpRequest.headers = new HashMap<>();
+        httpContent.httpRequest.headers = new HashMap<>();
         Headers headers = request.headers();
         for (int i = 0, count = headers.size(); i < count; i++) {
-            httpRequest.headers.put(headers.name(i), headers.value(i));
+            httpContent.httpRequest.headers.put(headers.name(i), headers.value(i));
         }
         if (!hasRequestBody) {
-            httpRequest.payload = "(No request body)";
+            httpContent.httpRequest.payload = "(No request body)";
         } else if (bodyHasUnknownEncoding(request.headers())) {
-            httpRequest.payload = "(Unknown encoding request body)";
+            httpContent.httpRequest.payload = "(Unknown encoding request body)";
         } else if (requestBody.isDuplex()) {
-            httpRequest.payload = "(duplex request body, Maybe HTTP2)";
+            httpContent.httpRequest.payload = "(duplex request body, Maybe HTTP2)";
         } else {
             Buffer buffer = new Buffer();
             requestBody.writeTo(buffer);
@@ -60,12 +64,11 @@ public class OkHttpNetworkContentInterceptor implements Interceptor {
                 charset = UTF8;
             }
             if (isPlaintext(buffer)) {
-                httpRequest.payload = buffer.readString(charset) + "\n(" + requestBody.contentLength() + "-byte request body)";
+                httpContent.httpRequest.payload = buffer.readString(charset) + "\n(" + requestBody.contentLength() + "-byte request body)";
             } else {
-                httpRequest.payload = "(binary " + requestBody.contentLength() + "-byte request body)";
+                httpContent.httpRequest.payload = "(binary " + requestBody.contentLength() + "-byte request body)";
             }
         }
-        HttpResponse httpResponse = new HttpResponse();
         boolean isSuccessful = true;
         String message = "";
         long startNs = System.nanoTime();
@@ -81,18 +84,18 @@ public class OkHttpNetworkContentInterceptor implements Interceptor {
         ResponseBody responseBody = response.body();
         long contentLength = responseBody.contentLength();
         String bodySize = contentLength != -1 ? contentLength + "-byte" : "unknown-length";
-        httpResponse.protocol = String.valueOf(response.protocol());
-        httpResponse.code = response.code();
-        httpResponse.message = response.message();
-        httpResponse.headers = new HashMap<>();
+        httpContent.httpResponse.protocol = String.valueOf(response.protocol());
+        httpContent.httpResponse.code = response.code();
+        httpContent.httpResponse.message = response.message();
+        httpContent.httpResponse.headers = new HashMap<>();
         Headers responseHeaders = response.headers();
         for (int i = 0, count = responseHeaders.size(); i < count; i++) {
-            httpResponse.headers.put(responseHeaders.name(i), responseHeaders.value(i));
+            httpContent.httpResponse.headers.put(responseHeaders.name(i), responseHeaders.value(i));
         }
         if (!HttpHeaders.hasBody(response)) {
-            httpResponse.payload = "(No response body)";
+            httpContent.httpResponse.payload = "(No response body)";
         } else if (bodyHasUnknownEncoding(responseHeaders)) {
-            httpResponse.payload = "(Unknown encoding response body)";
+            httpContent.httpResponse.payload = "(Unknown encoding response body)";
         } else {
             BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE); // Buffer the entire body.
@@ -118,18 +121,19 @@ public class OkHttpNetworkContentInterceptor implements Interceptor {
                 charset = UTF8;
             }
             if (!isPlaintext(buffer)) {
-                httpResponse.payload = "(binary " + buffer.size() + "-byte response body)";
+                httpContent.httpResponse.payload = "(binary " + buffer.size() + "-byte response body)";
                 return response;
             }
             if (contentLength != 0) {
-                httpResponse.payload = buffer.clone().readString(charset);
+                httpContent.httpResponse.payload = buffer.clone().readString(charset);
             }
             if (gzippedLength != null) {
-                httpResponse.payload = httpResponse.payload + "\n(" + buffer.size() + "-byte, " + gzippedLength + "-gzipped-byte response body)";
+                httpContent.httpResponse.payload = httpContent.httpResponse.payload + "\n(" + buffer.size() + "-byte, " + gzippedLength + "-gzipped-byte response body)";
             } else {
-                httpResponse.payload = httpResponse.payload + "\n(" + buffer.size() + "-byte response body)";
+                httpContent.httpResponse.payload = httpContent.httpResponse.payload + "\n(" + buffer.size() + "-byte response body)";
             }
         }
+
         return response;
     }
 

@@ -49,7 +49,7 @@ class Crash extends Component {
                     {Crash.renderStacktraceItem(crashInfo.throwableStacktrace)}
                 </div>
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Crash detail" closable={true}
-                       onOk={this.handleClose}>
+                       onOk={this.handleClose} width={800}>
                     <JSONPretty id="json-pretty" json={this.state.crashInfo}/>
                 </Modal>
             </Card>);

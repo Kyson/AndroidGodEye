@@ -158,7 +158,7 @@ class Pageload extends Component {
         }
         return (
             <Card title="Page Lifecycle(页面生命周期)" extra={this.renderTip(followClass)}>
-                <div style={{height: 556}}>
+                <div style={{height: 670}}>
                     <ScrollableFeed changeDetectionFilter={(previousProps, newProps) => {
                         const prevChildren = previousProps.children;
                         const newChildren = newProps.children;

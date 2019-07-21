@@ -13,6 +13,11 @@ android {
 
     }
 
+    compileOptions {
+        targetCompatibility = "8"
+        sourceCompatibility = "8"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -28,7 +33,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.okhttp3:okhttp:3.14.2'
-    implementation "com.squareup.okhttp3:logging-interceptor:3.14.2"
     implementation project(':android-godeye')
 }
 

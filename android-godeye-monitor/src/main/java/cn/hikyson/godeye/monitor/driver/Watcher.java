@@ -29,7 +29,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodsRecordInfo;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
-import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
+import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.ActivityLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.FragmentLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageLifecycleEventInfo;
@@ -46,6 +46,7 @@ import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
 import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modulemodel.MethodCanaryStatus;
+import cn.hikyson.godeye.monitor.modulemodel.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modulemodel.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
 import cn.hikyson.godeye.monitor.processors.Messager;
@@ -101,7 +102,8 @@ public class Watcher implements Processor {
                         .subscribe(this.createSendMessageConsumer()),
                 //网络数据发射不一定在子线程，这里强制切换到子线程
                 godEye.<Network>getModule(GodEye.ModuleName.NETWORK).subject()
-                        .map(this.<RequestBaseInfo>createConvertServerMessageFunction("networkInfo"))
+                        .map(this.networkMap())
+                        .map(this.createConvertServerMessageFunction("networkInfo"))
                         .subscribeOn(ThreadUtil.sComputationScheduler)
                         .observeOn(ThreadUtil.sComputationScheduler)
                         .subscribe(this.createSendMessageConsumer()),
@@ -191,78 +193,59 @@ public class Watcher implements Processor {
     }
 
     private Predicate<List<CrashInfo>> crashPredicate() {
-        return new Predicate<List<CrashInfo>>() {
-            @Override
-            public boolean test(List<CrashInfo> crashInfos) throws Exception {
-                return crashInfos != null && !crashInfos.isEmpty();
-            }
-        };
+        return crashInfos -> crashInfos != null && !crashInfos.isEmpty();
     }
 
     private Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent> pageLifecycleMap() {
-        return new Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent>() {
-            @Override
-            public PageLifecycleProcessedEvent apply(PageLifecycleEventInfo tPageLifecycleEventInfo) throws Exception {
-                PageLifecycleProcessedEvent pageLifecycleProcessedEvent = new PageLifecycleProcessedEvent<>();
-                pageLifecycleProcessedEvent.pageInfo = tPageLifecycleEventInfo.pageInfo;
-                pageLifecycleProcessedEvent.pageLifecycleEventWithTime = tPageLifecycleEventInfo.currentEvent;
-                pageLifecycleProcessedEvent.processedInfo = new HashMap<>();
-                if (pageLifecycleProcessedEvent.pageLifecycleEventWithTime != null
-                        && (pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_DRAW
-                        || pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_DRAW)) {
-                    long drawTime = PageloadUtil.parsePageDrawTimeMillis(tPageLifecycleEventInfo.allEvents);
-                    pageLifecycleProcessedEvent.processedInfo.put("drawTime", drawTime);
-                }
-                if (pageLifecycleProcessedEvent.pageLifecycleEventWithTime != null
-                        && (pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_LOAD
-                        || pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_LOAD)) {
-                    long loadTime = PageloadUtil.parsePageloadTimeMillis(tPageLifecycleEventInfo.allEvents);
-                    pageLifecycleProcessedEvent.processedInfo.put("loadTime", loadTime);
-                }
-                return pageLifecycleProcessedEvent;
+        return tPageLifecycleEventInfo -> {
+            PageLifecycleProcessedEvent pageLifecycleProcessedEvent = new PageLifecycleProcessedEvent<>();
+            pageLifecycleProcessedEvent.pageInfo = tPageLifecycleEventInfo.pageInfo;
+            pageLifecycleProcessedEvent.pageLifecycleEventWithTime = tPageLifecycleEventInfo.currentEvent;
+            pageLifecycleProcessedEvent.processedInfo = new HashMap<>();
+            if (pageLifecycleProcessedEvent.pageLifecycleEventWithTime != null
+                    && (pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_DRAW
+                    || pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_DRAW)) {
+                long drawTime = PageloadUtil.parsePageDrawTimeMillis(tPageLifecycleEventInfo.allEvents);
+                pageLifecycleProcessedEvent.processedInfo.put("drawTime", drawTime);
             }
+            if (pageLifecycleProcessedEvent.pageLifecycleEventWithTime != null
+                    && (pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_LOAD
+                    || pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_LOAD)) {
+                long loadTime = PageloadUtil.parsePageloadTimeMillis(tPageLifecycleEventInfo.allEvents);
+                pageLifecycleProcessedEvent.processedInfo.put("loadTime", loadTime);
+            }
+            return pageLifecycleProcessedEvent;
         };
     }
 
     private Function<List<CrashInfo>, CrashInfo> firstCrashMap() {
-        return new Function<List<CrashInfo>, CrashInfo>() {
-            @Override
-            public CrashInfo apply(List<CrashInfo> crashInfos) throws Exception {
-                //获取最近的一次崩溃
-                Collections.sort(crashInfos, new Comparator<CrashInfo>() {
-                    @Override
-                    public int compare(CrashInfo o1, CrashInfo o2) {
-                        if (o1.timestampMillis < o2.timestampMillis) {
-                            return 1;
-                        }
-                        if (o1.timestampMillis > o2.timestampMillis) {
-                            return -1;
-                        }
-                        return 0;
+        return crashInfos -> {
+            //获取最近的一次崩溃
+            Collections.sort(crashInfos, new Comparator<CrashInfo>() {
+                @Override
+                public int compare(CrashInfo o1, CrashInfo o2) {
+                    if (o1.timestampMillis < o2.timestampMillis) {
+                        return 1;
                     }
-                });
-                return crashInfos.get(0);
-            }
+                    if (o1.timestampMillis > o2.timestampMillis) {
+                        return -1;
+                    }
+                    return 0;
+                }
+            });
+            return crashInfos.get(0);
         };
     }
 
     private Function<List<Thread>, List<ThreadInfo>> threadMap() {
-        return new Function<List<Thread>, List<ThreadInfo>>() {
-            @Override
-            public List<ThreadInfo> apply(List<Thread> threads) throws Exception {
-                return ThreadInfo.convert(threads);
-            }
-        };
+        return ThreadInfo::convert;
     }
 
     private Function<BlockInfo, BlockSimpleInfo> blockMap() {
-        return new Function<BlockInfo, BlockSimpleInfo>() {
-            @Override
-            public BlockSimpleInfo apply(BlockInfo blockInfo) throws Exception {
-                return new BlockSimpleInfo(blockInfo);
-            }
-        };
+        return BlockSimpleInfo::new;
     }
 
-
+    private Function<NetworkInfo, NetworkSummaryInfo> networkMap() {
+        return NetworkSummaryInfo::convert;
+    }
 }

@@ -24,7 +24,8 @@ class Block extends Component {
                 enabled: false
             },
             chart: {
-                type: 'column'
+                type: 'column',
+                height: 411
             },
             title: {
                 text: null
@@ -120,7 +121,8 @@ class Block extends Component {
                     ref="chart"
                     config={this.options}
                 />
-                <Modal visible={this.state.show} onCancel={this.handleClose} title="Block detail" closable={true} onOk={this.handleClose}>
+                <Modal visible={this.state.show} onCancel={this.handleClose} title="Block detail" closable={true}
+                       onOk={this.handleClose} width={800}>
                     <JSONPretty id="json-pretty"
                                 json={this.state.blockInfo.blockBaseinfo ? this.state.blockInfo.blockBaseinfo : "No detail found, maybe it is a short block."}/>
                 </Modal>

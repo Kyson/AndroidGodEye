@@ -25,3 +25,8 @@ bintrayKey:https://bintray.com/profile/edit API Key
 ## react-boostrap vs antd
 
 6.8M vs 19.9M
+
+## Run emulator
+
+cd ~/Library/Android/sdk/emulator
+./emulator -avd 4.65_720p_Galaxy_Nexus_API_25 -dns-server 8.8.8.8,8.8.4.4

@@ -15,6 +15,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.hikyson.android.godeye.toolbox.network.HttpContent;
 import cn.hikyson.android.godeye.toolbox.network.OkNetworkCollectorFactory;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
@@ -37,7 +38,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
-import cn.hikyson.godeye.core.internal.modules.network.RequestBaseInfo;
+import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
@@ -155,7 +156,8 @@ public class MainActivity extends Activity implements Loggable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mZygote = new OkHttpClient.Builder().eventListenerFactory(new OkNetworkCollectorFactory(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK))).build();
+        OkNetworkCollectorFactory okNetworkCollectorFactory = new OkNetworkCollectorFactory(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK));
+        mZygote = new OkHttpClient.Builder().eventListenerFactory(okNetworkCollectorFactory).addNetworkInterceptor(okNetworkCollectorFactory.createInterceptor()).build();
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
         installableCbs = new CheckBox[14];
@@ -274,7 +276,7 @@ public class MainActivity extends Activity implements Loggable {
                 mCompositeDisposable.add(GodEye.instance().<Ram>getModule(GodEye.ModuleName.RAM).subject().subscribe(new LogObserver<RamInfo>("ram", this)));
                 break;
             case R.id.activity_main_consumer_network:
-                mCompositeDisposable.add(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK).subject().subscribe(new LogObserver<RequestBaseInfo>("network", this)));
+                mCompositeDisposable.add(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK).subject().subscribe(new LogObserver<NetworkInfo>("network", this)));
                 break;
             case R.id.activity_main_consumer_sm:
                 mCompositeDisposable.add(GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).subject().subscribe(new LogObserver<BlockInfo>("sm", this)));
@@ -399,7 +401,7 @@ public class MainActivity extends Activity implements Loggable {
                 try {
                     OkHttpClient client = mZygote;
                     Request request = new Request.Builder()
-                            .url("https://www.trip.com")
+                            .url("http://www.trip.com")
                             .build();
                     Response response = client.newCall(request).execute();
                     String body = response.body().string();

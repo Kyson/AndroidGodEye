@@ -6,7 +6,8 @@ import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import {toast} from 'react-toastify';
-import {Card, Modal} from 'antd'
+import Util from "../libs/util";
+import {Card, Modal, Table, Tabs, Badge, Button} from 'antd'
 
 exporting(Highcharts);
 
@@ -18,215 +19,196 @@ class Network extends Component {
     constructor(props) {
         super(props);
         this.handleClose = this.handleClose.bind(this);
-        this.handleClick = this.handleClick.bind(this);
-        Network.isRedirect = Network.isRedirect.bind(this);
-        Network.isSuccessful = Network.isSuccessful.bind(this);
-        this.options = {
-            chart: {
-                type: 'column',
-                spacingLeft: 0,
-                spacingRight: 0,
-            },
-            title: {
-                text: null
-            },
-            credits: {
-                enabled: false
-            },
-            tooltip: {
-                shared: true,
-                formatter: function () {
-                    let point = this.points[0].point;
-                    if (point.networkInfo) {
-                        return point.networkInfo.requestId + '<br/>' + point.networkInfo.networkSimplePerformance.totalTimeMillis.toFixed(1) + ' ms <br/>';
-                    }
-                    return "";
-                }
-            },
-            xAxis: {
-                type: 'category'
-            },
-            yAxis: {
-                title: {
-                    text: "Request time(ms)",
-                    align: "middle",
-                },
-                min: 0
-            },
-            plotOptions: {
-                series: {
-                    point: {
-                        events: {
-                            click: this.handleClick
-                        }
-                    }
-                }
-            },
-            series: [
-                {
-                    name: 'DNS(域名解析)',
-                    stacking: 'normal',
-                    color: '#4586F3',
-                    data: (Network.initSeries())
-                }, {
-                    name: 'Connect(连接)',
-                    stacking: 'normal',
-                    color: '#35AA53',
-                    data: (Network.initSeries())
-                }, {
-                    name: 'SendRequestHead(发送请求头信息)',
-                    stacking: 'normal',
-                    color: '#FBBD06',
-                    data: (Network.initSeries())
-                }, {
-                    name: 'SendRequestBody(发送请求体)',
-                    stacking: 'normal',
-                    color: '#a0bb00',
-                    data: (Network.initSeries())
-                }, {
-                    name: 'ReceiveResponseHead(接收响应头信息)',
-                    stacking: 'normal',
-                    color: '#E0a0ff',
-                    data: (Network.initSeries())
-                }, {
-                    name: 'ReceiveResponseBody(接收响应体)',
-                    stacking: 'normal',
-                    color: '#aa8877',
-                    data: (Network.initSeries())
-                }, {
-                    name: 'Other(其他耗时)',
-                    stacking: 'normal',
-                    color: '#999999',
-                    data: (Network.initSeries())
-                }, {
-                    name: 'Error(错误)',
-                    stacking: 'normal',
-                    color: '#EB4334',
-                    data: (Network.initSeries())
-                }
-            ]
-        };
+        this.handleShowDetail = this.handleShowDetail.bind(this);
         this.state = {
             show: false,
-            networkInfo: {}
+            networkInfo: null,
+            networkInfos: [],
         };
-        this.index = 0;
     }
 
-    handleClick(e) {
-        if (e.point.networkInfo) {
-            this.setState({networkInfo: e.point.networkInfo, show: true});
+    handleShowDetail(networkInfo) {
+        if (networkInfo) {
+            this.setState({networkInfo: networkInfo, show: true});
         }
     }
 
     handleClose() {
-        this.setState({show: false});
-    }
-
-    static initSeries() {
-        let data = [];
-        for (let i = 0; i < 30; i++) {
-            data.push({
-                x: i,
-                y: 0
-            });
-        }
-        return data;
-    }
-
-    generateIndex() {
-        this.index = this.index + 1;
-        return this.index;
-    }
-
-    static isRedirect(resultCode) {
-        return resultCode === 307 || resultCode === 308 || resultCode === 300 || resultCode === 301 || resultCode === 302 || resultCode === 303
-    }
-
-    static isSuccessful(resultCode) {
-        return resultCode >= 200 && resultCode < 300;
+        this.setState({networkInfo: null, show: false});
     }
 
     refresh(networkInfo) {
         if (networkInfo) {
-            const resultCode = parseInt(networkInfo.resultCode);
-            let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
-            if (!isNaN(resultCode) && (Network.isSuccessful(resultCode) || Network.isRedirect(resultCode))) {//request success
-                this.refs.chart.getChart().series[0].addPoint({//dns
-                    name: axisData,
-                    y: networkInfo.networkSimplePerformance.dnsTimeMillis,
-                    networkInfo: networkInfo
-                }, false, true, true);
-                this.refs.chart.getChart().series[1].addPoint({//connect
-                    name: axisData,
-                    y: networkInfo.networkSimplePerformance.connectTimeMillis,
-                    networkInfo: networkInfo
-                }, false, true, true);
-                this.refs.chart.getChart().series[2].addPoint({//sendreqheader
-                    name: axisData,
-                    y: networkInfo.networkSimplePerformance.sendHeaderTimeMillis,
-                    networkInfo: networkInfo
-                }, false, true, true);
-                this.refs.chart.getChart().series[3].addPoint({//sendreqbody
-                    name: axisData,
-                    y: networkInfo.networkSimplePerformance.sendBodyTimeMillis,
-                    networkInfo: networkInfo
-                }, false, true, true);
-                this.refs.chart.getChart().series[4].addPoint({//recvhead
-                    name: axisData,
-                    y: networkInfo.networkSimplePerformance.receiveHeaderTimeMillis,
-                    networkInfo: networkInfo
-                }, false, true, true);
-                this.refs.chart.getChart().series[5].addPoint({//recvbody
-                    name: axisData,
-                    y: networkInfo.networkSimplePerformance.receiveBodyTimeMillis,
-                    networkInfo: networkInfo
-                }, false, true, true);
-                this.refs.chart.getChart().series[6].addPoint({//other
-                    name: axisData,
-                    y: (networkInfo.networkSimplePerformance.totalTimeMillis -
-                        (networkInfo.networkSimplePerformance.dnsTimeMillis
-                            + networkInfo.networkSimplePerformance.connectTimeMillis
-                            + networkInfo.networkSimplePerformance.sendHeaderTimeMillis
-                            + networkInfo.networkSimplePerformance.sendBodyTimeMillis
-                            + networkInfo.networkSimplePerformance.receiveHeaderTimeMillis
-                            + networkInfo.networkSimplePerformance.receiveBodyTimeMillis)),
-                    networkInfo: networkInfo
-                }, false, true, true);
-                this.refs.chart.getChart().series[7].addPoint({//error
-                    name: axisData,
-                    y: 0,
-                    networkInfo: networkInfo
-                }, false, true, true);
-            } else {//request fail
-                for (let i = 0; i < 7; i++) {
-                    this.refs.chart.getChart().series[i].addPoint({//error
-                        name: axisData,
-                        y: 0,
-                        networkInfo: networkInfo
-                    }, false, true, true);
-                }
-                this.refs.chart.getChart().series[7].addPoint({//error
-                    name: axisData,
-                    y: 1000,
-                    networkInfo: networkInfo
-                }, false, true, true);
-                toast.error("Network fail.(请求失败)");
+            const networkInfos = this.state.networkInfos;
+            networkInfos.unshift(networkInfo);
+            this.setState({
+                networkInfos: networkInfos,
+            });
+            if (!networkInfo.isSuccessful) {
+                toast.error("Network error.(网络请求失败)")
             }
-            this.refs.chart.getChart().redraw(true);
         }
+    }
+
+    renderModelContent() {
+        const networkInfo = this.state.networkInfo;
+        if (networkInfo) {
+            const series = [];
+            if (networkInfo.networkTime) {
+                let otherTime = networkInfo.totalTime;
+                for (let i = 0; i < networkInfo.networkTime.length; i++) {
+                    series.push({
+                        name: networkInfo.networkTime[i].name,
+                        data: [networkInfo.networkTime[i].time]
+                    });
+                    otherTime = otherTime - networkInfo.networkTime[i].time;
+                }
+                if (otherTime < 0) {
+                    otherTime = 0;
+                }
+                series.push({
+                    name: "otherTime",
+                    data: [otherTime]
+                });
+            }
+            const optionsForTime = {
+                chart: {
+                    type: 'bar',
+                    height: 50,
+                    margin: 0,
+                    spacing: 0
+                },
+                title: {
+                    text: null
+                },
+                colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00',
+                    '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+                legend: {
+                    enabled: false
+                },
+                exporting: {
+                    enabled: false
+                },
+                credits: {
+                    enabled: false
+                },
+                yAxis: {
+                    visible: false,
+                    title: {
+                        text: null
+                    },
+                    min: 0,
+                    gridLineWidth: 0
+                },
+                xAxis: {
+                    visible: false,
+                    categories: ['阶段耗时']
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'percent',
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function () {
+                                return this.series.name
+                            }
+                        },
+                        borderRadius: 0,
+                        pointPadding: 0,
+                        groupPadding: 0,
+                        pointWidth: 25,
+                    }
+                },
+                series: series
+            };
+            return (
+                <div>
+                    <strong>
+                        Result:&nbsp;&nbsp;
+                        <Badge
+                            color={networkInfo.isSuccessful ? Util.getGreen() : Util.getRed()}
+                            text={networkInfo.message}>
+                        </Badge>
+                        <br/>
+                        TotalTime:&nbsp;&nbsp;{networkInfo.totalTime}
+                    </strong>
+                    <ReactHighcharts
+                        ref="chartForTime"
+                        config={optionsForTime}/>
+                    <Tabs defaultActiveKey="1">
+                        <Tabs.TabPane tab={`Request(${networkInfo.networkContent.networkType})`} key="1">
+                            <pre>{networkInfo.networkContent.requestContent}</pre>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab={`Response(${networkInfo.networkContent.networkType})`} key="2">
+                            <pre>{networkInfo.networkContent.responseContent}</pre>
+                        </Tabs.TabPane>
+                        <Tabs.TabPane tab="ExtraInfo" key="3">
+                            <JSONPretty id="json-pretty" json={networkInfo.extraInfo}/>
+                        </Tabs.TabPane>
+                    </Tabs>
+                </div>
+            )
+        }
+        return <div/>
+    }
+
+    renderTable() {
+        const networkInfos = this.state.networkInfos;
+        const showDetail = this.handleShowDetail;
+        const columns = [
+            {
+                title: 'Summary',
+                dataIndex: 'summary',
+                key: 'summary',
+            },
+            {
+                title: 'Message',
+                dataIndex: 'message',
+                key: 'message',
+                render: (text, record) => {
+                    return (<div>
+                        <Badge color={record.networkInfo.isSuccessful ? Util.getGreen() : Util.getRed()}/>
+                        <span>{record.networkInfo.message}</span>
+                    </div>);
+                }
+            },
+            {
+                title: 'TotalTime(ms)',
+                dataIndex: 'totalTime',
+                key: 'totalTime',
+            },
+            {
+                title: 'Detail',
+                key: 'action',
+                render: (text, record) => {
+                    return (<Button onClick={() => {
+                        showDetail(record.networkInfo)
+                    }}>Detail</Button>);
+                }
+            },
+        ];
+        const datas = [];
+        for (let i = 0; i < networkInfos.length; i++) {
+            const networkInfo = networkInfos[i];
+            datas.push({
+                key: i,
+                summary: networkInfo.summary,
+                message: networkInfo.message,
+                totalTime: networkInfo.totalTime,
+                networkInfo: networkInfo
+            })
+        }
+        return (<Table dataSource={datas} columns={columns} size="middle"
+                       pagination={{pageSize: 10}}/>);
     }
 
     render() {
         return (
             <Card title="Network(网络)">
-                <ReactHighcharts
-                    ref="chart"
-                    config={this.options}
-                />
-                <Modal visible={this.state.show} onCancel={this.handleClose} title="Network detail" closable={true}
-                       onOk={this.handleClose}>
-                    <JSONPretty id="json-pretty" json={this.state.networkInfo}/>
+                {this.renderTable()}
+                <Modal visible={this.state.show} onCancel={this.handleClose} title="Detail" closable={true}
+                       onOk={this.handleClose} width={800}>
+                    {this.renderModelContent()}
                 </Modal>
             </Card>);
     }

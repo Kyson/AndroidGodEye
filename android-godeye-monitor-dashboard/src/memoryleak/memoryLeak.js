@@ -82,7 +82,7 @@ class MemoryLeak extends Component {
                             </div>
                         );
                     }}
-                    defaultPageSize={12}
+                    defaultPageSize={8}
                     className="-striped -highlight"/>
             </Card>
         );
