@@ -50,7 +50,7 @@ dependencies {
 }
 ```
 
-> VERSION_NAME参考github release
+> VERSION_NAME参考 [Github release](https://github.com/Kyson/AndroidGodEye/releases)
 
 #### Root Project `build.gradle`
 
@@ -65,7 +65,33 @@ buildscript {
 }
 ```
 
-> PLUGIN_VERSION_NAME参考[MethodCanary](https://github.com/Kyson/MethodCanary) github release
+> PLUGIN_VERSION_NAME参考 [MethodCanary github release](https://github.com/Kyson/MethodCanary/releases)
+
+需要配置MethodCanary的插桩逻辑，在项目根目录下新建js文件：`MethodCanary.js`，内容如下：
+
+```
+/**
+    classInfo
+        {int access
+         String name
+         String superName
+         String[] interfaces}
+
+     methodInfo
+         {int access
+         String name
+         String desc}
+**/
+function isExclude(classInfo,methodInfo){
+    return false
+}
+
+function isInclude(classInfo,methodInfo){
+    return classInfo.name.startsWith('cn/hikyson/godeyedemo'))
+}
+```
+
+> 配置说明可以参考[MethodCanary](https://github.com/Kyson/MethodCanary)
 
 #### Module Project `'com.android.application'` `build.gradle`
 

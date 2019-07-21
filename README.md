@@ -49,7 +49,7 @@ dependencies {
 }
 ```
 
-> Find VERSION_NAME in github release
+> Find VERSION_NAME in [Github release](https://github.com/Kyson/AndroidGodEye/releases)
 
 #### Root Project `build.gradle`
 
@@ -65,6 +65,32 @@ buildscript {
 ```
 
 > Find PLUGIN_VERSION_NAME in [MethodCanary](https://github.com/Kyson/MethodCanary) github release
+
+You need to config the logic of method canary injection, create js file:`MethodCanary.js` in project root dir, content like following:
+
+```
+/**
+    classInfo
+        {int access
+         String name
+         String superName
+         String[] interfaces}
+
+     methodInfo
+         {int access
+         String name
+         String desc}
+**/
+function isExclude(classInfo,methodInfo){
+    return false
+}
+
+function isInclude(classInfo,methodInfo){
+    return classInfo.name.startsWith('cn/hikyson/godeyedemo'))
+}
+```
+
+> More configurations reference: [MethodCanary](https://github.com/Kyson/MethodCanary)
 
 #### Module Project `'com.android.application'` `build.gradle`
 
