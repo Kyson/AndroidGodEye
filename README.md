@@ -18,6 +18,8 @@
 
 > Android developer lack of monitoring of performance data,especially in production environment. so we need "AndroidGodEye".
 
+[Demo APK](https://fir.im/5k67)
+
 ## Overview
 
 ![android_godeye_connect](ART/android_god_eye_connect.jpg)
@@ -183,8 +185,6 @@ Connect mobile phones and computers with USB, run `adb forward tcp:5390 tcp:5390
 > Default port is 5390, you can find ip in logcat output after call `GodEyeMonitor.work(context,port)`, log is like:'Open AndroidGodEye dashboard [ http://ip:port/index.html" ] in your browser...'.
 
 Now enjoy it!
-
-**If you just want to see the results, you can install [APK](https://fir.im/5k67) directly.**
 
 ## Performance Visualization Dashboard
 

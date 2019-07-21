@@ -18,6 +18,8 @@
 
 > Android开发者在性能检测方面的工具一直比较匮乏，仅有的一些工具，比如Android Device Monitor，使用起来也有些繁琐，使用起来对开发者有一定的要求。而线上的App监控更无从谈起。所以需要有一个系统能够提供Debug和Release阶段全方位的监控，更深入地了解对App运行时的状态。
 
+[Demo APK](https://fir.im/5k67)，可以先看看效果 :-)
+
 ## 概览
 
 ![android_godeye_connect](ART/android_god_eye_connect.jpg)
@@ -191,8 +193,6 @@ usb连上你的手机，接下来可以开始运行项目了！
 > 端口默认是5390，也可以在`GodEyeMonitor.work(context,port)`中指定，一般在开发者在调用`GodEyeMonitor.work(context,port)`之后可以看到日志输出 'Open AndroidGodEye dashboard [ http://ip:port/index.html" ] in your browser...' 中包含了访问地址。
 
 Done!
-
-**如果你懒得自己编译这个项目的话，你也可以先下载 [APK](https://fir.im/5k67) 看看效果。**
 
 ## 性能可视化面板
 
