@@ -18,8 +18,6 @@
 
 > Android开发者在性能检测方面的工具一直比较匮乏，仅有的一些工具，比如Android Device Monitor，使用起来也有些繁琐，使用起来对开发者有一定的要求。而线上的App监控更无从谈起。所以需要有一个系统能够提供Debug和Release阶段全方位的监控，更深入地了解对App运行时的状态。
 
-[Demo APK](https://fir.im/5k67)，可以先看看效果 :-)
-
 ## 概览
 
 ![android_godeye_connect](ART/android_god_eye_connect.jpg)
@@ -37,7 +35,9 @@ AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存�
 
 ## 快速开始
 
-参考Demo:[https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
+[Demo APK](https://fir.im/5k67)，可以先看看效果 :-)
+
+[Demo Project:https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
 
 ### STEP1 依赖引入
 

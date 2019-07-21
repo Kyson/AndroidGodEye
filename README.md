@@ -18,8 +18,6 @@
 
 > Android developer lack of monitoring of performance data,especially in production environment. so we need "AndroidGodEye".
 
-[Demo APK](https://fir.im/5k67)
-
 ## Overview
 
 ![android_godeye_connect](ART/android_god_eye_connect.jpg)
@@ -36,7 +34,9 @@ AndroidGodEye prodive several modules, such as cpu, heap, block, leak memory and
 
 ## Quickstart
 
-Demo:[https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
+[Demo APK](https://fir.im/5k67)
+
+[Demo Project:https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
 
 ### Step1 Dependencies
 
