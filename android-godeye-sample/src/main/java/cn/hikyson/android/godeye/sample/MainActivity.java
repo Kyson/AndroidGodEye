@@ -15,7 +15,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.hikyson.android.godeye.toolbox.network.HttpContent;
 import cn.hikyson.android.godeye.toolbox.network.OkNetworkCollectorFactory;
 import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
@@ -401,7 +400,7 @@ public class MainActivity extends Activity implements Loggable {
                 try {
                     OkHttpClient client = mZygote;
                     Request request = new Request.Builder()
-                            .url("http://www.trip.com")
+                            .url("https://tech.hikyson.cn/")
                             .build();
                     Response response = client.newCall(request).execute();
                     String body = response.body().string();
