@@ -38,9 +38,11 @@ public class FragmentLifecycleCallbacks extends FragmentManager.FragmentLifecycl
             @Override
             public void run() {
                 final PageInfo<Fragment> pageInfo = mPageInfoProvider.getInfoByFragment(f);
-                mCachePageInfo.put(f, pageInfo);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+                if (pageInfo != null) {
+                    mCachePageInfo.put(f, pageInfo);
+                    PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
+                    mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+                }
             }
         });
     }

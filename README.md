@@ -83,26 +83,9 @@ GodEye.instance().init(this);
 Install modules in `application onCreate`, GodEye class is entrance for this step, all modules are provided by it.
 
 ```java
-if (isMainProcess(this)) {//can not install modules in sub process
-        // You can find assets file sample in assets path of android-godeye module
-        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+if (ProcessUtils.isMainProcess(this)) {//install in main process
+    GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
 }
-
-/**
-* is main process
-*/
-    private static boolean isMainProcess(Application application) {
-        int pid = android.os.Process.myPid();
-        String processName = "";
-        ActivityManager manager = (ActivityManager) application.getSystemService
-                (Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
-            if (process.pid == pid) {
-                processName = process.processName;
-            }
-        }
-        return application.getPackageName().equals(processName);
-    }
 ```
 
 assets目录下放模块的配置文件`android-godeye-config/install.config`，内容如下：
@@ -207,23 +190,23 @@ and more...
 
 ## Modules
 
-|Module Name|Installable|Data produce time|configuration|more|
-|-----------|------------|----------------|-------------|----|
-|network|no|外部输入时输出|无|-|
-|startup|no|外部输入时输出|无|-|
-|battery|yes|电池变化时输出|无|-|
-|cpu|yes|定时输出|intervalMillis-每隔x毫秒输出数据，sampleMillis-采样间隔|系统版本大于8.0失效|
-|crash|yes|安装后，输出上次崩溃|crashProvider-实现CrashProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider即可|-|
-|fps|yes|定时输出|intervalMillis-输出间隔|-|
-|heap|yes|定时输出|intervalMillis-输出间隔|-|
-|leakDetector(leakMemory)|yes|页面销毁且泄漏时|debug-是否需要解析gc引用链，debugNotification泄漏时是否需要通知，leakRefInfoProvider-实现LeakRefInfoProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider|-|
-|pageload|yes|页面create/draw/destory等输出|无|-|
-|pss|yes|定时输出|intervalMillis-输出间隔|-|
-|ram|yes|定时输出|intervalMillis-输出间隔|-|
-|sm|yes|卡顿时输出|debugNotify-卡顿是否需要通知，dumpIntervalMillis-dump堆栈间隔，longBlockThresholdMillis-长卡顿阈值，shortBlockThresholdMillis-短卡顿阈值|-|
-|thread|yes|定时|intervalMillis-输出间隔，threadFilter-过滤器，实现ThreadFilter类path，一般用内置cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter即可|-|
-|traffic|yes|定时输出|intervalMillis-输出间隔，sampleMillis-采样间隔|-|
-|methodCanary|yes|停止后输出|maxMethodCountSingleThreadByCost-每个线程最多记录的方法数，lowCostMethodThresholdMillis-方法耗时阈值|-|
+|模块名|需要安装|数据生产时机|配置|备注|
+|-----|-------|---------|---|----|
+|network|否|外部输入时输出|无|-|
+|startup|否|外部输入时输出|无|-|
+|battery|是|电池变化时输出|无|-|
+|cpu|是|定时输出|intervalMillis-每隔x毫秒输出数据，sampleMillis-采样间隔|系统版本大于8.0失效|
+|crash|是|安装后，输出上次崩溃|crashProvider-实现CrashProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider即可|-|
+|fps|是|定时输出|intervalMillis-输出间隔|-|
+|heap|是|定时输出|intervalMillis-输出间隔|-|
+|leakDetector(leakMemory)|是|页面销毁且泄漏时|debug-是否需要解析gc引用链，debugNotification泄漏时是否需要通知，leakRefInfoProvider-实现LeakRefInfoProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider|-|
+|pageload|是|页面create/draw/destory/load/hide/show等输出|pageInfoProvider-根据页面实例提供页面信息|fragment的显示隐藏需要手动调用show hide api,页面加载手动调用load api|
+|pss|是|定时输出|intervalMillis-输出间隔|-|
+|ram|是|定时输出|intervalMillis-输出间隔|-|
+|sm|是|卡顿时输出|debugNotify-卡顿是否需要通知，dumpIntervalMillis-dump堆栈间隔，longBlockThresholdMillis-长卡顿阈值，shortBlockThresholdMillis-短卡顿阈值|-|
+|thread|是|定时|intervalMillis-输出间隔，threadFilter-过滤器，实现ThreadFilter类path，一般用内置cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter即可|-|
+|traffic|是|定时输出|intervalMillis-输出间隔，sampleMillis-采样间隔|-|
+|methodCanary|是|停止后输出|maxMethodCountSingleThreadByCost-每个线程最多记录的方法数，lowCostMethodThresholdMillis-方法耗时阈值|-|
 
 ## Framework
 

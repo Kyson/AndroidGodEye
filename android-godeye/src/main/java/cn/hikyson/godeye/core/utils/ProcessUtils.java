@@ -16,6 +16,7 @@
 package cn.hikyson.godeye.core.utils;
 
 import android.app.ActivityManager;
+import android.app.Application;
 import android.content.Context;
 
 import java.util.List;
@@ -70,5 +71,24 @@ public class ProcessUtils {
 
     public static int getCurrentUid() {
         return android.os.Process.myUid();
+    }
+
+    /**
+     * 是否主进程
+     *
+     * @param application
+     * @return
+     */
+    private static boolean isMainProcess(Application application) {
+        int pid = android.os.Process.myPid();
+        String processName = "";
+        ActivityManager manager = (ActivityManager) application.getSystemService
+                (Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
+            if (process.pid == pid) {
+                processName = process.processName;
+            }
+        }
+        return application.getPackageName().equals(processName);
     }
 }

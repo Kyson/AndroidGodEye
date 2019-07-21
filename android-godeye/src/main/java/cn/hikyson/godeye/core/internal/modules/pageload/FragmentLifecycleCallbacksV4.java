@@ -34,9 +34,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             @Override
             public void run() {
                 final PageInfo<Fragment> pageInfo = mPageInfoProvider.getInfoByV4Fragment(f);
-                mCachePageInfo.put(f, pageInfo);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+                if (pageInfo != null) {
+                    mCachePageInfo.put(f, pageInfo);
+                    PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
+                    mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+                }
             }
         });
     }

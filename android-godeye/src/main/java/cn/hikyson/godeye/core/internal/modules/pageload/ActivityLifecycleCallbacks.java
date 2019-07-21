@@ -144,29 +144,24 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
             ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentLifecycleCallbacksV4(mPageLifecycleRecords, mPageInfoProvider, mCachePageInfo, mProducer, mHandler), true);
         }
         final long time0 = System.currentTimeMillis();
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                final PageInfo<Activity> pageInfo = mPageInfoProvider.getInfoByActivity(activity);
+        mHandler.post(() -> {
+            final PageInfo<Activity> pageInfo = mPageInfoProvider.getInfoByActivity(activity);
+            if (pageInfo != null) {
                 mCachePageInfo.put(activity, pageInfo);
                 PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_CREATE, time0);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
         });
-        ViewUtil.measureActivityDidDraw(activity, new ViewUtil.OnDrawCallback() {
-            @Override
-            public void didDraw() {
-                final long time1 = System.currentTimeMillis();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        // noinspection unchecked
-                        PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
-                        PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_DRAW, time1);
-                        mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    }
-                });
-            }
+        ViewUtil.measureActivityDidDraw(activity, () -> {
+            final long time1 = System.currentTimeMillis();
+            mHandler.post(() -> {
+                // noinspection unchecked
+                PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
+                if (pageInfo != null) {
+                    PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_DRAW, time1);
+                    mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+                }
+            });
         });
     }
 

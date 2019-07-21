@@ -86,26 +86,9 @@ GodEye.instance().init(this);
 在需要的时候安装所有模块（建议在`application onCreate`中）：
 
 ```java
-if (isMainProcess(this)) {//安装只能在主进程
-        // Assets文件demo可以在android-godeye模块的assets目录下找到
-        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+if (ProcessUtils.isMainProcess(this)) {//安装只能在主进程
+    GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
 }
-
-/**
-* 是否主进程
-*/
-    private static boolean isMainProcess(Application application) {
-        int pid = android.os.Process.myPid();
-        String processName = "";
-        ActivityManager manager = (ActivityManager) application.getSystemService
-                (Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo process : manager.getRunningAppProcesses()) {
-            if (process.pid == pid) {
-                processName = process.processName;
-            }
-        }
-        return application.getPackageName().equals(processName);
-    }
 ```
 
 assets目录下放模块的配置文件`android-godeye-config/install.config`，内容如下：
@@ -118,7 +101,7 @@ assets目录下放模块的配置文件`android-godeye-config/install.config`，
     <fps intervalMillis="2000"/>
     <heap intervalMillis="2000"/>
     <leakMemory debug="true" debugNotification="true" leakRefInfoProvider="cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider"/>
-    <pageload/>
+    <pageload pageInfoProvider="cn.hikyson.godeye.core.internal.modules.pageload.DefaultPageInfoProvider"/>
     <pss intervalMillis="2000"/>
     <ram intervalMillis="2000"/>
     <sm debugNotify="true"
@@ -225,7 +208,7 @@ Done!
 |fps|是|定时输出|intervalMillis-输出间隔|-|
 |heap|是|定时输出|intervalMillis-输出间隔|-|
 |leakDetector(leakMemory)|是|页面销毁且泄漏时|debug-是否需要解析gc引用链，debugNotification泄漏时是否需要通知，leakRefInfoProvider-实现LeakRefInfoProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider|-|
-|pageload|是|页面create/draw/destory等输出|无|-|
+|pageload|是|页面create/draw/destory/load/hide/show等输出|pageInfoProvider-根据页面实例提供页面信息|fragment的显示隐藏需要手动调用show hide api,页面加载手动调用load api|
 |pss|是|定时输出|intervalMillis-输出间隔|-|
 |ram|是|定时输出|intervalMillis-输出间隔|-|
 |sm|是|卡顿时输出|debugNotify-卡顿是否需要通知，dumpIntervalMillis-dump堆栈间隔，longBlockThresholdMillis-长卡顿阈值，shortBlockThresholdMillis-短卡顿阈值|-|
