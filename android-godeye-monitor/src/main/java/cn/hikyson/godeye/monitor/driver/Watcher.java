@@ -53,7 +53,6 @@ import cn.hikyson.godeye.monitor.processors.Messager;
 import cn.hikyson.godeye.monitor.processors.Processor;
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -195,18 +194,19 @@ public class Watcher implements Processor {
     private Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent> pageLifecycleMap() {
         return tPageLifecycleEventInfo -> {
             PageLifecycleProcessedEvent pageLifecycleProcessedEvent = new PageLifecycleProcessedEvent<>();
-            pageLifecycleProcessedEvent.pageInfo = tPageLifecycleEventInfo.pageInfo;
-            pageLifecycleProcessedEvent.pageLifecycleEventWithTime = tPageLifecycleEventInfo.currentEvent;
+            pageLifecycleProcessedEvent.pageType = tPageLifecycleEventInfo.pageInfo.pageType;
+            pageLifecycleProcessedEvent.pageHashCode = tPageLifecycleEventInfo.pageInfo.pageHashCode;
+            pageLifecycleProcessedEvent.pageClassName = tPageLifecycleEventInfo.pageInfo.pageClassName;
+            pageLifecycleProcessedEvent.lifecycleEvent = tPageLifecycleEventInfo.currentEvent.lifecycleEvent;
+            pageLifecycleProcessedEvent.eventTimeMillis = tPageLifecycleEventInfo.currentEvent.eventTimeMillis;
             pageLifecycleProcessedEvent.processedInfo = new HashMap<>();
-            if (pageLifecycleProcessedEvent.pageLifecycleEventWithTime != null
-                    && (pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_DRAW
-                    || pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_DRAW)) {
+            if ((pageLifecycleProcessedEvent.lifecycleEvent == ActivityLifecycleEvent.ON_DRAW
+                    || pageLifecycleProcessedEvent.lifecycleEvent == FragmentLifecycleEvent.ON_DRAW)) {
                 long drawTime = PageloadUtil.parsePageDrawTimeMillis(tPageLifecycleEventInfo.allEvents);
                 pageLifecycleProcessedEvent.processedInfo.put("drawTime", drawTime);
             }
-            if (pageLifecycleProcessedEvent.pageLifecycleEventWithTime != null
-                    && (pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_LOAD
-                    || pageLifecycleProcessedEvent.pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_LOAD)) {
+            if ((pageLifecycleProcessedEvent.lifecycleEvent == ActivityLifecycleEvent.ON_LOAD
+                    || pageLifecycleProcessedEvent.lifecycleEvent == FragmentLifecycleEvent.ON_LOAD)) {
                 long loadTime = PageloadUtil.parsePageloadTimeMillis(tPageLifecycleEventInfo.allEvents);
                 pageLifecycleProcessedEvent.processedInfo.put("loadTime", loadTime);
             }

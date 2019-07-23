@@ -76,13 +76,13 @@ class Pageload extends Component {
             let items = [];
             for (let i = 0; i < pageLifecycleProcessedEvents.length; i++) {
                 const event = pageLifecycleProcessedEvents[i];
-                if (event.pageLifecycleEventWithTime.lifecycleEvent === 'ON_LOAD') {
+                if (event.lifecycleEvent === 'ON_LOAD') {
                     items.push(<Card style={{margin: 4}} size="small">
                         <Badge
-                            color={Util.getGreen()}/><span>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()}`}</span>
+                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}`}</span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <strong>{`${event.pageInfo.pageClassName}`}</strong>{`@${event.pageInfo.pageHashCode}`}<Button
+                            <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}<Button
                                 type="link"
                                 onClick={() => {
                                     this.handleFollow(event);
@@ -91,19 +91,19 @@ class Pageload extends Component {
                          </span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Tag color="cyan">{event.pageInfo.pageType}</Tag>
-                            <Tag color="geekblue">{event.pageLifecycleEventWithTime.lifecycleEvent}</Tag>
+                            <Tag color="cyan">{event.pageType}</Tag>
+                            <Tag color="geekblue">{event.lifecycleEvent}</Tag>
                             Load cost <strong
                                 style={(event.processedInfo['loadTime'] > Pageload.BAD_LOAD_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['loadTime']}</strong> ms
                         </span>
                     </Card>);
-                } else if (event.pageLifecycleEventWithTime.lifecycleEvent === 'ON_DRAW') {
+                } else if (event.lifecycleEvent === 'ON_DRAW') {
                     items.push(<Card style={{margin: 4}} size="small">
                         <Badge
-                            color={Util.getGreen()}/><span>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()}`}</span>
+                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}`}</span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <strong>{`${event.pageInfo.pageClassName}`}</strong>{`@${event.pageInfo.pageHashCode}`}<Button
+                            <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}<Button
                                 type="link"
                                 onClick={() => {
                                     this.handleFollow(event);
@@ -112,8 +112,8 @@ class Pageload extends Component {
                         </span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Tag color="cyan">{event.pageInfo.pageType}</Tag>
-                            <Tag color="geekblue">{event.pageLifecycleEventWithTime.lifecycleEvent}</Tag>
+                            <Tag color="cyan">{event.pageType}</Tag>
+                            <Tag color="geekblue">{event.lifecycleEvent}</Tag>
                             Draw cost <strong
                                 style={(event.processedInfo['drawTime'] > Pageload.BAD_DRAW_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['drawTime']}</strong> ms
                         </span>
@@ -121,10 +121,10 @@ class Pageload extends Component {
                 } else {
                     items.push(<Card style={{margin: 4}} size="small">
                         <Badge
-                            color={Util.getGreen()}/><span>{`${new Date(event.pageLifecycleEventWithTime.eventTimeMillis).toLocaleString()}`}</span>
+                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}`}</span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <strong>{`${event.pageInfo.pageClassName}`}</strong>{`@${event.pageInfo.pageHashCode}`}<Button
+                            <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}<Button
                                 type="link"
                                 onClick={() => {
                                     this.handleFollow(event);
@@ -133,8 +133,8 @@ class Pageload extends Component {
                         </span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Tag color="cyan">{event.pageInfo.pageType}</Tag>
-                            <Tag color="geekblue">{event.pageLifecycleEventWithTime.lifecycleEvent}</Tag>
+                            <Tag color="cyan">{event.pageType}</Tag>
+                            <Tag color="geekblue">{event.lifecycleEvent}</Tag>
                         </span>
                     </Card>);
                 }
@@ -153,8 +153,8 @@ class Pageload extends Component {
 
     render() {
         let followClass;
-        if (this.state.followPageLifecycleProcessedEvent && this.state.followPageLifecycleProcessedEvent.pageInfo) {
-            followClass = this.state.followPageLifecycleProcessedEvent.pageInfo.pageClassName
+        if (this.state.followPageLifecycleProcessedEvent) {
+            followClass = this.state.followPageLifecycleProcessedEvent.pageClassName
         }
         return (
             <Card title="Page Lifecycle(页面生命周期)" extra={this.renderTip(followClass)}>

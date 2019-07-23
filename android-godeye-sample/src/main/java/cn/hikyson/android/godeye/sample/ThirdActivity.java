@@ -29,7 +29,7 @@ public class ThirdActivity extends FragmentActivity {
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("2")).show(fragmentManager.findFragmentByTag("1")).commit();
                     }
-                }, 5000);
+                }, 2000);
             }
         });
     }
