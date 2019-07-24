@@ -114,27 +114,27 @@ class Mock {
         //     blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
         // });
         //
-        // this.recvFun("networkInfo", {
-        //     summary: "POST www.trip.com" + this.index,
-        //     isSuccessful: true,
-        //     message: "OK",
-        //     totalTime: 1200,
-        //     networkTime: [
-        //         {name: "DNS", time: 200},
-        //         {name: "RequestHeader", time: 300},
-        //         {name: "ResponseBody", time: 500},
-        //
-        //     ],
-        //     networkContent: {
-        //         networkType: "Http",
-        //         requestContent: "this is requestContent",
-        //         responseContent: "this is responseContent",
-        //     },
-        //     extraInfo: {
-        //         key1: "value1",
-        //         key2: "value2"
-        //     }
-        // });
+        this.recvFun("networkInfo", {
+            summary: "POST www.trip.com" + this.index,
+            isSuccessful: true,
+            message: "OK",
+            totalTime: 1200,
+            networkTime: [
+                {name: "DNS", time: 200},
+                {name: "RequestHeader", time: 300},
+                {name: "ResponseBody", time: 500},
+
+            ],
+            networkContent: {
+                networkType: "Http",
+                requestContent: "this is requestContent",
+                responseContent: "this is responseContent",
+            },
+            extraInfo: {
+                key1: "value1",
+                key2: "value2"
+            }
+        });
         // this.recvFun("trafficInfo", {
         //     rxTotalRate: 56,
         //     txTotalRate: 48,

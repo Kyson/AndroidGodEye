@@ -28,10 +28,10 @@ class Pageload extends Component {
         };
     }
 
-    static isSamePageClass(pageInfo1, pageInfo2) {
-        if (pageInfo1 && pageInfo2) {
-            return pageInfo1.pageType === pageInfo2.pageType
-                && pageInfo1.pageClassName === pageInfo2.pageClassName
+    static isSamePageClass(pageLifecycleProcessedEvent1, pageLifecycleProcessedEvent2) {
+        if (pageLifecycleProcessedEvent1 && pageLifecycleProcessedEvent2) {
+            return pageLifecycleProcessedEvent1.pageType === pageLifecycleProcessedEvent2.pageType
+                && pageLifecycleProcessedEvent1.pageClassName === pageLifecycleProcessedEvent2.pageClassName
         }
         return false;
     }
@@ -40,7 +40,7 @@ class Pageload extends Component {
         if (pageLifecycleProcessedEvent) {
             const thisPageLifecycleEvents = [];
             pageLifecycleProcessedEvents.forEach((item) => {
-                if (Pageload.isSamePageClass(item.pageInfo, pageLifecycleProcessedEvent.pageInfo)) {
+                if (Pageload.isSamePageClass(item, pageLifecycleProcessedEvent)) {
                     thisPageLifecycleEvents.push(item)
                 }
             });
@@ -145,10 +145,10 @@ class Pageload extends Component {
 
     renderTip(followClass) {
         if (followClass) {
-            return (<div><span>Following [{followClass}]&nbsp;&nbsp;</span>
+            return (<div><span>Current Following Page: [{followClass}]&nbsp;&nbsp;</span>
                 <Button onClick={this.handleUnfollow}>Unfollow</Button></div>)
         }
-        return <div></div>
+        return <div><span>滚动到底部可以跟随内容</span></div>
     }
 
     render() {
