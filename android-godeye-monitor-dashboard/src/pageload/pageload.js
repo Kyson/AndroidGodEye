@@ -5,7 +5,6 @@ import Highcharts from '../../node_modules/highcharts/highcharts';
 import exporting from '../../node_modules/highcharts/modules/exporting';
 import {Card, Badge, Button, Tag} from 'antd'
 import Util from "../libs/util";
-import ScrollableFeed from 'react-scrollable-feed';
 
 exporting(Highcharts);
 
@@ -50,7 +49,7 @@ class Pageload extends Component {
     }
 
     refresh(pageLifecycleProcessedEvent) {
-        this.allPageLifecycleProcessedEvents.push(pageLifecycleProcessedEvent);
+        this.allPageLifecycleProcessedEvents.unshift(pageLifecycleProcessedEvent);
         this.setState({
             renderPageLifecycleProcessedEvents: Pageload.findThisPageLifecycleEvents(this.allPageLifecycleProcessedEvents, this.state.followPageLifecycleProcessedEvent)
         });
@@ -64,7 +63,6 @@ class Pageload extends Component {
     }
 
     handleUnfollow() {
-        console.log("handleUnfollow");
         this.setState({
             followPageLifecycleProcessedEvent: null,
             renderPageLifecycleProcessedEvents: Pageload.findThisPageLifecycleEvents(this.allPageLifecycleProcessedEvents, null)
@@ -148,7 +146,7 @@ class Pageload extends Component {
             return (<div><span>Current Following Page: [{followClass}]&nbsp;&nbsp;</span>
                 <Button onClick={this.handleUnfollow}>Unfollow</Button></div>)
         }
-        return <div><span>滚动到底部可以跟随内容</span></div>
+        return <div></div>
     }
 
     render() {
@@ -158,14 +156,8 @@ class Pageload extends Component {
         }
         return (
             <Card title="Page Lifecycle(页面生命周期)" extra={this.renderTip(followClass)}>
-                <div style={{height: 670}}>
-                    <ScrollableFeed changeDetectionFilter={(previousProps, newProps) => {
-                        const prevChildren = previousProps.children;
-                        const newChildren = newProps.children;
-                        return prevChildren.length !== newChildren.length;
-                    }}>
-                        {this.renderTimelines(this.state.renderPageLifecycleProcessedEvents)}
-                    </ScrollableFeed>
+                <div style={{height: 670, overflow: 'auto'}}>
+                    {this.renderTimelines(this.state.renderPageLifecycleProcessedEvents)}
                 </div>
             </Card>);
     }
