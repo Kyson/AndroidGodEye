@@ -63,9 +63,9 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
             return;
         }
         boolean showNotification = intent.getBooleanExtra(SHOW_NOTIFICATION, false);
-        int id = Notifier.getId();
+        int id = 0;
         if (showNotification) {
-            showNotification(id);
+            id = showNotification();
         }
         GodEyeCanaryLog.d("开始分析dump");
         HeapDump heapDump = (HeapDump) intent.getSerializableExtra(HEAPDUMP_EXTRA);
@@ -84,33 +84,17 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
         //删除dump文件
         heapDump.heapDumpFile.delete();
         GodEyeCanaryLog.d("dump文件删除");
-        if (showNotification) {
-            cancelNotification(id);
+        if (id > 0) {
+            Notifier.cancelNotice(this, id);
         }
     }
 
-    private void showNotification(int id) {
-        Notification.Builder builder;
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= 26) {
-            NotificationChannel channel = new NotificationChannel("AndroidGodEye", "AndroidGodEye", NotificationManager.IMPORTANCE_MIN);
-            channel.setDescription("AndroidGodEye");
-            notificationManager.createNotificationChannel(channel);
-            builder = new Notification.Builder(this, "AndroidGodEye");
-        } else {
-            builder = new Notification.Builder(this);
-        }
-        builder.setSmallIcon(R.drawable.ic_remove_red_eye)
-                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.mipmap.ic_launcher))
-                .setContentTitle("内存泄漏分析服务").setContentText("AndroidGodEye").build();
-        startForeground(id, builder.build());
+    private int showNotification() {
+        Notification notification = Notifier.create(this, new Notifier.Config("MemoryLeakAnalyzerService", "Analyzing...", "Install Android Studio plugin 'AndroidGodEye' to find the detail."));
+        int id = Notifier.createNoticeId();
+        startForeground(id, notification);
+        return id;
     }
-
-    private void cancelNotification(int id) {
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(id);
-    }
-
 
     @Override
     public void onProgressUpdate(@NonNull Step step) {
