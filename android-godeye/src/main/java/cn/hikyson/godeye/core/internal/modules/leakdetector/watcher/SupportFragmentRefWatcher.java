@@ -27,6 +27,7 @@ import com.squareup.leakcanary.internal.FragmentRefWatcher;
 
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefInfoProvider;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakUtil;
 
 public class SupportFragmentRefWatcher implements FragmentRefWatcher {
 
@@ -46,7 +47,7 @@ public class SupportFragmentRefWatcher implements FragmentRefWatcher {
                     View view = fragment.getView();
                     LeakRefInfo leakRefInfo = leakRefInfoProvider.getInfoByV4Fragment(fragment);
                     if (view != null && !leakRefInfo.isExcludeRef()) {
-                        refWatcher.watch(view, leakRefInfo.getExtraInfo());
+                        refWatcher.watch(view, LeakUtil.serialize(leakRefInfo));
                     }
                 }
 
@@ -54,7 +55,7 @@ public class SupportFragmentRefWatcher implements FragmentRefWatcher {
                 public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment fragment) {
                     LeakRefInfo leakRefInfo = leakRefInfoProvider.getInfoByV4Fragment(fragment);
                     if (!leakRefInfo.isExcludeRef()) {
-                        refWatcher.watch(fragment, leakRefInfo.getExtraInfo());
+                        refWatcher.watch(fragment, LeakUtil.serialize(leakRefInfo));
                     }
                 }
             };

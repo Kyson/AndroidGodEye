@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.util.ArrayMap;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.lang.annotation.Retention;
@@ -50,7 +51,7 @@ public class LeakQueue {
 
         public String referenceKey = "";
         @Nullable
-        public String extraInfo = null;
+        public LeakRefInfo leakRefInfo = null;
         public String leakTime = "";
         public String statusSummary = "";
         public @Status
@@ -83,7 +84,7 @@ public class LeakQueue {
         public String toString() {
             return "LeakMemoryInfo{" +
                     "referenceKey='" + referenceKey + '\'' +
-                    ", extraInfo='" + extraInfo + '\'' +
+                    ", leakRefInfo='" + leakRefInfo + '\'' +
                     ", leakTime='" + leakTime + '\'' +
                     ", statusSummary='" + statusSummary + '\'' +
                     ", status=" + status +
@@ -135,9 +136,9 @@ public class LeakQueue {
         mLeakMemoryInfoArrayMap.put(refKey, curMap);
     }
 
-    public synchronized LeakMemoryInfo generateLeakMemoryInfo(String refKey, String extraInfo) {
+    public synchronized LeakMemoryInfo generateLeakMemoryInfo(String refKey, String leakRefInfo) {
         LeakMemoryInfo leakMemoryInfo = new LeakMemoryInfo(refKey);
-        leakMemoryInfo.extraInfo = extraInfo;
+        leakMemoryInfo.leakRefInfo = LeakUtil.deserialize(leakRefInfo);
         Map<String, Object> detailMap = mLeakMemoryInfoArrayMap.get(refKey);
         leakMemoryInfo.referenceKey = refKey;
         Object leakTimeObj = detailMap.get(LeakMemoryInfo.Fields.LEAK_TIME);

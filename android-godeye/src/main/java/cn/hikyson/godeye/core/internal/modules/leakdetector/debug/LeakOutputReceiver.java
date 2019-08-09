@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
@@ -40,32 +41,32 @@ public class LeakOutputReceiver extends BroadcastReceiver {
 
     private void onLeakDumpStart(Intent intent) {
         String referenceKey = intent.getStringExtra("referenceKey");
-        String extraInfo = intent.getStringExtra("extraInfo");
+        String leakRefInfo = intent.getStringExtra("leakRefInfo");
         GodEyeCanaryLog.d("onLeakDumpStart:" + referenceKey);
         Map<String, Object> map = new ArrayMap<>();
         map.put(LeakQueue.LeakMemoryInfo.Fields.LEAK_TIME, LeakQueue.LeakMemoryInfo.DF.format(new Date(System.currentTimeMillis())));
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "Leak detected");
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_START);
         LeakQueue.instance().createOrUpdateIfExsist(referenceKey, map);
-        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(referenceKey, extraInfo));
+        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(referenceKey, leakRefInfo));
     }
 
     private void onLeakDumpProgress(Intent intent) {
         String referenceKey = intent.getStringExtra("referenceKey");
-        String extraInfo = intent.getStringExtra("extraInfo");
+        String leakRefInfo = intent.getStringExtra("leakRefInfo");
         String progress = intent.getStringExtra("progress");
         GodEyeCanaryLog.d("onLeakDumpProgress:" + referenceKey + " , progress:" + progress);
         Map<String, Object> map = new ArrayMap<>();
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, progress);
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_PROGRESS);
         LeakQueue.instance().createOrUpdateIfExsist(referenceKey, map);
-        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(referenceKey, extraInfo));
+        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(referenceKey, leakRefInfo));
     }
 
 
     private void onLeakDumpDone(Intent intent) {
         String referenceKey = intent.getStringExtra("referenceKey");
-        String extraInfo = intent.getStringExtra("extraInfo");
+        String leakRefInfo = intent.getStringExtra("leakRefInfo");
         AnalysisResultWrapper analysisResult = (AnalysisResultWrapper) intent.getSerializableExtra("result");
         String summary = intent.getStringExtra("summary");
         ArrayList<String> elementStack = intent.getStringArrayListExtra("elementStack");
@@ -78,12 +79,12 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_DONE);
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "done");
         LeakQueue.instance().createOrUpdateIfExsist(referenceKey, map);
-        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(referenceKey, extraInfo));
+        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(referenceKey, leakRefInfo));
     }
 
     private void onLeakDumpFailure(Intent intent) {
         String referenceKey = intent.getStringExtra("referenceKey");
-        String extraInfo = intent.getStringExtra("extraInfo");
+        String leakRefInfo = intent.getStringExtra("leakRefInfo");
         AnalysisResultWrapper analysisResult = (AnalysisResultWrapper) intent.getSerializableExtra("result");
         String summary = intent.getStringExtra("summary");
         GodEyeCanaryLog.d("onLeakDumpFailure:" + referenceKey + " , leak:" + analysisResult.className + " , summary:" + summary);
@@ -94,6 +95,6 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_DONE);
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "Leak null.");
         LeakQueue.instance().createOrUpdateIfExsist(referenceKey, map);
-        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(referenceKey, extraInfo));
+        LeakDetector.instance().produce(LeakQueue.instance().generateLeakMemoryInfo(referenceKey, leakRefInfo));
     }
 }

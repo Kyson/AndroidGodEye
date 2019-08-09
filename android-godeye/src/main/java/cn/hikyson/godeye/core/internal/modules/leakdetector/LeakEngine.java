@@ -7,7 +7,6 @@ import android.support.annotation.RequiresApi;
 
 import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.DebuggerControl;
-import com.squareup.leakcanary.GcTrigger;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.leakcanary.internal.FragmentRefWatcher;
@@ -80,7 +79,7 @@ public class LeakEngine implements Engine {
             public void onActivityDestroyed(Activity activity) {
                 LeakRefInfo leakRefInfo = mConfig.leakRefInfoProvider().getInfoByActivity(activity);
                 if (!leakRefInfo.isExcludeRef()) {
-                    watcher.watch(activity, leakRefInfo.getExtraInfo());
+                    watcher.watch(activity, LeakUtil.serialize(leakRefInfo));
                 }
             }
         };

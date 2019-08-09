@@ -1,19 +1,46 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
-public class LeakRefInfo {
-    private final String extraInfo;
-    private final boolean excludeRef;
+import android.support.annotation.Nullable;
 
-    public LeakRefInfo(boolean excludeRef, String extraInfo) {
-        this.extraInfo = extraInfo;
+import java.io.Serializable;
+import java.util.Map;
+
+public class LeakRefInfo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Nullable
+    private final String pageId;
+    private final boolean excludeRef;
+    @Nullable
+    private final Map<String, String> extraInfo;
+
+    public LeakRefInfo(boolean excludeRef, @Nullable String pageId, @Nullable Map<String, String> extraInfo) {
+        this.pageId = pageId;
         this.excludeRef = excludeRef;
+        this.extraInfo = extraInfo;
     }
 
-    public String getExtraInfo() {
+    @Nullable
+    public String getPageId() {
+        return pageId;
+    }
+
+    @Nullable
+    public Map<String, String> getExtraInfo() {
         return extraInfo;
     }
 
     public boolean isExcludeRef() {
         return excludeRef;
+    }
+
+    @Override
+    public String toString() {
+        return "LeakRefInfo{" +
+                "pageId='" + pageId + '\'' +
+                ", excludeRef=" + excludeRef +
+                ", extraInfo=" + extraInfo +
+                '}';
     }
 }
