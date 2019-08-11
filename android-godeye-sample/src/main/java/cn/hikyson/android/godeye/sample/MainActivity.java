@@ -425,7 +425,9 @@ public class MainActivity extends Activity implements Loggable {
                 }
             });
         } catch (Throwable e) {
-            Toast.makeText(MainActivity.this, "Input valid time for jank(block)!", Toast.LENGTH_SHORT).show();
+            runOnUiThread(() -> {
+                Toast.makeText(MainActivity.this, "Input valid time for jank(block)!", Toast.LENGTH_SHORT).show();
+            });
         }
     }
 
