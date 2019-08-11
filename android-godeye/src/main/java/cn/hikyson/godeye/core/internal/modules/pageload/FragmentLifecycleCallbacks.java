@@ -23,7 +23,7 @@ public class FragmentLifecycleCallbacks extends FragmentManager.FragmentLifecycl
     private Producer<PageLifecycleEventInfo> mProducer;
     private Handler mHandler;
 
-    public FragmentLifecycleCallbacks(PageLifecycleRecords pageLifecycleRecords, PageInfoProvider pageInfoProvider, Map<Object, PageInfo<?>> cachePageInfo, Producer<PageLifecycleEventInfo> producer, Handler handler) {
+    FragmentLifecycleCallbacks(PageLifecycleRecords pageLifecycleRecords, PageInfoProvider pageInfoProvider, Map<Object, PageInfo<?>> cachePageInfo, Producer<PageLifecycleEventInfo> producer, Handler handler) {
         mPageLifecycleRecords = pageLifecycleRecords;
         mPageInfoProvider = pageInfoProvider;
         mCachePageInfo = cachePageInfo;

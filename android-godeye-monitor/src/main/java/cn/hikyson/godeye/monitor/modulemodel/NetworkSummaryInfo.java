@@ -40,37 +40,6 @@ public class NetworkSummaryInfo {
         }
     }
 
-    private static List<TimePair> convertToTimePairs(NetworkTime networkTime) {
-        List<TimePair> networkTimeList = new ArrayList<>();
-        if (networkTime == null || networkTime.networkTimeMillisMap == null) {
-            return networkTimeList;
-        }
-        for (Map.Entry<String, Long> entry : networkTime.networkTimeMillisMap.entrySet()) {
-            networkTimeList.add(new TimePair(entry.getKey(), entry.getValue()));
-        }
-        return networkTimeList;
-    }
-
-    private static Content convertToNetworkContent(NetworkContent networkContent) {
-        if (networkContent != null) {
-            if (networkContent instanceof HttpContent) {
-                return new Content(networkContent.getClass().getSimpleName(), ((HttpContent) networkContent).httpRequest.getStandardFormat(), ((HttpContent) networkContent).httpResponse.getStandardFormat());
-            }
-            return new Content(networkContent.getClass().getSimpleName(), "Request unknown network protocol", "Response unknown network protocol");
-        }
-        return new Content("NULL", "NULL", "NULL");
-    }
-
-    private static String convertToSummary(NetworkContent networkContent) {
-        if (networkContent != null) {
-            if (networkContent instanceof HttpContent) {
-                return ((HttpContent) networkContent).httpRequest.method + " " + ((HttpContent) networkContent).httpRequest.url;
-            }
-            return "Summary Unknown network protocol";
-        }
-        return "NULL";
-    }
-
     public static NetworkSummaryInfo convert(NetworkInfo networkInfo) {
         NetworkSummaryInfo networkSummaryInfo = new NetworkSummaryInfo();
         networkSummaryInfo.isSuccessful = networkInfo.isSuccessful;
@@ -83,15 +52,40 @@ public class NetworkSummaryInfo {
                     networkSummaryInfo.isSuccessful = false;
                 }
             }
-            networkSummaryInfo.networkContent = convertToNetworkContent(httpContent);
+            networkSummaryInfo.networkContent = convertHttpContentToSummaryContent(httpContent);
         } else {
-            networkSummaryInfo.networkContent = new Content(networkInfo.getClass().getSimpleName(), "Request unknown network protocol", "Response unknown network protocol");
+            networkSummaryInfo.networkContent = convertUnknownProtocolContentToSummaryContent(networkInfo.networkContent);
         }
         networkSummaryInfo.summary = networkInfo.summary;
         networkSummaryInfo.totalTime = networkInfo.networkTime == null ? 0 : networkInfo.networkTime.totalTimeMillis;
         networkSummaryInfo.networkTime = convertToTimePairs(networkInfo.networkTime);
         networkSummaryInfo.extraInfo = networkInfo.extraInfo;
         return networkSummaryInfo;
+    }
+
+    private static List<TimePair> convertToTimePairs(NetworkTime networkTime) {
+        List<TimePair> networkTimeList = new ArrayList<>();
+        if (networkTime == null || networkTime.networkTimeMillisMap == null) {
+            return networkTimeList;
+        }
+        for (Map.Entry<String, Long> entry : networkTime.networkTimeMillisMap.entrySet()) {
+            networkTimeList.add(new TimePair(entry.getKey(), entry.getValue()));
+        }
+        return networkTimeList;
+    }
+
+    private static Content convertHttpContentToSummaryContent(HttpContent httpContent) {
+        if (httpContent != null) {
+            return new Content(httpContent.getClass().getSimpleName(), httpContent.httpRequest.getStandardFormat(), httpContent.httpResponse.getStandardFormat());
+        }
+        return new Content("NULL", "NULL", "NULL");
+    }
+
+    private static Content convertUnknownProtocolContentToSummaryContent(NetworkContent networkContent) {
+        if (networkContent != null) {
+            return new Content(networkContent.getClass().getSimpleName(), "Request unknown network protocol: " + networkContent.getClass().getSimpleName(), "Response unknown network protocol:" + networkContent.getClass().getSimpleName());
+        }
+        return new Content("NULL", "NULL", "NULL");
     }
 
     private static boolean isSuccessful(int code) {
