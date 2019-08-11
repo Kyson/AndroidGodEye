@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -415,16 +416,17 @@ public class MainActivity extends Activity implements Loggable {
 
     private void block() {
         EditText editText = findViewById(R.id.activity_main_block_et);
-        final long blockTime = Long.parseLong(String.valueOf(editText.getText()));
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        try {
+            final long blockTime = Long.parseLong(String.valueOf(editText.getText()));
+            runOnUiThread(() -> {
                 try {
                     Thread.sleep(blockTime);
                 } catch (Throwable e) {
                 }
-            }
-        });
+            });
+        } catch (Throwable e) {
+            Toast.makeText(MainActivity.this, "Input valid time for jank(block)!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void jumpToLeak() {
