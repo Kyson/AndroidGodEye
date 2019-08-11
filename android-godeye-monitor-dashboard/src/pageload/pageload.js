@@ -19,6 +19,7 @@ class Pageload extends Component {
         super(props);
         this.handleFollow = this.handleFollow.bind(this);
         this.handleUnfollow = this.handleUnfollow.bind(this);
+        this.handleClear = this.handleClear.bind(this);
         this.allPageLifecycleProcessedEvents = [];
         this.state = {
             show: false,
@@ -69,6 +70,13 @@ class Pageload extends Component {
         });
     }
 
+    handleClear() {
+        this.allPageLifecycleProcessedEvents = [];
+        this.setState({
+            renderPageLifecycleProcessedEvents: []
+        });
+    }
+
     renderTimelines(pageLifecycleProcessedEvents) {
         if (pageLifecycleProcessedEvents) {
             let items = [];
@@ -77,7 +85,7 @@ class Pageload extends Component {
                 if (event.lifecycleEvent === 'ON_LOAD') {
                     items.push(<Card style={{margin: 4}} size="small">
                         <Badge
-                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}`}</span>
+                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}.${event.eventTimeMillis % 1000}`}</span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}<Button
@@ -98,7 +106,7 @@ class Pageload extends Component {
                 } else if (event.lifecycleEvent === 'ON_DRAW') {
                     items.push(<Card style={{margin: 4}} size="small">
                         <Badge
-                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}`}</span>
+                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}.${event.eventTimeMillis % 1000}`}</span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}<Button
@@ -119,7 +127,7 @@ class Pageload extends Component {
                 } else {
                     items.push(<Card style={{margin: 4}} size="small">
                         <Badge
-                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}`}</span>
+                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}.${event.eventTimeMillis % 1000}`}</span>
                         <br/>
                         <span>&nbsp;&nbsp;&nbsp;&nbsp;
                             <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}<Button
@@ -144,9 +152,10 @@ class Pageload extends Component {
     renderTip(followClass) {
         if (followClass) {
             return (<div><span>Current Following Page: [{followClass}]&nbsp;&nbsp;</span>
-                <Button onClick={this.handleUnfollow}>Unfollow</Button></div>)
+                <Button onClick={this.handleUnfollow}>Unfollow</Button> <Button
+                    onClick={this.handleClear}>Clear</Button></div>)
         }
-        return <div></div>
+        return <Button onClick={this.handleClear}>Clear</Button>
     }
 
     render() {
