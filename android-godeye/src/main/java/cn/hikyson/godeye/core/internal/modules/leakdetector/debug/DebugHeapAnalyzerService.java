@@ -2,13 +2,9 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector.debug;
 
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -20,7 +16,6 @@ import com.squareup.leakcanary.LeakTraceElement;
 
 import java.util.ArrayList;
 
-import cn.hikyson.godeye.core.R;
 import cn.hikyson.godeye.core.helper.Notifier;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 
@@ -42,7 +37,7 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
     public static final String OUTPUT_BOARDCAST_ACTION_PROGRESS = "com.ctrip.ibu.leakcanary.output.progress";
 
     private String referenceKey;
-    private String extraInfo;
+    private String leakRefInfo;
 
     public DebugHeapAnalyzerService() {
         super("内存泄漏分析服务");
@@ -70,8 +65,9 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
         GodEyeCanaryLog.d("开始分析dump");
         HeapDump heapDump = (HeapDump) intent.getSerializableExtra(HEAPDUMP_EXTRA);
         referenceKey = heapDump.referenceKey;
-        extraInfo = heapDump.referenceName;
+        leakRefInfo = heapDump.referenceName;
         GodEyeCanaryLog.d("referenceKey:" + heapDump.referenceKey);
+        GodEyeCanaryLog.d("leakRefInfo:" + heapDump.referenceName);
         GodEyeCanaryLog.d("heapDumpFile:" + heapDump.heapDumpFile.getAbsolutePath());
         HeapAnalyzer heapAnalyzer =
                 new HeapAnalyzer(heapDump.excludedRefs, this, heapDump.reachabilityInspectorClasses);
@@ -98,7 +94,7 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
 
     @Override
     public void onProgressUpdate(@NonNull Step step) {
-        sendOutputBroadcastProgress(this, referenceKey, extraInfo, step);
+        sendOutputBroadcastProgress(this, referenceKey, leakRefInfo, step);
         GodEyeCanaryLog.d(step.toString());
     }
 
@@ -155,7 +151,7 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
         return summary;
     }
 
-    private void sendOutputBroadcastProgress(Context context, String referenceKey, String extraInfo, AnalyzerProgressListener.Step step) {
+    private void sendOutputBroadcastProgress(Context context, String referenceKey, String leakRefInfo, AnalyzerProgressListener.Step step) {
         if (step == AnalyzerProgressListener.Step.READING_HEAP_DUMP_FILE) {
             Intent intent = new Intent(context, LeakOutputReceiver.class);
             intent.putExtra("referenceKey", referenceKey);
@@ -164,29 +160,29 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
         }
         Intent intent = new Intent(context, LeakOutputReceiver.class);
         intent.putExtra("referenceKey", referenceKey);
-        intent.putExtra("extraInfo", extraInfo);
+        intent.putExtra("leakRefInfo", leakRefInfo);
         intent.putExtra("progress", step.name());
         intent.setAction(OUTPUT_BOARDCAST_ACTION_PROGRESS);
         context.sendBroadcast(intent);
     }
 
-    private void sendOutputBroadcastDone(Context context, String referenceKey, String extraInfo, AnalysisResult result, String summary,
+    private void sendOutputBroadcastDone(Context context, String referenceKey, String leakRefInfo, AnalysisResult result, String summary,
                                          ArrayList<String> elementStack) {
         Intent intent = new Intent(context, LeakOutputReceiver.class);
         intent.setAction(OUTPUT_BOARDCAST_ACTION_DONE);
         intent.putExtra("referenceKey", referenceKey);
-        intent.putExtra("extraInfo", extraInfo);
+        intent.putExtra("leakRefInfo", leakRefInfo);
         intent.putExtra("result", new AnalysisResultWrapper(result));
         intent.putExtra("summary", summary);
         intent.putStringArrayListExtra("elementStack", elementStack);
         context.sendBroadcast(intent);
     }
 
-    private void sendOutputBroadcastFailure(Context context, String referenceKey, String extraInfo, AnalysisResult result, String summary) {
+    private void sendOutputBroadcastFailure(Context context, String referenceKey, String leakRefInfo, AnalysisResult result, String summary) {
         Intent intent = new Intent(context, LeakOutputReceiver.class);
         intent.setAction(OUTPUT_BOARDCAST_ACTION_FAILURE);
         intent.putExtra("referenceKey", referenceKey);
-        intent.putExtra("extraInfo", extraInfo);
+        intent.putExtra("leakRefInfo", leakRefInfo);
         intent.putExtra("result", new AnalysisResultWrapper(result));
         intent.putExtra("summary", summary);
         context.sendBroadcast(intent);
