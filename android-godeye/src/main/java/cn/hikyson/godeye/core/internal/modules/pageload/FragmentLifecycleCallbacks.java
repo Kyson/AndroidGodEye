@@ -35,12 +35,11 @@ public class FragmentLifecycleCallbacks extends FragmentManager.FragmentLifecycl
     public void onFragmentAttached(FragmentManager fm, final Fragment f, Context context) {
         final long time = System.currentTimeMillis();
         mHandler.post(() -> {
-            final PageInfo<Fragment> pageInfo = mPageInfoProvider.getInfoByFragment(f);
-            if (pageInfo != null) {
-                mCachePageInfo.put(f, pageInfo);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
+            Map<String, String> extraInfo = mPageInfoProvider.getInfoByFragment(f);
+            PageInfo<Fragment> pageInfo = new PageInfo<>(f, extraInfo);
+            mCachePageInfo.put(f, pageInfo);
+            PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
+            mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
         });
     }
 

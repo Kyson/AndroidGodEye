@@ -18,7 +18,6 @@ public class LeakUtil {
         }
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("pageId", leakRefInfo.getPageId());
             jsonObject.put("excludeRef", leakRefInfo.isExcludeRef());
             if (leakRefInfo.getExtraInfo() != null) {
                 JSONObject mapObject = new JSONObject();
@@ -27,20 +26,19 @@ public class LeakUtil {
                 }
                 jsonObject.put("extraInfo", mapObject);
             }
-        } catch (JSONException ignored) {
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
        return jsonObject.toString();
     }
     @Nullable
     public static LeakRefInfo deserialize(@Nullable String json) {
-        JSONObject jsonObject = null;
         LeakRefInfo leakRefInfo = null;
         if (json == null) {
             return null;
         }
         try {
-            jsonObject = new JSONObject(json);
-            String pageId = jsonObject.optString("pageId");
+            JSONObject jsonObject = new JSONObject(json);
             boolean excludeRef = jsonObject.optBoolean("excludeRef");
             Map<String, String> extraInfo = null;
             JSONObject mapObject = jsonObject.optJSONObject("extraInfo");
@@ -49,12 +47,13 @@ public class LeakUtil {
                 Iterator iterator = mapObject.keys();
                 while (iterator.hasNext()) {
                     String key = (String) iterator.next();
-                    String value = jsonObject.getString(key);
+                    String value = mapObject.optString(key);
                     extraInfo.put(key, value);
                 }
             }
-            leakRefInfo = new LeakRefInfo(excludeRef, pageId, extraInfo);
-        } catch (JSONException ignored) {
+            leakRefInfo = new LeakRefInfo(excludeRef, extraInfo);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return leakRefInfo;
     }

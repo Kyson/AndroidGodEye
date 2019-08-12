@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;

@@ -130,12 +130,11 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         }
         final long time0 = System.currentTimeMillis();
         mHandler.post(() -> {
-            final PageInfo<Activity> pageInfo = mPageInfoProvider.getInfoByActivity(activity);
-            if (pageInfo != null) {
-                mCachePageInfo.put(activity, pageInfo);
-                PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_CREATE, time0);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
+            Map<String, String> extraInfo = mPageInfoProvider.getInfoByActivity(activity);
+            PageInfo<Activity> pageInfo = new PageInfo<>(activity, extraInfo);
+            mCachePageInfo.put(activity, pageInfo);
+            PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_CREATE, time0);
+            mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
         });
         ViewUtil.measureActivityDidDraw(activity, () -> {
             final long time1 = System.currentTimeMillis();
