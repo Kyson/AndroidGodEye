@@ -20,6 +20,7 @@ class Network extends Component {
         super(props);
         this.handleClose = this.handleClose.bind(this);
         this.handleShowDetail = this.handleShowDetail.bind(this);
+        this.handleClear = this.handleClear.bind(this);
         this.state = {
             show: false,
             networkInfo: null,
@@ -37,9 +38,17 @@ class Network extends Component {
         this.setState({networkInfo: null, show: false});
     }
 
+    handleClear() {
+        this.setState({
+            networkInfos: []
+        });
+    }
+
     refresh(networkInfo) {
         if (networkInfo) {
             const networkInfos = this.state.networkInfos;
+            const currentTime = new Date();
+            networkInfo.localTime = `${currentTime.toLocaleTimeString()}.${currentTime.getMilliseconds() % 1000}`;
             networkInfos.unshift(networkInfo);
             this.setState({
                 networkInfos: networkInfos,
@@ -157,6 +166,11 @@ class Network extends Component {
         const showDetail = this.handleShowDetail;
         const columns = [
             {
+                title: 'LocalTime',
+                dataIndex: 'localtime',
+                key: 'localtime',
+            },
+            {
                 title: 'Summary',
                 dataIndex: 'summary',
                 key: 'summary',
@@ -192,6 +206,7 @@ class Network extends Component {
             const networkInfo = networkInfos[i];
             datas.push({
                 key: i,
+                localtime: networkInfo.localTime,
                 summary: networkInfo.summary,
                 message: networkInfo.message,
                 totalTime: networkInfo.totalTime,
@@ -204,7 +219,7 @@ class Network extends Component {
 
     render() {
         return (
-            <Card title="Network(网络)">
+            <Card title="Network(网络)" extra={<Button onClick={this.handleClear}>Clear</Button>}>
                 {this.renderTable()}
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Detail" closable={true}
                        onOk={this.handleClose} width={800}>

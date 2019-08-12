@@ -19,7 +19,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
     private Producer<PageLifecycleEventInfo> mProducer;
     private Handler mHandler;
 
-    public FragmentLifecycleCallbacksV4(PageLifecycleRecords pageLifecycleRecords, PageInfoProvider pageInfoProvider, Map<Object, PageInfo<?>> cachePageInfo, Producer<PageLifecycleEventInfo> producer, Handler handler) {
+    FragmentLifecycleCallbacksV4(PageLifecycleRecords pageLifecycleRecords, PageInfoProvider pageInfoProvider, Map<Object, PageInfo<?>> cachePageInfo, Producer<PageLifecycleEventInfo> producer, Handler handler) {
         mPageLifecycleRecords = pageLifecycleRecords;
         mPageInfoProvider = pageInfoProvider;
         mCachePageInfo = cachePageInfo;

@@ -11,7 +11,7 @@ public class ViewUtil {
         void didDraw();
     }
 
-    private static Handler sHandler = new Handler(Looper.getMainLooper());
+    public static Handler sHandler = new Handler(Looper.getMainLooper());
 
     public static void measureActivityDidDraw(final Activity activity, final OnDrawCallback onDrawCallback) {
         measurePageDidDraw(activity.getWindow().getDecorView(), onDrawCallback);
@@ -32,18 +32,10 @@ public class ViewUtil {
     }
 
     private static void measurePageDidDraw(final View view, final OnDrawCallback onDrawCallback) {
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                sHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (onDrawCallback != null) {
-                            onDrawCallback.didDraw();
-                        }
-                    }
-                });
+        view.post(() -> sHandler.post(() -> {
+            if (onDrawCallback != null) {
+                onDrawCallback.didDraw();
             }
-        });
+        }));
     }
 }
