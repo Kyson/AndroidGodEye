@@ -1,6 +1,11 @@
 package cn.hikyson.godeye.monitor.driver;
 
+import android.content.Context;
+
 import com.koushikdutta.async.http.WebSocket;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
@@ -37,11 +43,13 @@ import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadUtil;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
+import cn.hikyson.godeye.core.internal.modules.sm.SmContext;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
 import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
@@ -148,6 +156,8 @@ public class Watcher implements Processor {
                         new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring()));
             }).subscribe(this.createSendMessageConsumer()));
         }
+
+
     }
 
     public void cancelAllObserve() {
@@ -157,25 +167,50 @@ public class Watcher implements Processor {
     @Override
     public void process(final WebSocket webSocket, String msg) {
         ThreadUtil.ensureWorkThread("Watcher process:" + msg);
-        ClientMessage clientMessage = GsonUtil.fromJson(msg, ClientMessage.class);
-        if ("clientOnline".equals(clientMessage.moduleName)) {//if a client get online,send init message to it
-            for (Map.Entry<String, Object> entry : mMessageCache.copy().entrySet()) {
-                webSocket.send(new ServerMessage(entry.getKey(), entry.getValue()).toString());
+        try {
+            final JSONObject msgJSONObject = new JSONObject(msg);
+            final String moduleName = msgJSONObject.optString("moduleName");
+            if ("clientOnline".equals(moduleName)) {//if a client get online,send init message to it
+                for (Map.Entry<String, Object> entry : mMessageCache.copy().entrySet()) {
+                    webSocket.send(new ServerMessage(entry.getKey(), entry.getValue()).toString());
+                }
+            } else if ("appInfo".equals(moduleName)) {
+                webSocket.send(new ServerMessage("appInfo", new AppInfo()).toString());
+            } else if ("methodCanary".equals(moduleName)) {
+                final MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
+                if ("start".equals(msgJSONObject.optString("payload"))) {
+                    methodCanary.startMonitor();
+                } else if ("stop".equals(msgJSONObject.optString("payload"))) {
+                    methodCanary.stopMonitor();
+                }
+            } else if ("MethodCanaryStatus".equals(moduleName)) {
+                Subject<String> methodCanaryStatusSubject = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject();
+                if (methodCanaryStatusSubject != null && !methodCanaryStatusSubject.hasComplete() && !methodCanaryStatusSubject.hasThrowable()) {
+                    methodCanaryStatusSubject.onNext("GET");
+                }
+            } else if ("reinstallBlock".equals(moduleName)) {
+                final JSONObject payloadJSONObject = msgJSONObject.optJSONObject("payload");
+                SmContext smContext = Sm.instance().getSmContext();
+                GodEyeConfig.SmConfig newSmConfig;
+                if (smContext == null) {
+                    newSmConfig = new GodEyeConfig.SmConfig();
+                } else {
+                    newSmConfig = GodEyeConfig.SmConfig.Factory.convert(smContext);
+                }
+                long longBlockThreshold = payloadJSONObject.optLong("longBlockThreshold");
+                long shortBlockThreshold = payloadJSONObject.optLong("shortBlockThreshold");
+                if (longBlockThreshold > 0) {
+                    newSmConfig.longBlockThresholdMillis = longBlockThreshold;
+                }
+                if (shortBlockThreshold > 0) {
+                    newSmConfig.shortBlockThresholdMillis = shortBlockThreshold;
+                }
+                Sm.instance().uninstall();
+                Sm.instance().install(newSmConfig);
+                webSocket.send(new ServerMessage("reinstallBlock", newSmConfig).toString());
             }
-        } else if ("appInfo".equals(clientMessage.moduleName)) {
-            webSocket.send(new ServerMessage("appInfo", new AppInfo()).toString());
-        } else if ("methodCanary".equals(clientMessage.moduleName)) {
-            final MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
-            if ("start".equals(String.valueOf(clientMessage.payload))) {
-                methodCanary.startMonitor();
-            } else if ("stop".equals(String.valueOf(clientMessage.payload))) {
-                methodCanary.stopMonitor();
-            }
-        } else if ("MethodCanaryStatus".equals(clientMessage.moduleName)) {
-            Subject<String> methodCanaryStatusSubject = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject();
-            if (methodCanaryStatusSubject != null && !methodCanaryStatusSubject.hasComplete() && !methodCanaryStatusSubject.hasThrowable()) {
-                methodCanaryStatusSubject.onNext("GET");
-            }
+        } catch (JSONException e) {
+            L.e(String.valueOf(e));
         }
     }
 

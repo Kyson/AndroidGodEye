@@ -420,8 +420,8 @@ public class GodEyeConfig {
         public SmConfig() {
             this.debugNotify = true;
             this.longBlockThresholdMillis = 500;
-            this.shortBlockThresholdMillis = 100;
-            this.dumpIntervalMillis = 300;
+            this.shortBlockThresholdMillis = 300;
+            this.dumpIntervalMillis = 1000;
         }
 
         @Override
@@ -447,6 +447,42 @@ public class GodEyeConfig {
         @Override
         public long dumpInterval() {
             return dumpIntervalMillis;
+        }
+
+        public static class Factory {
+
+            public static SmConfig convert(SmContext smContext) {
+                return new SmConfig(smContext.debugNotify(), smContext.longBlockThreshold(), smContext.shortBlockThreshold(), smContext.dumpInterval());
+            }
+
+            public static SmContext convert(GodEyeConfig.SmConfig smConfig) {
+                return new SmContext() {
+                    @Override
+                    public Context context() {
+                        return smConfig.context();
+                    }
+
+                    @Override
+                    public boolean debugNotify() {
+                        return smConfig.debugNotify();
+                    }
+
+                    @Override
+                    public long longBlockThreshold() {
+                        return smConfig.longBlockThreshold();
+                    }
+
+                    @Override
+                    public long shortBlockThreshold() {
+                        return smConfig.shortBlockThreshold();
+                    }
+
+                    @Override
+                    public long dumpInterval() {
+                        return smConfig.dumpInterval();
+                    }
+                };
+            }
         }
     }
 

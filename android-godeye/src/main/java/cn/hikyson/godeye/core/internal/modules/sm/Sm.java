@@ -20,6 +20,7 @@ import cn.hikyson.godeye.core.utils.ThreadUtil;
 public final class Sm extends ProduceableSubject<BlockInfo> implements Install<SmContext> {
 
     private SmCore mBlockCore;
+    private SmContext mSmContext;
     private boolean mInstalled = false;
 
     private Sm() {
@@ -40,6 +41,7 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
             return;
         }
         this.mInstalled = true;
+        this.mSmContext = config;
         this.mBlockCore = new SmCore(config.context(), config.debugNotify(),
                 config.longBlockThreshold(), config.shortBlockThreshold(), config.dumpInterval());
         this.mBlockCore.addBlockInterceptor(new BlockInterceptor() {
@@ -76,11 +78,16 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
             return;
         }
         mInstalled = false;
+        this.mSmContext = null;
         mBlockCore.uninstall();
         L.d("sm uninstalled");
     }
 
     public static SmCore core() {
         return instance().mBlockCore;
+    }
+
+    public SmContext getSmContext() {
+        return mSmContext;
     }
 }
