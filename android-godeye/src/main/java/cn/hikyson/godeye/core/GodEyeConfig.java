@@ -452,10 +452,16 @@ public class GodEyeConfig {
         public static class Factory {
 
             public static SmConfig convert(SmContext smContext) {
+                if (smContext == null) {
+                    return null;
+                }
                 return new SmConfig(smContext.debugNotify(), smContext.longBlockThreshold(), smContext.shortBlockThreshold(), smContext.dumpInterval());
             }
 
             public static SmContext convert(GodEyeConfig.SmConfig smConfig) {
+                if (smConfig == null) {
+                    return null;
+                }
                 return new SmContext() {
                     @Override
                     public Context context() {

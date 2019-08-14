@@ -123,12 +123,12 @@ class Block extends Component {
 
     changeLongBlockThreshold(time) {
         console.log("changeLongBlockThreshold to " + time);
-        this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"longBlockThreshold":${time}`);
+        this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"longBlockThreshold":${time}}}`);
     }
 
     changeShortBlockThreshold(time) {
         console.log("changeShortBlockThreshold to " + time);
-        this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"shortBlockThreshold":${time}`);
+        this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"shortBlockThreshold":${time}}}`);
     }
 
     renderTitlebar() {

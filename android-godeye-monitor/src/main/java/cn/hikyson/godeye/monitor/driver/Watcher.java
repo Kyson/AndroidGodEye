@@ -156,8 +156,6 @@ public class Watcher implements Processor {
                         new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring()));
             }).subscribe(this.createSendMessageConsumer()));
         }
-
-
     }
 
     public void cancelAllObserve() {
@@ -170,10 +168,12 @@ public class Watcher implements Processor {
         try {
             final JSONObject msgJSONObject = new JSONObject(msg);
             final String moduleName = msgJSONObject.optString("moduleName");
+            L.d("receive module:" + moduleName);
             if ("clientOnline".equals(moduleName)) {//if a client get online,send init message to it
                 for (Map.Entry<String, Object> entry : mMessageCache.copy().entrySet()) {
                     webSocket.send(new ServerMessage(entry.getKey(), entry.getValue()).toString());
                 }
+                webSocket.send(new ServerMessage("reinstallBlock", GodEyeConfig.SmConfig.Factory.convert(Sm.instance().getSmContext())).toString());
             } else if ("appInfo".equals(moduleName)) {
                 webSocket.send(new ServerMessage("appInfo", new AppInfo()).toString());
             } else if ("methodCanary".equals(moduleName)) {
