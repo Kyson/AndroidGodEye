@@ -31,12 +31,11 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
     public void onFragmentAttached(FragmentManager fm, final Fragment f, Context context) {
         final long time = System.currentTimeMillis();
         mHandler.post(() -> {
-            final PageInfo<Fragment> pageInfo = mPageInfoProvider.getInfoByV4Fragment(f);
-            if (pageInfo != null) {
-                mCachePageInfo.put(f, pageInfo);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
+            Map<String, String> extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
+            PageInfo<Fragment> pageInfo = new PageInfo<>(f, extraInfo);
+            mCachePageInfo.put(f, pageInfo);
+            PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
+            mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
         });
     }
 
@@ -47,6 +46,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             // noinspection unchecked
             final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
             if (pageInfo != null) {
+                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_CREATE, time);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
@@ -60,6 +60,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             // noinspection unchecked
             final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
             if (pageInfo != null) {
+                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_VIEW_CREATE, time0);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
@@ -70,6 +71,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
                 // noinspection unchecked
                 final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
                 if (pageInfo != null) {
+                    pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                     PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_DRAW, time1);
                     mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
                 }
@@ -84,6 +86,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             // noinspection unchecked
             final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
             if (pageInfo != null) {
+                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_START, time);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
@@ -97,6 +100,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             // noinspection unchecked
             final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
             if (pageInfo != null) {
+                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_RESUME, time);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
@@ -110,6 +114,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             // noinspection unchecked
             final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
             if (pageInfo != null) {
+                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_PAUSE, time);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
@@ -123,6 +128,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             // noinspection unchecked
             final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
             if (pageInfo != null) {
+                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_STOP, time);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
@@ -136,6 +142,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             // noinspection unchecked
             final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
             if (pageInfo != null) {
+                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_VIEW_DESTROY, time);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
@@ -149,6 +156,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             // noinspection unchecked
             final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
             if (pageInfo != null) {
+                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_DESTROY, time);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
@@ -162,6 +170,7 @@ public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.Fragmen
             // noinspection unchecked
             PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.remove(f);
             if (pageInfo != null) {
+                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
                 PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_DETACH, time);
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }

@@ -9,9 +9,9 @@ public class PageInfo<T> {
     public PageType pageType;
     public String pageClassName;
     public int pageHashCode;
-    public Map<Object, Object> extraInfo;
+    public Map<String, String> extraInfo;
 
-    public PageInfo(T page, Map<Object, Object> extraInfo) {
+    public PageInfo(T page, Map<String, String> extraInfo) {
         if (page instanceof Activity) {
             this.pageType = PageType.ACTIVITY;
         } else if (page instanceof Fragment || page instanceof android.app.Fragment) {
