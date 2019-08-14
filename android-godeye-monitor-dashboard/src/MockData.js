@@ -100,11 +100,11 @@ class Mock {
             lifecycleEvent: "ON_CREATE",
             eventTimeMillis: 1469433907836,
         });
-        // this.recvFun("crashInfo", {
-        //     timestampMillis: new Date().getMilliseconds(),
-        //     throwableMessage: "throwableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessagethrowableMessage",
-        //     throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
-        // });
+        this.recvFun("crashInfo", {
+            timestampMillis: new Date().getMilliseconds(),
+            throwableMessage: "throwableMessagethrowableMessagethrowableMessagethrowab",
+            throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
+        });
         // this.recvFun("blockInfo", {
         //     blockTime: 200,
         //     blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}

@@ -42,7 +42,7 @@ class App extends Component {
         };
         globalWs.registerCallback(this.onWsOpenCallback);
         globalWs.start();
-        this.mock.start(this._onReceiveMessage);
+        // this.mock.start(this._onReceiveMessage);
     }
 
     componentWillUnmount() {
@@ -112,26 +112,23 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={15}>
-                            <Row gutter={16} align="top">
-                                <Col span={8}>
-                                    <Fps ref="fpsInfo"/>
-                                </Col>
-                                <Col span={16}>
-                                    <Startup ref="startupInfo"/>
-                                </Col>
-                            </Row>
-                            <Row gutter={16} align="top" style={{marginTop: 16}}>
-                                <Col span={8}> <Ram ref="ramInfo"/>
-                                </Col>
-                                <Col span={8}> <Pss ref="pssInfo"/>
-                                </Col>
-                                <Col span={8}> <BatteryInfo ref="batteryInfo"/>
-                                </Col>
-                            </Row>
+                        <Col span={5}>
+                            <Fps ref="fpsInfo"/>
                         </Col>
-                        <Col span={9}>
+                        <Col span={8}>
+                            <Startup ref="startupInfo"/>
+                        </Col>
+
+                        <Col span={11}>
                             <Crash ref="crashInfo"/>
+                        </Col>
+                    </Row>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
+                        <Col span={5}> <Ram ref="ramInfo"/>
+                        </Col>
+                        <Col span={5}> <Pss ref="pssInfo"/>
+                        </Col>
+                        <Col span={5}> <BatteryInfo ref="batteryInfo"/>
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>

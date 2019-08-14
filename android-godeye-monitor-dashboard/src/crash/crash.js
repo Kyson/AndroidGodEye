@@ -45,28 +45,12 @@ class Crash extends Component {
                     <p style={{wordWrap: "break-word", wordBreak: "break-all"}}>
                         <strong>Message(异常信息):&nbsp;</strong>{crashInfo.throwableMessage ? crashInfo.throwableMessage : "**"}
                     </p>
-                    <p><strong>Stacktrace(异常堆栈)</strong></p>
-                    {Crash.renderStacktraceItem(crashInfo.throwableStacktrace)}
                 </div>
-                <Modal visible={this.state.show} onCancel={this.handleClose} title="Crash detail" closable={true}
+                <Modal visible={this.state.show} onCancel={this.handleClose} title="Crash Detail" closable={true}
                        onOk={this.handleClose} width={800}>
                     <JSONPretty id="json-pretty" json={this.state.crashInfo}/>
                 </Modal>
             </Card>);
-    }
-
-    static renderStacktraceItem(throwableStacktraces) {
-        if (throwableStacktraces) {
-            let items = [];
-            for (let i = 0; i < throwableStacktraces.length; i++) {
-                items.push(
-                    <p style={{wordWrap: "break-word", wordBreak: "break-all", margin: 0}} key={"crash" + i}>
-                        <small>{throwableStacktraces[i]}</small>
-                    </p>
-                );
-            }
-            return items;
-        }
     }
 }
 

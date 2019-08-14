@@ -6,7 +6,7 @@ import JSONPretty from '../../node_modules/react-json-pretty';
 import {toast} from 'react-toastify';
 import ChangeBlockConfigFormInstance from "./changeBlockConfigForm.js"
 
-import {Card, Modal, Button, Popover, InputNumber, Form} from 'antd'
+import {Card, Modal, Button, Popover} from 'antd'
 
 /**
  * Block
@@ -25,7 +25,7 @@ class Block extends Component {
             },
             chart: {
                 type: 'column',
-                height: 411
+                height: 403
             },
             title: {
                 text: null
