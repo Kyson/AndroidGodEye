@@ -109,11 +109,17 @@ class Mock {
         //     blockTime: 200,
         //     blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
         // });
-        // this.recvFun("blockInfo", {
-        //     blockTime: 300,
-        //     blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
-        // });
-        //
+        this.recvFun("blockInfo", {
+            blockTime: 300,
+            blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
+        });
+        this.recvFun("reinstallBlock", {
+            longBlockThresholdMillis: 100,
+            shortBlockThresholdMillis: 100,
+            dumpIntervalMillis: 1000,
+            debugNotify: true
+        });
+
         this.recvFun("networkInfo", {
             summary: "POST www.trip.com" + this.index,
             isSuccessful: true,

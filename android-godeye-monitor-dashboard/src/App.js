@@ -42,7 +42,7 @@ class App extends Component {
         };
         globalWs.registerCallback(this.onWsOpenCallback);
         globalWs.start();
-        // this.mock.start(this._onReceiveMessage);
+        this.mock.start(this._onReceiveMessage);
     }
 
     componentWillUnmount() {
@@ -78,7 +78,11 @@ class App extends Component {
         this.refs.refreshStatus.refresh(new Date());
         if ("MethodCanaryStatus" === moduleName) {
             this.refs.methodCanary.refreshStatus(payload);
-        } else {
+        }
+        if ("reinstallBlock" === moduleName) {
+            this.refs.blockInfo.refreshStatus(payload);
+        }
+        else {
             this._getModuleRef(moduleName).refresh(payload);
         }
     }

@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel, Modal, Button} from 'react-bootstrap'
 
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import JSONPretty from '../../node_modules/react-json-pretty';
 import {toast} from 'react-toastify';
+import ChangeBlockConfigFormInstance from "./changeBlockConfigForm.js"
 
-import {Card, Modal} from 'antd'
+import {Card, Modal, Button, Popover, InputNumber, Form} from 'antd'
 
 /**
  * Block
@@ -19,6 +17,8 @@ class Block extends Component {
         super(props);
         this.handleClose = this.handleClose.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.changeLongBlockThreshold = this.changeLongBlockThreshold.bind(this);
+        this.changeShortBlockThreshold = this.changeShortBlockThreshold.bind(this);
         this.options = {
             credits: {
                 enabled: false
@@ -70,7 +70,8 @@ class Block extends Component {
         };
         this.state = {
             show: false,
-            blockInfo: {}
+            blockInfo: {},
+            blockConfig: {}
         };
         this.index = 0;
     }
@@ -99,6 +100,12 @@ class Block extends Component {
         return this.index;
     }
 
+    refreshStatus(blockConfig) {
+        this.setState({
+            blockConfig
+        })
+    }
+
     refresh(blockInfo) {
         if (blockInfo) {
             let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
@@ -114,9 +121,49 @@ class Block extends Component {
         }
     }
 
+    changeLongBlockThreshold(time) {
+        console.log("changeLongBlockThreshold to " + time);
+        this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"longBlockThreshold":${time}`);
+    }
+
+    changeShortBlockThreshold(time) {
+        console.log("changeShortBlockThreshold to " + time);
+        this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"shortBlockThreshold":${time}`);
+    }
+
+    renderTitlebar() {
+        return (<div>
+                Block(Jank) Threshold&nbsp;&nbsp;
+                <Popover
+                    content={
+                        <div>
+                            <ChangeBlockConfigFormInstance handleChange={this.changeLongBlockThreshold}/>
+                        </div>
+                    }
+                    title="Change Threshold"
+                    trigger="click"
+                >
+                    <Button>Long:{this.state.blockConfig.longBlockThresholdMillis}ms</Button>
+                </Popover>
+                &nbsp;&nbsp;
+                <Popover
+                    content={
+                        <div>
+                            <ChangeBlockConfigFormInstance handleChange={this.changeShortBlockThreshold}/>
+                        </div>
+                    }
+                    title="Change Threshold"
+                    trigger="click"
+                >
+                    <Button>Short:{this.state.blockConfig.shortBlockThresholdMillis}ms</Button>
+                </Popover>
+            </div>
+        );
+    }
+
     render() {
         return (
-            <Card title="Block(卡顿)">
+            <Card title="Block(卡顿)" extra={this.renderTitlebar()}>
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}
