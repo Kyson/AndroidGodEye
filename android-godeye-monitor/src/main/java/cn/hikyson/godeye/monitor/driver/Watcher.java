@@ -168,6 +168,7 @@ public class Watcher implements Processor {
         try {
             final JSONObject msgJSONObject = new JSONObject(msg);
             final String moduleName = msgJSONObject.optString("moduleName");
+            // TODO KYSON DEL
             L.d("receive module:" + moduleName);
             if ("clientOnline".equals(moduleName)) {//if a client get online,send init message to it
                 for (Map.Entry<String, Object> entry : mMessageCache.copy().entrySet()) {
