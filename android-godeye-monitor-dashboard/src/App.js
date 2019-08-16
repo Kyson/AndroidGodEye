@@ -140,7 +140,7 @@ class App extends Component {
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={12}><MemoryLeak ref="leakInfo"/></Col>
-                        <Col span={12}><Block ref="blockInfo"/></Col>
+                        <Col span={12}><Block ref="blockInfo" globalWs={globalWs}/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={12}><Pageload ref="pageLifecycle"/></Col>
