@@ -20,6 +20,8 @@
 
 ## Overview
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e5f4ed2cb65c4e6d87587e8287fe7945)](https://app.codacy.com/app/Kyson/AndroidGodEye?utm_source=github.com&utm_medium=referral&utm_content=Kyson/AndroidGodEye&utm_campaign=Badge_Grade_Settings)
+
 ![android_godeye_connect](ART/android_god_eye_connect.jpg)
 
 AndroidGodEye is a performance monitor tool for Android(not limited to performance data) , you can easily monitor the performance of your app in real time in pc browser.
