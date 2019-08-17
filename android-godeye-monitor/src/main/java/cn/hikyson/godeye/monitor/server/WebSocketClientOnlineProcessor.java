@@ -13,7 +13,7 @@ public class WebSocketClientOnlineProcessor implements WebSocketProcessor {
 
     @Override
     public void process(WebSocket webSocket, JSONObject msgJSONObject) throws Exception {
-        for (Map.Entry<String, Object> entry : Watcher.instance().messageCacheCopy().entrySet()) {
+        for (Map.Entry<String, Object> entry : ModuleDriver.instance().messageCacheCopy().entrySet()) {
             webSocket.send(new ServerMessage(entry.getKey(), entry.getValue()).toString());
         }
         webSocket.send(new ServerMessage("reinstallBlock", GodEyeConfig.SmConfig.Factory.convert(Sm.instance().getSmContext())).toString());

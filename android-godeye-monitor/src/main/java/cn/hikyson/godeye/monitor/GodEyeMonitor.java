@@ -15,7 +15,7 @@ import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessSorterClassPathPrefixImpl;
-import cn.hikyson.godeye.monitor.server.Watcher;
+import cn.hikyson.godeye.monitor.server.ModuleDriver;
 import cn.hikyson.godeye.monitor.modules.AppInfo;
 import cn.hikyson.godeye.monitor.modules.AppInfoLabel;
 import cn.hikyson.godeye.monitor.server.HttpStaticProcessor;
@@ -75,6 +75,18 @@ public class GodEyeMonitor {
         final WebSocketBizProcessor webSocketBizProcessor = new WebSocketBizProcessor();
         sGodEyeMonitorServer.setMonitorServerCallback(new GodEyeMonitorServer.MonitorServerCallback() {
             @Override
+            public void onClientAdded(List<WebSocket> webSockets, WebSocket added) {
+                ModuleDriver.instance().start(sGodEyeMonitorServer);
+            }
+
+            @Override
+            public void onClientRemoved(List<WebSocket> webSockets, WebSocket removed) {
+                if (webSockets == null || webSockets.isEmpty()) {
+                    ModuleDriver.instance().stop();
+                }
+            }
+
+            @Override
             public void onHttpRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 ThreadUtil.ensureWorkThread("AndroidGodEyeOnHttpRequest");
                 try {
@@ -91,8 +103,6 @@ public class GodEyeMonitor {
             }
         });
         sGodEyeMonitorServer.start();
-        Watcher.instance().setMessager(sGodEyeMonitorServer);
-        Watcher.instance().start();
         L.d(getAddressLog(context, port));
         L.d("GodEye monitor is working...");
     }
@@ -105,7 +115,7 @@ public class GodEyeMonitor {
             sGodEyeMonitorServer.stop();
             sGodEyeMonitorServer = null;
         }
-        Watcher.instance().stop();
+        ModuleDriver.instance().stop();
         sIsWorking = false;
         L.d("GodEye monitor stopped.");
     }

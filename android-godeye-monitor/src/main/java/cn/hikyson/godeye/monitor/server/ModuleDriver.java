@@ -2,17 +2,13 @@ package cn.hikyson.godeye.monitor.server;
 
 import android.support.v4.util.ArrayMap;
 
-import com.koushikdutta.async.http.WebSocket;
 
-
-import java.nio.channels.ClosedSelectorException;
 import java.util.Collections;
 import java.util.Comparator;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
@@ -46,6 +42,7 @@ import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modules.MethodCanaryStatus;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
@@ -62,25 +59,22 @@ import io.reactivex.schedulers.Schedulers;
  * monitor数据引擎，用于生产各项数据
  * Created by kysonchao on 2017/11/21.
  */
-public class Watcher {
+public class ModuleDriver {
     private CompositeDisposable mCompositeDisposable;
     private Messager mMessager;
     //cache lastest message
     private MessageCache mMessageCache;
+    private boolean mIsRunning;
 
     private static class InstanceHolder {
-        private static Watcher sInstance = new Watcher();
+        private static ModuleDriver sInstance = new ModuleDriver();
     }
 
-    public static Watcher instance() {
+    public static ModuleDriver instance() {
         return InstanceHolder.sInstance;
     }
 
-    public void setMessager(Messager messager) {
-        mMessager = messager;
-    }
-
-    private Watcher() {
+    private ModuleDriver() {
     }
 
     private <T> Observable<T> wrapThreadComputationObservable(Observable<T> observable) {
@@ -93,10 +87,16 @@ public class Watcher {
     /**
      * 监听所有的数据
      */
-    public void start() {
+    public synchronized void start(Messager messager) {
+        if (mIsRunning) {
+            return;
+        }
+        mIsRunning = true;
+        L.d("ModuleDriver start running.");
         GodEye godEye = GodEye.instance();
         mMessageCache = new MessageCache();
         mCompositeDisposable = new CompositeDisposable();
+        mMessager = messager;
         mCompositeDisposable.addAll(
                 wrapThreadComputationObservable(godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject())
                         .map(this.<BatteryInfo>createConvertServerMessageFunction("batteryInfo"))
@@ -160,7 +160,12 @@ public class Watcher {
         }
     }
 
-    public void stop() {
+    public synchronized void stop() {
+        if (!mIsRunning) {
+            return;
+        }
+        mIsRunning = false;
+        L.d("ModuleDriver has stopped.");
         if (mCompositeDisposable != null) {
             mCompositeDisposable.dispose();
             mCompositeDisposable = null;

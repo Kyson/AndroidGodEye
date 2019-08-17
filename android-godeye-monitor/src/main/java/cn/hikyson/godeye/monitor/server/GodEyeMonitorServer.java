@@ -9,7 +9,6 @@ import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import cn.hikyson.godeye.core.utils.L;
@@ -19,12 +18,17 @@ public class GodEyeMonitorServer implements Messager {
     private final int mPort;
     private AsyncHttpServer mServer;
     private final List<WebSocket> mWebSockets;
+    private final Object mLockForWebSockets = new Object();
     private MonitorServerCallback mMonitorServerCallback;
 
     /**
      * server的消息回调
      */
     public interface MonitorServerCallback {
+        void onClientAdded(List<WebSocket> webSockets, WebSocket added);
+
+        void onClientRemoved(List<WebSocket> webSockets, WebSocket removed);
+
         void onHttpRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response);
 
         void onWebSocketRequest(WebSocket webSocket, String messageFromClient);
@@ -33,15 +37,25 @@ public class GodEyeMonitorServer implements Messager {
     public GodEyeMonitorServer(int port) {
         mPort = port;
         mServer = new AsyncHttpServer();
-        mWebSockets = Collections.synchronizedList(new ArrayList<>());
+        mWebSockets = new ArrayList<>();
         mServer.websocket("/refresh", (webSocket, request) -> {
-            mWebSockets.add(webSocket);
-            L.d("connection build. current count:" + mWebSockets.size());
+            synchronized (mLockForWebSockets) {
+                mWebSockets.add(webSocket);
+                if (mMonitorServerCallback != null) {
+                    mMonitorServerCallback.onClientAdded(mWebSockets, webSocket);
+                }
+                L.d("connection build. current count:" + mWebSockets.size());
+            }
             webSocket.setClosedCallback(new CompletedCallback() {
                 @Override
                 public void onCompleted(Exception ex) {
-                    mWebSockets.remove(webSocket);
-                    L.d("connection released. current count:" + mWebSockets.size());
+                    synchronized (mLockForWebSockets) {
+                        mWebSockets.remove(webSocket);
+                        if (mMonitorServerCallback != null) {
+                            mMonitorServerCallback.onClientRemoved(mWebSockets, webSocket);
+                        }
+                        L.d("connection released. current count:" + mWebSockets.size());
+                    }
                 }
             });
             webSocket.setStringCallback(s -> {
