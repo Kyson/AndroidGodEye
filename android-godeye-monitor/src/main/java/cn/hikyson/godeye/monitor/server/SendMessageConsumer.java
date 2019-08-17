@@ -1,7 +1,6 @@
-package cn.hikyson.godeye.monitor.driver;
+package cn.hikyson.godeye.monitor.server;
 
 import cn.hikyson.godeye.core.utils.ThreadUtil;
-import cn.hikyson.godeye.monitor.processors.Messager;
 import io.reactivex.functions.Consumer;
 
 public class SendMessageConsumer implements Consumer<ServerMessage> {
@@ -14,6 +13,8 @@ public class SendMessageConsumer implements Consumer<ServerMessage> {
     @Override
     public void accept(ServerMessage serverMessage) throws Exception {
         ThreadUtil.ensureWorkThread("SendMessageConsumer accept");
-        mMessager.sendMessage(serverMessage.toString());
+        if (mMessager != null) {
+            mMessager.sendMessage(serverMessage.toString());
+        }
     }
 }

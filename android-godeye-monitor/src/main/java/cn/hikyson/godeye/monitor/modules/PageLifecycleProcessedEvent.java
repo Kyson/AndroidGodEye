@@ -1,11 +1,11 @@
-package cn.hikyson.godeye.monitor.modulemodel;
+package cn.hikyson.godeye.monitor.modules;
 
 import java.util.Map;
 
 import cn.hikyson.godeye.core.internal.modules.pageload.LifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageType;
 
-public class PageLifecycleProcessedEvent<T> {
+public class PageLifecycleProcessedEvent {
     public PageType pageType;
     public String pageClassName;
     public int pageHashCode;

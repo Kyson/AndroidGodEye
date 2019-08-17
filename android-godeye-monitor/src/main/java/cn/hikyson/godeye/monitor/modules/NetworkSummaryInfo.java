@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.monitor.modulemodel;
+package cn.hikyson.godeye.monitor.modules;
 
 import java.util.ArrayList;
 import java.util.List;

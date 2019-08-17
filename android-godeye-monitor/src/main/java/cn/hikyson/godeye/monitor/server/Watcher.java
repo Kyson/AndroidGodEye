@@ -1,21 +1,20 @@
-package cn.hikyson.godeye.monitor.driver;
+package cn.hikyson.godeye.monitor.server;
 
-import android.content.Context;
+import android.support.v4.util.ArrayMap;
 
 import com.koushikdutta.async.http.WebSocket;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.nio.channels.ClosedSelectorException;
 import java.util.Collections;
 import java.util.Comparator;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import cn.hikyson.godeye.core.GodEye;
-import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
@@ -43,44 +42,45 @@ import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadUtil;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
-import cn.hikyson.godeye.core.internal.modules.sm.SmContext;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
-import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
-import cn.hikyson.godeye.core.utils.L;
-import cn.hikyson.godeye.core.utils.ThreadUtil;
-import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
-import cn.hikyson.godeye.monitor.modulemodel.BlockSimpleInfo;
-import cn.hikyson.godeye.monitor.modulemodel.MethodCanaryStatus;
-import cn.hikyson.godeye.monitor.modulemodel.NetworkSummaryInfo;
-import cn.hikyson.godeye.monitor.modulemodel.PageLifecycleProcessedEvent;
-import cn.hikyson.godeye.monitor.modulemodel.ThreadInfo;
-import cn.hikyson.godeye.monitor.processors.Messager;
-import cn.hikyson.godeye.monitor.processors.Processor;
-import cn.hikyson.godeye.monitor.utils.GsonUtil;
+import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
+import cn.hikyson.godeye.monitor.modules.MethodCanaryStatus;
+import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
+import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
+import cn.hikyson.godeye.monitor.modules.thread.ThreadInfo;
+import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.Subject;
 
 /**
  * monitor数据引擎，用于生产各项数据
  * Created by kysonchao on 2017/11/21.
  */
-public class Watcher implements Processor {
+public class Watcher {
     private CompositeDisposable mCompositeDisposable;
     private Messager mMessager;
     //cache lastest message
     private MessageCache mMessageCache;
 
-    public Watcher(Messager messager) {
-        mCompositeDisposable = new CompositeDisposable();
+    private static class InstanceHolder {
+        private static Watcher sInstance = new Watcher();
+    }
+
+    public static Watcher instance() {
+        return InstanceHolder.sInstance;
+    }
+
+    public void setMessager(Messager messager) {
         mMessager = messager;
-        mMessageCache = new MessageCache();
+    }
+
+    private Watcher() {
     }
 
     private <T> Observable<T> wrapThreadComputationObservable(Observable<T> observable) {
@@ -93,8 +93,10 @@ public class Watcher implements Processor {
     /**
      * 监听所有的数据
      */
-    public void observeAll() {
+    public void start() {
         GodEye godEye = GodEye.instance();
+        mMessageCache = new MessageCache();
+        mCompositeDisposable = new CompositeDisposable();
         mCompositeDisposable.addAll(
                 wrapThreadComputationObservable(godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject())
                         .map(this.<BatteryInfo>createConvertServerMessageFunction("batteryInfo"))
@@ -132,7 +134,7 @@ public class Watcher implements Processor {
                         .map(this.<HeapInfo>createConvertServerMessageFunction("heapInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 wrapThreadComputationObservable(godEye.<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject())
-                        .map(threadMap())
+                        .map(ThreadInfoConverter.threadMap())
                         .map(this.<List<ThreadInfo>>createConvertServerMessageFunction("threadInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 wrapThreadComputationObservable(godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject())
@@ -158,59 +160,13 @@ public class Watcher implements Processor {
         }
     }
 
-    public void cancelAllObserve() {
-        mCompositeDisposable.dispose();
-    }
-
-    @Override
-    public void process(final WebSocket webSocket, String msg) {
-        ThreadUtil.ensureWorkThread("Watcher process:" + msg);
-        try {
-            final JSONObject msgJSONObject = new JSONObject(msg);
-            final String moduleName = msgJSONObject.optString("moduleName");
-            if ("clientOnline".equals(moduleName)) {//if a client get online,send init message to it
-                for (Map.Entry<String, Object> entry : mMessageCache.copy().entrySet()) {
-                    webSocket.send(new ServerMessage(entry.getKey(), entry.getValue()).toString());
-                }
-                webSocket.send(new ServerMessage("reinstallBlock", GodEyeConfig.SmConfig.Factory.convert(Sm.instance().getSmContext())).toString());
-            } else if ("appInfo".equals(moduleName)) {
-                webSocket.send(new ServerMessage("appInfo", new AppInfo()).toString());
-            } else if ("methodCanary".equals(moduleName)) {
-                final MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
-                if ("start".equals(msgJSONObject.optString("payload"))) {
-                    methodCanary.startMonitor();
-                } else if ("stop".equals(msgJSONObject.optString("payload"))) {
-                    methodCanary.stopMonitor();
-                }
-            } else if ("MethodCanaryStatus".equals(moduleName)) {
-                Subject<String> methodCanaryStatusSubject = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject();
-                if (methodCanaryStatusSubject != null && !methodCanaryStatusSubject.hasComplete() && !methodCanaryStatusSubject.hasThrowable()) {
-                    methodCanaryStatusSubject.onNext("GET");
-                }
-            } else if ("reinstallBlock".equals(moduleName)) {
-                final JSONObject payloadJSONObject = msgJSONObject.optJSONObject("payload");
-                SmContext smContext = Sm.instance().getSmContext();
-                GodEyeConfig.SmConfig newSmConfig;
-                if (smContext == null) {
-                    newSmConfig = new GodEyeConfig.SmConfig();
-                } else {
-                    newSmConfig = GodEyeConfig.SmConfig.Factory.convert(smContext);
-                }
-                long longBlockThreshold = payloadJSONObject.optLong("longBlockThreshold");
-                long shortBlockThreshold = payloadJSONObject.optLong("shortBlockThreshold");
-                if (longBlockThreshold > 0) {
-                    newSmConfig.longBlockThresholdMillis = longBlockThreshold;
-                }
-                if (shortBlockThreshold > 0) {
-                    newSmConfig.shortBlockThresholdMillis = shortBlockThreshold;
-                }
-                Sm.instance().uninstall();
-                Sm.instance().install(newSmConfig);
-                webSocket.send(new ServerMessage("reinstallBlock", newSmConfig).toString());
-            }
-        } catch (JSONException e) {
-            L.e(String.valueOf(e));
+    public void stop() {
+        if (mCompositeDisposable != null) {
+            mCompositeDisposable.dispose();
+            mCompositeDisposable = null;
         }
+        mMessager = null;
+        mMessageCache = null;
     }
 
     private SendMessageConsumer createSendMessageConsumer() {
@@ -221,13 +177,20 @@ public class Watcher implements Processor {
         return new ConvertServerMessageFunction<T>(mMessageCache, module);
     }
 
+    Map<String, Object> messageCacheCopy() {
+        if (mMessageCache == null) {
+            return new ArrayMap<>();
+        }
+        return mMessageCache.copy();
+    }
+
     private Predicate<List<CrashInfo>> crashPredicate() {
         return crashInfos -> crashInfos != null && !crashInfos.isEmpty();
     }
 
     private Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent> pageLifecycleMap() {
         return tPageLifecycleEventInfo -> {
-            PageLifecycleProcessedEvent pageLifecycleProcessedEvent = new PageLifecycleProcessedEvent<>();
+            PageLifecycleProcessedEvent pageLifecycleProcessedEvent = new PageLifecycleProcessedEvent();
             pageLifecycleProcessedEvent.pageType = tPageLifecycleEventInfo.pageInfo.pageType;
             pageLifecycleProcessedEvent.pageHashCode = tPageLifecycleEventInfo.pageInfo.pageHashCode;
             pageLifecycleProcessedEvent.pageClassName = tPageLifecycleEventInfo.pageInfo.pageClassName;
@@ -265,10 +228,6 @@ public class Watcher implements Processor {
             });
             return crashInfos.get(0);
         };
-    }
-
-    private Function<List<Thread>, List<ThreadInfo>> threadMap() {
-        return ThreadInfo::convert;
     }
 
     private Function<BlockInfo, BlockSimpleInfo> blockMap() {

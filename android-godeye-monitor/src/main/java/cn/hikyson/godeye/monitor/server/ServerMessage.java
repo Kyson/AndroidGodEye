@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.monitor.driver;
+package cn.hikyson.godeye.monitor.server;
 
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
 

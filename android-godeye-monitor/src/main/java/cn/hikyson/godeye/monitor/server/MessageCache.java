@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.monitor.driver;
+package cn.hikyson.godeye.monitor.server;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 public class MessageCache {
     private final Map<String, Object> mCachedMessage;
 
-    public MessageCache() {
+    MessageCache() {
         mCachedMessage = new HashMap<>();
     }
 

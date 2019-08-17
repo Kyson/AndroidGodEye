@@ -9,14 +9,15 @@ import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 
 import java.util.List;
+import java.util.Locale;
 
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
-import cn.hikyson.godeye.monitor.driver.Watcher;
-import cn.hikyson.godeye.monitor.modulemodel.AppInfo;
-import cn.hikyson.godeye.monitor.modulemodel.AppInfoLabel;
-import cn.hikyson.godeye.monitor.processors.StaticProcessor;
-import cn.hikyson.godeye.monitor.processors.WebSocketProcessor;
+import cn.hikyson.godeye.monitor.server.Watcher;
+import cn.hikyson.godeye.monitor.modules.AppInfo;
+import cn.hikyson.godeye.monitor.modules.AppInfoLabel;
+import cn.hikyson.godeye.monitor.server.HttpStaticProcessor;
+import cn.hikyson.godeye.monitor.server.WebSocketBizProcessor;
 import cn.hikyson.godeye.monitor.server.GodEyeMonitorServer;
 
 /**
@@ -26,7 +27,6 @@ public class GodEyeMonitor {
     private static boolean sIsWorking = false;
     private static final int DEFAULT_PORT = 5390;
     private static GodEyeMonitorServer sGodEyeMonitorServer;
-    private static Watcher sWatcher;
 
     public interface AppInfoConext {
         Context getContext();
@@ -58,15 +58,14 @@ public class GodEyeMonitor {
         }
         Context applicationContext = context.getApplicationContext();
         sGodEyeMonitorServer = new GodEyeMonitorServer(port);
-        final StaticProcessor staticProcessor = new StaticProcessor(applicationContext);
-        final WebSocketProcessor webSocketProcessor = new WebSocketProcessor(sGodEyeMonitorServer);
+        final HttpStaticProcessor httpStaticProcessor = new HttpStaticProcessor(applicationContext);
+        final WebSocketBizProcessor webSocketBizProcessor = new WebSocketBizProcessor();
         sGodEyeMonitorServer.setMonitorServerCallback(new GodEyeMonitorServer.MonitorServerCallback() {
             @Override
             public void onHttpRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 ThreadUtil.ensureWorkThread("AndroidGodEyeOnHttpRequest");
                 try {
-                    StaticProcessor.StaticResource staticResource = staticProcessor.process(request.getPath());
-                    response.send(staticResource.contentType, staticResource.payload);
+                    boolean processed = httpStaticProcessor.process(request, response);
                 } catch (Throwable throwable) {
                     L.e(String.valueOf(throwable));
                 }
@@ -75,13 +74,12 @@ public class GodEyeMonitor {
             @Override
             public void onWebSocketRequest(WebSocket webSocket, String messageFromClient) {
                 ThreadUtil.ensureWorkThread("AndroidGodEyeOnWebSocketRequest");
-                webSocketProcessor.process(webSocket, messageFromClient);
+                webSocketBizProcessor.process(webSocket, messageFromClient);
             }
         });
-        sWatcher = new Watcher(webSocketProcessor);
-        webSocketProcessor.setProcessor(sWatcher);
         sGodEyeMonitorServer.start();
-        sWatcher.observeAll();
+        Watcher.instance().setMessager(sGodEyeMonitorServer);
+        Watcher.instance().start();
         L.d(getAddressLog(context, port));
         L.d("GodEye monitor is working...");
     }
@@ -94,10 +92,7 @@ public class GodEyeMonitor {
             sGodEyeMonitorServer.stop();
             sGodEyeMonitorServer = null;
         }
-        if (sWatcher != null) {
-            sWatcher.cancelAllObserve();
-            sWatcher = null;
-        }
+        Watcher.instance().stop();
         sIsWorking = false;
         L.d("GodEye monitor stopped.");
     }
@@ -106,7 +101,7 @@ public class GodEyeMonitor {
         @SuppressLint("WifiManagerPotentialLeak")
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         int ipAddress = wifiManager != null ? wifiManager.getConnectionInfo().getIpAddress() : 0;
-        @SuppressLint("DefaultLocale") final String formattedIpAddress = String.format("%d.%d.%d.%d",
+        final String formattedIpAddress = String.format(Locale.US, "%d.%d.%d.%d",
                 (ipAddress & 0xff),
                 (ipAddress >> 8 & 0xff),
                 (ipAddress >> 16 & 0xff),

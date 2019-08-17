@@ -1,8 +1,7 @@
-package cn.hikyson.godeye.monitor.modulemodel;
+package cn.hikyson.godeye.monitor.modules.thread;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.hikyson.godeye.core.utils.StacktraceUtil;
@@ -28,18 +27,22 @@ public class ThreadInfo {
     @Expose
     public List<String> stackTraceElements;
     @Expose
-    public String deadlock;
+    public ThreadRunningProcess threadRunningProcess;
 
-
-    public ThreadInfo(Thread thread) {
+    public ThreadInfo(Thread thread, ThreadRunningProcessSorter threadRunningProcessSorter) {
+        this.id = thread.getId();
         this.name = thread.getName();
         this.state = String.valueOf(thread.getState());
         this.deamon = thread.isDaemon();
         this.priority = thread.getPriority();
-        this.id = thread.getId();
         this.isAlive = thread.isAlive();
         this.isInterrupted = thread.isInterrupted();
         this.stackTraceElements = StacktraceUtil.getStack(thread.getStackTrace());
+        if (threadRunningProcessSorter != null) {
+            this.threadRunningProcess = threadRunningProcessSorter.sort(this);
+        } else {
+            this.threadRunningProcess = ThreadRunningProcess.UNKNOWN;
+        }
     }
 
     @Override
@@ -47,34 +50,13 @@ public class ThreadInfo {
         return "ThreadInfo{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", state=" + state +
+                ", state='" + state + '\'' +
                 ", deamon=" + deamon +
                 ", priority=" + priority +
                 ", isAlive=" + isAlive +
                 ", isInterrupted=" + isInterrupted +
                 ", stackTraceElements=" + stackTraceElements +
+                ", threadRunningProcess=" + threadRunningProcess +
                 '}';
-    }
-
-    public static List<ThreadInfo> convert(List<Thread> threads) {
-        List<ThreadInfo> threadWrappers = new ArrayList<>();
-        for (Thread thread : threads) {
-            if (thread == null) {
-                continue;
-            }
-            threadWrappers.add(new ThreadInfo(thread));
-        }
-        return threadWrappers;
-    }
-
-    public static List<ThreadInfo> convert(Thread... threads) {
-        List<ThreadInfo> threadWrappers = new ArrayList<>();
-        for (Thread thread : threads) {
-            if (thread == null) {
-                continue;
-            }
-            threadWrappers.add(new ThreadInfo(thread));
-        }
-        return threadWrappers;
     }
 }

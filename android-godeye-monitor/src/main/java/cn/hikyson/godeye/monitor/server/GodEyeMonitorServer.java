@@ -11,12 +11,10 @@ import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Observable;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import cn.hikyson.godeye.core.utils.L;
 
-public class GodEyeMonitorServer {
+public class GodEyeMonitorServer implements Messager {
 
     private final int mPort;
     private AsyncHttpServer mServer;
@@ -35,28 +33,22 @@ public class GodEyeMonitorServer {
     public GodEyeMonitorServer(int port) {
         mPort = port;
         mServer = new AsyncHttpServer();
-        mWebSockets = Collections.synchronizedList(new ArrayList<WebSocket>());
-        mServer.websocket("/refresh", new AsyncHttpServer.WebSocketRequestCallback() {
-            @Override
-            public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {
-                mWebSockets.add(webSocket);
-                L.d("connection build. current count:" + mWebSockets.size());
-                webSocket.setClosedCallback(new CompletedCallback() {
-                    @Override
-                    public void onCompleted(Exception ex) {
-                        mWebSockets.remove(webSocket);
-                        L.d("connection released. current count:" + mWebSockets.size());
-                    }
-                });
-                webSocket.setStringCallback(new WebSocket.StringCallback() {
-                    @Override
-                    public void onStringAvailable(String s) {
-                        if (mMonitorServerCallback != null) {
-                            mMonitorServerCallback.onWebSocketRequest(webSocket, s);
-                        }
-                    }
-                });
-            }
+        mWebSockets = Collections.synchronizedList(new ArrayList<>());
+        mServer.websocket("/refresh", (webSocket, request) -> {
+            mWebSockets.add(webSocket);
+            L.d("connection build. current count:" + mWebSockets.size());
+            webSocket.setClosedCallback(new CompletedCallback() {
+                @Override
+                public void onCompleted(Exception ex) {
+                    mWebSockets.remove(webSocket);
+                    L.d("connection released. current count:" + mWebSockets.size());
+                }
+            });
+            webSocket.setStringCallback(s -> {
+                if (mMonitorServerCallback != null) {
+                    mMonitorServerCallback.onWebSocketRequest(webSocket, s);
+                }
+            });
         });
         mServer.get("/.*[(.html)|(.css)|(.js)|(.png)|(.jpg)|(.jpeg)|(.ico)]", new HttpServerRequestCallback() {
             @Override
@@ -81,6 +73,7 @@ public class GodEyeMonitorServer {
         AsyncServer.getDefault().stop();
     }
 
+    @Override
     public void sendMessage(String message) {
         Object[] wss = mWebSockets.toArray();
         if (wss != null) {

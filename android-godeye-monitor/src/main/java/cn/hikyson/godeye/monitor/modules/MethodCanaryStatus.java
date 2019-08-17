@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.monitor.modulemodel;
+package cn.hikyson.godeye.monitor.modules;
 
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryContext;
 

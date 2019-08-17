@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.monitor.processors;
+package cn.hikyson.godeye.monitor.server;
 
 public interface Messager {
     void sendMessage(String message);

@@ -1,8 +1,11 @@
-package cn.hikyson.godeye.monitor.processors;
+package cn.hikyson.godeye.monitor.server;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
+
+import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
+import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,14 +16,15 @@ import cn.hikyson.godeye.monitor.utils.IoUtil;
  * 静态资源模块
  * Created by kysonchao on 2017/9/3.
  */
-public class StaticProcessor {
+public class HttpStaticProcessor {
     private AssetManager mAssets;
 
-    public StaticProcessor(Context context) {
+    public HttpStaticProcessor(Context context) {
         mAssets = context.getResources().getAssets();
     }
 
-    public StaticResource process(String path) throws Throwable {
+    public boolean process(AsyncHttpServerRequest request, AsyncHttpServerResponse response) throws Throwable {
+        String path = request.getPath();
         if (path.startsWith("/")) {
             path = path.substring(1);
         }
@@ -28,7 +32,9 @@ public class StaticProcessor {
             path = "index.html";
         }
         String fileName = "android-godeye-dashboard/" + path;
-        return new StaticResource(parseMimeType(fileName), loadContent(fileName, mAssets));
+        StaticResource staticResource = new StaticResource(parseMimeType(fileName), loadContent(fileName, mAssets));
+        response.send(staticResource.contentType, staticResource.payload);
+        return true;
     }
 
     private static String loadContent(String fileName, AssetManager assetManager) throws IOException {

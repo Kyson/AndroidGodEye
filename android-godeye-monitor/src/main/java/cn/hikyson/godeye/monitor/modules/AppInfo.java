@@ -1,11 +1,10 @@
-package cn.hikyson.godeye.monitor.modulemodel;
+package cn.hikyson.godeye.monitor.modules;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
 

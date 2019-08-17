@@ -4,18 +4,13 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -36,20 +31,14 @@ public class ThreadEngine implements Engine {
 
     @Override
     public void work() {
-        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).map(new Function<Long, List<Thread>>() {
-            @Override
-            public List<Thread> apply(Long aLong) throws Exception {
-                ThreadUtil.ensureWorkThread("ThreadEngine apply");
-                return dump(mThreadFilter);
-            }
+        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).map(aLong -> {
+            ThreadUtil.ensureWorkThread("ThreadEngine apply");
+            return dump(mThreadFilter);
         }).subscribeOn(ThreadUtil.sComputationScheduler)
                 .observeOn(ThreadUtil.sComputationScheduler)
-                .subscribe(new Consumer<List<Thread>>() {
-                    @Override
-                    public void accept(List<Thread> food) throws Exception {
-                        ThreadUtil.ensureWorkThread("ThreadEngine accept");
-                        mProducer.produce(food);
-                    }
+                .subscribe(food -> {
+                    ThreadUtil.ensureWorkThread("ThreadEngine accept");
+                    mProducer.produce(food);
                 }));
     }
 

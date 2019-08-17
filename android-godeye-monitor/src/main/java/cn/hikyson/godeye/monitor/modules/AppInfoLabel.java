@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.monitor.modulemodel;
+package cn.hikyson.godeye.monitor.modules;
 
 public class AppInfoLabel {
     public String name;

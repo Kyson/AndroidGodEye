@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
-import cn.hikyson.godeye.monitor.modulemodel.AppInfoLabel;
+import cn.hikyson.godeye.monitor.modules.AppInfoLabel;
 
 /**
  * Created by kysonchao on 2017/12/9.

@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.monitor.driver;
+package cn.hikyson.godeye.monitor.server;
 
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.functions.Function;
@@ -15,7 +15,9 @@ public class ConvertServerMessageFunction<T> implements Function<T, ServerMessag
     @Override
     public ServerMessage apply(T input) {
         ThreadUtil.ensureWorkThread("ConvertServerMessageFunction:" + input.getClass().getSimpleName());
-        mMessageCache.put(mModuleName, input);
+        if (mMessageCache != null) {
+            mMessageCache.put(mModuleName, input);
+        }
         return new ServerMessage(mModuleName, input);
     }
 }
