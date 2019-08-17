@@ -17,7 +17,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.hikyson.android.godeye.toolbox.network.OkNetworkCollectorFactory;
-import cn.hikyson.android.godeye.toolbox.StartupTracer;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
@@ -359,6 +358,14 @@ public class MainActivity extends Activity implements Loggable {
         String[] i = new String[1000];
         for (int m = 0; m < i.length; m++) {
             i[m] = m + "this is a string";
+        }
+    }
+
+    private void methodE() {
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

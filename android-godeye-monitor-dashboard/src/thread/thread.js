@@ -59,10 +59,6 @@ class Thread extends Component {
                             Header: "State",
                             accessor: "state"
                         }, {
-                            Header: "Deadlock",
-                            id: "deadlock",
-                            accessor: d => d.deadlock + ""
-                        }, {
                             Header: "Priority",
                             accessor: "priority"
                         }, {
@@ -77,6 +73,10 @@ class Thread extends Component {
                             Header: "IsInterrupted",
                             id: "isInterrupted",
                             accessor: d => d.isInterrupted + ""
+                        }, {
+                            Header: "RunningProcess",
+                            id: "threadRunningProcess",
+                            accessor: d => d.threadRunningProcess + ""
                         }
                     ]}
                     SubComponent={row => {

@@ -2,7 +2,8 @@ package cn.hikyson.android.godeye.sample;
 
 import android.app.Application;
 
-import cn.hikyson.android.godeye.toolbox.StartupTracer;
+import java.util.Collections;
+
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
 
@@ -18,5 +19,6 @@ public class SampleApp extends Application {
         //UPDATE 1.8+ 需要初始化
         GodEye.instance().init(this);
         GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl(this));
+        GodEyeMonitor.setClassPathPrefixOfThreadRunningProcess(Collections.singletonList("cn.hikyson.android.godeye.sample"));
     }
 }

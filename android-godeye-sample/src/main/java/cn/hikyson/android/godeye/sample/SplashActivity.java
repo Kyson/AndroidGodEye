@@ -8,8 +8,6 @@ import android.os.Handler;
 import android.support.v4.content.PermissionChecker;
 import android.widget.Toast;
 
-import cn.hikyson.android.godeye.toolbox.StartupTracer;
-
 public class SplashActivity extends Activity {
 
     @Override
@@ -22,13 +20,10 @@ public class SplashActivity extends Activity {
         } else {
             Toast.makeText(this, "permission " + Manifest.permission.WRITE_EXTERNAL_STORAGE + " need!!!", Toast.LENGTH_SHORT).show();
         }
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }, 2000);
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }, 1000);
     }
 }

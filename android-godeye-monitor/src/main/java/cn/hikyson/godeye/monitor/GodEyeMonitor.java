@@ -13,6 +13,8 @@ import java.util.Locale;
 
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
+import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
+import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessSorterClassPathPrefixImpl;
 import cn.hikyson.godeye.monitor.server.Watcher;
 import cn.hikyson.godeye.monitor.modules.AppInfo;
 import cn.hikyson.godeye.monitor.modules.AppInfoLabel;
@@ -35,10 +37,21 @@ public class GodEyeMonitor {
     }
 
     /**
+     * set app informations,it will show on the top of dashboard
+     *
      * @param appInfoConext
      */
-    public static synchronized void injectAppInfoConext(AppInfoConext appInfoConext) {
+    public static void injectAppInfoConext(AppInfoConext appInfoConext) {
         AppInfo.injectAppInfoConext(appInfoConext);
+    }
+
+    /**
+     * set the code class path ,it will show if a thread is running in app process for thread info list in dashboard
+     *
+     * @param classPathPrefixes
+     */
+    public static void setClassPathPrefixOfThreadRunningProcess(List<String> classPathPrefixes) {
+        ThreadInfoConverter.setThreadRunningProcessSorter(new ThreadRunningProcessSorterClassPathPrefixImpl(classPathPrefixes));
     }
 
     public static synchronized void work(Context context) {

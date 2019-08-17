@@ -32,4 +32,8 @@ public class GodEyeMonitor {
     public static void injectAppInfoConext(AppInfoConext appInfoConext) {
         //no op
     }
+
+    public static void setClassPathPrefixOfThreadRunningProcess(List<String> classPathPrefixes) {
+        // no op
+    }
 }

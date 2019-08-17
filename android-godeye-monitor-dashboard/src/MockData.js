@@ -72,75 +72,75 @@ class Mock {
         //     currentFps: "32",
         //     systemFps: "34"
         // });
-        this.recvFun("pageLifecycle", {
-            pageType: "Acivity",
-            pageClassName: "pageClassName" + this.index,
-            pageHashCode: 10000,
-
-            lifecycleEvent: "ON_LOAD",
-            eventTimeMillis: 1469433907836,
-            processedInfo: {
-                "loadTime": 2342
-            }
-        });
-        this.recvFun("pageLifecycle", {
-            pageType: "Acivity",
-            pageClassName: "pageClassName" + (this.index * 2),
-            pageHashCode: 20000,
-            lifecycleEvent: "ON_DRAW",
-            eventTimeMillis: 1469433907836,
-            processedInfo: {
-                "drawTime": 700
-            }
-        });
-        this.recvFun("pageLifecycle", {
-            pageType: "Acivity",
-            pageClassName: "ClassName3",
-            pageHashCode: 12312,
-            lifecycleEvent: "ON_CREATE",
-            eventTimeMillis: 1469433907836,
-        });
-        this.recvFun("crashInfo", {
-            timestampMillis: new Date().getMilliseconds(),
-            throwableMessage: "throwableMessagethrowableMessagethrowableMessagethrowab",
-            throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
-        });
+        // this.recvFun("pageLifecycle", {
+        //     pageType: "Acivity",
+        //     pageClassName: "pageClassName" + this.index,
+        //     pageHashCode: 10000,
+        //
+        //     lifecycleEvent: "ON_LOAD",
+        //     eventTimeMillis: 1469433907836,
+        //     processedInfo: {
+        //         "loadTime": 2342
+        //     }
+        // });
+        // this.recvFun("pageLifecycle", {
+        //     pageType: "Acivity",
+        //     pageClassName: "pageClassName" + (this.index * 2),
+        //     pageHashCode: 20000,
+        //     lifecycleEvent: "ON_DRAW",
+        //     eventTimeMillis: 1469433907836,
+        //     processedInfo: {
+        //         "drawTime": 700
+        //     }
+        // });
+        // this.recvFun("pageLifecycle", {
+        //     pageType: "Acivity",
+        //     pageClassName: "ClassName3",
+        //     pageHashCode: 12312,
+        //     lifecycleEvent: "ON_CREATE",
+        //     eventTimeMillis: 1469433907836,
+        // });
+        // this.recvFun("crashInfo", {
+        //     timestampMillis: new Date().getMilliseconds(),
+        //     throwableMessage: "throwableMessagethrowableMessagethrowableMessagethrowab",
+        //     throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
+        // });
         // this.recvFun("blockInfo", {
         //     blockTime: 200,
         //     blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
         // });
-        this.recvFun("blockInfo", {
-            blockTime: 300,
-            blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
-        });
-        this.recvFun("reinstallBlock", {
-            longBlockThresholdMillis: 100,
-            shortBlockThresholdMillis: 100,
-            dumpIntervalMillis: 1000,
-            debugNotify: true
-        });
-
-        this.recvFun("networkInfo", {
-            summary: "POST www.trip.com" + this.index,
-            isSuccessful: true,
-            message: "OK",
-            totalTime: 1200,
-            networkTime: [
-                {name: "DNS", time: 200},
-                {name: "RequestHeader", time: 300},
-                {name: "ResponseBody", time: 500},
-
-            ],
-            networkContent: {
-                networkType: "Http",
-                requestContent: "this is requestContent",
-                responseContent: "this is responseContent",
-            },
-            extraInfo: {
-                key1: "value1",
-                key2: "value2"
-            }
-        });
+        // this.recvFun("blockInfo", {
+        //     blockTime: 300,
+        //     blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
+        // });
+        // this.recvFun("reinstallBlock", {
+        //     longBlockThresholdMillis: 100,
+        //     shortBlockThresholdMillis: 100,
+        //     dumpIntervalMillis: 1000,
+        //     debugNotify: true
+        // });
+        //
+        // this.recvFun("networkInfo", {
+        //     summary: "POST www.trip.com" + this.index,
+        //     isSuccessful: true,
+        //     message: "OK",
+        //     totalTime: 1200,
+        //     networkTime: [
+        //         {name: "DNS", time: 200},
+        //         {name: "RequestHeader", time: 300},
+        //         {name: "ResponseBody", time: 500},
+        //
+        //     ],
+        //     networkContent: {
+        //         networkType: "Http",
+        //         requestContent: "this is requestContent",
+        //         responseContent: "this is responseContent",
+        //     },
+        //     extraInfo: {
+        //         key1: "value1",
+        //         key2: "value2"
+        //     }
+        // });
         // this.recvFun("trafficInfo", {
         //     rxTotalRate: 56,
         //     txTotalRate: 48,
@@ -154,37 +154,37 @@ class Mock {
         //     statusSummary: "statusSummary",
         //     pathToGcRoot: ["leakStack", "leakStack", "leakStack", "leakStack", "leakStack"]
         // });
-        // this.recvFun("threadInfo", [
-        //     {
-        //         id: 1,
-        //         name: "name",
-        //         state: "state",
-        //         deadlock: "deadlock",
-        //         priority: "priority",
-        //         deamon: "deamon",
-        //         isAlive: "isAlive",
-        //         isInterrupted: "isInterrupted",
-        //     },
-        //     {
-        //         id: 1,
-        //         name: "name",
-        //         state: "state",
-        //         deadlock: "deadlock",
-        //         priority: "priority",
-        //         deamon: "deamon",
-        //         isAlive: "isAlive",
-        //         isInterrupted: "isInterrupted",
-        //     }, {
-        //         id: 1,
-        //         name: "name",
-        //         state: "state",
-        //         deadlock: "deadlock",
-        //         priority: "priority",
-        //         deamon: "deamon",
-        //         isAlive: "isAlive",
-        //         isInterrupted: "isInterrupted",
-        //     }
-        // ]);
+        this.recvFun("threadInfo", [
+            {
+                id: 1,
+                name: "name",
+                state: "state",
+                priority: "priority",
+                deamon: "deamon",
+                isAlive: "isAlive",
+                isInterrupted: "isInterrupted",
+                threadRunningProcess: "UNKNOWN"
+            },
+            {
+                id: 1,
+                name: "name",
+                state: "state",
+                priority: "priority",
+                deamon: "deamon",
+                isAlive: "isAlive",
+                isInterrupted: "isInterrupted",
+                threadRunningProcess: "APP"
+            }, {
+                id: 1,
+                name: "name",
+                state: "state",
+                priority: "priority",
+                deamon: "deamon",
+                isAlive: "isAlive",
+                isInterrupted: "isInterrupted",
+                threadRunningProcess: "SYSTEM"
+            }
+        ]);
         //
         // this.recvFun("MethodCanaryStatus", {
         //     lowCostMethodThresholdMillis: 10,
