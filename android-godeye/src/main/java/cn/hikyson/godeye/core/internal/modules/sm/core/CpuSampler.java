@@ -175,7 +175,6 @@ public class CpuSampler extends AbstractSampler {
             synchronized (mCpuInfoEntries) {
                 mCpuInfoEntries.put(System.currentTimeMillis(), cpuInfo);
                 if (mCpuInfoEntries.size() > MAX_ENTRY_COUNT) {
-                    // TODO KYSON TEST
                     int overSize = mCpuInfoEntries.size() - MAX_ENTRY_COUNT;
                     List<Long> willRemove = new ArrayList<>();
                     for (Map.Entry<Long, CpuInfo> entry : mCpuInfoEntries.entrySet()) {
