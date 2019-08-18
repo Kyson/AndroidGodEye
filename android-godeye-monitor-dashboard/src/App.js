@@ -132,11 +132,11 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={8}> <Cpu ref="cpuInfo"/>
+                        <Col span={6}> <Cpu ref="cpuInfo"/>
                         </Col>
-                        <Col span={8}> <Heap ref="heapInfo"/>
+                        <Col span={6}> <Heap ref="heapInfo"/>
                         </Col>
-                        <Col span={8}><Traffic ref="trafficInfo"/></Col>
+                        <Col span={6}><Traffic ref="trafficInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={12}><MemoryLeak ref="leakInfo"/></Col>

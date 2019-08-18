@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import '../App.css';
 
-import Highcharts from '../../node_modules/highcharts/highcharts';
-import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import {Card} from 'antd'
+import TrafficInfo from "./traffic_info";
 
-exporting(Highcharts);
 
 /**
  * Traffic
@@ -19,16 +17,20 @@ class Traffic extends Component {
             chart: {
                 spacingLeft: 0,
                 spacingRight: 0,
-                height: 300,
+                height: 200,
+                type: "line"
+            },
+            exporting: {
+                enabled: false
+            },
+            legend: {
+                enabled: false
             },
             title: {
-                text: "Traffic(流量)"
+                text: null
             },
             credits: {
                 enabled: false
-            },
-            exporting: {
-                chartOptions: {},
             },
             tooltip: {
                 shared: true,
@@ -43,14 +45,20 @@ class Traffic extends Component {
                 }
             },
             xAxis: {
-                type: 'category'
+                type: 'category',
+                visible: false,
             },
             yAxis: {
-                title: {
-                    text: "Traffic(KB/S)",
-                    align: "middle",
-                },
-                min: 0
+                min: 0,
+                visible: false,
+            },
+            plotOptions: {
+                line: {
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    }
+                }
             },
             series: [
                 {
@@ -99,11 +107,13 @@ class Traffic extends Component {
             this.refs.chart.getChart().series[3].addPoint([axisData, trafficInfo.txUidRate], false, true, true);
             this.refs.chart.getChart().redraw(true);
         }
+        this.refs.info.refresh(trafficInfo);
     }
 
     render() {
         return (
-            <Card>
+            <Card title="Traffic(流量)KB/s">
+                <TrafficInfo ref="info"/>
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}

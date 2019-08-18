@@ -1,17 +1,11 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
-import Highcharts from '../../node_modules/highcharts/highcharts';
-import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import {toast} from 'react-toastify';
 
 import {Card} from 'antd'
-
-exporting(Highcharts);
+import HeapInfo from "./heap_info";
 
 /**
  * Heap
@@ -23,13 +17,19 @@ class Heap extends Component {
 
         this.options = {
             chart: {
-                type: 'area',
                 spacingLeft: 0,
                 spacingRight: 0,
-                height: 300,
+                height: 200,
+                type: "line"
+            },
+            exporting: {
+                enabled: false
+            },
+            legend: {
+                enabled: false
             },
             title: {
-                text: "Heap(堆内存)"
+                text: null
             },
             credits: {
                 enabled: false
@@ -47,30 +47,31 @@ class Heap extends Component {
                 }
             },
             xAxis: {
-                type: 'category'
+                type: 'category',
+                visible: false
             },
             yAxis: {
-                title: {
-                    text: "Heap(MB)",
-                    align: "middle",
-                },
-                min: 0
+                min: 0,
+                visible: false
+            },
+            plotOptions: {
+                line: {
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    }
+                }
             },
             series: [
                 {
                     name: 'Allocated',
-                    stack: 'heap',
-                    stacking: 'normal',
                     data: (Heap.initSeries())
                 },
                 {
                     name: 'Free',
-                    stack: 'heap',
-                    stacking: 'normal',
                     data: (Heap.initSeries())
                 }, {
                     name: 'Max',
-                    type: 'line',
                     data: (Heap.initSeries())
                 }
             ]
@@ -105,11 +106,13 @@ class Heap extends Component {
                 toast.error("Heap memory is running out.(堆内存即将耗尽)")
             }
         }
+        this.refs.info.refresh(heapInfo);
     }
 
     render() {
         return (
-            <Card>
+            <Card title="Heap(堆内存)MB">
+                <HeapInfo ref="info"/>
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}

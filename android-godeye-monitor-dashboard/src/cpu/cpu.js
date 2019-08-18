@@ -2,12 +2,9 @@ import React, {Component} from 'react';
 import '../App.css';
 import {Card} from 'antd'
 
-import Highcharts from '../../node_modules/highcharts/highcharts';
-import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import {toast} from 'react-toastify';
-
-exporting(Highcharts);
+import CpuInfo from "./cpu_info";
 
 /**
  * Cpu
@@ -18,13 +15,19 @@ class Cpu extends Component {
         super(props);
         this.options = {
             chart: {
-                type: 'area',
                 spacingLeft: 0,
                 spacingRight: 0,
-                height: 300,
+                height: 200,
+                type: "line"
+            },
+            exporting: {
+                enabled: false
+            },
+            legend: {
+                enabled: false
             },
             title: {
-                text: "CPU"
+                text: null
             },
             credits: {
                 enabled: false
@@ -42,39 +45,37 @@ class Cpu extends Component {
                 }
             },
             xAxis: {
-                type: 'category'
+                type: 'category',
+                visible: false,
             },
             yAxis: {
-                title: {
-                    text: "Cpu Usage Rate(Percentage)",
-                    align: "middle",
-                },
                 min: 0,
-                max: 100
+                max: 100,
+                visible: false,
+            },
+            plotOptions: {
+                line: {
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    }
+                }
             },
             series: [
                 {
                     name: 'Total',
-                    stack: 'cpu_total',
-                    stacking: 'normal',
                     data: (Cpu.initSeries())
                 },
                 {
                     name: 'App',
-                    stack: 'cpu',
-                    stacking: 'normal',
                     data: (Cpu.initSeries())
                 },
                 {
                     name: 'UserProcess',
-                    stack: 'cpu',
-                    stacking: 'normal',
                     data: (Cpu.initSeries())
                 },
                 {
                     name: 'SystemProcess',
-                    stack: 'cpu',
-                    stacking: 'normal',
                     data: (Cpu.initSeries())
                 }
             ]
@@ -110,11 +111,13 @@ class Cpu extends Component {
         if (cpuInfo.appCpuRatio >= 0.9 || cpuInfo.totalUseRatio >= 0.9) {
             toast.error("CPU overload(CPU负载过重)!!!");
         }
+        this.refs.info.refresh(cpuInfo);
     }
 
     render() {
         return (
-            <Card>
+            <Card title="CPU">
+                <CpuInfo ref="info"/>
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}

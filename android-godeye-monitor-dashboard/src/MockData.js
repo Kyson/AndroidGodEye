@@ -47,17 +47,17 @@ class Mock {
         //     technology: "technology",
         //     scale: 100,
         // });
-        // this.recvFun("cpuInfo", {
-        //     totalUseRatio: 0.91,
-        //     appCpuRatio: 0.12,
-        //     userCpuRatio: 0.23,
-        //     sysCpuRatio: 0.09
-        // });
-        // this.recvFun("heapInfo", {
-        //     freeMemKb: 1024 * 520,
-        //     allocatedKb: 1024 * 1520,
-        //     maxMemKb: 1024 * 6000
-        // });
+        this.recvFun("cpuInfo", {
+            totalUseRatio: 0.91,
+            appCpuRatio: 0.12,
+            userCpuRatio: 0.23,
+            sysCpuRatio: 0.09
+        });
+        this.recvFun("heapInfo", {
+            freeMemKb: 1024 * 520,
+            allocatedKb: 1024 * 1520,
+            maxMemKb: 1024 * 6000
+        });
         // this.recvFun("ramInfo", {
         //     totalMemKb: 1024 * 1024 * 3,
         //     availMemKb: 1024 * 1024 * 1.5
@@ -141,12 +141,12 @@ class Mock {
         //         key2: "value2"
         //     }
         // });
-        // this.recvFun("trafficInfo", {
-        //     rxTotalRate: 56,
-        //     txTotalRate: 48,
-        //     rxUidRate: 34,
-        //     txUidRate: 42
-        // });
+        this.recvFun("trafficInfo", {
+            rxTotalRate: 56,
+            txTotalRate: 48,
+            rxUidRate: 34,
+            txUidRate: 42
+        });
         // this.recvFun("leakInfo", {
         //     referenceKey: "referenceKey",
         //     leakTime: "leakTime",
