@@ -3,7 +3,10 @@ class Util {
         return ["#EB4334", "#4586F3", "#FBBD06", "#93c756", "#999999"];
     }
 
+
     static getRed() {
+
+
         return Util.getCommonColors()[0];
     }
 
@@ -21,6 +24,10 @@ class Util {
 
     static getGrey() {
         return Util.getCommonColors()[4];
+    }
+
+    static getLightGrey() {
+        return "#cccccc";
     }
 }
 

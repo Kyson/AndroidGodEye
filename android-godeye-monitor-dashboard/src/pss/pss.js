@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import '../App.css';
 
-import Highcharts from '../../node_modules/highcharts/highstock';
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import {Card} from 'antd'
 
@@ -17,6 +16,9 @@ class Pss extends Component {
                 height: 248,
                 spacing: [0, 0, 0, 0]
             },
+            exporting: {
+                enabled: false
+            },
             title: {
                 floating: true,
                 text: 'Pss',
@@ -31,8 +33,8 @@ class Pss extends Component {
             },
             tooltip: {
                 formatter: function () {
-                    return '<div style="text-align:center"><span style="font-size:18px;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">' +
+                    return '<div style="text-align:center"><span style="font-size:13px;color:' +
+                        'black' + '">' +
                         this.point.name + ":" +
                         (this.point.y / 1024).toFixed(2) + 'M,' +
                         this.point.percentage.toFixed(1) + "%"
@@ -45,7 +47,7 @@ class Pss extends Component {
                         enabled: false,
                         format: '<b>{point.name}</b>',
                         style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            color: 'black'
                         }
                     },
                 }
@@ -53,7 +55,7 @@ class Pss extends Component {
             series: [{
                 type: 'pie',
                 name: 'pss',
-                innerSize: '80%',
+                innerSize: '90%',
                 data: []
             }]
         };
@@ -74,8 +76,7 @@ class Pss extends Component {
             datas.push(Pss.createSeriresData("native", info.nativePssKb));
             datas.push(Pss.createSeriresData("other", info.otherPssKb));
             datas.push(Pss.createSeriresData("unknown", unknownPssKb));
-            let title = "Pss(共享比例物理内存)<br/>" + (info.totalPssKb / 1024).toFixed(2) + "M";
-            this.options.title.text = title;
+            this.options.title.text = "Pss(共享比例物理内存)<br/>" + (info.totalPssKb / 1024).toFixed(2) + "M";
         } else {
             this.options.title.text = "**";
         }

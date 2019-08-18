@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel} from 'react-bootstrap'
 
-import Highcharts from '../../node_modules/highcharts/highstock';
+
 import ReactHighcharts from '../../node_modules/react-highcharts'
 
 import {Card} from 'antd'
@@ -21,6 +18,9 @@ class Ram extends Component {
                 height: 248,
                 spacing: [0, 0, 0, 0]
             },
+            exporting: {
+                enabled: false
+            },
             title: {
                 floating: true,
                 text: 'Ram',
@@ -35,8 +35,8 @@ class Ram extends Component {
             },
             tooltip: {
                 formatter: function () {
-                    return '<div style="text-align:center"><span style="font-size:18px;color:' +
-                        ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">' +
+                    return '<div style="text-align:center"><span style="font-size:13px;color:' +
+                        'black' + '">' +
                         this.point.name + ":" +
                         (this.point.y / 1024).toFixed(1) + 'M,' +
                         this.point.percentage.toFixed(1) + "%"
@@ -54,7 +54,7 @@ class Ram extends Component {
             series: [{
                 type: 'pie',
                 name: 'ram',
-                innerSize: '80%',
+                innerSize: '90%',
                 data: []
             }]
         };
@@ -73,8 +73,7 @@ class Ram extends Component {
             let allocatedKb = info.totalMemKb - info.availMemKb;
             datas.push(Ram.createSeriresData("allocated", allocatedKb));
             datas.push(Ram.createSeriresData("free", info.availMemKb));
-            let title = "Ram(运行时内存)<br/>" + (info.totalMemKb / 1024).toFixed(1) + "M";
-            this.options.title.text = title;
+            this.options.title.text = "Ram(运行时内存)<br/>" + (info.totalMemKb / 1024).toFixed(1) + "M";
         } else {
             this.options.title.text = "**";
         }

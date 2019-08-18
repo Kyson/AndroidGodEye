@@ -36,17 +36,17 @@ class Mock {
         //     startupType: "cold",
         //     startupTime: 1003
         // });
-        // this.recvFun("batteryInfo", {
-        //     level: 24,
-        //     status: "ok",
-        //     plugged: "plugged",
-        //     present: "present",
-        //     health: "health",
-        //     voltage: "voltage",
-        //     temperature: "temperature",
-        //     technology: "technology",
-        //     scale: 100,
-        // });
+        this.recvFun("batteryInfo", {
+            level: 24,
+            status: "ok",
+            plugged: "plugged",
+            present: "present",
+            health: "health",
+            voltage: "voltage",
+            temperature: "temperature",
+            technology: "technology",
+            scale: 100,
+        });
         this.recvFun("cpuInfo", {
             totalUseRatio: 0.91,
             appCpuRatio: 0.12,
@@ -58,16 +58,16 @@ class Mock {
             allocatedKb: 1024 * 1520,
             maxMemKb: 1024 * 6000
         });
-        // this.recvFun("ramInfo", {
-        //     totalMemKb: 1024 * 1024 * 3,
-        //     availMemKb: 1024 * 1024 * 1.5
-        // });
-        // this.recvFun("pssInfo", {
-        //     totalPssKb: 1024 * 300,
-        //     dalvikPssKb: 1024 * 125,
-        //     nativePssKb: 1024 * 200,
-        //     otherPssKb: 1024 * 7,
-        // });
+        this.recvFun("ramInfo", {
+            totalMemKb: 1024 * 1024 * 3,
+            availMemKb: 1024 * 1024 * 1.5
+        });
+        this.recvFun("pssInfo", {
+            totalPssKb: 1024 * 300,
+            dalvikPssKb: 1024 * 125,
+            nativePssKb: 1024 * 200,
+            otherPssKb: 1024 * 7,
+        });
         // this.recvFun("fpsInfo", {
         //     currentFps: "32",
         //     systemFps: "34"
