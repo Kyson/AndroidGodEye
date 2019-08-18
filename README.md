@@ -245,6 +245,11 @@ How does AndroidGodEye work？As below:
 
 AndroidGodEye is under Apache2.0.
 
+## Contributors
+
+- [ahhbzyz](https://github.com/ahhbzyz)
+- [Xiangxingqian](https://github.com/Xiangxingqian)
+
 ## About Me
 
 - Github: [Kyson](https://github.com/Kyson)

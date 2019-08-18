@@ -253,6 +253,11 @@ Done!
 
 AndroidGodEye使用 Apache2.0 许可协议。
 
+## 贡献者
+
+- [ahhbzyz](https://github.com/ahhbzyz)
+- [Xiangxingqian](https://github.com/Xiangxingqian)
+
 ## 关于我
 
 - Github: [Kyson](https://github.com/Kyson)
