@@ -14,15 +14,15 @@ class TrafficInfo extends Component {
         };
     }
 
-    // trafficInfo.rxTotalRate], false, true, true);
-    // ([axisData, trafficInfo.txTotalRate], false, true, true);
-    // [axisData, trafficInfo.rxUidRate], false, true, true);
-    // ([axisData, trafficInfo.txUidRate]
-
     refresh(trafficInfo) {
         if (trafficInfo) {
             this.setState({
-                trafficInfo
+                trafficInfo: {
+                    rxUidRate: trafficInfo.rxUidRate.toFixed(1),
+                    txUidRate: trafficInfo.txUidRate.toFixed(1),
+                    rxTotalRate: trafficInfo.rxTotalRate.toFixed(1),
+                    txTotalRate: trafficInfo.txTotalRate.toFixed(1),
+                }
             })
         } else {
             this.setState({

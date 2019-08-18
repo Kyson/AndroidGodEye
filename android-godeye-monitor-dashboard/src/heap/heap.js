@@ -66,13 +66,6 @@ class Heap extends Component {
                 {
                     name: 'Allocated',
                     data: (Heap.initSeries())
-                },
-                {
-                    name: 'Free',
-                    data: (Heap.initSeries())
-                }, {
-                    name: 'Max',
-                    data: (Heap.initSeries())
                 }
             ]
         };
@@ -99,8 +92,6 @@ class Heap extends Component {
         if (heapInfo) {
             let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
             this.refs.chart.getChart().series[0].addPoint([axisData, heapInfo.allocatedKb / 1024], false, true, true);
-            this.refs.chart.getChart().series[1].addPoint([axisData, heapInfo.freeMemKb / 1024], false, true, true);
-            this.refs.chart.getChart().series[2].addPoint([axisData, heapInfo.maxMemKb / 1024], false, true, true);
             this.refs.chart.getChart().redraw(true);
             if (heapInfo.allocatedKb > (heapInfo.maxMemKb * 0.9)) {
                 toast.error("Heap memory is running out.(堆内存即将耗尽)")

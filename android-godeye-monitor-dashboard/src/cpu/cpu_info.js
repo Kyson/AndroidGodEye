@@ -15,8 +15,8 @@ class CpuInfo extends Component {
         if (cpuInfo) {
             this.setState({
                 cpuInfo: {
-                    totalUseRatio: (cpuInfo.totalUseRatio * 100),
-                    appCpuRatio: (cpuInfo.appCpuRatio * 100)
+                    totalUseRatio: (cpuInfo.totalUseRatio * 100).toFixed(1),
+                    appCpuRatio: (cpuInfo.appCpuRatio * 100).toFixed(1)
                 }
             })
         } else {
