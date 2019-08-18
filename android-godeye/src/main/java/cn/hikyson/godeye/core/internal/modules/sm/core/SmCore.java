@@ -6,16 +6,13 @@ import android.os.Looper;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.helper.AndroidDebug;
 import cn.hikyson.godeye.core.helper.Notifier;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.MemoryUtil;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public final class SmCore {
 
@@ -48,11 +45,14 @@ public final class SmCore {
 
             @Override
             public void onBlockEvent(final long blockTimeMillis, final long threadBlockTimeMillis, final boolean longBlock, final long eventStartTimeMilliis, final long eventEndTimeMillis, long longBlockThresholdMillis, long shortBlockThresholdMillis) {
-                if (debugNotify) {
-                    Notifier.notice(GodEye.instance().getApplication()
-                            , new Notifier.Config("AndroidGodEye", "Block!", "Install Android Studio plugin 'AndroidGodEye' to find the detail."));
-                }
                 HandlerThreadFactory.getObtainDumpThreadHandler().post(() -> {
+                    if (AndroidDebug.isDebugging()) {// if debugging, then ignore
+                        return;
+                    }
+                    if (debugNotify) {
+                        ThreadUtil.sMain.execute(() -> Notifier.notice(GodEye.instance().getApplication()
+                                , new Notifier.Config("AndroidGodEye", "Block!", "Install Android Studio plugin 'AndroidGodEye' to find the detail.")));
+                    }
                     if (longBlock) {//短卡顿
                         //如果是长卡顿，那么需要记录很多信息
                         final boolean cpuBusy = cpuSampler.isCpuBusy(eventStartTimeMilliis, eventEndTimeMillis);
@@ -120,7 +120,7 @@ public final class SmCore {
      *
      * @return
      */
-    public long getSampleDelay() {
+    long getSampleDelay() {
         return (long) (this.mLongBlockThresholdMillis * 0.9f);
     }
 

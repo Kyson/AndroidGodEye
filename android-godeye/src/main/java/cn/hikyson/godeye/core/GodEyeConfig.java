@@ -140,13 +140,13 @@ public class GodEyeConfig {
             }
             element = getFirstElementByTagInRoot(root, "sm");
             if (element != null) {
-                final String debugNotifyString = element.getAttribute("debugNotify");
+                final String debugNotifyString = element.getAttribute("debugNotification");
                 final String longBlockThresholdMillisString = element.getAttribute("longBlockThresholdMillis");
                 final String shortBlockThresholdMillisString = element.getAttribute("shortBlockThresholdMillis");
                 final String dumpIntervalMillisString = element.getAttribute("dumpIntervalMillis");
                 SmConfig smConfig = new SmConfig();
                 if (!TextUtils.isEmpty(debugNotifyString)) {
-                    smConfig.debugNotify = Boolean.parseBoolean(debugNotifyString);
+                    smConfig.debugNotification = Boolean.parseBoolean(debugNotifyString);
                 }
                 if (!TextUtils.isEmpty(longBlockThresholdMillisString)) {
                     smConfig.longBlockThresholdMillis = Long.parseLong(longBlockThresholdMillisString);
@@ -314,10 +314,22 @@ public class GodEyeConfig {
     }
 
     public static class LeakConfig implements LeakContext {
-
-        public boolean debug = true;
-        public boolean debugNotification = true;
+        // if you want leak module work in production,set debug false
+        public boolean debug;
+        public boolean debugNotification;
         public LeakRefInfoProvider leakRefInfoProvider;
+
+        public LeakConfig(boolean debug, boolean debugNotification, LeakRefInfoProvider leakRefInfoProvider) {
+            this.debug = debug;
+            this.debugNotification = debugNotification;
+            this.leakRefInfoProvider = leakRefInfoProvider;
+        }
+
+        public LeakConfig() {
+            this.debug = false;
+            this.debugNotification = false;
+            this.leakRefInfoProvider = new DefaultLeakRefInfoProvider();
+        }
 
         @NonNull
         @Override
@@ -405,20 +417,20 @@ public class GodEyeConfig {
     }
 
     public static class SmConfig implements SmContext {
+        public boolean debugNotification;
         public long longBlockThresholdMillis;
         public long shortBlockThresholdMillis;
         public long dumpIntervalMillis;
-        public boolean debugNotify;
 
-        public SmConfig(boolean debugNotify, long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
-            this.debugNotify = debugNotify;
+        public SmConfig(boolean debugNotification, long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
+            this.debugNotification = debugNotification;
             this.longBlockThresholdMillis = longBlockThresholdMillis;
             this.shortBlockThresholdMillis = shortBlockThresholdMillis;
             this.dumpIntervalMillis = dumpIntervalMillis;
         }
 
         public SmConfig() {
-            this.debugNotify = true;
+            this.debugNotification = false;
             this.longBlockThresholdMillis = 500;
             this.shortBlockThresholdMillis = 300;
             this.dumpIntervalMillis = 1000;
@@ -430,8 +442,8 @@ public class GodEyeConfig {
         }
 
         @Override
-        public boolean debugNotify() {
-            return debugNotify;
+        public boolean debugNotification() {
+            return debugNotification;
         }
 
         @Override
@@ -455,7 +467,7 @@ public class GodEyeConfig {
                 if (smContext == null) {
                     return null;
                 }
-                return new SmConfig(smContext.debugNotify(), smContext.longBlockThreshold(), smContext.shortBlockThreshold(), smContext.dumpInterval());
+                return new SmConfig(smContext.debugNotification(), smContext.longBlockThreshold(), smContext.shortBlockThreshold(), smContext.dumpInterval());
             }
 
             public static SmContext convert(GodEyeConfig.SmConfig smConfig) {
@@ -469,8 +481,8 @@ public class GodEyeConfig {
                     }
 
                     @Override
-                    public boolean debugNotify() {
-                        return smConfig.debugNotify();
+                    public boolean debugNotification() {
+                        return smConfig.debugNotification();
                     }
 
                     @Override

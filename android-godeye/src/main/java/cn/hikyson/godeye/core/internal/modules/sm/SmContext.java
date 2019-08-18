@@ -8,7 +8,7 @@ import android.content.Context;
 public interface SmContext {
     Context context();
 
-    boolean debugNotify();
+    boolean debugNotification();
 
     //长卡顿阀值
     long longBlockThreshold();

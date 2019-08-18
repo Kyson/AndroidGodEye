@@ -478,7 +478,10 @@ public class MainActivity extends Activity implements Loggable {
                     GodEye.instance().<Fps>getModule(GodEye.ModuleName.FPS).install(new GodEyeConfig.FpsConfig());
                 }
                 if (mActivityMainLeak.isChecked()) {
-                    GodEye.instance().<LeakDetector>getModule(GodEye.ModuleName.LEAK).install(new GodEyeConfig.LeakConfig());
+                    GodEyeConfig.LeakConfig leakConfig = new GodEyeConfig.LeakConfig();
+                    leakConfig.debug = true;
+                    leakConfig.debugNotification = true;
+                    GodEye.instance().<LeakDetector>getModule(GodEye.ModuleName.LEAK).install(leakConfig);
                 }
                 if (mActivityMainHeap.isChecked()) {
                     GodEye.instance().<Heap>getModule(GodEye.ModuleName.HEAP).install(new GodEyeConfig.HeapConfig());
@@ -490,7 +493,9 @@ public class MainActivity extends Activity implements Loggable {
                     GodEye.instance().<Ram>getModule(GodEye.ModuleName.RAM).install(new GodEyeConfig.RamConfig());
                 }
                 if (mActivityMainSm.isChecked()) {
-                    GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).install(new GodEyeConfig.SmConfig());
+                    GodEyeConfig.SmConfig smConfig = new GodEyeConfig.SmConfig();
+                    smConfig.debugNotification = true;
+                    GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).install(smConfig);
                 }
                 if (mActivityMainTraffic.isChecked()) {
                     GodEye.instance().<Traffic>getModule(GodEye.ModuleName.TRAFFIC).install(new GodEyeConfig.TrafficConfig());

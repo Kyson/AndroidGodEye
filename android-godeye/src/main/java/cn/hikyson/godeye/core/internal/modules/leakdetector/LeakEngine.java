@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 
 import com.squareup.leakcanary.AndroidExcludedRefs;
-import com.squareup.leakcanary.DebuggerControl;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import com.squareup.leakcanary.internal.FragmentRefWatcher;
@@ -44,12 +43,7 @@ public class LeakEngine implements Engine {
 
     private RefWatcher createReleaseRefWatcher() {
         return LeakCanary.refWatcher(mConfig.application()).listenerServiceClass(GodEyeDisplayLeakService.class)
-                .debuggerControl(new DebuggerControl() {
-                    @Override
-                    public boolean isDebuggerAttached() {
-                        return false;
-                    }
-                })
+                .debuggerControl(() -> false)
                 .gcTrigger(new ReleaseGcTrigger())
                 .heapDumper(new ReleaseHeapDumper(mConfig.application()))
                 .heapDumpListener(new ReleaseHeapDumpListener())
