@@ -4,11 +4,9 @@ import java.util.List;
 
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
-import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.Preconditions;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 

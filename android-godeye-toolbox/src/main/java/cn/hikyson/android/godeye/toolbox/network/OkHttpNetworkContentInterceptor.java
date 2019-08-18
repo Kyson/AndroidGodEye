@@ -6,7 +6,6 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.utils.IoUtil;
 import okhttp3.Connection;
 import okhttp3.Headers;

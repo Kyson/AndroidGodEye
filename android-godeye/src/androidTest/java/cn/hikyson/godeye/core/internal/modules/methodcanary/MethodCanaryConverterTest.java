@@ -1,6 +1,5 @@
 package cn.hikyson.godeye.core.internal.modules.methodcanary;
 
-import android.app.Application;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
@@ -18,88 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.hikyson.godeye.core.utils.FileUtil;
-import cn.hikyson.godeye.core.utils.IoUtil;
 import cn.hikyson.methodcanary.lib.MethodEnterEvent;
 import cn.hikyson.methodcanary.lib.MethodEvent;
 import cn.hikyson.methodcanary.lib.MethodExitEvent;
 import cn.hikyson.methodcanary.lib.ThreadInfo;
-import cn.hikyson.methodcanary.lib.Util;
-
-import static org.junit.Assert.*;
 
 public class MethodCanaryConverterTest {
-
-    @Test
-    public void convertToMethodsRecordInfo() throws IOException {
-        File file = createMethodCanaryRecordFile();
-        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(3284436152929793L, 3284436172929793L, file);
-        Gson gson = new Gson();
-        String c = gson.toJson(methodsRecordInfo);
-        System.out.println("methodsRecordInfo:\n" + c);
-    }
-
-    @Test
-    public void filter() throws IOException {
-        File file = createMethodCanaryRecordFile();
-        final Context context = InstrumentationRegistry.getTargetContext();
-        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(3284436152929793L, 3284440700503230L, file);
-        Gson gson = new Gson();
-        String c = gson.toJson(methodsRecordInfo);
-        System.out.println("methodsRecordInfo0:\n" + c);
-
-        MethodCanaryConverter.filter(methodsRecordInfo, new MethodCanaryContext() {
-
-            @Override
-            public long lowCostMethodThresholdMillis() {
-                return 500;
-            }
-
-            @Override
-            public int maxMethodCountSingleThreadByCost() {
-                return 0;
-            }
-
-            @Override
-            public int maxMethodCountForSyncFile() {
-                return 0;
-            }
-
-            @Override
-            public Application app() {
-                return (Application) context.getApplicationContext();
-            }
-        });
-        c = gson.toJson(methodsRecordInfo);
-        System.out.println("methodsRecordInfo1:\n" + c);
-    }
-
-    @Test
-    public void filterByTopX() {
-        File file = createMethodCanaryRecordFile();
-        long start = 3284436152929793L;
-        long end = 3284440700503230L;
-
-        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, end, file);
-        MethodCanaryConverter.filterByTopX(3, MethodCanaryConverter.methodInfoCostComparator(start, end), methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos);
-        assertEquals("cn/hikyson/methodcanary/sample/MainActivity", methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.get(0).className);
-        assertEquals("onCreate", methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.get(0).methodName);
-        assertEquals("(Landroid/os/Bundle;)V", methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.get(0).methodDesc);
-        assertEquals(3, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.size());
-
-        methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, end, file);
-        MethodCanaryConverter.filterByTopX(2, MethodCanaryConverter.methodInfoCostComparator(start, end), methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos);
-        assertEquals(2, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.size());
-
-        methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, end, file);
-        MethodCanaryConverter.filterByTopX(1, MethodCanaryConverter.methodInfoCostComparator(start, end), methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos);
-        assertEquals(1, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.size());
-
-        methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, end, file);
-        MethodCanaryConverter.filterByTopX(0, MethodCanaryConverter.methodInfoCostComparator(start, end), methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos);
-        assertEquals(4, methodsRecordInfo.methodInfoOfThreadInfos.get(0).methodInfos.size());
-    }
-
     @Test
     public void methodInfoCostComparator() {
     }

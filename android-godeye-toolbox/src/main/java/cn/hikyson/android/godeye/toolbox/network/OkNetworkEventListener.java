@@ -7,7 +7,6 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import cn.hikyson.godeye.core.internal.Producer;

@@ -8,8 +8,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.http.util.TextUtils;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.Properties;
 
 /**

@@ -1,6 +1,5 @@
 package cn.hikyson.godeye.monitor.modules.thread;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;

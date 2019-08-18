@@ -1,13 +1,10 @@
 package cn.hikyson.godeye.core.internal.modules.crash;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
-import io.reactivex.Observable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kysonchao on 2017/12/18.

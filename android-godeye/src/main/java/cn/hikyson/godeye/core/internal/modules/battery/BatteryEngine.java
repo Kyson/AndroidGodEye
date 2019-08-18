@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
-import cn.hikyson.godeye.core.utils.ThreadUtil;
 
 /**
  * Created by kysonchao on 2017/11/23.

@@ -2,18 +2,15 @@ package cn.hikyson.godeye.core.internal.modules.memory;
 
 import android.content.Context;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -24,7 +21,7 @@ public class RamEngine implements Engine {
     private long mIntervalMillis;
     private CompositeDisposable mCompositeDisposable;
 
-    public RamEngine(Context context, Producer<RamInfo> producer, long intervalMillis) {
+    RamEngine(Context context, Producer<RamInfo> producer, long intervalMillis) {
         mContext = context;
         mProducer = producer;
         mIntervalMillis = intervalMillis;
