@@ -9,10 +9,11 @@ public class ThreadRunningProcessSorterClassPathPrefixImpl implements ThreadRunn
     private List<String> mClassPathPrefixs;
 
     public ThreadRunningProcessSorterClassPathPrefixImpl(List<String> classPathPrefixs) {
+        List<String> cpp = classPathPrefixs;
         if (classPathPrefixs == null) {
-            classPathPrefixs = new ArrayList<>();
+            cpp = new ArrayList<>();
         }
-        mClassPathPrefixs = classPathPrefixs;
+        mClassPathPrefixs = cpp;
     }
 
     @Override

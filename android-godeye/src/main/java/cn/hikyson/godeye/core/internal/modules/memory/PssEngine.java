@@ -9,8 +9,6 @@ import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -30,20 +28,14 @@ public class PssEngine implements Engine {
 
     @Override
     public void work() {
-        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).map(new Function<Long, PssInfo>() {
-            @Override
-            public PssInfo apply(Long aLong) throws Exception {
-                ThreadUtil.ensureWorkThread("PssEngine accept");
-                return MemoryUtil.getAppPssInfo(mContext);
-            }
+        mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).map(aLong -> {
+            ThreadUtil.ensureWorkThread("PssEngine accept");
+            return MemoryUtil.getAppPssInfo(mContext);
         }).subscribeOn(ThreadUtil.sComputationScheduler)
                 .observeOn(ThreadUtil.sComputationScheduler)
-                .subscribe(new Consumer<PssInfo>() {
-                    @Override
-                    public void accept(PssInfo food) throws Exception {
-                        ThreadUtil.ensureWorkThread("PssEngine accept");
-                        mProducer.produce(food);
-                    }
+                .subscribe(food -> {
+                    ThreadUtil.ensureWorkThread("PssEngine accept");
+                    mProducer.produce(food);
                 }));
     }
 

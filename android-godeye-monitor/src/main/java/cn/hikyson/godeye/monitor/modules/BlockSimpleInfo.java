@@ -14,9 +14,7 @@ public class BlockSimpleInfo {
         } else if (BlockInfo.BlockType.SHORT.equals(blockInfo.blockType)) {
             this.blockTime = blockInfo.shortBlockInfo.blockTime;
             this.blockBaseinfo = GsonUtil.toJson(blockInfo.shortBlockInfo);
-            ;
-        } else {
-            //do nothing
-        }
+        }  //do nothing
+
     }
 }

@@ -26,12 +26,7 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
         if (ThreadUtil.isMainThread()) {
             installInMain(crashProvider);
         } else {
-            ThreadUtil.sMain.execute(new Runnable() {
-                @Override
-                public void run() {
-                    installInMain(crashProvider);
-                }
-            });
+            ThreadUtil.sMain.execute(() -> installInMain(crashProvider));
         }
     }
 
@@ -51,12 +46,7 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
         if (ThreadUtil.isMainThread()) {
             uninstallInMain();
         } else {
-            ThreadUtil.sMain.execute(new Runnable() {
-                @Override
-                public void run() {
-                    uninstallInMain();
-                }
-            });
+            ThreadUtil.sMain.execute(() -> uninstallInMain());
         }
     }
 

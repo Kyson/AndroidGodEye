@@ -16,6 +16,9 @@ import cn.hikyson.godeye.core.utils.ProcessUtils;
  * Created by kysonchao on 2017/11/22.
  */
 public class MemoryUtil {
+    private static AtomicLong sTotalMem = new AtomicLong(0L);
+    private static ActivityManager sActivityManager;
+
     /**
      * 获取应用dalvik内存信息
      * 耗时忽略不计
@@ -31,7 +34,6 @@ public class MemoryUtil {
         return heapInfo;
     }
 
-    private static ActivityManager sActivityManager;
 
     /**
      * 获取应用实际占用RAM
@@ -87,7 +89,6 @@ public class MemoryUtil {
         }
     }
 
-    private static AtomicLong sTotalMem = new AtomicLong(0L);
 
     /**
      * 获取手机的RAM容量，其实和activityManager.getMemoryInfo(mi).totalMem效果一样，也就是说，在API16以上使用系统API获取，低版本采用这个文件读取方式

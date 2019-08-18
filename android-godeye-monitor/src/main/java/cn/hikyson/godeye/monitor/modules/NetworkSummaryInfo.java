@@ -10,6 +10,13 @@ import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkTime;
 
 public class NetworkSummaryInfo {
+    private static final int HTTP_TEMP_REDIRECT = 307;
+    private static final int HTTP_PERM_REDIRECT = 308;
+    private static final int HTTP_MULT_CHOICE = 300;
+    private static final int HTTP_MOVED_PERM = 301;
+    private static final int HTTP_MOVED_TEMP = 302;
+    private static final int HTTP_SEE_OTHER = 303;
+
     public String summary;
     public boolean isSuccessful;
     public String message;
@@ -22,7 +29,7 @@ public class NetworkSummaryInfo {
         public String name;
         public long time;
 
-        public TimePair(String name, long time) {
+        TimePair(String name, long time) {
             this.name = name;
             this.time = time;
         }
@@ -91,13 +98,6 @@ public class NetworkSummaryInfo {
     private static boolean isSuccessful(int code) {
         return code >= 200 && code < 300;
     }
-
-    private static final int HTTP_TEMP_REDIRECT = 307;
-    private static final int HTTP_PERM_REDIRECT = 308;
-    private static final int HTTP_MULT_CHOICE = 300;
-    private static final int HTTP_MOVED_PERM = 301;
-    private static final int HTTP_MOVED_TEMP = 302;
-    private static final int HTTP_SEE_OTHER = 303;
 
     private static boolean isRedirect(int code) {
         switch (code) {

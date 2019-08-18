@@ -9,7 +9,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.hikyson.godeye.core.helper.ActivityStack;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
@@ -58,6 +57,10 @@ public class GodEye {
         public static final String METHOD_CANARY = "METHOD_CANARY";
     }
 
+    private Application mApplication;
+
+    private Map<String, Object> mModules = new HashMap<>();
+
     private GodEye() {
     }
 
@@ -69,9 +72,6 @@ public class GodEye {
         return InstanceHolder.sInstance;
     }
 
-    private Application mApplication;
-
-    private Map<String, Object> mModules = new HashMap<>();
 
     /**
      * 初始化
