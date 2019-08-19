@@ -46,15 +46,20 @@ class Traffic extends Component {
             },
             xAxis: {
                 type: 'category',
-                visible: false,
+                labels: {
+                    enabled: false
+                },
+                lineWidth: 0,
+                tickLength: 0,
+                gridLineWidth: 1
             },
             yAxis: {
                 min: 0,
-                visible: false,
+                visible: false
             },
             plotOptions: {
                 line: {
-                    lineWidth: 1,
+                    lineWidth: 2,
                     marker: {
                         enabled: false
                     }
@@ -112,7 +117,7 @@ class Traffic extends Component {
 
     render() {
         return (
-            <Card title="Traffic(流量)KB/s">
+            <Card title="Traffic(流量)">
                 <TrafficInfo ref="info"/>
                 <ReactHighcharts
                     ref="chart"

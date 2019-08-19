@@ -34,7 +34,7 @@ class Pss extends Component {
             tooltip: {
                 formatter: function () {
                     return '<div style="text-align:center"><span style="font-size:13px;color:' +
-                        'black' + '">' +
+                        'black">' +
                         this.point.name + ":" +
                         (this.point.y / 1024).toFixed(2) + 'M,' +
                         this.point.percentage.toFixed(1) + "%"

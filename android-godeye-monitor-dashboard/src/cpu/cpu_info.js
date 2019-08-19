@@ -34,7 +34,7 @@ class CpuInfo extends Component {
         return (
             <span
                 style={{fontSize: 15}}>App:&nbsp;
-                <span style={{fontSize: 25}}>{this.state.cpuInfo.appCpuRatio}</span>&nbsp;%,&nbsp;Total:&nbsp;
+                <span style={{fontSize: 25}}>{this.state.cpuInfo.appCpuRatio}</span>&nbsp;%&nbsp;&nbsp;&nbsp;Device:&nbsp;
                 <span style={{fontSize: 25}}>{this.state.cpuInfo.totalUseRatio}</span>&nbsp;%</span>
         )
     }

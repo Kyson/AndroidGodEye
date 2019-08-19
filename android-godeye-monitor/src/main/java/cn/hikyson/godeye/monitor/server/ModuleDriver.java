@@ -47,6 +47,7 @@ import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modules.MethodCanaryStatus;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
+import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfo;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import io.reactivex.Observable;
@@ -99,7 +100,8 @@ public class ModuleDriver {
         mMessager = messager;
         mCompositeDisposable.addAll(
                 wrapThreadComputationObservable(godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject())
-                        .map(this.<BatteryInfo>createConvertServerMessageFunction("batteryInfo"))
+                        .map(BatteryInfoFactory.converter())
+                        .map(this.createConvertServerMessageFunction("batteryInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 wrapThreadComputationObservable(godEye.<Cpu>getModule(GodEye.ModuleName.CPU).subject())
                         .map(this.<CpuInfo>createConvertServerMessageFunction("cpuInfo"))

@@ -37,9 +37,10 @@ class HeapInfo extends Component {
         return (
             <span style={{fontSize: 15}}>Allocated:&nbsp;
                 <span style={{fontSize: 25}}>{this.state.heapInfo.allocatedMB}</span>
-              ,&nbsp;Max:&nbsp;
-                 <span style={{fontSize: 25}}>{this.state.heapInfo.maxMemMB}</span>
-                </span>
+                &nbsp;&nbsp;&nbsp;Max:&nbsp;
+                <span style={{fontSize: 25}}>{this.state.heapInfo.maxMemMB}</span>
+                &nbsp;&nbsp;MB
+            </span>
         )
     }
 }

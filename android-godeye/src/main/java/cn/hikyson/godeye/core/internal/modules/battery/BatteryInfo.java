@@ -25,78 +25,33 @@ public class BatteryInfo {
     //String类型，电池类型，例如，Li-ion等等。
     public String technology;
 
-    public static final String SPILT = "\r\n";
+    public BatteryInfo() {
+    }
+
+    public BatteryInfo(int status, int health, boolean present, int level, int scale, int plugged, int voltage, int temperature, String technology) {
+        this.status = status;
+        this.health = health;
+        this.present = present;
+        this.level = level;
+        this.scale = scale;
+        this.plugged = plugged;
+        this.voltage = voltage;
+        this.temperature = temperature;
+        this.technology = technology;
+    }
 
     @Override
     public String toString() {
-        return "statusSummary: " + getDisplayStatus() + SPILT +
-                "health: " + getDisplayHealth() + SPILT +
-                "present: " + present + SPILT +
-                "level: " + level + SPILT +
-                "scale: " + scale + SPILT +
-                "plugged: " + getDisplayPlugged() + SPILT +
-                "voltage: " + voltage / 1000.0 + SPILT +
-                "temperature: " + temperature / 10.0 + SPILT +
-                "technology: " + technology;
-    }
-
-    public String getDisplayStatus() {
-        switch (status) {
-            case BatteryManager.BATTERY_STATUS_CHARGING:
-                // 充电状态
-                return "charging";
-            case BatteryManager.BATTERY_STATUS_DISCHARGING:
-                // 放电中
-                return "discharging";
-            case BatteryManager.BATTERY_STATUS_NOT_CHARGING:
-                // 未充电
-                return "not charging";
-            case BatteryManager.BATTERY_STATUS_FULL:
-                // 电池满
-                return "full";
-            case BatteryManager.BATTERY_STATUS_UNKNOWN:
-            default:
-                return "unknown";
-        }
-    }
-
-    public String getDisplayHealth() {
-        switch (health) {
-            case BatteryManager.BATTERY_HEALTH_GOOD:
-                // 良好
-                return "good";
-            case BatteryManager.BATTERY_HEALTH_OVERHEAT:
-                //过热
-                return "overheat";
-            case BatteryManager.BATTERY_HEALTH_DEAD:
-                //没电
-                return "dead";
-            case BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE:
-                //过电压
-                return "voltage";
-            case BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE:
-                return "unspecified failure";
-            case BatteryManager.BATTERY_HEALTH_COLD:
-                return "cold";
-            case BatteryManager.BATTERY_HEALTH_UNKNOWN:
-            default:
-                return "unknown";
-        }
-    }
-
-    public String getDisplayPlugged() {
-        switch (plugged) {
-            case BatteryManager.BATTERY_PLUGGED_AC:
-                // 充电器
-                return "ac";
-            case BatteryManager.BATTERY_PLUGGED_USB:
-                // USB
-                return "usb";
-            case BatteryManager.BATTERY_PLUGGED_WIRELESS:
-                // wireless
-                return "wireless";
-            default:
-                return "unknown";
-        }
+        return "BatteryInfo{" +
+                "status=" + status +
+                ", health=" + health +
+                ", present=" + present +
+                ", level=" + level +
+                ", scale=" + scale +
+                ", plugged=" + plugged +
+                ", voltage=" + voltage +
+                ", temperature=" + temperature +
+                ", technology='" + technology + '\'' +
+                '}';
     }
 }

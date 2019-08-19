@@ -42,7 +42,7 @@ class App extends Component {
         };
         globalWs.registerCallback(this.onWsOpenCallback);
         globalWs.start();
-        this.mock.start(this._onReceiveMessage);
+        // this.mock.start(this._onReceiveMessage);
     }
 
     componentWillUnmount() {
@@ -124,19 +124,19 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={5}> <Ram ref="ramInfo"/>
+                        <Col span={6}> <Ram ref="ramInfo"/>
                         </Col>
-                        <Col span={5}> <Pss ref="pssInfo"/>
+                        <Col span={6}> <Pss ref="pssInfo"/>
                         </Col>
-                        <Col span={10}> <BatteryInfo ref="batteryInfo"/>
+                        <Col span={6}> <BatteryInfo ref="batteryInfo"/>
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={6}> <Cpu ref="cpuInfo"/>
+                        <Col span={7}> <Cpu ref="cpuInfo"/>
                         </Col>
-                        <Col span={6}> <Heap ref="heapInfo"/>
+                        <Col span={7}> <Heap ref="heapInfo"/>
                         </Col>
-                        <Col span={6}><Traffic ref="trafficInfo"/></Col>
+                        <Col span={10}><Traffic ref="trafficInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={12}><MemoryLeak ref="leakInfo"/></Col>

@@ -36,7 +36,7 @@ class Ram extends Component {
             tooltip: {
                 formatter: function () {
                     return '<div style="text-align:center"><span style="font-size:13px;color:' +
-                        'black' + '">' +
+                        'black">' +
                         this.point.name + ":" +
                         (this.point.y / 1024).toFixed(1) + 'M,' +
                         this.point.percentage.toFixed(1) + "%"

@@ -48,7 +48,12 @@ class Heap extends Component {
             },
             xAxis: {
                 type: 'category',
-                visible: false
+                labels: {
+                    enabled: false
+                },
+                lineWidth: 0,
+                tickLength: 0,
+                gridLineWidth: 1
             },
             yAxis: {
                 min: 0,
@@ -56,7 +61,7 @@ class Heap extends Component {
             },
             plotOptions: {
                 line: {
-                    lineWidth: 1,
+                    lineWidth: 2,
                     marker: {
                         enabled: false
                     }
@@ -102,7 +107,7 @@ class Heap extends Component {
 
     render() {
         return (
-            <Card title="Heap(堆内存)MB">
+            <Card title="Heap(堆内存)">
                 <HeapInfo ref="info"/>
                 <ReactHighcharts
                     ref="chart"

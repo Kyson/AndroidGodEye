@@ -45,12 +45,13 @@ class TrafficInfo extends Component {
                 &nbsp;
                 <Icon type="arrow-up"/>
                 <span style={{fontSize: 25}}>{this.state.trafficInfo.txUidRate}</span>
-                ,&nbsp;Total:&nbsp;
+                &nbsp;&nbsp;&nbsp;Device:&nbsp;
                 <Icon type="arrow-down"/>
                 <span style={{fontSize: 25}}>{this.state.trafficInfo.rxTotalRate}</span>
                 &nbsp;
                 <Icon type="arrow-up"/>
                 <span style={{fontSize: 25}}>{this.state.trafficInfo.txTotalRate}</span>
+                &nbsp;&nbsp;KB/s
             </span>
             </div>
         )

@@ -46,16 +46,21 @@ class Cpu extends Component {
             },
             xAxis: {
                 type: 'category',
-                visible: false,
+                labels: {
+                    enabled: false
+                },
+                lineWidth: 0,
+                tickLength: 0,
+                gridLineWidth: 1
             },
             yAxis: {
                 min: 0,
                 max: 100,
-                visible: false,
+                visible: false
             },
             plotOptions: {
                 line: {
-                    lineWidth: 1,
+                    lineWidth: 2,
                     marker: {
                         enabled: false
                     }
@@ -63,7 +68,7 @@ class Cpu extends Component {
             },
             series: [
                 {
-                    name: 'Total',
+                    name: 'Device',
                     data: (Cpu.initSeries())
                 },
                 {
