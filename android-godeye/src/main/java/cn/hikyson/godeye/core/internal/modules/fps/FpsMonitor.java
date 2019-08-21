@@ -42,7 +42,7 @@ public class FpsMonitor implements Choreographer.FrameCallback {
      * @return
      */
     @UiThread
-    public int exportThenReset() {
+    int exportThenReset() {
         if (mCurrentFrameCount < 1 || mCurrentFrameTimeNanos < mStartFrameTimeNanos) {
             return -1;
         }

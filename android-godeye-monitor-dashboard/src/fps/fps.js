@@ -31,7 +31,7 @@ class Fps extends Component {
     }
 
     static _parseFpsLevel(fpsInfo) {
-        if (fpsInfo && fpsInfo.currentFps && fpsInfo.systemFps) {
+        if (fpsInfo && fpsInfo.currentFps && fpsInfo.systemFps && fpsInfo.currentFps > 0 && fpsInfo.systemFps > 0) {
             if (fpsInfo.currentFps >= fpsInfo.systemFps * 5 / 6) {
                 return 3;
             } else if (fpsInfo.currentFps >= fpsInfo.systemFps / 3) {
@@ -49,14 +49,14 @@ class Fps extends Component {
             <Card>
                 <Card.Meta
                     title="FPS(帧率)"
-                    description={"SystemRefreshRate(系统帧率):" + ((this.state.fpsInfo && this.state.fpsInfo.systemFps) ? this.state.fpsInfo.systemFps : "**")}
+                    description={"SystemRefreshRate(系统帧率):" + ((this.state.fpsInfo && this.state.fpsInfo.systemFps && this.state.fpsInfo.systemFps > 0) ? this.state.fpsInfo.systemFps : "**")}
                 />
                 <div style={{textAlign: "center"}}>
                 <span style={{
                     padding: 16,
                     fontSize: 48,
                     color: this.fpsLevelColor[fpsLevel]
-                }}>{(this.state.fpsInfo && this.state.fpsInfo.currentFps) ? this.state.fpsInfo.currentFps : "**"}</span>
+                }}>{(this.state.fpsInfo && this.state.fpsInfo.currentFps && this.state.fpsInfo.currentFps > 0) ? this.state.fpsInfo.currentFps : "**"}</span>
                 </div>
             </Card>);
     }

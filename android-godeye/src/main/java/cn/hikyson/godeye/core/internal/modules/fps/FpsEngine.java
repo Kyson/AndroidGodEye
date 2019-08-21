@@ -6,6 +6,7 @@ import android.view.WindowManager;
 
 import java.util.concurrent.TimeUnit;
 
+import cn.hikyson.godeye.core.helper.AndroidDebug;
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 
@@ -39,13 +40,13 @@ public class FpsEngine implements Engine {
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
                 .observeOn(ThreadUtil.sComputationScheduler)
                 .subscribeOn(ThreadUtil.sComputationScheduler)
-                .subscribe(new Consumer<Long>() {
-                    @Override
-                    public void accept(Long aLong) throws Exception {
-                        ThreadUtil.ensureWorkThread("FpsEngine accept");
-                        int fps = mFpsMonitor.exportThenReset();
-                        mProducer.produce(new FpsInfo(fps, mSystemRate));
+                .subscribe(aLong -> {
+                    ThreadUtil.ensureWorkThread("FpsEngine accept");
+                    int fps = -1;
+                    if (!AndroidDebug.isDebugging()) {// if debugging, then ignore
+                        fps = mFpsMonitor.exportThenReset();
                     }
+                    mProducer.produce(new FpsInfo(fps, mSystemRate));
                 }));
     }
 
