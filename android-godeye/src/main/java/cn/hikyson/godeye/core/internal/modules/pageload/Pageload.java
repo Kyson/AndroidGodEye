@@ -13,7 +13,6 @@ import cn.hikyson.godeye.core.utils.L;
 /**
  * 页面加载模块
  * 安装卸载可以任意线程
- * 发射数据在主线程
  * Created by kysonchao on 2018/1/25.
  */
 public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> implements Install<PageloadContext> {

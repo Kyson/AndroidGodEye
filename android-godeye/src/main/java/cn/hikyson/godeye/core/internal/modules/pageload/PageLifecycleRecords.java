@@ -9,6 +9,25 @@ public class PageLifecycleRecords {
     private Map<PageInfo, List<Integer>> mPageLifecycleEventIndexing = new HashMap<>();
     private List<PageLifecycleEventWithTime> mLifecycleEvents = new ArrayList<>();
 
+    /**
+     * exist such LifecycleEvent for page
+     *
+     * @param pageInfo
+     * @param lifecycleEvent
+     * @return
+     */
+    synchronized boolean isExistEvent(PageInfo pageInfo, LifecycleEvent lifecycleEvent) {
+        List<PageLifecycleEventWithTime> pageLifecycleEventWithTimes = getLifecycleEventsByPageInfo(pageInfo);
+        if (pageLifecycleEventWithTimes != null && !pageLifecycleEventWithTimes.isEmpty()) {
+            for (PageLifecycleEventWithTime pageLifecycleEventWithTime : pageLifecycleEventWithTimes) {
+                if (pageLifecycleEventWithTime.lifecycleEvent == lifecycleEvent) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public synchronized <T> PageLifecycleEventWithTime<T> addEvent(PageInfo<T> pageInfo, LifecycleEvent lifecycleEvent, long time) {
         PageLifecycleEventWithTime<T> pageLifecycleEventLine = new PageLifecycleEventWithTime<>(pageInfo, lifecycleEvent, time);
         mLifecycleEvents.add(pageLifecycleEventLine);
@@ -25,7 +44,7 @@ public class PageLifecycleRecords {
         return pageLifecycleEventLine;
     }
 
-    public synchronized List<PageLifecycleEventWithTime> getLifecycleEventsByPageInfo(PageInfo pageInfo) {
+    synchronized List<PageLifecycleEventWithTime> getLifecycleEventsByPageInfo(PageInfo pageInfo) {
         List<Integer> pageEventIndexingList = mPageLifecycleEventIndexing.get(pageInfo);
         if (pageEventIndexingList == null) {
             return new ArrayList<>();

@@ -19,10 +19,18 @@ public class SecondActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                ((TextView)findViewById(R.id.textView)).setText("I am SecondActivity!");
+                ((TextView)findViewById(R.id.textView)).setText("I am SecondActivity111!");
                 GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onActivityLoad(SecondActivity.this);
             }
         }, 2000);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((TextView)findViewById(R.id.textView)).setText("I am SecondActivity222!");
+                GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onActivityLoad(SecondActivity.this);
+            }
+        }, 3000);
     }
 
     public void JumpToThirdActivity(View view) {

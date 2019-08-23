@@ -26,8 +26,11 @@ public class ThirdActivity extends FragmentActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("2")).show(fragmentManager.findFragmentByTag("1")).commit();
+                        try {
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("2")).show(fragmentManager.findFragmentByTag("1")).commit();
+                        } catch (Throwable ignore) {
+                        }
                     }
                 }, 2000);
             }
