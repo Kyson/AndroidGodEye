@@ -73,6 +73,12 @@ public class BlankFragment1 extends Fragment {
                 GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onFragmentV4Load(BlankFragment1.this);
             }
         },3500);
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onFragmentV4Load(BlankFragment1.this);
+            }
+        },4500);
         return inflater.inflate(R.layout.fragment_blank_fragment1, container, false);
     }
 

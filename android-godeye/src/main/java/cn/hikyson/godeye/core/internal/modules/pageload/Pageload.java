@@ -58,6 +58,18 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         }
     }
 
+    public synchronized void onFragmentLoad(android.app.Fragment f) {
+        if (mInstalled && mActivityLifecycleCallbacks != null) {
+            mActivityLifecycleCallbacks.onFragmentLoad(f);
+        }
+    }
+
+    public synchronized void onFragmentV4Load(Fragment f) {
+        if (mInstalled && mActivityLifecycleCallbacks != null) {
+            mActivityLifecycleCallbacks.onFragmentV4Load(f);
+        }
+    }
+
     public synchronized void onFragmentV4Show(Fragment f) {
         if (mInstalled && mActivityLifecycleCallbacks != null) {
             mActivityLifecycleCallbacks.onFragmentV4Show(f);
@@ -70,12 +82,6 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         }
     }
 
-    public synchronized void onFragmentV4Load(Fragment f) {
-        if (mInstalled && mActivityLifecycleCallbacks != null) {
-            mActivityLifecycleCallbacks.onFragmentV4Load(f);
-        }
-    }
-
     public synchronized void onFragmentShow(android.app.Fragment f) {
         if (mInstalled && mActivityLifecycleCallbacks != null) {
             mActivityLifecycleCallbacks.onFragmentShow(f);
@@ -85,12 +91,6 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
     public synchronized void onFragmentHide(android.app.Fragment f) {
         if (mInstalled && mActivityLifecycleCallbacks != null) {
             mActivityLifecycleCallbacks.onFragmentHide(f);
-        }
-    }
-
-    public synchronized void onFragmentLoad(android.app.Fragment f) {
-        if (mInstalled && mActivityLifecycleCallbacks != null) {
-            mActivityLifecycleCallbacks.onFragmentLoad(f);
         }
     }
 
