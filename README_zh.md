@@ -205,23 +205,41 @@ Done!
 </a>
 </p>
 
-### Base info
+### MethodCanary
 
-![android_godeye_summary](ART/android_god_eye_summary.png)
+![android_god_eye_dashboard1](ART/android_god_eye_dashboard1.png)
 
-### 卡顿检测
+### Fps/RAM/PSS/Battery...
 
-![android_god_eye_block](ART/android_god_eye_block.gif)
+![android_god_eye_dashboard2](ART/android_god_eye_dashboard2.png)
 
-### 内存泄漏检测
+### Cpu/Heap/Traffic...
+
+![android_god_eye_dashboard3](ART/android_god_eye_dashboard3.png)
+
+### Leak Memory/App Jank(Block)
+
+![android_god_eye_dashboard4](ART/android_god_eye_dashboard4.png)
 
 ![android_god_eye_leak](ART/android_god_eye_leak.gif)
 
-### 更多模块
+![android_god_eye_block](ART/android_god_eye_block.gif)
 
-![android_god_eye_cpuheaptraffic](ART/android_god_eye_cpuheaptraffic.gif)
+### Page Lifecycle(Load)/Network
 
-还有更多...
+![android_god_eye_dashboard5](ART/android_god_eye_dashboard5.png)
+
+![android_god_eye_pageload](ART/android_god_eye_pageload.gif)
+
+![android_god_eye_network](ART/android_god_eye_network.gif)
+
+**Network Detail**
+
+![android_god_eye_dashboard6](ART/android_god_eye_dashboard6.png)
+
+### Thread
+
+![android_god_eye_dashboard7](ART/android_god_eye_dashboard7.png)
 
 ## 模块详情
 
