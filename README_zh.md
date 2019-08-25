@@ -221,15 +221,22 @@ Done!
 
 ![android_god_eye_dashboard4](ART/android_god_eye_dashboard4.png)
 
+**Leak Memory GIF**
+
 ![android_god_eye_leak](ART/android_god_eye_leak.gif)
+
+**Jank(Block) GIF**
 
 ![android_god_eye_block](ART/android_god_eye_block.gif)
 
-### Page Lifecycle(Load)/Network
+### Page Lifecycle(Page Load)/Network
 
 ![android_god_eye_dashboard5](ART/android_god_eye_dashboard5.png)
 
+**Page Lifecycle(Page Load) GIF**
 ![android_god_eye_pageload](ART/android_god_eye_pageload.gif)
+
+**Network GIF**
 
 ![android_god_eye_network](ART/android_god_eye_network.gif)
 
