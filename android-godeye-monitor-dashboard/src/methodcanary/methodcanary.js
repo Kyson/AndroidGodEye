@@ -1,3 +1,5 @@
+/* eslint-disable react/no-string-refs */
+/* eslint-disable react/prop-types */
 import React, {Component} from 'react';
 import '../App.css';
 

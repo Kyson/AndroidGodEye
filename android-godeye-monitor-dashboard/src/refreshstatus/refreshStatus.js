@@ -1,8 +1,6 @@
+/* eslint-disable react/prop-types */
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Button} from 'react-bootstrap'
 import {Button} from 'antd'
 
 /**

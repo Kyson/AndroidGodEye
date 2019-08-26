@@ -1,3 +1,4 @@
+/* eslint-disable react/no-string-refs */
 import React, {Component} from 'react';
 import './App.css';
 import {Row, Col, Layout} from 'antd'
@@ -78,11 +79,9 @@ class App extends Component {
         this.refs.refreshStatus.refresh(new Date());
         if ("MethodCanaryStatus" === moduleName) {
             this.refs.methodCanary.refreshStatus(payload);
-        }
-        if ("reinstallBlock" === moduleName) {
+        }else if ("reinstallBlock" === moduleName) {
             this.refs.blockInfo.refreshStatus(payload);
-        }
-        else {
+        }else {
             this._getModuleRef(moduleName).refresh(payload);
         }
     }

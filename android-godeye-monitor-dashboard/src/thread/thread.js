@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel, Button} from 'react-bootstrap'
 import ReactTable from "../../node_modules/react-table";
 import '../../node_modules/react-table/react-table.css'
 import JSONPretty from '../../node_modules/react-json-pretty';
@@ -32,7 +29,7 @@ class Thread extends Component {
     }
 
     setRefreshStatus() {
-        this.setState((prevState, props) => ({
+        this.setState((prevState) => ({
             isRefreshing: !prevState.isRefreshing,
             threadInfo: this.threadInfoForCache
         }));

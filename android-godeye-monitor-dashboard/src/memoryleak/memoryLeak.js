@@ -44,7 +44,7 @@ class MemoryLeak extends Component {
     }
 
     setRefreshStatus() {
-        this.setState((prevState, props) => ({
+        this.setState((prevState) => ({
             isRefreshing: !prevState.isRefreshing,
             dataList: this.leakInfos
         }));

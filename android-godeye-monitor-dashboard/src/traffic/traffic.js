@@ -1,8 +1,9 @@
+/* eslint-disable react/no-string-refs */
 import React, {Component} from 'react';
 import '../App.css';
 
-import ReactHighcharts from '../../node_modules/react-highcharts'
-import {Card} from 'antd'
+import ReactHighcharts from '../../node_modules/react-highcharts';
+import {Card} from 'antd';
 import TrafficInfo from "./traffic_info";
 
 

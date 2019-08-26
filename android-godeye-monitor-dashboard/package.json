@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "antd": "^3.19.8",
+    "eslint": "^5.16.0",
     "highcharts": "^6.1.0",
     "npm": "^6.0.1",
     "react": "^16.3.2",
@@ -24,5 +25,8 @@
     "bd": "react-scripts build && python deploy.py",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "^7.14.3"
   }
 }
