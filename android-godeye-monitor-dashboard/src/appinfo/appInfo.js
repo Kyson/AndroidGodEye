@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/jsx-no-target-blank */
 import React, {Component} from 'react';
 import '../App.css';
 

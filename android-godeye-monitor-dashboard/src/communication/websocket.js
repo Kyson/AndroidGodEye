@@ -21,7 +21,7 @@ class GlobalWs {
         this.ws = new WebSocket("ws://" + window.location.host + "/refresh");
         this.ws.addEventListener('open', () => {
             if (this.wsCallbacks) {
-                this.wsCallbacks.forEach((element, sameElement, set) => {
+                this.wsCallbacks.forEach((element) => {
                     element()
                 })
             }

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-string-refs */
 import React, {Component} from 'react';
 import './App.css';
 import {Row, Col, Layout} from 'antd'
@@ -23,6 +24,7 @@ import MethodCanary from "./methodcanary/methodcanary";
 import Mock from "./MockData";
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import MethodCanaryThread from "./methodcanary/methodcanary_thread";
 
 class App extends Component {
 
@@ -42,7 +44,7 @@ class App extends Component {
         };
         globalWs.registerCallback(this.onWsOpenCallback);
         globalWs.start();
-        // this.mock.start(this._onReceiveMessage);
+        this.mock.start(this._onReceiveMessage);
     }
 
     componentWillUnmount() {
@@ -78,11 +80,9 @@ class App extends Component {
         this.refs.refreshStatus.refresh(new Date());
         if ("MethodCanaryStatus" === moduleName) {
             this.refs.methodCanary.refreshStatus(payload);
-        }
-        if ("reinstallBlock" === moduleName) {
+        } else if ("reinstallBlock" === moduleName) {
             this.refs.blockInfo.refreshStatus(payload);
-        }
-        else {
+        } else {
             this._getModuleRef(moduleName).refresh(payload);
         }
     }
@@ -101,6 +101,14 @@ class App extends Component {
                         </Col>
                     </Row>
                     <ToastContainer autoClose={1200} position={toast.POSITION.TOP_LEFT}/>
+
+                    <Row>
+                        <Col span={24}>
+                            <MethodCanaryThread/>
+                        </Col>
+                    </Row>
+
+
                     <Row gutter={16} align="top" style={{textAlign: 'right', marginTop: 16}}>
                         <Col span={24}>
                             <RefreshStatus ref="refreshStatus" setCanRefresh={this._setCanRefresh}/>

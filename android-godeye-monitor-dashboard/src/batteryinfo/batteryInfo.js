@@ -1,10 +1,11 @@
+/* eslint-disable react/no-string-refs */
 import React, {Component} from 'react';
 import '../App.css';
 
-import {Card, Modal} from 'antd'
+import {Card, Modal} from 'antd';
 
-import ReactHighcharts from '../../node_modules/react-highcharts'
-import Util from '../libs/util'
+import ReactHighcharts from '../../node_modules/react-highcharts';
+import Util from '../libs/util';
 import JSONPretty from '../../node_modules/react-json-pretty';
 
 

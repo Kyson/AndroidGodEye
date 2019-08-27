@@ -26,7 +26,7 @@ class Crash extends Component {
         toast.error("Crash!(发生崩溃)");
     }
 
-    handleCrashDetailClick(e) {
+    handleCrashDetailClick() {
         this.setState({show: true});
     }
 

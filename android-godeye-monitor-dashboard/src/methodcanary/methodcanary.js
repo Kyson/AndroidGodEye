@@ -1,3 +1,5 @@
+/* eslint-disable react/no-string-refs */
+/* eslint-disable react/prop-types */
 import React, {Component} from 'react';
 import '../App.css';
 
@@ -80,6 +82,15 @@ class MethodCanary extends Component {
                 panKey: 'shift',
                 marginTop: 30,
                 marginBottom: 60,
+            },
+            mapNavigation: {
+                enabled: true,
+                enableButtons: true
+            },
+            events: {
+                selection: function(e) {
+                    // 事件处理代码，可以通过 console.log(e) 查看更多详细信息
+                }
             },
             colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00',
                 '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
@@ -268,7 +279,7 @@ class MethodCanary extends Component {
         } else if (this.state.MethodCanaryStatus.isMonitoring) {
             instruction = `Monitoring... | lowCostMethod: ${this.state.MethodCanaryStatus.lowCostMethodThresholdMillis}ms, maxSingleThread: ${this.state.MethodCanaryStatus.maxMethodCountSingleThreadByCost}`
         } else {
-            instruction = `Select to zoom in, hold shift and drag(框选放大，按住shift左右拖动)`
+            instruction = `Click and drag to zoom in, Hold down shift to pan(框选放大，按住shift左右拖动)`
         }
         return (
             <Card title="MethodCanary" extra={
