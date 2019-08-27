@@ -24,8 +24,8 @@ class Mock {
         //     isInstalled: true
         // });
         this.recvFun("methodCanary", {
-            start: 80,
-            end: 200,
+            start: 1566909500000,
+            end: 1566909510000,
             methodInfoOfThreadInfos: [
                 {
                     threadInfo: {
@@ -34,8 +34,8 @@ class Mock {
                     methodInfos: [
                         {
                             stack: 0,
-                            start: 100,
-                            end: 102,
+                            start: 1566909501000,
+                            end: 1566909509000,
                             className: "classA",
                             methodName: "methodA",
                             methodDesc: "descA",
@@ -50,8 +50,8 @@ class Mock {
                     methodInfos: [
                         {
                             stack: 0,
-                            start: 90,
-                            end: 107,
+                            start: 1566909508000,
+                            end: 1566909509000,
                             className: "classA",
                             methodName: "methodA",
                             methodDesc: "descA",
@@ -59,8 +59,8 @@ class Mock {
                         },
                         {
                             stack: 1,
-                            start: 108,
-                            end: 124,
+                            start: 1566909508800,
+                            end: 1566909509200,
                             className: "classB",
                             methodName: "methodB",
                             methodDesc: "descB",
@@ -68,8 +68,8 @@ class Mock {
                         },
                         {
                             stack: 2,
-                            start: 103,
-                            end: 104,
+                            start: 1566909509800,
+                            end: 1566909509900,
                             className: "classC",
                             methodName: "methodC",
                             methodDesc: "descC",
@@ -77,8 +77,8 @@ class Mock {
                         },
                         {
                             stack: 2,
-                            start: 106,
-                            end: 120,
+                            start: 1566909507700,
+                            end: 1566909508800,
                             className: "classD",
                             methodName: "methodD",
                             methodDesc: "descD",
@@ -86,8 +86,8 @@ class Mock {
                         },
                         {
                             stack: 3,
-                            start: 107,
-                            end: 108,
+                            start: 1566909502700,
+                            end: 1566909505800,
                             className: "classE",
                             methodName: "methodE",
                             methodDesc: "descE",

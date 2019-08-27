@@ -5,6 +5,7 @@ import java.util.List;
 import cn.hikyson.methodcanary.lib.ThreadInfo;
 
 public class MethodsRecordInfo {
+    //nano time
     public long start;
     public long end;
     public List<MethodInfoOfThreadInfo> methodInfoOfThreadInfos;

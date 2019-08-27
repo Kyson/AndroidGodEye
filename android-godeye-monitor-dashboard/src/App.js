@@ -101,14 +101,6 @@ class App extends Component {
                         </Col>
                     </Row>
                     <ToastContainer autoClose={1200} position={toast.POSITION.TOP_LEFT}/>
-
-                    <Row>
-                        <Col span={24}>
-                            <MethodCanaryThread/>
-                        </Col>
-                    </Row>
-
-
                     <Row gutter={16} align="top" style={{textAlign: 'right', marginTop: 16}}>
                         <Col span={24}>
                             <RefreshStatus ref="refreshStatus" setCanRefresh={this._setCanRefresh}/>

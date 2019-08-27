@@ -6,6 +6,7 @@ import '../App.css';
 import {Card, Button, Row, Col} from 'antd'
 import xrange from 'highcharts/modules/xrange';
 import ReactHighcharts from 'react-highcharts'
+import MethodCanaryThread from "./methodcanary_thread";
 
 (xrange)(ReactHighcharts.Highcharts);
 
@@ -19,7 +20,8 @@ class MethodCanary extends Component {
         this.record = {};
         this.toggleIsMonitor = this.toggleIsMonitor.bind(this);
         this.openThread = this.openThread.bind(this);
-        const functionOpenThread = this.openThread;
+        this.openThread2 = this.openThread2.bind(this);
+        const functionOpenThread = this.openThread2;
 
         this.optionsForSummary = {
             chart: {
@@ -88,7 +90,7 @@ class MethodCanary extends Component {
                 enableButtons: true
             },
             events: {
-                selection: function(e) {
+                selection: function (e) {
                     // 事件处理代码，可以通过 console.log(e) 查看更多详细信息
                 }
             },
@@ -177,6 +179,10 @@ class MethodCanary extends Component {
         } else if (this.state.MethodCanaryStatus.isInstalled && this.state.MethodCanaryStatus.isMonitoring) {
             this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"stop"}');
         }
+    }
+
+    openThread2(threadName) {
+        this.refs.chartForThread2.openThread(threadName, this.record);
     }
 
     openThread(threadName) {
@@ -301,6 +307,13 @@ class MethodCanary extends Component {
                         <ReactHighcharts
                             ref="chartForThread"
                             config={this.optionsForThread}
+                        />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={24}>
+                        <MethodCanaryThread
+                            ref="chartForThread2"
                         />
                     </Col>
                 </Row>
