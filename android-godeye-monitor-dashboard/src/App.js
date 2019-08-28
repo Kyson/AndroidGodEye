@@ -25,6 +25,7 @@ import Mock from "./MockData";
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MethodCanaryThread from "./methodcanary/methodcanary_thread";
+import MethodCanaryThreadTree from "./methodcanary/methodcanary_thread_tree";
 
 class App extends Component {
 
@@ -78,6 +79,13 @@ class App extends Component {
             return;
         }
         this.refs.refreshStatus.refresh(new Date());
+
+        if ("KYSON" === moduleName) { // TODO KYSON DEL
+            this.refs.methodCanaryThreadTree.refresh(payload.start, payload.end, payload.methodInfos);
+            return;
+        }
+
+
         if ("MethodCanaryStatus" === moduleName) {
             this.refs.methodCanary.refreshStatus(payload);
         } else if ("reinstallBlock" === moduleName) {
@@ -106,6 +114,15 @@ class App extends Component {
                             <RefreshStatus ref="refreshStatus" setCanRefresh={this._setCanRefresh}/>
                         </Col>
                     </Row>
+
+
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
+                        <Col span={24}>
+                            <MethodCanaryThreadTree ref="methodCanaryThreadTree"/>
+                        </Col>
+                    </Row>
+
+
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}>
                             <MethodCanary ref="methodCanary" globalWs={globalWs}/>

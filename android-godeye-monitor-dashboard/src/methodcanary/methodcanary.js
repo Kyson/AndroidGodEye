@@ -19,9 +19,8 @@ class MethodCanary extends Component {
         };
         this.record = {};
         this.toggleIsMonitor = this.toggleIsMonitor.bind(this);
-        this.openThread = this.openThread.bind(this);
-        this.openThread2 = this.openThread2.bind(this);
-        const functionOpenThread = this.openThread2;
+        this.openMethodCanaryThread = this.openMethodCanaryThread.bind(this);
+        const functionOpenThread = this.openMethodCanaryThread;
 
         this.optionsForSummary = {
             chart: {
@@ -75,91 +74,6 @@ class MethodCanary extends Component {
             },
             series: []
         };
-        this.optionsForThread = {
-            chart: {
-                type: 'xrange',
-                height: 1,
-                zoomType: 'x',
-                panning: true,
-                panKey: 'shift',
-                marginTop: 30,
-                marginBottom: 60,
-            },
-            mapNavigation: {
-                enabled: true,
-                enableButtons: true
-            },
-            events: {
-                selection: function (e) {
-                    // 事件处理代码，可以通过 console.log(e) 查看更多详细信息
-                }
-            },
-            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00',
-                '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
-            title: {
-                text: null
-            },
-            legend: {
-                enabled: false
-            },
-            credits: {
-                enabled: false
-            },
-            tooltip: {
-                formatter: function () {
-                    return "cost " + ((this.point.methodEvent.end - this.point.methodEvent.start) / 1000000).toFixed(2) + " ms, " + this.point.methodEvent.className + "#" + this.point.methodEvent.methodName + " ,from "
-                        + this.point.methodEvent.start + " to " + this.point.methodEvent.end
-                }
-            },
-            xAxis: {
-                title: {
-                    text: null
-                },
-                gridLineWidth: 0,
-                labels: {
-                    formatter: function () {
-                        return (this.value / 1000000000).toFixed(3) + "s";
-                    }
-                }
-            },
-            yAxis: {
-                title: {
-                    text: null
-                },
-                visible: false,
-                reversed: true
-            },
-            plotOptions: {
-                series: {
-                    borderRadius: 0,
-                    pointPadding: 0,
-                    groupPadding: 0,
-                    pointWidth: 20
-                },
-                column: {
-                    colorByPoint: true
-                }
-            },
-            series: [{
-                name: '',
-                pointPadding: 0,
-                groupPadding: 0,
-                pointWidth: 30,
-                dataLabels: {
-                    enabled: true,
-                    style: {
-                        fontSize: 12,
-                        fontWeight: "regular",
-                        textOutline: "0px 0px contrast",
-                        color: "black"
-                    },
-                    formatter: function () {
-                        return this.point.methodEvent.className + "#" + this.point.methodEvent.methodName
-                    }
-                },
-                data: [{}]
-            }]
-        };
     }
 
     componentDidMount() {
@@ -181,53 +95,8 @@ class MethodCanary extends Component {
         }
     }
 
-    openThread2(threadName) {
-        this.refs.chartForThread2.openThread(threadName, this.record);
-    }
-
-    openThread(threadName) {
-        let methodInfos = {};
-        for (let i = 0; i < this.record.methodInfoOfThreadInfos.length; i++) {
-            if (threadName === MethodCanary.getThreadNameByThreadInfo(this.record.methodInfoOfThreadInfos[i].threadInfo)) {
-                methodInfos = this.record.methodInfoOfThreadInfos[i].methodInfos
-            }
-        }
-        const min = this.record.start;
-        const max = this.record.end;
-        const datas = [];
-        let maxStack = 0;
-        for (let i = 0; i < methodInfos.length; i++) {
-            datas.push({
-                x: methodInfos[i].start === 0 ? min : methodInfos[i].start,
-                x2: (methodInfos[i].end === 0 ? max : methodInfos[i].end),
-                y: methodInfos[i].stack,
-                methodEvent: methodInfos[i]
-            });
-            if (methodInfos[i].stack > maxStack) {
-                maxStack = methodInfos[i].stack
-            }
-        }
-        const categories = [];
-        let height = 90;
-        for (let i = 0; i < (maxStack + 1); i++) {
-            categories.push("");
-            height = height + 35
-        }
-        this.refs.chartForThread.getChart().update({
-            chart: {
-                height: height
-            },
-            series: [{
-                data: datas,
-            }],
-            yAxis: {
-                categories: categories
-            },
-            xAxis: {
-                min: min,
-                max: max
-            },
-        });
+    openMethodCanaryThread(threadName) {
+        this.refs.chartForThread.openMethodCanaryThread(threadName, this.record);
     }
 
     static getThreadNameByThreadInfo(threadInfo) {
@@ -304,16 +173,8 @@ class MethodCanary extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        <ReactHighcharts
-                            ref="chartForThread"
-                            config={this.optionsForThread}
-                        />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={24}>
                         <MethodCanaryThread
-                            ref="chartForThread2"
+                            ref="chartForThread"
                         />
                     </Col>
                 </Row>

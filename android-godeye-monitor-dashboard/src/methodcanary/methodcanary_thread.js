@@ -14,11 +14,16 @@ class MethodCanaryThread extends Component {
 
     constructor(props) {
         super(props);
-        this.openThread = this.openThread.bind(this);
+        this.openMethodCanaryThread = this.openMethodCanaryThread.bind(this);
+        this.afterSetExtremes = this.afterSetExtremes.bind(this);
+        this.state = {
+            tt: ""
+        };
+        this.record = {};
     }
 
     componentDidMount() {
-        this.chart = Highcharts.stockChart('container2', {
+        this.chart = Highcharts.stockChart('chart', {
             chart: {
                 type: 'xrange',
                 height: 0.1,
@@ -70,6 +75,9 @@ class MethodCanaryThread extends Component {
                             s += '<br/> from ' + e.methodEvent.start + " to " + e.methodEvent.end;
                         }
                     }
+                    if (s === "") {
+                        return null;
+                    }
                     return s;
                 }
             },
@@ -94,6 +102,9 @@ class MethodCanaryThread extends Component {
                 gridLineWidth: 0.5,
                 startOnTick: false,
                 endOnTick: false,
+                events: {
+                    afterSetExtremes: this.afterSetExtremes
+                },
             },
             yAxis: {
                 title: {
@@ -104,6 +115,11 @@ class MethodCanaryThread extends Component {
                 reversed: true,
                 categories: [],
                 crosshair: false,
+            },
+            events: {
+                selection: function (e) {
+                    console.log(e);
+                }
             },
             series: [
                 {
@@ -121,7 +137,9 @@ class MethodCanaryThread extends Component {
                         },
                         formatter: function () {
                             if (this.point.methodEvent) {
-                                return this.point.methodEvent.className + "#" + this.point.methodEvent.methodName
+                                const index = this.point.methodEvent.className.lastIndexOf("/");
+                                const className = this.point.methodEvent.className.substring(index + 1, this.point.methodEvent.className.length);
+                                return className + "#" + this.point.methodEvent.methodName
                             }
                         }
                     },
@@ -130,7 +148,14 @@ class MethodCanaryThread extends Component {
         });
     }
 
-    openThread(threadName, record) {
+    afterSetExtremes(e) {
+        this.setState({
+            tt: e.min + "-" + e.max
+        });
+    }
+
+    openMethodCanaryThread(threadName, record) {
+        this.record = record;
         let methodInfos = {};
         for (let i = 0; i < record.methodInfoOfThreadInfos.length; i++) {
             if (threadName === MethodCanaryThread.getThreadNameByThreadInfo(record.methodInfoOfThreadInfos[i].threadInfo)) {
@@ -201,7 +226,7 @@ class MethodCanaryThread extends Component {
         return (
             <Row>
                 <Col span={24}>
-                    <div id="container2"/>
+                    <div id="chart"/>
                 </Col>
             </Row>
         );

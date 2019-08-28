@@ -23,6 +23,79 @@ class Mock {
         //     isMonitoring: true,
         //     isInstalled: true
         // });
+
+        this.recvFun("KYSON", {
+            start: 100,
+            end: 300,
+            methodInfos: [
+                {
+                    stack: 1,
+                    start: 0,
+                    end: 300,
+                    className: "0-300",
+                    methodName: "methodB",
+                    methodDesc: "descB",
+                    methodAccessFlag: 1
+                },
+
+                {
+                    stack: 1,
+                    start: 710,
+                    end: 780,
+                    className: "710-780",
+                    methodName: "methodD",
+                    methodDesc: "descD",
+                    methodAccessFlag: 1
+                },
+                {
+                    stack: 2,
+                    start: 100,
+                    end: 200,
+                    className: "100-200",
+                    methodName: "methodE",
+                    methodDesc: "descE",
+                    methodAccessFlag: 1
+                },
+                {
+                    stack: 1,
+                    start: 400,
+                    end: 450,
+                    className: "400-450",
+                    methodName: "methodD",
+                    methodDesc: "descD",
+                    methodAccessFlag: 1
+                }, {
+                    stack: 0,
+                    start: 0,
+                    end: 500,
+                    className: "0-500",
+                    methodName: "methodA",
+                    methodDesc: "descA",
+                    methodAccessFlag: 1
+                },
+                {
+                    stack: 1,
+                    start: 320,
+                    end: 350,
+                    className: "320-350",
+                    methodName: "methodC",
+                    methodDesc: "descC",
+                    methodAccessFlag: 1
+                },
+
+                {
+                    stack: 0,
+                    start: 700,
+                    end: 800,
+                    className: "700-800",
+                    methodName: "methodA",
+                    methodDesc: "descA",
+                    methodAccessFlag: 1
+                },
+            ]
+        });
+
+
         this.recvFun("methodCanary", {
             start: 1566909500000,
             end: 1566909510000,
@@ -52,7 +125,7 @@ class Mock {
                             stack: 0,
                             start: 1566909508000,
                             end: 1566909509000,
-                            className: "classA",
+                            className: "cn/hikyson/classA",
                             methodName: "methodA",
                             methodDesc: "descA",
                             methodAccessFlag: 1
@@ -61,7 +134,7 @@ class Mock {
                             stack: 1,
                             start: 1566909508800,
                             end: 1566909509200,
-                            className: "classB",
+                            className: "cn/hikyson/classB",
                             methodName: "methodB",
                             methodDesc: "descB",
                             methodAccessFlag: 1
@@ -70,7 +143,7 @@ class Mock {
                             stack: 2,
                             start: 1566909509800,
                             end: 1566909509900,
-                            className: "classC",
+                            className: "cn/hikyson/classC",
                             methodName: "methodC",
                             methodDesc: "descC",
                             methodAccessFlag: 1
@@ -79,7 +152,7 @@ class Mock {
                             stack: 2,
                             start: 1566909507700,
                             end: 1566909508800,
-                            className: "classD",
+                            className: "cn/hikyson/classD",
                             methodName: "methodD",
                             methodDesc: "descD",
                             methodAccessFlag: 1
@@ -88,7 +161,7 @@ class Mock {
                             stack: 3,
                             start: 1566909502700,
                             end: 1566909505800,
-                            className: "classE",
+                            className: "cn/hikyson/classE",
                             methodName: "methodE",
                             methodDesc: "descE",
                             methodAccessFlag: 1
