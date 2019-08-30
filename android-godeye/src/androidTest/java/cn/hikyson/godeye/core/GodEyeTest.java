@@ -14,14 +14,4 @@ import java.util.concurrent.ExecutionException;
 @RunWith(AndroidJUnit4.class)
 public class GodEyeTest {
 
-    @Test
-    public void cpu() throws ExecutionException, InterruptedException {
-
-    }
-
-    @Test
-    public void battery() throws ExecutionException, InterruptedException {
-
-    }
-
 }
