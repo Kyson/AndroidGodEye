@@ -13,7 +13,6 @@ import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by kysonchao on 2017/11/23.

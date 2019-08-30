@@ -20,6 +20,9 @@ import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * network is success or not , network time for connection\send\receive...
+ */
 public class OkNetworkEventListener extends EventListener {
     private Producer<NetworkInfo> mNetworkInfoProducer;
     private NetworkInfo<HttpContent> mNetworkInfo;

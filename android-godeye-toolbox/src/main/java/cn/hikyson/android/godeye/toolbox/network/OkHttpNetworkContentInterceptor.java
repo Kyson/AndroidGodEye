@@ -4,7 +4,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.utils.IoUtil;
 import okhttp3.Connection;
@@ -39,7 +38,6 @@ public class OkHttpNetworkContentInterceptor implements Interceptor {
         httpContent.httpRequest.method = request.method();
         httpContent.httpRequest.url = String.valueOf(request.url());
         httpContent.httpRequest.protocol = connection != null ? String.valueOf(connection.protocol()) : "NULL";
-        String requestLine = request.method() + ' ' + request.url() + (connection != null ? " " + connection.protocol() : "");
         httpContent.httpRequest.headers = new HashMap<>();
         Headers headers = request.headers();
         for (int i = 0, count = headers.size(); i < count; i++) {
@@ -68,21 +66,10 @@ public class OkHttpNetworkContentInterceptor implements Interceptor {
                 httpContent.httpRequest.payload = "(binary " + requestBody.contentLength() + "-byte request body)";
             }
         }
-        boolean isSuccessful = true;
-        String message = "";
-        long startNs = System.nanoTime();
         Response response;
-        try {
-            response = chain.proceed(request);
-        } catch (Exception e) {
-            isSuccessful = false;
-            message = String.valueOf(e);
-            throw e;
-        }
-        long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
+        response = chain.proceed(request);
         ResponseBody responseBody = response.body();
         long contentLength = responseBody.contentLength();
-        String bodySize = contentLength != -1 ? contentLength + "-byte" : "unknown-length";
         httpContent.httpResponse.protocol = String.valueOf(response.protocol());
         httpContent.httpResponse.code = response.code();
         httpContent.httpResponse.message = response.message();

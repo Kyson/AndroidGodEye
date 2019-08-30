@@ -38,18 +38,15 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
 
                     @Override
                     public void outputToMemory(final long startTimeNanos, final long stopTimeNanos, final Map<ThreadInfo, List<MethodEvent>> methodEventMap) {
-                        Schedulers.computation().scheduleDirect(new Runnable() {
-                            @Override
-                            public void run() {
-                                long start0 = System.currentTimeMillis();
-                                MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startTimeNanos, stopTimeNanos, methodEventMap);
-                                long start1 = System.currentTimeMillis();
-                                MethodCanaryConverter.filter(methodsRecordInfo, methodCanaryContext);
-                                long end = System.currentTimeMillis();
-                                L.d(String.format("MethodCanary outputToMemory cost %s ms, filter cost %s ms", end - start0, end - start1));
-                                mStatusSubject.onNext("OUTPUT");
-                                produce(methodsRecordInfo);
-                            }
+                        Schedulers.computation().scheduleDirect(() -> {
+                            long start0 = System.currentTimeMillis();
+                            MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startTimeNanos, stopTimeNanos, methodEventMap);
+                            long start1 = System.currentTimeMillis();
+                            MethodCanaryConverter.filter(methodsRecordInfo, methodCanaryContext);
+                            long end = System.currentTimeMillis();
+                            L.d(String.format("MethodCanary outputToMemory cost %s ms, filter cost %s ms", end - start0, end - start1));
+                            mStatusSubject.onNext("OUTPUT");
+                            produce(methodsRecordInfo);
                         });
                     }
                 }).build());

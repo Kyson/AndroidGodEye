@@ -65,7 +65,7 @@ class MethodCanaryConverter {
         }
     }
 
-    static void filterByTopX(int maxMethodCountSingleThreadByCost, Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator, List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos) {
+    private static void filterByTopX(int maxMethodCountSingleThreadByCost, Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator, List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos) {
         if (maxMethodCountSingleThreadByCost <= 0) {
             return;
         }
@@ -80,12 +80,8 @@ class MethodCanaryConverter {
         }
     }
 
-    static Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator(final long start, final long end) {
-        return (o1, o2) -> longCompare(computeMethodCost(start, end, o2), computeMethodCost(start, end, o1));
-    }
-
-    private static int longCompare(long x, long y) {
-        return (x < y) ? -1 : ((x == y) ? 0 : 1);
+    private static Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator(final long start, final long end) {
+        return (o1, o2) ->  Long.compare(computeMethodCost(start, end, o2), computeMethodCost(start, end, o1));
     }
 
     private static long computeMethodCost(long start, long end, MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo) {

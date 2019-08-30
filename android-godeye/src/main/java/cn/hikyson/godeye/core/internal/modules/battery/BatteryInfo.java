@@ -1,7 +1,5 @@
 package cn.hikyson.godeye.core.internal.modules.battery;
 
-import android.os.BatteryManager;
-
 /**
  * Created by kysonchao on 2017/11/22.
  */

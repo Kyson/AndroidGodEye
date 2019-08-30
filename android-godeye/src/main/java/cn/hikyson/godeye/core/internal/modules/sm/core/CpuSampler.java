@@ -17,8 +17,6 @@ import cn.hikyson.godeye.core.utils.IoUtil;
  * 必须要doSample两次才有数据
  */
 public class CpuSampler extends AbstractSampler {
-
-    private static final String TAG = "CpuSampler";
     private static final int BUFFER_SIZE = 1000;
 
     private final int BUSY_TIME;

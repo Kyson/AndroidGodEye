@@ -12,7 +12,7 @@ import java.util.Map;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.ViewUtil;
 
-public class FragmentLifecycleCallbacksV4 extends android.support.v4.app.FragmentManager.FragmentLifecycleCallbacks {
+public class FragmentLifecycleCallbacksV4 extends FragmentManager.FragmentLifecycleCallbacks {
     private PageLifecycleRecords mPageLifecycleRecords;
     private PageInfoProvider mPageInfoProvider;
     private Map<Object, PageInfo<?>> mCachePageInfo;

@@ -90,7 +90,7 @@ public class GodEyeMonitor {
             public void onHttpRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
                 ThreadUtil.ensureWorkThread("AndroidGodEyeOnHttpRequest");
                 try {
-                    boolean processed = httpStaticProcessor.process(request, response);
+                    httpStaticProcessor.process(request, response);
                 } catch (Throwable throwable) {
                     L.e(String.valueOf(throwable));
                 }

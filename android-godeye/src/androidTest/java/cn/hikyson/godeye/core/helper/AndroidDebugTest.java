@@ -1,6 +1,7 @@
 package cn.hikyson.godeye.core.helper;
 
 import android.os.Debug;
+import android.os.SystemClock;
 
 import org.junit.Test;
 
@@ -10,13 +11,10 @@ public class AndroidDebugTest {
 
     @Test
     public void isDebugging() throws InterruptedException {
+        long startTime = SystemClock.elapsedRealtime();
         for (int i = 0; i < 1000; i++) {
-//            Thread.sleep(10);
-            boolean isDebuggerConnected = Debug.isDebuggerConnected();
+            Debug.isDebuggerConnected();
         }
-    }
-
-    @Test
-    public void setIsDebug() {
+        assertTrue("Debug isDebuggerConnected cost too much.", (SystemClock.elapsedRealtime() - startTime) < 10);
     }
 }

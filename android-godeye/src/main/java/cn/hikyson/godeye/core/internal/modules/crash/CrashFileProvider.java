@@ -48,7 +48,7 @@ public class CrashFileProvider implements CrashProvider {
         try {
             fileWriter = new FileWriter(file);
             fileWriter.write(mSerializer.serialize(crashInfo));
-        } catch (IOException e) {
+        } catch (IOException ignore) {
         } finally {
             IoUtil.closeSilently(fileWriter);
         }
@@ -63,7 +63,7 @@ public class CrashFileProvider implements CrashProvider {
             try {
                 reader = new FileReader(crashFile);
                 crashInfos.add(mSerializer.deserialize(reader, CrashInfo.class));
-            } catch (IOException e) {
+            } catch (IOException ignore) {
             } finally {
                 IoUtil.closeSilently(reader);
             }
@@ -71,21 +71,9 @@ public class CrashFileProvider implements CrashProvider {
         return crashInfos;
     }
 
-    public synchronized void clearCrash() throws IOException {
-        File[] crashFiles = makeSureCrashDir(mContext).listFiles(mCrashFilenameFilter);
-        for (File crashFile : crashFiles) {
-            boolean deleteResult = crashFile.delete();
-        }
-    }
-
     private static final String SUFFIX = ".crash";
 
-    private FilenameFilter mCrashFilenameFilter = new FilenameFilter() {
-        @Override
-        public boolean accept(File dir, String filename) {
-            return filename.endsWith(SUFFIX);
-        }
-    };
+    private FilenameFilter mCrashFilenameFilter = (dir, filename) -> filename.endsWith(SUFFIX);
 
     private static String getStoreFileName() {
         return FORMATTER.format(new Date(System.currentTimeMillis())) + SUFFIX;
