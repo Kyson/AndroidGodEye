@@ -5,10 +5,10 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThreadRunningProcessSorterClassPathPrefixImpl implements ThreadRunningProcessSorter {
+public class ThreadRunningProcessClassifierImpl implements ThreadRunningProcessClassifier {
     private List<String> mClassPathPrefixs;
 
-    public ThreadRunningProcessSorterClassPathPrefixImpl(List<String> classPathPrefixs) {
+    public ThreadRunningProcessClassifierImpl(List<String> classPathPrefixs) {
         List<String> cpp = classPathPrefixs;
         if (classPathPrefixs == null) {
             cpp = new ArrayList<>();
@@ -17,7 +17,7 @@ public class ThreadRunningProcessSorterClassPathPrefixImpl implements ThreadRunn
     }
 
     @Override
-    public ThreadRunningProcess sort(ThreadInfo threadInfo) {
+    public ThreadRunningProcess classify(ThreadInfo threadInfo) {
         List<String> stackTraceElements = threadInfo.stackTraceElements;
         if (stackTraceElements == null || stackTraceElements.isEmpty()) {
             return ThreadRunningProcess.UNKNOWN;

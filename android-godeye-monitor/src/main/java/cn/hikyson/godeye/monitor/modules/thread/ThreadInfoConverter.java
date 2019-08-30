@@ -6,10 +6,10 @@ import java.util.List;
 import io.reactivex.functions.Function;
 
 public class ThreadInfoConverter {
-    private static ThreadRunningProcessSorter sThreadRunningProcessSorter;
+    private static ThreadRunningProcessClassifier sThreadRunningProcessClassifier;
 
-    public static void setThreadRunningProcessSorter(ThreadRunningProcessSorter threadRunningProcessSorter) {
-        sThreadRunningProcessSorter = threadRunningProcessSorter;
+    public static void setThreadRunningProcessClassifier(ThreadRunningProcessClassifier threadRunningProcessClassifier) {
+        sThreadRunningProcessClassifier = threadRunningProcessClassifier;
     }
 
     public static Function<List<Thread>, List<ThreadInfo>> threadMap() {
@@ -22,7 +22,7 @@ public class ThreadInfoConverter {
             if (thread == null) {
                 continue;
             }
-            threadWrappers.add(new ThreadInfo(thread, sThreadRunningProcessSorter));
+            threadWrappers.add(new ThreadInfo(thread, sThreadRunningProcessClassifier));
         }
         return threadWrappers;
     }

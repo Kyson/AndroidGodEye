@@ -29,7 +29,7 @@ public class ThreadInfo {
     @Expose
     public ThreadRunningProcess threadRunningProcess;
 
-    public ThreadInfo(Thread thread, ThreadRunningProcessSorter threadRunningProcessSorter) {
+    public ThreadInfo(Thread thread, ThreadRunningProcessClassifier threadRunningProcessClassifier) {
         this.id = thread.getId();
         this.name = thread.getName();
         this.state = String.valueOf(thread.getState());
@@ -38,8 +38,8 @@ public class ThreadInfo {
         this.isAlive = thread.isAlive();
         this.isInterrupted = thread.isInterrupted();
         this.stackTraceElements = StacktraceUtil.getStack(thread.getStackTrace());
-        if (threadRunningProcessSorter != null) {
-            this.threadRunningProcess = threadRunningProcessSorter.sort(this);
+        if (threadRunningProcessClassifier != null) {
+            this.threadRunningProcess = threadRunningProcessClassifier.classify(this);
         } else {
             this.threadRunningProcess = ThreadRunningProcess.UNKNOWN;
         }

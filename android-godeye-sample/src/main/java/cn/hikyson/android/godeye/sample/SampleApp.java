@@ -19,6 +19,6 @@ public class SampleApp extends Application {
         //UPDATE 1.8+ 需要初始化
         GodEye.instance().init(this);
         GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl(this));
-        GodEyeMonitor.setClassPathPrefixOfThreadRunningProcess(Collections.singletonList("cn.hikyson.android.godeye.sample"));
+        GodEyeMonitor.setClassPrefixOfAppProcess(Collections.singletonList("cn.hikyson.android.godeye.sample"));
     }
 }

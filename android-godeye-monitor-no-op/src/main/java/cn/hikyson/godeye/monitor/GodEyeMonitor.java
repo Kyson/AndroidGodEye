@@ -33,7 +33,7 @@ public class GodEyeMonitor {
         //no op
     }
 
-    public static void setClassPathPrefixOfThreadRunningProcess(List<String> classPathPrefixes) {
+    public static void setClassPrefixOfAppProcess(List<String> classPathPrefixes) {
         // no op
     }
 }

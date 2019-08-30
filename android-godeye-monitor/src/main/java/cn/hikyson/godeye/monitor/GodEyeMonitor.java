@@ -14,7 +14,7 @@ import java.util.Locale;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
-import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessSorterClassPathPrefixImpl;
+import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifierImpl;
 import cn.hikyson.godeye.monitor.server.ModuleDriver;
 import cn.hikyson.godeye.monitor.modules.AppInfo;
 import cn.hikyson.godeye.monitor.modules.AppInfoLabel;
@@ -46,12 +46,13 @@ public class GodEyeMonitor {
     }
 
     /**
-     * set the code class path ,it will show if a thread is running in app process for thread info list in dashboard
+     * set the class path of app process, indicate whether code is running in app process or system process<br/>
+     * it will show in thread info list module of AndroidGodEye dashboard
      *
      * @param classPathPrefixes
      */
-    public static void setClassPathPrefixOfThreadRunningProcess(List<String> classPathPrefixes) {
-        ThreadInfoConverter.setThreadRunningProcessSorter(new ThreadRunningProcessSorterClassPathPrefixImpl(classPathPrefixes));
+    public static void setClassPrefixOfAppProcess(List<String> classPathPrefixes) {
+        ThreadInfoConverter.setThreadRunningProcessClassifier(new ThreadRunningProcessClassifierImpl(classPathPrefixes));
     }
 
     public static synchronized void work(Context context) {
