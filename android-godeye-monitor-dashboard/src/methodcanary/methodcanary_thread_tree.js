@@ -75,7 +75,7 @@ class MethodCanaryThreadTree extends Component {
         this.setState({treeData, start, end})
     }
 
-    getRenderNodeTitle(item) {
+    getRenderNodeText(item) {
         return <span>
            [COST]&nbsp;
             <strong>{Util.getFormatDuration((this.getMethodEndInRange(item.end) - this.getMethodStartInRange(item.start)))}</strong>
@@ -83,6 +83,9 @@ class MethodCanaryThreadTree extends Component {
             <strong>{((this.getMethodEndInRange(item.end) - this.getMethodStartInRange(item.start)) * 100 / (this.state.end - this.state.start)).toFixed(1) + "%"}</strong>
             &nbsp;&nbsp;&nbsp;&nbsp;[METHOD]&nbsp;
             <strong>{item.className + "#" + item.methodName}</strong>
+            &nbsp;&nbsp;&nbsp;&nbsp;[DURATION]&nbsp;
+            From&nbsp;<strong>{Util.getFormatMAndSAndMS(item.start)}</strong>&nbsp;to&nbsp;
+            <strong>{Util.getFormatMAndSAndMS(item.end)}</strong>
            </span>
     }
 
@@ -90,7 +93,7 @@ class MethodCanaryThreadTree extends Component {
         if (item.children) {
             return (
                 <Tree.TreeNode title={
-                    this.getRenderNodeTitle(item)
+                    this.getRenderNodeText(item)
                 }
                                selectable={false}
                                key={`${item.stack}#${item.start}#${item.end}`}
@@ -100,7 +103,7 @@ class MethodCanaryThreadTree extends Component {
             );
         }
         return <Tree.TreeNode {...item} title={
-            this.getRenderNodeTitle(item)
+            this.getRenderNodeText(item)
         } selectable={false}
                               key={`${item.stack}#${item.start}#${item.end}`} dataRef={item} isLeaf/>;
     });

@@ -12,6 +12,10 @@ import MethodCanaryThreadTree from "./methodcanary_thread_tree";
 
 class MethodCanaryThread extends Component {
 
+    static getMethodValueWithRange(realValue, range) {
+        return realValue === 0 ? range : realValue;
+    }
+
     constructor(props) {
         super(props);
         this.openMethodCanaryThread = this.openMethodCanaryThread.bind(this);
@@ -35,6 +39,7 @@ class MethodCanaryThread extends Component {
         }, 500);
     }
 
+
     openMethodCanaryThread(threadName, record) {
         let methodInfos = [];
         for (let i = 0; i < record.methodInfoOfThreadInfos.length; i++) {
@@ -57,8 +62,8 @@ class MethodCanaryThread extends Component {
         let maxStack = 0;
         for (let i = 0; i < methodInfos.length; i++) {
             datas.push({
-                x: methodInfos[i].start === 0 ? min : methodInfos[i].start,
-                x2: (methodInfos[i].end === 0 ? max : methodInfos[i].end),
+                x: MethodCanaryThread.getMethodValueWithRange(methodInfos[i].start, min),
+                x2: MethodCanaryThread.getMethodValueWithRange(methodInfos[i].end, max),
                 y: methodInfos[i].stack,
                 color: Util.getCommonColors()[i % Util.getCommonColors().length],
                 methodEvent: methodInfos[i]
@@ -75,7 +80,7 @@ class MethodCanaryThread extends Component {
         const main_point_width = 20;
         let thumbnail_height = (maxStack + 4) * thumbnail_point_width * 1.5;
         let main_height = 120 + thumbnail_height + (maxStack + 1) * main_point_width * 1.2;
-        const chart = Highcharts.stockChart('chart', {
+        Highcharts.stockChart('chart', {
             chart: {
                 type: 'xrange',
                 height: main_height,
@@ -119,7 +124,7 @@ class MethodCanaryThread extends Component {
                     gridLineWidth: 1,
                     labels: {
                         formatter: function () {
-                            return Util.getFormatDuration(this.value);
+                            return Util.getFormatMAndS(this.value);
                         }
                     },
                 }
@@ -132,9 +137,9 @@ class MethodCanaryThread extends Component {
                     let s = "";
                     const e = this.point;
                     if (e.methodEvent) {
-                        s += '<b>' + "cost " + Util.getFormatDuration(e.methodEvent.end - e.methodEvent.start) + '</b>'
-                        s += '<br/>' + e.methodEvent.className + "#" + e.methodEvent.methodName;
-                        s += '<br/> from ' + e.methodEvent.start + " to " + e.methodEvent.end;
+                        s += "cost " + Util.getFormatDuration(MethodCanaryThread.getMethodValueWithRange(e.methodEvent.end, max) - MethodCanaryThread.getMethodValueWithRange(e.methodEvent.start, min)) + '<br/>';
+                        s += e.methodEvent.className + "#" + e.methodEvent.methodName + '<br/>';
+                        s += 'From ' + Util.getFormatMAndSAndMS(MethodCanaryThread.getMethodValueWithRange(e.methodEvent.start, min)) + " to " + Util.getFormatMAndSAndMS(MethodCanaryThread.getMethodValueWithRange(e.methodEvent.end, max));
                     }
                     return s;
                 }
@@ -157,7 +162,7 @@ class MethodCanaryThread extends Component {
                 gridLineWidth: 1,
                 labels: {
                     formatter: function () {
-                        return Util.getFormatDuration(this.value);
+                        return Util.getFormatMAndS(this.value);
                     }
                 },
                 events: {
@@ -221,7 +226,10 @@ class MethodCanaryThread extends Component {
 
     renderTimeRange() {
         if (this.state.end !== 0 || this.state.start !== 0) {
-            return <p>{"Selected duration: " + Util.getFormatDuration(this.state.end - this.state.start) + ", From " + Util.getFormatDuration(this.state.start) + " to " + Util.getFormatDuration(this.state.end)}</p>
+            return <p>Selected duration:&nbsp;
+                <strong>{Util.getFormatDuration(this.state.end - this.state.start)}</strong>
+                ,&nbsp;From&nbsp;<strong>{Util.getFormatMAndS(this.state.start)}</strong>
+                &nbsp;to&nbsp;<strong>{Util.getFormatMAndS(this.state.end)}</strong></p>
         }
         return <div/>
     }

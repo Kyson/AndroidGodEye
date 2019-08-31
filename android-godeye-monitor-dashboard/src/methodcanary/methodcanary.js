@@ -7,6 +7,7 @@ import {Card, Button, Row, Col} from 'antd'
 import xrange from 'highcharts/modules/xrange';
 import ReactHighcharts from 'react-highcharts'
 import MethodCanaryThread from "./methodcanary_thread";
+import Util from "../libs/util";
 
 (xrange)(ReactHighcharts.Highcharts);
 
@@ -25,7 +26,7 @@ class MethodCanary extends Component {
         this.optionsForSummary = {
             chart: {
                 type: 'bar',
-                height: 1
+                height: 1,
             },
             title: {
                 text: null
@@ -45,12 +46,13 @@ class MethodCanary extends Component {
                 title: {
                     text: null
                 },
+                visible: false,
                 min: 0,
                 gridLineWidth: 0
             },
             xAxis: {
                 visible: false,
-                categories: ['执行方法数']
+                categories: ['执行方法数'],
             },
             plotOptions: {
                 series: {
@@ -69,7 +71,7 @@ class MethodCanary extends Component {
                     borderRadius: 0,
                     pointPadding: 0,
                     groupPadding: 0,
-                    pointWidth: 30,
+                    pointWidth: 25,
                 }
             },
             series: []
@@ -141,7 +143,7 @@ class MethodCanary extends Component {
         }
         this.refs.chartForSummary.getChart().update({
             chart: {
-                height: 100
+                height: 60
             },
             series: threadSeries
         });
@@ -172,7 +174,7 @@ class MethodCanary extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={24}>
+                    <Col span={24} style={{marginTop: 16}}>
                         <MethodCanaryThread
                             ref="chartForThread"
                         />
