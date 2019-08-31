@@ -150,11 +150,11 @@ class MethodCanary extends Component {
     render() {
         let instruction = "";
         if (!this.state.MethodCanaryStatus.isInstalled) {
-            instruction = "Please install method canary first."
+            instruction = "Please install method canary first!"
         } else if (this.state.MethodCanaryStatus.isMonitoring) {
             instruction = `Monitoring... | lowCostMethod: ${this.state.MethodCanaryStatus.lowCostMethodThresholdMillis}ms, maxSingleThread: ${this.state.MethodCanaryStatus.maxMethodCountSingleThreadByCost}`
         } else {
-            instruction = `Click and drag to zoom in, Hold down shift to pan(框选放大，按住shift左右拖动)`
+            instruction = ``
         }
         return (
             <Card title="MethodCanary" extra={

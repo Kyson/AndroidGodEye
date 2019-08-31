@@ -29,6 +29,22 @@ class Util {
     static getLightGrey() {
         return "#cccccc";
     }
+
+    static getFormatDuration(timeNanos) {
+        if (timeNanos >= 1000000000 * 60) {
+            return Math.floor(timeNanos / (1000000000 * 60)) + "m" + Math.floor((timeNanos % (1000000000 * 60)) / 1000000000) + "s";
+        }
+        if (timeNanos >= 1000000000) {
+            return (timeNanos / 1000000000).toFixed(3) + "s";
+        }
+        if (timeNanos >= 1000000) {
+            return (timeNanos / 1000000).toFixed(3) + "ms";
+        }
+        if (timeNanos >= 1000) {
+            return (timeNanos / 1000).toFixed(3) + "us";
+        }
+        return Math.floor(timeNanos) + "ns";
+    }
 }
 
 export default Util;

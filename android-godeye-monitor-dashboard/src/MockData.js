@@ -26,7 +26,7 @@ class Mock {
 
         this.recvFun("methodCanary", {
             start: 0,
-            end: 2000,
+            end: 1000,
             methodInfoOfThreadInfos: [
                 {
                     threadInfo: {
@@ -103,10 +103,9 @@ class Mock {
                             methodDesc: "descC",
                             methodAccessFlag: 1
                         },
-
                         {
                             stack: 0,
-                            start: 750,
+                            start: 700,
                             end: 800,
                             className: "700-800",
                             methodName: "methodA",
