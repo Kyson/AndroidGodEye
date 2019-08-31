@@ -20,12 +20,6 @@ class MethodCanaryThreadTree extends Component {
 
     refresh(start, end, methodInfos) {
         const treeData = [];
-        methodInfos.sort((a, b) => {
-            if (a.stack === b.stack) {
-                return a.start - b.start;
-            }
-            return a.stack - b.stack;
-        });
         this.buildTree(start, end, start, end, methodInfos, null, new Set(), treeData);
         this.setState({treeData})
     }
@@ -34,7 +28,7 @@ class MethodCanaryThreadTree extends Component {
     buildTree(originStart, originEnd, start, end, methodInfos, parent, added, treeData) {
         for (let i = 0; i < methodInfos.length; i += 1) {
             const item = methodInfos[i];
-            if (!added.has(item) && ((start >= item.start && start <= item.end) || (end >= item.start && end <= item.end))) {
+            if (!added.has(item) && (!(item.end < start || item.start > end))) {
                 if (parent) {
                     if (!parent.children) {
                         parent.children = [];
@@ -51,53 +45,24 @@ class MethodCanaryThreadTree extends Component {
         }
     }
 
-    renderTreeNodes(data) {
-        data.map(item => {
-            if (item.children) {
-                const index = item.className.lastIndexOf("/");
-                const className = item.className.substring(index + 1, item.className.length);
-                return (
-                    <Tree.TreeNode title={className + "#" + item.methodName} key={className + "#" + item.methodName}
-                                   dataRef={item}>
-                        {this.renderTreeNodes(item.children)}
-                    </Tree.TreeNode>);
-            }
-            const index = item.className.lastIndexOf("/");
-            const className = item.className.substring(index + 1, item.className.length);
-            return (<Tree.TreeNode {...item} title={className + "#" + item.methodName}
-                                   key={className + "#" + item.methodName} dataRef={item}/>);
-        });
-    }
-
-    renderTreeNodes2 = data => data.map((item) => {
+    renderTreeNodes = data => data.map((item) => {
         if (item.children) {
             return (
-                <Tree.TreeNode title={item.className} key={item.className} dataRef={item}>
-                    {this.renderTreeNodes2(item.children)}
+                <Tree.TreeNode title={item.className + "#" + item.methodName}
+                               key={`${item.stack}#${item.start}#${item.end}`}
+                               dataRef={item}>
+                    {this.renderTreeNodes(item.children)}
                 </Tree.TreeNode>
             );
         }
-        return <Tree.TreeNode {...item} title={item.className} key={item.className} dataRef={item} />;
+        return <Tree.TreeNode {...item} title={item.className + "#" + item.methodName}
+                              key={`${item.stack}#${item.start}#${item.end}`} dataRef={item}/>;
     });
-
 
     render() {
         return (<div>
-                <p>ceshi</p>
                 <Tree>
-                    <Tree.TreeNode title="ddd">
-                        <Tree.TreeNode title="ddd">
-                            <Tree.TreeNode title="ddd">
-
-                            </Tree.TreeNode>
-                        </Tree.TreeNode>
-                    </Tree.TreeNode>
-                    <Tree.TreeNode title="ddd">
-
-                    </Tree.TreeNode>
-                </Tree>
-                <Tree>
-                    {this.renderTreeNodes2(this.state.treeData)}
+                    {this.renderTreeNodes(this.state.treeData)}
                 </Tree></div>
         );
     }

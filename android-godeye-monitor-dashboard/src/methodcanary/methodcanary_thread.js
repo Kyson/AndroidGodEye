@@ -6,7 +6,8 @@ import Util from "../libs/util";
 
 import {Card, Button, Row, Col} from 'antd'
 import xrange from 'highcharts/modules/xrange';
-import Highcharts from 'highcharts/highstock';
+import Highcharts from 'highcharts/highstock.src';
+import MethodCanaryThreadTree from "./methodcanary_thread_tree";
 
 (xrange)(Highcharts);
 
@@ -16,17 +17,81 @@ class MethodCanaryThread extends Component {
         super(props);
         this.openMethodCanaryThread = this.openMethodCanaryThread.bind(this);
         this.afterSetExtremes = this.afterSetExtremes.bind(this);
+        this.methodInfos = [];
         this.state = {
-            tt: ""
-        };
-        this.record = {};
+            start: 0,
+            end: 0
+        }
     }
 
     componentDidMount() {
-        this.chart = Highcharts.stockChart('chart', {
+
+    }
+
+    afterSetExtremes(e) {
+        this.setState({
+            start: e.min,
+            end: e.max
+        });
+        this.refs.methodCanaryThreadTree.refresh(e.min, e.max, this.methodInfos);
+    }
+
+    openMethodCanaryThread(threadName, record) {
+        let methodInfos = [];
+        for (let i = 0; i < record.methodInfoOfThreadInfos.length; i++) {
+            if (threadName === MethodCanaryThread.getThreadNameByThreadInfo(record.methodInfoOfThreadInfos[i].threadInfo)) {
+                methodInfos = record.methodInfoOfThreadInfos[i].methodInfos
+            }
+        }
+        methodInfos.sort((a, b) => {
+            return a.start - b.start;
+        });
+        const min = record.start;
+        const max = record.end;
+        const datas = [];
+        let maxStack = 0;
+        datas.push({
+            x: min,
+            x2: max,
+            y: 0,
+            color: "#00000000",
+            methodEvent: null
+        });
+        for (let i = 0; i < methodInfos.length; i++) {
+            datas.push({
+                x: methodInfos[i].start === 0 ? min : methodInfos[i].start,
+                x2: (methodInfos[i].end === 0 ? max : methodInfos[i].end),
+                y: methodInfos[i].stack,
+                color: Util.getCommonColors()[i % Util.getCommonColors().length],
+                methodEvent: methodInfos[i]
+            });
+            if (methodInfos[i].stack > maxStack) {
+                maxStack = methodInfos[i].stack
+            }
+        }
+
+        const categories = [];
+        let thumbnail_height = 30;
+        for (let i = 0; i < (maxStack + 1); i++) {
+            categories.push("");
+            thumbnail_height = thumbnail_height + 7
+        }
+        let main_height = 120 + thumbnail_height;
+        for (let i = 0; i < (maxStack + 1); i++) {
+            main_height = main_height + 22
+        }
+        methodInfos.sort((a, b) => {
+            if (a.stack === b.stack) {
+                return a.start - b.start;
+            }
+            return a.stack - b.stack;
+        });
+        this.methodInfos = methodInfos;
+
+        const chart = Highcharts.stockChart('chart', {
             chart: {
                 type: 'xrange',
-                height: 0.1,
+                height: main_height,
             },
             title: null,
             credits: {
@@ -37,7 +102,7 @@ class MethodCanaryThread extends Component {
             },
             navigator: {
                 enabled: true,
-                height: 0,
+                height: thumbnail_height,
                 series: {
                     type: 'xrange',
                     borderRadius: 0,
@@ -50,13 +115,17 @@ class MethodCanaryThread extends Component {
                         text: null
                     },
                     min: 0,
+                    max: categories.length,
                     gridLineWidth: 0,
                     reversed: true,
+                    startOnTick: false,
+                    endOnTick: false,
                     categories: []
                 },
                 xAxis: {
                     startOnTick: false,
                     endOnTick: false,
+                    ordinal: false,
                     labels: {
                         formatter: function () {
                             return (this.value / 1000000000).toFixed(3) + "s";
@@ -98,6 +167,7 @@ class MethodCanaryThread extends Component {
                         return (this.value / 1000000000).toFixed(3) + "s";
                     }
                 },
+                ordinal: false,
                 lineWidth: 0.5,
                 gridLineWidth: 0.5,
                 startOnTick: false,
@@ -113,16 +183,14 @@ class MethodCanaryThread extends Component {
                 min: 0,
                 gridLineWidth: 0,
                 reversed: true,
-                categories: [],
+                startOnTick: false,
+                endOnTick: false,
+                categories: categories,
                 crosshair: false,
-            },
-            events: {
-                selection: function (e) {
-                    console.log(e);
-                }
             },
             series: [
                 {
+                    data: datas,
                     borderRadius: 0,
                     pointPadding: 0,
                     groupPadding: 0,
@@ -141,81 +209,14 @@ class MethodCanaryThread extends Component {
                                 const className = this.point.methodEvent.className.substring(index + 1, this.point.methodEvent.className.length);
                                 return className + "#" + this.point.methodEvent.methodName
                             }
+                            return null
                         }
                     },
                 }
             ]
         });
-    }
-
-    afterSetExtremes(e) {
-        this.setState({
-            tt: e.min + "-" + e.max
-        });
-    }
-
-    openMethodCanaryThread(threadName, record) {
-        this.record = record;
-        let methodInfos = {};
-        for (let i = 0; i < record.methodInfoOfThreadInfos.length; i++) {
-            if (threadName === MethodCanaryThread.getThreadNameByThreadInfo(record.methodInfoOfThreadInfos[i].threadInfo)) {
-                methodInfos = record.methodInfoOfThreadInfos[i].methodInfos
-            }
-        }
-        const min = record.start;
-        const max = record.end;
-        const datas = [];
-        let maxStack = 0;
-        datas.push({
-            x: min,
-            x2: max,
-            y: 0,
-            color: "#00000000",
-            methodEvent: null
-        });
-        for (let i = 0; i < methodInfos.length; i++) {
-            datas.push({
-                x: methodInfos[i].start === 0 ? min : methodInfos[i].start,
-                x2: (methodInfos[i].end === 0 ? max : methodInfos[i].end),
-                y: methodInfos[i].stack,
-                color: Util.getCommonColors()[i % 5],
-                methodEvent: methodInfos[i]
-            });
-            if (methodInfos[i].stack > maxStack) {
-                maxStack = methodInfos[i].stack
-            }
-        }
-        const categories = [];
-
-        let thumbnail_height = 30;
-        for (let i = 0; i < (maxStack + 1); i++) {
-            categories.push("");
-            thumbnail_height = thumbnail_height + 7
-        }
-        let main_height = 120 + thumbnail_height;
-        for (let i = 0; i < (maxStack + 1); i++) {
-            categories.push("");
-            main_height = main_height + 22
-        }
-        this.chart.update({
-            chart: {
-                height: main_height,
-            },
-            navigator: {
-                height: thumbnail_height,
-                yAxis: {
-                    max: categories.length - 2,
-                },
-            },
-            yAxis: {
-                categories: categories,
-            },
-            series: [
-                {
-                    data: datas
-                }
-            ]
-        })
+        this.refs.methodCanaryThreadTree.refresh(min, max, methodInfos);
+        this.setState({start: min, end: max})
     }
 
     static getThreadNameByThreadInfo(threadInfo) {
@@ -224,11 +225,11 @@ class MethodCanaryThread extends Component {
 
     render() {
         return (
-            <Row>
-                <Col span={24}>
-                    <div id="chart"/>
-                </Col>
-            </Row>
+            <div>
+                <div id="chart"/>
+                <p>{((this.state.end - this.state.start)) + "s, from " + (this.state.start ) + " to " + (this.state.end )}</p>
+                <MethodCanaryThreadTree ref="methodCanaryThreadTree"/>
+            </div>
         );
     }
 }
