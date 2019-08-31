@@ -15,5 +15,5 @@ function isExclude(classInfo,methodInfo){
 }
 
 function isInclude(classInfo,methodInfo){
-    return classInfo.name.startsWith('cn/hikyson/android/godeye/sample') || classInfo.name.startsWith('cn/hikyson/godeye')
+    return classInfo.name.startsWith('cn/hikyson/android/godeye/sample')
 }

@@ -5,11 +5,12 @@ import '../App.css';
 
 import {Card, Button, Row, Col} from 'antd'
 import xrange from 'highcharts/modules/xrange';
-import ReactHighcharts from 'react-highcharts'
 import MethodCanaryThread from "./methodcanary_thread";
 import Util from "../libs/util";
+import Highcharts from 'highcharts/highcharts';
 
-(xrange)(ReactHighcharts.Highcharts);
+
+(xrange)(Highcharts);
 
 class MethodCanary extends Component {
 
@@ -19,14 +20,81 @@ class MethodCanary extends Component {
             MethodCanaryStatus: {}
         };
         this.record = {};
+        this.chart = null;
         this.toggleIsMonitor = this.toggleIsMonitor.bind(this);
+        this.clear = this.clear.bind(this);
         this.openMethodCanaryThread = this.openMethodCanaryThread.bind(this);
-        const functionOpenThread = this.openMethodCanaryThread;
+    }
 
-        this.optionsForSummary = {
+    componentDidMount() {
+        this.onWsOpenCallback = () => {
+            this.props.globalWs.sendMessage('{"moduleName": "MethodCanaryStatus"}');
+        };
+        this.props.globalWs.registerCallback(this.onWsOpenCallback);
+    }
+
+    componentWillUnmount() {
+        this.props.globalWs.unregisterCallback(this.onWsOpenCallback);
+    }
+
+    toggleIsMonitor() {
+        if (this.state.MethodCanaryStatus.isInstalled && !this.state.MethodCanaryStatus.isMonitoring) {
+            this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"start"}');
+        } else if (this.state.MethodCanaryStatus.isInstalled && this.state.MethodCanaryStatus.isMonitoring) {
+            this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"stop"}');
+        }
+    }
+
+    clear() {
+        this.record = {};
+        if (this.chart) {
+            this.chart.destroy();
+            this.chart = null;
+        }
+        this.refs.chartForThread.clear();
+    }
+
+    openMethodCanaryThread(threadName) {
+        this.refs.chartForThread.openMethodCanaryThread(threadName, this.record);
+    }
+
+    static getThreadNameByThreadInfo(threadInfo) {
+        return "id:[" + threadInfo.id + "],name:[" + threadInfo.name + "]"
+    }
+
+    refreshStatus(record) {
+        this.setState({
+            MethodCanaryStatus: record
+        });
+    }
+
+    refresh(record) {
+        this.record = record;
+        const threadSeries = [];
+        if (this.record && this.record.methodInfoOfThreadInfos) {
+            for (let i = 0; i < this.record.methodInfoOfThreadInfos.length; i++) {
+                const methodEventCount = this.record.methodInfoOfThreadInfos[i].methodInfos.length;
+                const threadInfo = this.record.methodInfoOfThreadInfos[i].threadInfo;
+                if (threadInfo.id === 2 && threadInfo.name === 'main') {
+                    threadSeries.push({
+                        name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
+                        data: [methodEventCount],
+                        color: 'black'
+                    })
+                } else {
+                    threadSeries.push({
+                        name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
+                        data: [methodEventCount],
+                        color: Util.getCommonColors()[i % Util.getCommonColors().length]
+                    })
+                }
+            }
+        }
+        const openMethodCanaryThread = this.openMethodCanaryThread;
+        const options = {
             chart: {
                 type: 'bar',
-                height: 1,
+                height: 60,
             },
             title: {
                 text: null
@@ -59,7 +127,7 @@ class MethodCanary extends Component {
                     stacking: 'percent',
                     events: {
                         click: function (event) {
-                            functionOpenThread(this.name);
+                            openMethodCanaryThread(this.name);
                         }
                     },
                     dataLabels: {
@@ -74,79 +142,9 @@ class MethodCanary extends Component {
                     pointWidth: 25,
                 }
             },
-            series: []
-        };
-    }
-
-    componentDidMount() {
-        this.onWsOpenCallback = () => {
-            this.props.globalWs.sendMessage('{"moduleName": "MethodCanaryStatus"}');
-        };
-        this.props.globalWs.registerCallback(this.onWsOpenCallback);
-    }
-
-    componentWillUnmount() {
-        this.props.globalWs.unregisterCallback(this.onWsOpenCallback);
-    }
-
-    toggleIsMonitor() {
-        if (this.state.MethodCanaryStatus.isInstalled && !this.state.MethodCanaryStatus.isMonitoring) {
-            this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"start"}');
-        } else if (this.state.MethodCanaryStatus.isInstalled && this.state.MethodCanaryStatus.isMonitoring) {
-            this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"stop"}');
-        }
-    }
-
-    openMethodCanaryThread(threadName) {
-        this.refs.chartForThread.openMethodCanaryThread(threadName, this.record);
-    }
-
-    static getThreadNameByThreadInfo(threadInfo) {
-        return "id:[" + threadInfo.id + "],name:[" + threadInfo.name + "]"
-    }
-
-    refreshStatus(record) {
-        this.setState({
-            MethodCanaryStatus: record
-        });
-    }
-
-    refresh(record) {
-        let i;
-        this.record = record;
-        const threadSeries = [];
-        for (let i = 0; i < this.record.methodInfoOfThreadInfos.length; i++) {
-            const methodEventCount = this.record.methodInfoOfThreadInfos[i].methodInfos.length;
-            const threadInfo = this.record.methodInfoOfThreadInfos[i].threadInfo;
-            if (threadInfo.id === 2 && threadInfo.name === 'main') {
-                threadSeries.push({
-                    name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
-                    data: [methodEventCount],
-                    color: 'black'
-                })
-            } else {
-                threadSeries.push({
-                    name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
-                    data: [methodEventCount]
-                })
-            }
-        }
-        const diff = this.refs.chartForSummary.getChart().series.length - threadSeries.length;
-        if (diff > 0) {
-            for (i = this.refs.chartForSummary.getChart().series.length; i > diff; i--) {
-                this.refs.chartForSummary.getChart().series[i - 1].remove(true);
-            }
-        } else if (diff < 0) {
-            for (i = this.refs.chartForSummary.getChart().series.length; i < threadSeries.length; i++) {
-                this.refs.chartForSummary.getChart().addSeries({});
-            }
-        }
-        this.refs.chartForSummary.getChart().update({
-            chart: {
-                height: 60
-            },
             series: threadSeries
-        });
+        };
+        this.chart = Highcharts.chart('chartForSummary', options);
     }
 
     render() {
@@ -164,13 +162,14 @@ class MethodCanary extends Component {
                     <span>{instruction}&nbsp;&nbsp;</span>
                     <Button
                         onClick={this.toggleIsMonitor}>{this.state.MethodCanaryStatus.isMonitoring ? "Stop" : "Start"}</Button>
+                    &nbsp;&nbsp;
+                    <Button
+                        onClick={this.clear}>Clear</Button>
                 </div>
             }>
                 <Row>
                     <Col span={24}>
-                        <ReactHighcharts
-                            ref="chartForSummary"
-                            config={this.optionsForSummary}/>
+                        <div id="chartForSummary"/>
                     </Col>
                 </Row>
                 <Row>

@@ -8,6 +8,10 @@ import {Tree} from 'antd'
 
 class MethodCanaryThreadTree extends Component {
 
+    static getMethodValueWithRange(realValue, range) {
+        return realValue === 0 ? range : realValue;
+    }
+
     static buildTree(originStart, originEnd, start, end, methodInfos, parent, added, treeData) {
         for (let i = 0; i < methodInfos.length; i += 1) {
             const item = methodInfos[i];
@@ -52,6 +56,8 @@ class MethodCanaryThreadTree extends Component {
     constructor(props) {
         super(props);
         this.renderTreeNodes = this.renderTreeNodes.bind(this);
+        this.getRenderNodeText = this.getRenderNodeText.bind(this);
+        this.clear = this.clear.bind(this);
         this.refresh = this.refresh.bind(this);
         this.state = {
             treeData: [],
@@ -66,6 +72,14 @@ class MethodCanaryThreadTree extends Component {
 
     getMethodEndInRange(realEnd) {
         return realEnd < this.state.end ? realEnd : this.state.end;
+    }
+
+    clear() {
+        this.setState({
+            treeData: [],
+            start: 0,
+            end: 0
+        });
     }
 
     refresh(start, end, methodInfos) {
@@ -109,9 +123,13 @@ class MethodCanaryThreadTree extends Component {
     });
 
     render() {
-        return (<Tree>
-            {this.renderTreeNodes(this.state.treeData)}
-        </Tree>);
+        if (this.state.treeData && this.state.treeData.length > 0) {
+            return (<Tree>
+                {this.renderTreeNodes(this.state.treeData)}
+            </Tree>);
+        } else {
+            return <span>No data.</span>
+        }
     }
 }
 

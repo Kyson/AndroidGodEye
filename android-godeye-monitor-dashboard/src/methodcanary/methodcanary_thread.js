@@ -4,8 +4,10 @@ import React, {Component} from 'react';
 import '../App.css';
 import Util from "../libs/util";
 
+import {Collapse} from 'antd'
+
 import xrange from 'highcharts/modules/xrange';
-import Highcharts from 'highcharts/highstock.src';
+import Highcharts from 'highcharts/highstock';
 import MethodCanaryThreadTree from "./methodcanary_thread_tree";
 
 (xrange)(Highcharts);
@@ -19,7 +21,10 @@ class MethodCanaryThread extends Component {
     constructor(props) {
         super(props);
         this.openMethodCanaryThread = this.openMethodCanaryThread.bind(this);
+        this.renderDetail = this.renderDetail.bind(this);
         this.afterSetExtremes = this.afterSetExtremes.bind(this);
+        this.clear = this.clear.bind(this);
+        this.chart = null;
         this.methodInfos = [];
         this.afterSetExtremesTimerId = null;
         this.state = {
@@ -35,10 +40,26 @@ class MethodCanaryThread extends Component {
         });
         clearTimeout(this.afterSetExtremesTimerId);
         this.afterSetExtremesTimerId = setTimeout(() => {
-            this.refs.methodCanaryThreadTree.refresh(e.min, e.max, this.methodInfos);
-        }, 500);
+            if (this.refs.methodCanaryThreadTree) {
+                this.refs.methodCanaryThreadTree.refresh(e.min, e.max, this.methodInfos);
+            }
+        }, 300);
     }
 
+    clear() {
+        this.methodInfos = [];
+        if (this.chart) {
+            this.chart.destroy();
+            this.chart = null;
+        }
+        this.setState({
+            start: 0,
+            end: 0,
+        });
+        if (this.refs.methodCanaryThreadTree) {
+            this.refs.methodCanaryThreadTree.clear();
+        }
+    }
 
     openMethodCanaryThread(threadName, record) {
         let methodInfos = [];
@@ -61,11 +82,13 @@ class MethodCanaryThread extends Component {
         const datas = [];
         let maxStack = 0;
         for (let i = 0; i < methodInfos.length; i++) {
+            methodInfos[i].start = MethodCanaryThread.getMethodValueWithRange(methodInfos[i].start, min);
+            methodInfos[i].end = MethodCanaryThread.getMethodValueWithRange(methodInfos[i].end, max);
             datas.push({
-                x: MethodCanaryThread.getMethodValueWithRange(methodInfos[i].start, min),
-                x2: MethodCanaryThread.getMethodValueWithRange(methodInfos[i].end, max),
+                x: methodInfos[i].start,
+                x2: methodInfos[i].end,
                 y: methodInfos[i].stack,
-                color: Util.getCommonColors()[i % Util.getCommonColors().length],
+                color: Util.getColorForMethod(methodInfos[i]),
                 methodEvent: methodInfos[i]
             });
             if (methodInfos[i].stack > maxStack) {
@@ -80,7 +103,7 @@ class MethodCanaryThread extends Component {
         const main_point_width = 20;
         let thumbnail_height = (maxStack + 4) * thumbnail_point_width * 1.5;
         let main_height = 120 + thumbnail_height + (maxStack + 1) * main_point_width * 1.2;
-        Highcharts.stockChart('chart', {
+        this.chart = Highcharts.stockChart('chart', {
             chart: {
                 type: 'xrange',
                 height: main_height,
@@ -124,7 +147,7 @@ class MethodCanaryThread extends Component {
                     gridLineWidth: 1,
                     labels: {
                         formatter: function () {
-                            return Util.getFormatMAndS(this.value);
+                            return Util.getFormatMAndSAndMS(this.value);
                         }
                     },
                 }
@@ -137,9 +160,9 @@ class MethodCanaryThread extends Component {
                     let s = "";
                     const e = this.point;
                     if (e.methodEvent) {
-                        s += "cost " + Util.getFormatDuration(MethodCanaryThread.getMethodValueWithRange(e.methodEvent.end, max) - MethodCanaryThread.getMethodValueWithRange(e.methodEvent.start, min)) + '<br/>';
+                        s += "cost " + Util.getFormatDuration(e.methodEvent.end - e.methodEvent.start) + '<br/>';
                         s += e.methodEvent.className + "#" + e.methodEvent.methodName + '<br/>';
-                        s += 'From ' + Util.getFormatMAndSAndMS(MethodCanaryThread.getMethodValueWithRange(e.methodEvent.start, min)) + " to " + Util.getFormatMAndSAndMS(MethodCanaryThread.getMethodValueWithRange(e.methodEvent.end, max));
+                        s += 'From ' + Util.getFormatMAndSAndMS(e.methodEvent.start) + " to " + Util.getFormatMAndSAndMS(e.methodEvent.end);
                     }
                     return s;
                 }
@@ -162,7 +185,7 @@ class MethodCanaryThread extends Component {
                 gridLineWidth: 1,
                 labels: {
                     formatter: function () {
-                        return Util.getFormatMAndS(this.value);
+                        return Util.getFormatMAndSAndMS(this.value);
                     }
                 },
                 events: {
@@ -216,7 +239,9 @@ class MethodCanaryThread extends Component {
             return a.stack - b.stack;
         });
         this.methodInfos = methodInfos;
-        this.refs.methodCanaryThreadTree.refresh(min, max, this.methodInfos);
+        if (this.refs.methodCanaryThreadTree) {
+            this.refs.methodCanaryThreadTree.refresh(min, max, this.methodInfos);
+        }
         this.setState({start: min, end: max});
     }
 
@@ -224,22 +249,30 @@ class MethodCanaryThread extends Component {
         return "id:[" + threadInfo.id + "],name:[" + threadInfo.name + "]"
     }
 
+    renderDetail() {
+        return <Collapse bordered={true} defaultActiveKey={['1']}>
+            <Collapse.Panel header={this.renderTimeRange()} key="1">
+                <MethodCanaryThreadTree ref="methodCanaryThreadTree"/>
+            </Collapse.Panel>
+        </Collapse>
+    }
+
     renderTimeRange() {
         if (this.state.end !== 0 || this.state.start !== 0) {
-            return <p>Selected duration:&nbsp;
+            return <span>Selected duration:&nbsp;
                 <strong>{Util.getFormatDuration(this.state.end - this.state.start)}</strong>
-                ,&nbsp;From&nbsp;<strong>{Util.getFormatMAndS(this.state.start)}</strong>
-                &nbsp;to&nbsp;<strong>{Util.getFormatMAndS(this.state.end)}</strong></p>
+                ,&nbsp;From&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.start)}</strong>
+                &nbsp;to&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.end)}</strong></span>
+        } else {
+            return <span>Empty...</span>
         }
-        return <div/>
     }
 
     render() {
         return (
             <div>
                 <div id="chart"/>
-                {this.renderTimeRange()}
-                <MethodCanaryThreadTree ref="methodCanaryThreadTree"/>
+                {this.renderDetail()}
             </div>
         );
     }

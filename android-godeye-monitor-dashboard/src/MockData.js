@@ -25,7 +25,7 @@ class Mock {
         // });
 
         this.recvFun("methodCanary", {
-            start: 0,
+            start: 10,
             end: 1000,
             methodInfoOfThreadInfos: [
                 {
@@ -50,7 +50,7 @@ class Mock {
                     },
                     methodInfos: [
                         {
-                            stack: 1,
+                            stack: 2,
                             start: 0,
                             end: 300,
                             className: "0-300",
@@ -58,9 +58,17 @@ class Mock {
                             methodDesc: "descB",
                             methodAccessFlag: 1
                         },
-
                         {
-                            stack: 1,
+                            stack: 0,
+                            start: 0,
+                            end: 0,
+                            className: "xxx-xxx",
+                            methodName: "methodB",
+                            methodDesc: "descB",
+                            methodAccessFlag: 1
+                        },
+                        {
+                            stack: 2,
                             start: 720,
                             end: 780,
                             className: "700-780",
@@ -69,7 +77,7 @@ class Mock {
                             methodAccessFlag: 1
                         },
                         {
-                            stack: 2,
+                            stack: 3,
                             start: 100,
                             end: 200,
                             className: "100-200",
@@ -78,7 +86,7 @@ class Mock {
                             methodAccessFlag: 1
                         },
                         {
-                            stack: 1,
+                            stack: 2,
                             start: 400,
                             end: 450,
                             className: "400-450",
@@ -86,7 +94,7 @@ class Mock {
                             methodDesc: "descD",
                             methodAccessFlag: 1
                         }, {
-                            stack: 0,
+                            stack: 1,
                             start: 0,
                             end: 500,
                             className: "0-500",
@@ -95,7 +103,7 @@ class Mock {
                             methodAccessFlag: 1
                         },
                         {
-                            stack: 1,
+                            stack: 2,
                             start: 320,
                             end: 350,
                             className: "320-350",
@@ -104,7 +112,7 @@ class Mock {
                             methodAccessFlag: 1
                         },
                         {
-                            stack: 0,
+                            stack: 1,
                             start: 700,
                             end: 800,
                             className: "700-800",
