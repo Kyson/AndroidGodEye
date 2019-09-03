@@ -13,14 +13,15 @@ import java.util.Locale;
 
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
-import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
-import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifierImpl;
-import cn.hikyson.godeye.monitor.server.ModuleDriver;
 import cn.hikyson.godeye.monitor.modules.AppInfo;
 import cn.hikyson.godeye.monitor.modules.AppInfoLabel;
-import cn.hikyson.godeye.monitor.server.HttpStaticProcessor;
-import cn.hikyson.godeye.monitor.server.WebSocketBizProcessor;
+import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
+import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifier;
+import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifierImpl;
 import cn.hikyson.godeye.monitor.server.GodEyeMonitorServer;
+import cn.hikyson.godeye.monitor.server.HttpStaticProcessor;
+import cn.hikyson.godeye.monitor.server.ModuleDriver;
+import cn.hikyson.godeye.monitor.server.WebSocketBizProcessor;
 
 /**
  * Created by kysonchao on 2017/11/27.
@@ -55,12 +56,22 @@ public class GodEyeMonitor {
         ThreadInfoConverter.setThreadRunningProcessClassifier(new ThreadRunningProcessClassifierImpl(classPathPrefixes));
     }
 
+    /**
+     * set the ThreadRunningProcessClassifier of app process, indicate whether code is running in app process or system process<br/>
+     * it will show in thread info list module of AndroidGodEye dashboard
+     *
+     * @param threadRunningProcessClassifier
+     */
+    public static void setThreadRunningProcessClassifier(ThreadRunningProcessClassifier threadRunningProcessClassifier) {
+        ThreadInfoConverter.setThreadRunningProcessClassifier(threadRunningProcessClassifier);
+    }
+
     public static synchronized void work(Context context) {
         work(context, DEFAULT_PORT);
     }
 
     /**
-     * monitor开始工作
+     * monitor start work
      */
     public static synchronized void work(Context context, int port) {
         if (sIsWorking) {
@@ -109,7 +120,7 @@ public class GodEyeMonitor {
     }
 
     /**
-     * monitor停止工作
+     * monitor stop work
      */
     public static synchronized void shutDown() {
         if (sGodEyeMonitorServer != null) {
