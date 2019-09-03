@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.List;
 
 import cn.hikyson.godeye.monitor.modules.AppInfoLabel;
+import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifier;
 
 /**
  * Created by kysonchao on 2017/11/27.
@@ -34,6 +35,10 @@ public class GodEyeMonitor {
     }
 
     public static void setClassPrefixOfAppProcess(List<String> classPathPrefixes) {
+        // no op
+    }
+
+    public static void setThreadRunningProcessClassifier(ThreadRunningProcessClassifier threadRunningProcessClassifier) {
         // no op
     }
 }
