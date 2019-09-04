@@ -75,11 +75,11 @@ public class ProcessUtils {
 
     /**
      * 是否主进程
-     *
+     * 提供给外部使用
      * @param application
      * @return
      */
-    private static boolean isMainProcess(Application application) {
+    public static boolean isMainProcess(Application application) {
         int pid = android.os.Process.myPid();
         String processName = "";
         ActivityManager manager = (ActivityManager) application.getSystemService

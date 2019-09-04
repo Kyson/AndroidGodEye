@@ -127,13 +127,13 @@ assets目录下放模块的配置文件`android-godeye-config/install.config`，
     <fps intervalMillis="2000"/>
     <heap intervalMillis="2000"/>
     <leakMemory debug="true" debugNotification="true" leakRefInfoProvider="cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider"/>
-    <pageload/>
+    <pageload pageInfoProvider="cn.hikyson.godeye.core.internal.modules.pageload.DefaultPageInfoProvider"/>
     <pss intervalMillis="2000"/>
     <ram intervalMillis="2000"/>
-    <sm debugNotify="true"
-        dumpIntervalMillis="500"
-        longBlockThresholdMillis="300"
-        shortBlockThresholdMillis="100"/>
+    <sm debugNotification="true"
+        dumpIntervalMillis="1000"
+        longBlockThresholdMillis="500"
+        shortBlockThresholdMillis="300"/>
     <thread intervalMillis="3000"
             threadFilter="cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter"/>
     <traffic intervalMillis="2000" sampleMillis="1000"/>
