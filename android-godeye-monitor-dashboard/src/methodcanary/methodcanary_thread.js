@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import '../App.css';
 import Util from "../libs/util";
 
-import {Collapse} from 'antd'
+import {Collapse, Input} from 'antd'
 
 import xrange from 'highcharts/modules/xrange';
 import Highcharts from 'highcharts/highstock';
@@ -20,12 +20,14 @@ class MethodCanaryThread extends Component {
 
     constructor(props) {
         super(props);
-        this.openMethodCanaryThread = this.openMethodCanaryThread.bind(this);
+        this.refresh = this.refresh.bind(this);
         this.renderDetail = this.renderDetail.bind(this);
+        this.renderExtra = this.renderExtra.bind(this);
         this.afterSetExtremes = this.afterSetExtremes.bind(this);
         this.clear = this.clear.bind(this);
         this.chart = null;
         this.methodInfos = [];
+        this.searchText = null;
         this.afterSetExtremesTimerId = null;
         this.state = {
             start: 0,
@@ -61,7 +63,7 @@ class MethodCanaryThread extends Component {
         }
     }
 
-    openMethodCanaryThread(threadName, record) {
+    refresh(threadName, record) {
         let methodInfos = [];
         for (let i = 0; i < record.methodInfoOfThreadInfos.length; i++) {
             if (threadName === MethodCanaryThread.getThreadNameByThreadInfo(record.methodInfoOfThreadInfos[i].threadInfo)) {
@@ -268,9 +270,26 @@ class MethodCanaryThread extends Component {
         }
     }
 
+    renderExtra() {
+        if (this.state.end !== 0 || this.state.start !== 0) {
+            return (
+                <div style={{textAlign: 'right'}}>
+                    <Input.Search
+                        style={{width: 200}}
+                        placeholder="Input search text"
+                        onSearch={value => {
+                            this.searchText = value;
+                        }}
+                    /></div>)
+        } else {
+            return <div/>
+        }
+    }
+
     render() {
         return (
             <div>
+                {this.renderExtra()}
                 <div id="chart"/>
                 {this.renderDetail()}
             </div>

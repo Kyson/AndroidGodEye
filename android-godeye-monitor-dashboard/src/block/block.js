@@ -5,10 +5,9 @@ import '../App.css';
 
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import JSONPretty from '../../node_modules/react-json-pretty';
-import {toast} from 'react-toastify';
 import ChangeBlockConfigFormInstance from "./changeBlockConfigForm.js"
 
-import {Card, Modal, Button, Popover} from 'antd'
+import {Card, Modal, Button, Popover, message} from 'antd'
 
 /**
  * Block
@@ -118,7 +117,7 @@ class Block extends Component {
             }, false, true, true);
             this.refs.chart.getChart().redraw(true);
             if (blockInfo.blockTime >= 2000) {
-                toast.error("Block!(发生卡顿)");
+                message.error("Block!(发生卡顿)");
             }
         }
     }

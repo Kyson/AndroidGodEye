@@ -1,10 +1,9 @@
 /* eslint-disable react/no-string-refs */
 import React, {Component} from 'react';
 import '../App.css';
-import {Card} from 'antd'
+import {Card, message} from 'antd'
 
 import ReactHighcharts from '../../node_modules/react-highcharts'
-import {toast} from 'react-toastify';
 import CpuInfo from "./cpu_info";
 
 /**
@@ -115,7 +114,7 @@ class Cpu extends Component {
             this.refs.chart.getChart().redraw(true);
         }
         if (cpuInfo.appCpuRatio >= 0.9 || cpuInfo.totalUseRatio >= 0.9) {
-            toast.error("CPU overload(CPU负载过重)!!!");
+            message.error("CPU overload(CPU负载过重)!!!");
         }
         this.refs.info.refresh(cpuInfo);
     }

@@ -3,9 +3,8 @@ import React, {Component} from 'react';
 import '../App.css';
 
 import ReactHighcharts from '../../node_modules/react-highcharts'
-import {toast} from 'react-toastify';
 
-import {Card} from 'antd'
+import {Card, message} from 'antd'
 import HeapInfo from "./heap_info";
 
 /**
@@ -100,7 +99,7 @@ class Heap extends Component {
             this.refs.chart.getChart().series[0].addPoint([axisData, heapInfo.allocatedKb / 1024], false, true, true);
             this.refs.chart.getChart().redraw(true);
             if (heapInfo.allocatedKb > (heapInfo.maxMemKb * 0.9)) {
-                toast.error("Heap memory is running out.(堆内存即将耗尽)")
+                message.error("Heap memory is running out.(堆内存即将耗尽)")
             }
         }
         this.refs.info.refresh(heapInfo);

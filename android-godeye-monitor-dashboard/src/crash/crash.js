@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import '../App.css';
 
 import JSONPretty from '../../node_modules/react-json-pretty';
-import {toast} from 'react-toastify';
 
 import {Card, Modal, Button} from 'antd'
 
@@ -23,7 +22,6 @@ class Crash extends Component {
 
     refresh(crashInfo) {
         this.setState({crashInfo});
-        toast.error("Crash!(发生崩溃)");
     }
 
     handleCrashDetailClick() {

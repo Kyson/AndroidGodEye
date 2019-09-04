@@ -22,8 +22,6 @@ import MemoryLeak from "./memoryleak/memoryLeak";
 import RefreshStatus from "./refreshstatus/refreshStatus";
 import MethodCanary from "./methodcanary/methodcanary";
 import Mock from "./MockData";
-import {ToastContainer, toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 class App extends Component {
 
@@ -43,7 +41,7 @@ class App extends Component {
         };
         globalWs.registerCallback(this.onWsOpenCallback);
         globalWs.start();
-        // this.mock.start(this._onReceiveMessage);
+        this.mock.start(this._onReceiveMessage);
     }
 
     componentWillUnmount() {
@@ -99,7 +97,6 @@ class App extends Component {
                             <AppInfo ref="appInfo" globalWs={globalWs}/>
                         </Col>
                     </Row>
-                    <ToastContainer autoClose={1200} position={toast.POSITION.TOP_LEFT}/>
                     <Row gutter={16} align="top" style={{textAlign: 'right', marginTop: 16}}>
                         <Col span={24}>
                             <RefreshStatus ref="refreshStatus" setCanRefresh={this._setCanRefresh}/>
@@ -142,8 +139,8 @@ class App extends Component {
                         <Col span={12}><Block ref="blockInfo" globalWs={globalWs}/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={12}><Pageload ref="pageLifecycle"/></Col>
-                        <Col span={12}><Network ref="networkInfo"/></Col>
+                        <Col span={11}><Pageload ref="pageLifecycle"/></Col>
+                        <Col span={13}><Network ref="networkInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Thread ref="threadInfo"/></Col>

@@ -1,12 +1,8 @@
 import React, {Component} from 'react';
 import '../App.css';
 
-import Highcharts from '../../node_modules/highcharts/highcharts';
-import exporting from '../../node_modules/highcharts/modules/exporting';
-import {Card, Badge, Button, Tag} from 'antd'
+import {Card, Badge, Button, Tag, Input} from 'antd'
 import Util from "../libs/util";
-
-exporting(Highcharts);
 
 /**
  * Pageload
@@ -15,32 +11,21 @@ class Pageload extends Component {
     static BAD_DRAW_TIME = 800;
     static BAD_LOAD_TIME = 2000;
 
-    constructor(props) {
-        super(props);
-        this.handleFollow = this.handleFollow.bind(this);
-        this.handleUnfollow = this.handleUnfollow.bind(this);
-        this.handleClear = this.handleClear.bind(this);
-        this.allPageLifecycleProcessedEvents = [];
-        this.state = {
-            show: false,
-            followPageLifecycleProcessedEvent: null,
-            renderPageLifecycleProcessedEvents: []
-        };
-    }
-
-    static isSamePageClass(pageLifecycleProcessedEvent1, pageLifecycleProcessedEvent2) {
-        if (pageLifecycleProcessedEvent1 && pageLifecycleProcessedEvent2) {
-            return pageLifecycleProcessedEvent1.pageType === pageLifecycleProcessedEvent2.pageType
-                && pageLifecycleProcessedEvent1.pageClassName === pageLifecycleProcessedEvent2.pageClassName
+    static isPageInSearch(pageLifecycleProcessedEvent, searchText) {
+        searchText = searchText.toLowerCase();
+        if (pageLifecycleProcessedEvent) {
+            if (JSON.stringify(pageLifecycleProcessedEvent).toString().toLowerCase().search(searchText) !== -1) {
+                return true
+            }
         }
         return false;
     }
 
-    static findThisPageLifecycleEvents(pageLifecycleProcessedEvents, pageLifecycleProcessedEvent) {
-        if (pageLifecycleProcessedEvent) {
+    static findThisPageLifecycleEvents(pageLifecycleProcessedEvents, searchText) {
+        if (searchText) {
             const thisPageLifecycleEvents = [];
             pageLifecycleProcessedEvents.forEach((item) => {
-                if (Pageload.isSamePageClass(item, pageLifecycleProcessedEvent)) {
+                if (Pageload.isPageInSearch(item, searchText)) {
                     thisPageLifecycleEvents.push(item)
                 }
             });
@@ -49,124 +34,94 @@ class Pageload extends Component {
         return pageLifecycleProcessedEvents;
     }
 
+    constructor(props) {
+        super(props);
+        this.renderExtra = this.renderExtra.bind(this);
+        this.renderTimelines = this.renderTimelines.bind(this);
+        this.handleClear = this.handleClear.bind(this);
+        this.renderItem = this.renderItem.bind(this);
+        this.refresh = this.refresh.bind(this);
+        this.state = {
+            searchText: null,
+            show: false,
+            allPageLifecycleProcessedEvents: []
+        };
+    }
+
     refresh(pageLifecycleProcessedEvent) {
-        this.allPageLifecycleProcessedEvents.unshift(pageLifecycleProcessedEvent);
-        this.setState({
-            renderPageLifecycleProcessedEvents: Pageload.findThisPageLifecycleEvents(this.allPageLifecycleProcessedEvents, this.state.followPageLifecycleProcessedEvent)
-        });
-    }
-
-    handleFollow(pageLifecycleProcessedEvent) {
-        this.setState({
-            followPageLifecycleProcessedEvent: pageLifecycleProcessedEvent,
-            renderPageLifecycleProcessedEvents: Pageload.findThisPageLifecycleEvents(this.allPageLifecycleProcessedEvents, pageLifecycleProcessedEvent)
-        });
-    }
-
-    handleUnfollow() {
-        this.setState({
-            followPageLifecycleProcessedEvent: null,
-            renderPageLifecycleProcessedEvents: Pageload.findThisPageLifecycleEvents(this.allPageLifecycleProcessedEvents, null)
+        this.setState(function (prevState, props) {
+            const allPageLifecycleProcessedEvents = prevState.allPageLifecycleProcessedEvents;
+            allPageLifecycleProcessedEvents.unshift(pageLifecycleProcessedEvent);
+            return {allPageLifecycleProcessedEvents: allPageLifecycleProcessedEvents};
         });
     }
 
     handleClear() {
-        this.allPageLifecycleProcessedEvents = [];
         this.setState({
-            renderPageLifecycleProcessedEvents: []
+            allPageLifecycleProcessedEvents: [],
         });
     }
 
-    renderTimelines(pageLifecycleProcessedEvents) {
+    renderItem(event, key) {
+        return (
+            <Card style={{margin: 4}} size="small" key={key}>
+                <Badge
+                    color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}.${event.eventTimeMillis % 1000}`}</span>
+                <br/>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}</span>
+                <br/>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <Tag color="cyan">{event.pageType}</Tag>
+                            <Tag color="geekblue">{event.lifecycleEvent}</Tag>
+
+                    {(() => {
+                        if (event.lifecycleEvent === 'ON_LOAD') {
+                            return <span>Load cost <strong
+                                style={(event.processedInfo['loadTime'] > Pageload.BAD_LOAD_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['loadTime']}</strong> ms</span>
+                        } else if (event.lifecycleEvent === 'ON_DRAW') {
+                            return <span>Draw cost <strong
+                                style={(event.processedInfo['drawTime'] > Pageload.BAD_DRAW_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['drawTime']}</strong> ms</span>
+                        } else {
+                            return <div/>
+                        }
+                    })()}
+                        </span>
+            </Card>
+        );
+    }
+
+    renderTimelines() {
+        const pageLifecycleProcessedEvents = Pageload.findThisPageLifecycleEvents(this.state.allPageLifecycleProcessedEvents, this.state.searchText)
         if (pageLifecycleProcessedEvents) {
             let items = [];
             for (let i = 0; i < pageLifecycleProcessedEvents.length; i++) {
                 const event = pageLifecycleProcessedEvents[i];
-                if (event.lifecycleEvent === 'ON_LOAD') {
-                    items.push(<Card style={{margin: 4}} size="small">
-                        <Badge
-                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}.${event.eventTimeMillis % 1000}`}</span>
-                        <br/>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}<Button
-                                type="link"
-                                onClick={() => {
-                                    this.handleFollow(event);
-                                }
-                                }>Follow This Class of Page</Button>
-                         </span>
-                        <br/>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Tag color="cyan">{event.pageType}</Tag>
-                            <Tag color="geekblue">{event.lifecycleEvent}</Tag>
-                            Load cost <strong
-                                style={(event.processedInfo['loadTime'] > Pageload.BAD_LOAD_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['loadTime']}</strong> ms
-                        </span>
-                    </Card>);
-                } else if (event.lifecycleEvent === 'ON_DRAW') {
-                    items.push(<Card style={{margin: 4}} size="small">
-                        <Badge
-                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}.${event.eventTimeMillis % 1000}`}</span>
-                        <br/>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}<Button
-                                type="link"
-                                onClick={() => {
-                                    this.handleFollow(event);
-                                }
-                                }>Follow This Class of Page</Button>
-                        </span>
-                        <br/>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Tag color="cyan">{event.pageType}</Tag>
-                            <Tag color="geekblue">{event.lifecycleEvent}</Tag>
-                            Draw cost <strong
-                                style={(event.processedInfo['drawTime'] > Pageload.BAD_DRAW_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['drawTime']}</strong> ms
-                        </span>
-                    </Card>);
-                } else {
-                    items.push(<Card style={{margin: 4}} size="small">
-                        <Badge
-                            color={Util.getGreen()}/><span>{`${new Date(event.eventTimeMillis).toLocaleString()}.${event.eventTimeMillis % 1000}`}</span>
-                        <br/>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}<Button
-                                type="link"
-                                onClick={() => {
-                                    this.handleFollow(event);
-                                }
-                                }>Follow This Class of Page</Button>
-                        </span>
-                        <br/>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <Tag color="cyan">{event.pageType}</Tag>
-                            <Tag color="geekblue">{event.lifecycleEvent}</Tag>
-                        </span>
-                    </Card>);
-                }
+                items.push(this.renderItem(event, i))
             }
             return items;
         }
     }
 
-    renderTip(followClass) {
-        if (followClass) {
-            return (<div><span>Current Following Page: [{followClass}]&nbsp;&nbsp;</span>
-                <Button onClick={this.handleUnfollow}>Unfollow</Button> <Button
-                    onClick={this.handleClear}>Clear</Button></div>)
-        }
-        return <Button onClick={this.handleClear}>Clear</Button>
+    renderExtra() {
+        return (<span>
+          <Input.Search
+              style={{width: 200}}
+              placeholder="Input search text"
+              onSearch={value => this.setState({searchText: value})}
+          />
+            &nbsp;&nbsp;
+            <Button
+                onClick={this.handleClear}>Clear</Button>
+
+        </span>)
     }
 
     render() {
-        let followClass;
-        if (this.state.followPageLifecycleProcessedEvent) {
-            followClass = this.state.followPageLifecycleProcessedEvent.pageClassName
-        }
         return (
-            <Card title="Page Lifecycle(页面生命周期)" extra={this.renderTip(followClass)}>
+            <Card title="Page Lifecycle(页面生命周期)" extra={this.renderExtra()}>
                 <div style={{height: 670, overflow: 'auto'}}>
-                    {this.renderTimelines(this.state.renderPageLifecycleProcessedEvents)}
+                    {this.renderTimelines()}
                 </div>
             </Card>);
     }

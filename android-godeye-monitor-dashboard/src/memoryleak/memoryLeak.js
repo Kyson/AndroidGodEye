@@ -1,15 +1,11 @@
 import React, {Component} from 'react';
 import '../App.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap-theme.min.css';
-// import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import {Row, Col, Clearfix, Grid, Panel, Button} from 'react-bootstrap'
+
 import ReactTable from "../../node_modules/react-table";
 import '../../node_modules/react-table/react-table.css'
-// import Util from '../libs/util'
 import JSONPretty from '../../node_modules/react-json-pretty';
-import {toast} from 'react-toastify';
 
-import {Card, Button} from 'antd'
+import {Card, Button, message} from 'antd'
 
 /**
  * MemoryLeak
@@ -36,7 +32,7 @@ class MemoryLeak extends Component {
         }
         if (!hasLeakBefore) {
             this.leakInfos.push(leakInfo);
-            toast.error("Memory leak.(发生内存泄漏)")
+            message.error("Memory leak.(发生内存泄漏)")
         }
         if (this.state.isRefreshing) {
             this.setState({dataList: this.leakInfos});

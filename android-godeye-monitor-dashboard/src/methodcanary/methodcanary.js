@@ -55,7 +55,7 @@ class MethodCanary extends Component {
     }
 
     openMethodCanaryThread(threadName) {
-        this.refs.chartForThread.openMethodCanaryThread(threadName, this.record);
+        this.refs.chartForThread.refresh(threadName, this.record);
     }
 
     static getThreadNameByThreadInfo(threadInfo) {

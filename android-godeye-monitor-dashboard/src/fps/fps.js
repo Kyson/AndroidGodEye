@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import '../App.css';
 
 import Util from '../libs/util'
-import {toast} from 'react-toastify';
-import {Card} from 'antd'
+import {Card, message} from 'antd'
 
 /**
  * Fps
@@ -22,7 +21,7 @@ class Fps extends Component {
     refresh(fpsInfo) {
         const level = Fps._parseFpsLevel(fpsInfo);
         if (level === 1) {
-            toast.error("Low fps.(掉帧严重)");
+            message.error("Low fps.(掉帧严重)");
         }
         this.setState({
             fpsInfo: fpsInfo,

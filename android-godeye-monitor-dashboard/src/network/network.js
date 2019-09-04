@@ -3,26 +3,46 @@ import React, {Component} from 'react';
 import '../App.css';
 import JSONPretty from '../../node_modules/react-json-pretty';
 
-import Highcharts from '../../node_modules/highcharts/highcharts';
-import exporting from '../../node_modules/highcharts/modules/exporting';
 import ReactHighcharts from '../../node_modules/react-highcharts'
-import {toast} from 'react-toastify';
 import Util from "../libs/util";
-import {Card, Modal, Table, Tabs, Badge, Button} from 'antd'
-
-exporting(Highcharts);
+import {Card, Modal, Table, Tabs, Badge, Button, Input, message} from 'antd'
 
 /**
  * Network
  */
 class Network extends Component {
 
+    static isNetworkInSearch(networkInfo, searchText) {
+        searchText = searchText.toLowerCase();
+        if (networkInfo) {
+            if (JSON.stringify(networkInfo).toString().toLowerCase().search(searchText) !== -1) {
+                return true
+            }
+        }
+        return false;
+    }
+
+    static findNetworksInSearch(networkInfos, searchText) {
+        if (searchText) {
+            const findNetworkInfos = [];
+            networkInfos.forEach((item) => {
+                if (Network.isNetworkInSearch(item, searchText)) {
+                    findNetworkInfos.push(item)
+                }
+            });
+            return findNetworkInfos;
+        }
+        return networkInfos;
+    }
+
     constructor(props) {
         super(props);
         this.handleClose = this.handleClose.bind(this);
         this.handleShowDetail = this.handleShowDetail.bind(this);
         this.handleClear = this.handleClear.bind(this);
+        this.renderExtra = this.renderExtra.bind(this);
         this.state = {
+            searchText: null,
             show: false,
             networkInfo: null,
             networkInfos: [],
@@ -55,7 +75,7 @@ class Network extends Component {
                 networkInfos: networkInfos,
             });
             if (!networkInfo.isSuccessful) {
-                toast.error("Network error.(网络请求失败)")
+                message.error("Network error.(网络请求失败)")
             }
         }
     }
@@ -84,17 +104,16 @@ class Network extends Component {
             const optionsForTime = {
                 chart: {
                     type: 'bar',
-                    height: 50,
+                    height: 80,
                     margin: 0,
                     spacing: 0
                 },
                 title: {
                     text: null
                 },
-                colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00',
-                    '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+                colors: Util.getCommonColors(),
                 legend: {
-                    enabled: false
+                    enabled: true
                 },
                 exporting: {
                     enabled: false
@@ -114,13 +133,21 @@ class Network extends Component {
                     visible: false,
                     categories: ['阶段耗时']
                 },
+                tooltip: {
+                    formatter: function () {
+                        return '<div style="text-align:center"><span style="font-size:13px;color:' +
+                            'black">' +
+                            this.series.name + " " + this.point.y + "ms"
+                            + '</span></div>'
+                    }
+                },
                 plotOptions: {
                     series: {
                         stacking: 'percent',
                         dataLabels: {
                             enabled: true,
                             formatter: function () {
-                                return this.series.name
+                                return this.series.name + " " + this.series.data[0].y + "ms"
                             }
                         },
                         borderRadius: 0,
@@ -140,7 +167,7 @@ class Network extends Component {
                             text={networkInfo.message}>
                         </Badge>
                         <br/>
-                        TotalTime:&nbsp;&nbsp;{networkInfo.totalTime}
+                        TotalTime:&nbsp;&nbsp;{networkInfo.totalTime}ms
                     </strong>
                     <ReactHighcharts
                         ref="chartForTime"
@@ -163,7 +190,7 @@ class Network extends Component {
     }
 
     renderTable() {
-        const networkInfos = this.state.networkInfos;
+        const networkInfos = Network.findNetworksInSearch(this.state.networkInfos, this.state.searchText);
         const showDetail = this.handleShowDetail;
         const columns = [
             {
@@ -218,9 +245,22 @@ class Network extends Component {
                        pagination={{pageSize: 10}}/>);
     }
 
+    renderExtra() {
+        return (<span>
+          <Input.Search
+              style={{width: 200}}
+              placeholder="Input search text"
+              onSearch={value => this.setState({searchText: value})}
+          />
+            &nbsp;&nbsp;
+            <Button
+                onClick={this.handleClear}>Clear</Button>
+        </span>)
+    }
+
     render() {
         return (
-            <Card title="Network(网络)" extra={<Button onClick={this.handleClear}>Clear</Button>}>
+            <Card title="Network(网络)" extra={this.renderExtra()}>
                 {this.renderTable()}
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Detail" closable={true}
                        onOk={this.handleClose} width={800}>
