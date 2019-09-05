@@ -63,6 +63,11 @@ class MethodCanaryThread extends Component {
         }
     }
 
+    renderContent() {
+        // TODO KYSON IMPL
+        this.methodInfos
+    }
+
     refresh(threadName, record) {
         let methodInfos = [];
         for (let i = 0; i < record.methodInfoOfThreadInfos.length; i++) {
