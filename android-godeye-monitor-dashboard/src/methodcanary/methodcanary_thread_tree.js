@@ -85,6 +85,12 @@ class MethodCanaryThreadTree extends Component {
     refresh(start, end, methodInfos) {
         const treeData = [];
         const cloned = MethodCanaryThreadTree.cloneMethodCanaryMethodInfos(methodInfos);
+        cloned.sort((a, b) => {
+            if (a.stack === b.stack) {
+                return a.start - b.start;
+            }
+            return a.stack - b.stack;
+        });
         MethodCanaryThreadTree.buildTree(start, end, start, end, cloned, null, new Set(), treeData);
         this.setState({treeData, start, end})
     }

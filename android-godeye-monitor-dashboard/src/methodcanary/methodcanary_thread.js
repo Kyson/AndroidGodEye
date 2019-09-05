@@ -18,6 +18,10 @@ class MethodCanaryThread extends Component {
         return realValue === 0 ? range : realValue;
     }
 
+    static getThreadNameByThreadInfo(threadInfo) {
+        return "id:[" + threadInfo.id + "],name:[" + threadInfo.name + "]"
+    }
+
     constructor(props) {
         super(props);
         this.refresh = this.refresh.bind(this);
@@ -25,9 +29,12 @@ class MethodCanaryThread extends Component {
         this.renderExtra = this.renderExtra.bind(this);
         this.afterSetExtremes = this.afterSetExtremes.bind(this);
         this.clear = this.clear.bind(this);
+        this.refreshByParams = this.refreshByParams.bind(this);
         this.chart = null;
-        this.methodInfos = [];
+        this.threadName = null;
+        this.record = null;
         this.searchText = null;
+        this.methodInfos = [];
         this.afterSetExtremesTimerId = null;
         this.state = {
             start: 0,
@@ -63,12 +70,14 @@ class MethodCanaryThread extends Component {
         }
     }
 
-    renderContent() {
-        // TODO KYSON IMPL
-        this.methodInfos
-    }
-
-    refresh(threadName, record) {
+    refreshByParams() {
+        const record = this.record;
+        const threadName = this.threadName;
+        const searchText = this.searchText;
+        if (!record || !threadName) {
+            this.clear();
+            return;
+        }
         let methodInfos = [];
         for (let i = 0; i < record.methodInfoOfThreadInfos.length; i++) {
             if (threadName === MethodCanaryThread.getThreadNameByThreadInfo(record.methodInfoOfThreadInfos[i].threadInfo)) {
@@ -86,17 +95,27 @@ class MethodCanaryThread extends Component {
         });
         const min = record.start;
         const max = record.end;
+        this.setState({start: min, end: max});
+        this.methodInfos = methodInfos;
+        if (this.refs.methodCanaryThreadTree) {
+            this.refs.methodCanaryThreadTree.refresh(min, max, methodInfos);
+        }
         const datas = [];
         let maxStack = 0;
         for (let i = 0; i < methodInfos.length; i++) {
             methodInfos[i].start = MethodCanaryThread.getMethodValueWithRange(methodInfos[i].start, min);
             methodInfos[i].end = MethodCanaryThread.getMethodValueWithRange(methodInfos[i].end, max);
+            let selected = false;
+            if (searchText) {
+                selected = JSON.stringify(methodInfos[i]).toLowerCase().search(searchText) !== -1;
+            }
             datas.push({
                 x: methodInfos[i].start,
                 x2: methodInfos[i].end,
                 y: methodInfos[i].stack,
                 color: Util.getColorForMethod(methodInfos[i]),
-                methodEvent: methodInfos[i]
+                methodEvent: methodInfos[i],
+                selected: selected
             });
             if (methodInfos[i].stack > maxStack) {
                 maxStack = methodInfos[i].stack
@@ -239,21 +258,12 @@ class MethodCanaryThread extends Component {
                 }
             ]
         });
-        methodInfos.sort((a, b) => {
-            if (a.stack === b.stack) {
-                return a.start - b.start;
-            }
-            return a.stack - b.stack;
-        });
-        this.methodInfos = methodInfos;
-        if (this.refs.methodCanaryThreadTree) {
-            this.refs.methodCanaryThreadTree.refresh(min, max, this.methodInfos);
-        }
-        this.setState({start: min, end: max});
     }
 
-    static getThreadNameByThreadInfo(threadInfo) {
-        return "id:[" + threadInfo.id + "],name:[" + threadInfo.name + "]"
+    refresh(threadName, record) {
+        this.threadName = threadName;
+        this.record = record;
+        this.refreshByParams();
     }
 
     renderDetail() {
@@ -284,6 +294,8 @@ class MethodCanaryThread extends Component {
                         placeholder="Input search text"
                         onSearch={value => {
                             this.searchText = value;
+                            this.refreshByParams()
+
                         }}
                     /></div>)
         } else {
