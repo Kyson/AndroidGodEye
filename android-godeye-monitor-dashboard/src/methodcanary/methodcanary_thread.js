@@ -133,6 +133,7 @@ class MethodCanaryThread extends Component {
             chart: {
                 type: 'xrange',
                 height: main_height,
+                zoomType: 'x'
             },
             title: null,
             credits: {
