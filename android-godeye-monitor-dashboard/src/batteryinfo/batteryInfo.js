@@ -107,7 +107,7 @@ class BatteryInfo extends Component {
                     config={this.options}
                 />
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Battery Detail" closable={true}
-                       onOk={this.handleClose} width={800}>
+                       onOk={this.handleClose} width={1000} footer={null}>
                     <JSONPretty id="json-pretty" json={this.state.batteryInfo}/>
                 </Modal>
             </Card>);

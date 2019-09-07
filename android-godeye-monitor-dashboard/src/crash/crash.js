@@ -45,7 +45,7 @@ class Crash extends Component {
                     </p>
                 </div>
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Crash Detail" closable={true}
-                       onOk={this.handleClose} width={800}>
+                       onOk={this.handleClose} width={1000} footer={null}>
                     <JSONPretty id="json-pretty" json={this.state.crashInfo}/>
                 </Modal>
             </Card>);

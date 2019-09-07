@@ -168,7 +168,7 @@ class Block extends Component {
                     config={this.options}
                 />
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Block detail" closable={true}
-                       onOk={this.handleClose} width={800}>
+                       onOk={this.handleClose} width={1000} footer={null}>
                     <JSONPretty id="json-pretty"
                                 json={this.state.blockInfo.blockBaseinfo ? this.state.blockInfo.blockBaseinfo : "No detail found, maybe it is a short block."}/>
                 </Modal>

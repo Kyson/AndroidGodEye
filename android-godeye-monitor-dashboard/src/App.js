@@ -88,6 +88,7 @@ class App extends Component {
         this.canRefresh = canRefresh;
     }
 
+
     render() {
         return (
             <Layout>
@@ -107,39 +108,42 @@ class App extends Component {
                             <MethodCanary ref="methodCanary" globalWs={globalWs}/>
                         </Col>
                     </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={6}>
+                    <Row gutter={16} align="top" style={{marginTop: 16}} type="flex" justify="start">
+                        <Col md={24} lg={12} xl={6}>
                             <Fps ref="fpsInfo"/>
                         </Col>
-                        <Col span={6}> <Ram ref="ramInfo"/>
+                        <Col md={24} lg={12} xl={6}>
+                            <BatteryInfo ref="batteryInfo"/>
                         </Col>
-                        <Col span={6}> <Pss ref="pssInfo"/>
+                        <Col md={24} lg={12} xl={6}>
+                            <Ram ref="ramInfo"/>
                         </Col>
-                        <Col span={6}> <BatteryInfo ref="batteryInfo"/>
+                        <Col md={24} lg={12} xl={6}>
+                            <Pss ref="pssInfo"/>
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={11}>
+                        <Col lg={24} xl={11}>
                             <Startup ref="startupInfo"/>
                         </Col>
-                        <Col span={13}>
+                        <Col lg={24} xl={13}>
                             <Crash ref="crashInfo"/>
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={7}> <Cpu ref="cpuInfo"/>
+                        <Col lg={24} xl={7}> <Cpu ref="cpuInfo"/>
                         </Col>
-                        <Col span={7}> <Heap ref="heapInfo"/>
+                        <Col lg={24} xl={7}> <Heap ref="heapInfo"/>
                         </Col>
-                        <Col span={10}><Traffic ref="trafficInfo"/></Col>
+                        <Col lg={24} xl={10}><Traffic ref="trafficInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={12}><MemoryLeak ref="leakInfo"/></Col>
-                        <Col span={12}><Block ref="blockInfo" globalWs={globalWs}/></Col>
+                        <Col lg={24} xl={12}><MemoryLeak ref="leakInfo"/></Col>
+                        <Col lg={24} xl={12}><Block ref="blockInfo" globalWs={globalWs}/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={11}><Pageload ref="pageLifecycle"/></Col>
-                        <Col span={13}><Thread ref="threadInfo"/></Col>
+                        <Col lg={24} xl={11}><Pageload ref="pageLifecycle"/></Col>
+                        <Col lg={24} xl={13}><Thread ref="threadInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Network ref="networkInfo"/></Col>

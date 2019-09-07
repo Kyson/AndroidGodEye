@@ -262,8 +262,8 @@ class Network extends Component {
         return (
             <Card title="Network(网络)" extra={this.renderExtra()}>
                 {this.renderTable()}
-                <Modal visible={this.state.show} onCancel={this.handleClose} title="Detail" closable={true}
-                       onOk={this.handleClose} width={800}>
+                <Modal visible={this.state.show} onCancel={this.handleClose} title="Detail" closable={true} footer={null}
+                       onOk={this.handleClose} width={1000}>
                     {this.renderModelContent()}
                 </Modal>
             </Card>);
