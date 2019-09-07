@@ -36,4 +36,5 @@ dependencies {
     implementation project(':android-godeye-toolbox')
 }
 
-apply plugin: 'cn.hikyson.methodcanary.plugin'
+// TODO KYSON IMPL
+//apply plugin: 'cn.hikyson.methodcanary.plugin'

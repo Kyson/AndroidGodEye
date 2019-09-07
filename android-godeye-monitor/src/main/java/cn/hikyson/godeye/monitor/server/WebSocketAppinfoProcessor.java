@@ -9,6 +9,6 @@ import cn.hikyson.godeye.monitor.modules.appinfo.AppInfo;
 public class WebSocketAppinfoProcessor implements WebSocketProcessor {
     @Override
     public void process(WebSocket webSocket, JSONObject msgJSONObject) {
-        webSocket.send(new ServerMessage("appInfo", new AppInfo()).toString());
+        webSocket.send(new ServerMessage("appInfo", AppInfo.Factory.create()).toString());
     }
 }

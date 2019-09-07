@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import '../App.css';
 
-import {Tag} from 'antd'
+import {Tag, Drawer, Button, Row, Col} from 'antd'
 
 import Util from '../libs/util'
 
@@ -12,11 +12,34 @@ import Util from '../libs/util'
  */
 class AppInfo extends Component {
 
+
+    static renderLabel(labels) {
+        if (labels) {
+            let items = [];
+            let styles = Util.getCommonColors();
+            let styleCount = styles.length;
+            for (let i = 0; i < labels.length; i++) {
+                if (labels[i].url) {
+                    items.push(<Tag style={{margin: 2, color: styles[i % styleCount]}}
+                                    key={"appinfo" + i}>
+                        <a href={labels[i].url} target="_blank">{labels[i].name}</a>
+                    </Tag>);
+                } else {
+                    items.push(<Tag style={{margin: 2, color: styles[i % styleCount]}}
+                                    key={"appinfo" + i}>{labels[i].name}</Tag>);
+                }
+            }
+            return items;
+        }
+    }
+
     constructor(props) {
         super(props);
-        AppInfo.renderLabel = AppInfo.renderLabel.bind(this);
+        this.showDrawer = this.showDrawer.bind(this);
+        this.onClose = this.onClose.bind(this);
         this.state = {
-            appInfo: {}
+            appInfo: {},
+            visible: false
         }
     }
 
@@ -39,40 +62,46 @@ class AppInfo extends Component {
         this.setState({appInfo});
     }
 
+    showDrawer() {
+        this.setState({
+            visible: true,
+        });
+    }
+
+    onClose() {
+        this.setState({
+            visible: false,
+        });
+    }
+
     render() {
         return (
-            <div>
-                <h1 style={{color: 'white', textAlign: "center", marginTop: 16}}>
-                    {this.state.appInfo ? this.state.appInfo.appName : "**"}
-                </h1>
-                <div style={{
-                    paddingTop: 8,
-                    paddingBottom: 8,
-                    textAlign: "center"
-                }}>{AppInfo.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</div>
-            </div>
+            <Row>
+                <Col span={2}>
+                    <Button ghost icon="menu" size="default" onClick={this.showDrawer} style={{margin: 16}}>App
+                        Info</Button>
+                </Col>
+                <Col span={20} style={{textAlign: "center", margin: 16}}>
+                    <span style={{color: 'white', fontSize: 42}}>
+                        {this.state.appInfo ? this.state.appInfo.appName : "**"}
+                    </span>
+                </Col>
+                <Drawer
+                    title="App Info"
+                    placement="left"
+                    onClose={this.onClose}
+                    visible={this.state.visible}
+                    closable={true}>
+                    <div style={{
+                        paddingTop: 8,
+                        paddingBottom: 8,
+                        textAlign: "center"
+                    }}>{AppInfo.renderLabel(this.state.appInfo ? this.state.appInfo.labels : [])}</div>
+                </Drawer>
+            </Row>
         );
     }
 
-    static renderLabel(labels) {
-        if (labels) {
-            let items = [];
-            let styles = Util.getCommonColors();
-            let styleCount = styles.length;
-            for (let i = 0; i < labels.length; i++) {
-                if (labels[i].url) {
-                    items.push(<Tag style={{margin: 2, color: styles[i % styleCount]}}
-                                    key={"appinfo" + i}>
-                        <a href={labels[i].url} target="_blank">{labels[i].name}</a>
-                    </Tag>);
-                } else {
-                    items.push(<Tag style={{margin: 2, color: styles[i % styleCount]}}
-                                    key={"appinfo" + i}>{labels[i].name}</Tag>);
-                }
-            }
-            return items;
-        }
-    }
 }
 
 export default AppInfo;

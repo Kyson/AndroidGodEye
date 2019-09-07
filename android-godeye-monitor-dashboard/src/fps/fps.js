@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../App.css';
 
 import Util from '../libs/util'
-import {Card, message} from 'antd'
+import {Card, message, Statistic} from 'antd'
 
 /**
  * Fps
@@ -46,16 +46,11 @@ class Fps extends Component {
         let fpsLevel = this.state.level;
         return (
             <Card>
-                <Card.Meta
-                    title="FPS(帧率)"
-                    description={"SystemRefreshRate(系统帧率):" + ((this.state.fpsInfo && this.state.fpsInfo.systemFps && this.state.fpsInfo.systemFps > 0) ? this.state.fpsInfo.systemFps : "**")}
-                />
                 <div style={{textAlign: "center"}}>
-                <span style={{
-                    padding: 16,
-                    fontSize: 48,
-                    color: this.fpsLevelColor[fpsLevel]
-                }}>{(this.state.fpsInfo && this.state.fpsInfo.currentFps && this.state.fpsInfo.currentFps > 0) ? this.state.fpsInfo.currentFps : "**"}</span>
+                    <Statistic title="FPS(帧率)"
+                               value={(this.state.fpsInfo && this.state.fpsInfo.currentFps && this.state.fpsInfo.currentFps > 0) ? this.state.fpsInfo.currentFps : "**"}
+                               suffix={"/" + ((this.state.fpsInfo && this.state.fpsInfo.systemFps && this.state.fpsInfo.systemFps > 0) ? this.state.fpsInfo.systemFps : "**")}
+                               valueStyle={{fontSize: 128, color: this.fpsLevelColor[fpsLevel], padding: 16}}/>
                 </div>
             </Card>);
     }

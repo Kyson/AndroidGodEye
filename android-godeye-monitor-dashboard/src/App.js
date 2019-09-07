@@ -41,7 +41,7 @@ class App extends Component {
         };
         globalWs.registerCallback(this.onWsOpenCallback);
         globalWs.start();
-        // this.mock.start(this._onReceiveMessage);
+        this.mock.start(this._onReceiveMessage);
     }
 
     componentWillUnmount() {
@@ -108,23 +108,22 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={5}>
+                        <Col span={6}>
                             <Fps ref="fpsInfo"/>
                         </Col>
-                        <Col span={8}>
-                            <Startup ref="startupInfo"/>
-                        </Col>
-
-                        <Col span={11}>
-                            <Crash ref="crashInfo"/>
-                        </Col>
-                    </Row>
-                    <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={6}> <Ram ref="ramInfo"/>
                         </Col>
                         <Col span={6}> <Pss ref="pssInfo"/>
                         </Col>
                         <Col span={6}> <BatteryInfo ref="batteryInfo"/>
+                        </Col>
+                    </Row>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
+                        <Col span={11}>
+                            <Startup ref="startupInfo"/>
+                        </Col>
+                        <Col span={13}>
+                            <Crash ref="crashInfo"/>
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
@@ -140,10 +139,10 @@ class App extends Component {
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={11}><Pageload ref="pageLifecycle"/></Col>
-                        <Col span={13}><Network ref="networkInfo"/></Col>
+                        <Col span={13}><Thread ref="threadInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col span={24}><Thread ref="threadInfo"/></Col>
+                        <Col span={24}><Network ref="networkInfo"/></Col>
                     </Row>
                 </Layout.Content>
                 <Layout.Footer style={{textAlign: "center"}}>

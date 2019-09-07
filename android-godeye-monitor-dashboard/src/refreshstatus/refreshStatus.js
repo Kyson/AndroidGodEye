@@ -31,7 +31,7 @@ class RefreshStatus extends Component {
 
     render() {
         return (
-            <div className="span12" style={{paddingLeft: 28, paddingRight: 28}}>
+            <div style={{paddingLeft: 28, paddingRight: 28}}>
                 <span>
                     Status:{this.state.canRefresh ? "Refreshing..." : "Stopped."} |
                     Last update time:{this.state.lastUpdateTime.toISOString()}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

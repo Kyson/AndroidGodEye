@@ -1,7 +1,5 @@
 package cn.hikyson.android.godeye.sample;
 
-import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,15 +10,8 @@ import cn.hikyson.godeye.monitor.modules.appinfo.AppInfoLabel;
  * Created by kysonchao on 2017/12/9.
  */
 public class AppInfoProxyImpl implements GodEyeMonitor.AppInfoConext {
-    private Context mContext;
 
-    public AppInfoProxyImpl(Context context) {
-        mContext = context.getApplicationContext();
-    }
-
-    @Override
-    public Context getContext() {
-        return mContext;
+    public AppInfoProxyImpl() {
     }
 
     @Override

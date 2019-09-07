@@ -83,7 +83,7 @@ class Thread extends Component {
                             </div>
                         );
                     }}
-                    defaultPageSize={15}
+                    defaultPageSize={16}
                     className="-striped -highlight"/>
             </Card>
         );
