@@ -50,7 +50,7 @@ class Fps extends Component {
                     <Statistic title="FPS(帧率)"
                                value={(this.state.fpsInfo && this.state.fpsInfo.currentFps && this.state.fpsInfo.currentFps > 0) ? this.state.fpsInfo.currentFps : "**"}
                                suffix={"/" + ((this.state.fpsInfo && this.state.fpsInfo.systemFps && this.state.fpsInfo.systemFps > 0) ? this.state.fpsInfo.systemFps : "**")}
-                               valueStyle={{fontSize: 128, color: this.fpsLevelColor[fpsLevel], padding: 16}}/>
+                               valueStyle={{fontSize: 108, color: this.fpsLevelColor[fpsLevel], padding: 30}}/>
                 </div>
             </Card>);
     }

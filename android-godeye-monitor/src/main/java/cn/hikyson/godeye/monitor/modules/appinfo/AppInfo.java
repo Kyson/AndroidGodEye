@@ -130,10 +130,11 @@ public class AppInfo {
                     }
                 }
             }
-            List<AppInfoLabel> appInfoLabels = new ArrayList<>(sInternalLabels);
+            List<AppInfoLabel> appInfoLabels = new ArrayList<>();
             if (sAppInfoConext != null && sAppInfoConext.getAppInfo() != null) {
                 appInfoLabels.addAll(sAppInfoConext.getAppInfo());
             }
+            appInfoLabels.addAll(sInternalLabels);
             appInfo.appName = sAppName;
             appInfo.labels = appInfoLabels;
             return appInfo;

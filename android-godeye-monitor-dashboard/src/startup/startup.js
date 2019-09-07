@@ -25,8 +25,8 @@ class Startup extends Component {
         let info = this.state.startupInfo;
         return (
             <Card title="Startup(启动信息)">
-                <div>
-                    <span>
+                <div style={{paddingTop: 4, paddingBottom: 4}}>
+                    <span >
                         Startup Type:&nbsp;&nbsp;
                         <span style={{fontSize: 48}}>{info.startupType}</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cost time:&nbsp;&nbsp;

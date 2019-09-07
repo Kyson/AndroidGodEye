@@ -3,7 +3,7 @@
 import React, {Component} from 'react';
 import '../App.css';
 
-import {Tag, Drawer, Button, Row, Col} from 'antd'
+import {Drawer, Button, Row, Col, Typography} from 'antd'
 
 import Util from '../libs/util'
 
@@ -20,13 +20,15 @@ class AppInfo extends Component {
             let styleCount = styles.length;
             for (let i = 0; i < labels.length; i++) {
                 if (labels[i].url) {
-                    items.push(<Tag style={{margin: 2, color: styles[i % styleCount]}}
-                                    key={"appinfo" + i}>
-                        <a href={labels[i].url} target="_blank">{labels[i].name}</a>
-                    </Tag>);
+                    items.push(<p>
+                        <Typography.Text underline="true" style={{margin: 8, color: styles[i % styleCount]}}
+                                         key={"appinfo" + i}>
+                            <a href={labels[i].url} target="_blank">{labels[i].name}</a>
+                        </Typography.Text>
+                    </p>);
                 } else {
-                    items.push(<Tag style={{margin: 2, color: styles[i % styleCount]}}
-                                    key={"appinfo" + i}>{labels[i].name}</Tag>);
+                    items.push(<p><Typography.Text style={{margin: 8, color: styles[i % styleCount]}}
+                                                   key={"appinfo" + i}>{labels[i].name}</Typography.Text></p>);
                 }
             }
             return items;
@@ -82,7 +84,7 @@ class AppInfo extends Component {
                         Info</Button>
                 </Col>
                 <Col span={20} style={{textAlign: "center", margin: 16}}>
-                    <span style={{color: 'white', fontSize: 42}}>
+                    <span style={{color: 'white', fontSize: 36}}>
                         {this.state.appInfo ? this.state.appInfo.appName : "**"}
                     </span>
                 </Col>
