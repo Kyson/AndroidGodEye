@@ -13,8 +13,8 @@ import java.util.Locale;
 
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
-import cn.hikyson.godeye.monitor.modules.AppInfo;
-import cn.hikyson.godeye.monitor.modules.AppInfoLabel;
+import cn.hikyson.godeye.monitor.modules.appinfo.AppInfo;
+import cn.hikyson.godeye.monitor.modules.appinfo.AppInfoLabel;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifier;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifierImpl;
@@ -30,10 +30,10 @@ public class GodEyeMonitor {
     private static boolean sIsWorking = false;
     private static final int DEFAULT_PORT = 5390;
     private static GodEyeMonitorServer sGodEyeMonitorServer;
+    @SuppressLint("StaticFieldLeak")
+    private static Context sContext;
 
     public interface AppInfoConext {
-        Context getContext();
-
         List<AppInfoLabel> getAppInfo();
     }
 
@@ -81,9 +81,9 @@ public class GodEyeMonitor {
         if (context == null) {
             throw new IllegalStateException("context can not be null.");
         }
-        Context applicationContext = context.getApplicationContext();
+        sContext = context.getApplicationContext();
         sGodEyeMonitorServer = new GodEyeMonitorServer(port);
-        final HttpStaticProcessor httpStaticProcessor = new HttpStaticProcessor(applicationContext);
+        final HttpStaticProcessor httpStaticProcessor = new HttpStaticProcessor(sContext);
         final WebSocketBizProcessor webSocketBizProcessor = new WebSocketBizProcessor();
         sGodEyeMonitorServer.setMonitorServerCallback(new GodEyeMonitorServer.MonitorServerCallback() {
             @Override
@@ -142,5 +142,9 @@ public class GodEyeMonitor {
                 (ipAddress >> 16 & 0xff),
                 (ipAddress >> 24 & 0xff));
         return "Open AndroidGodEye dashboard [ http://localhost:" + port + "/index.html ] or [ http://" + formattedIpAddress + ":" + port + "/index.html ] in your browser";
+    }
+
+    public static Context getContext() {
+        return sContext;
     }
 }

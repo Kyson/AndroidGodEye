@@ -13,8 +13,6 @@ import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifier;
 public class GodEyeMonitor {
 
     public interface AppInfoConext {
-        Context getContext();
-
         List<AppInfoLabel> getAppInfo();
     }
 
@@ -40,5 +38,10 @@ public class GodEyeMonitor {
 
     public static void setThreadRunningProcessClassifier(ThreadRunningProcessClassifier threadRunningProcessClassifier) {
         // no op
+    }
+
+    public static Context getContext() {
+        // no op
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.monitor.modules;
+package cn.hikyson.godeye.monitor.modules.appinfo;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -22,7 +22,10 @@ public class AppInfo {
         if (sAppInfoConext == null) {
             return;
         }
-        Context context = sAppInfoConext.getContext();
+        Context context = GodEyeMonitor.getContext();
+        if (context == null) {
+            return;
+        }
         PackageManager pm = context.getPackageManager();
         this.appName = context.getApplicationInfo().loadLabel(pm).toString();
         this.labels = new ArrayList<>();
