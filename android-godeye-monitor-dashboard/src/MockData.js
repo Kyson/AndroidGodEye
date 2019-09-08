@@ -131,18 +131,18 @@ class Mock {
         this.recvFun("appInfo", {
             appName: "I am Name",
             labels: [
-                {name: "lablel1", url: "http://www.ctrip.com"},
-                {name: "lablel2", url: "http://www.trip.com"},
+                {name: "lablel1", value: "value0000000", url: "http://www.ctrip.com"},
+                {name: "lablel2", value: "value1111111", url: "http://www.trip.com"},
                 {
-                    name: "lablel3lablel3lablel3lablel3lablel3lablel3lablel3"
+                    name: "lablel3lablel3lablel3lablel3lablel3lablel3lablel3", value: "value2222222"
                 }, {
-                    name: "lablel3lablel3lablel3"
+                    name: "lablel3lablel3lablel3", value: "value333333333"
                 }, {
-                    name: "lablel3"
+                    name: "lablel3", value: "value44444444"
                 }, {
-                    name: "lablel3"
+                    name: "lablel3", value: "value5555555"
                 }, {
-                    name: "lablel3"
+                    name: "lablel3", value: "value66666"
                 }]
         });
         this.recvFun("startupInfo", {

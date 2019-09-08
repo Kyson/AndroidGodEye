@@ -17,13 +17,9 @@ public class AppInfoProxyImpl implements GodEyeMonitor.AppInfoConext {
     @Override
     public List<AppInfoLabel> getAppInfo() {
         List<AppInfoLabel> appInfoLabels = new ArrayList<>();
-        appInfoLabels.add(new AppInfoLabel("VersionName:" + BuildConfig.VERSION_NAME, ""));
-        appInfoLabels.add(new AppInfoLabel("VersionCode:" + BuildConfig.VERSION_CODE, ""));
-        appInfoLabels.add(new AppInfoLabel("BuildType:" + BuildConfig.BUILD_TYPE, ""));
-        appInfoLabels.add(new AppInfoLabel("Debuggable:" + BuildConfig.DEBUG, ""));
-        appInfoLabels.add(new AppInfoLabel("Email:kysonchao@gmail.com", "mailto:kysonchao@gmail.com"));
-        appInfoLabels.add(new AppInfoLabel("ProjectUrl:https://github.com/Kyson/AndroidGodEye", "https://github.com/Kyson/AndroidGodEye"));
-        appInfoLabels.add(new AppInfoLabel("Blog:tech.hikyson.cn", "https://tech.hikyson.cn"));
+        appInfoLabels.add(new AppInfoLabel("Email", "kysonchao@gmail.com", "mailto:kysonchao@gmail.com"));
+        appInfoLabels.add(new AppInfoLabel("ProjectUrl", "https://github.com/Kyson/AndroidGodEye", "https://github.com/Kyson/AndroidGodEye"));
+        appInfoLabels.add(new AppInfoLabel("Blog", "tech.hikyson.cn", "https://tech.hikyson.cn"));
         return appInfoLabels;
     }
 }

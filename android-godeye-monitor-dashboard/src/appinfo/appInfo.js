@@ -5,8 +5,6 @@ import '../App.css';
 
 import {Drawer, Button, Row, Col, Typography} from 'antd'
 
-import Util from '../libs/util'
-
 /**
  * 应用基本信息
  */
@@ -16,20 +14,26 @@ class AppInfo extends Component {
     static renderLabel(labels) {
         if (labels) {
             let items = [];
-            let styles = Util.getCommonColors();
-            let styleCount = styles.length;
             for (let i = 0; i < labels.length; i++) {
-                if (labels[i].url) {
-                    items.push(<p>
-                        <Typography.Text underline="true" style={{margin: 8, color: styles[i % styleCount]}}
-                                         key={"appinfo" + i}>
-                            <a href={labels[i].url} target="_blank">{labels[i].name}</a>
-                        </Typography.Text>
-                    </p>);
-                } else {
-                    items.push(<p><Typography.Text style={{margin: 8, color: styles[i % styleCount]}}
-                                                   key={"appinfo" + i}>{labels[i].name}</Typography.Text></p>);
-                }
+                items.push(
+                    <Row key={"appInfo" + i} type="flex" justify="center" align="middle" style={{marginTop: 8}}>
+                        <Col span={11} style={{textAlign: "right"}}>
+                            <Typography.Text underline="true">
+                                {labels[i].name}
+                            </Typography.Text>
+                        </Col>
+                        <Col span={1}>
+                            <Typography.Text>
+                                :
+                            </Typography.Text>
+                        </Col>
+                        <Col span={12} style={{textAlign: "left"}}>
+                            <Typography.Text underline="true">
+                                {labels[i].url ? (
+                                    <a href={labels[i].url} target="_blank">{labels[i].value}</a>) : (labels[i].value)}
+                            </Typography.Text>
+                        </Col>
+                    </Row>);
             }
             return items;
         }
@@ -91,6 +95,7 @@ class AppInfo extends Component {
                 <Drawer
                     title="App Info"
                     placement="left"
+                    width="400"
                     onClose={this.onClose}
                     visible={this.state.visible}
                     closable={true}>
