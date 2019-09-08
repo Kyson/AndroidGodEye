@@ -11,9 +11,6 @@ import cn.hikyson.godeye.monitor.modules.appinfo.AppInfoLabel;
  */
 public class AppInfoProxyImpl implements GodEyeMonitor.AppInfoConext {
 
-    public AppInfoProxyImpl() {
-    }
-
     @Override
     public List<AppInfoLabel> getAppInfo() {
         List<AppInfoLabel> appInfoLabels = new ArrayList<>();

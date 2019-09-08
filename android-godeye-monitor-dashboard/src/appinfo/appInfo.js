@@ -17,8 +17,8 @@ class AppInfo extends Component {
             for (let i = 0; i < labels.length; i++) {
                 items.push(
                     <Row key={"appInfo" + i} type="flex" justify="center" align="middle" style={{marginTop: 8}}>
-                        <Col span={11} style={{textAlign: "right"}}>
-                            <Typography.Text underline="true">
+                        <Col span={9} style={{textAlign: "right"}}>
+                            <Typography.Text>
                                 {labels[i].name}
                             </Typography.Text>
                         </Col>
@@ -27,8 +27,8 @@ class AppInfo extends Component {
                                 :
                             </Typography.Text>
                         </Col>
-                        <Col span={12} style={{textAlign: "left"}}>
-                            <Typography.Text underline="true">
+                        <Col span={14} style={{textAlign: "left"}}>
+                            <Typography.Text underline={!!labels[i].url}>
                                 {labels[i].url ? (
                                     <a href={labels[i].url} target="_blank">{labels[i].value}</a>) : (labels[i].value)}
                             </Typography.Text>
@@ -95,7 +95,7 @@ class AppInfo extends Component {
                 <Drawer
                     title="App Info"
                     placement="left"
-                    width="400"
+                    width="500"
                     onClose={this.onClose}
                     visible={this.state.visible}
                     closable={true}>
