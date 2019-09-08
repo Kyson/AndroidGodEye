@@ -79,7 +79,11 @@ public class AppInfo {
                     sInternalLabels.add(new AppInfoLabel("Model", easyDeviceMod.getModel(), null));
                     sInternalLabels.add(new AppInfoLabel("OSCodename", easyDeviceMod.getOSCodename(), null));
                     sInternalLabels.add(new AppInfoLabel("OSVersion", easyDeviceMod.getOSVersion(), null));
-                    sInternalLabels.add(new AppInfoLabel("PhoneNo", easyDeviceMod.getPhoneNo(), null));
+
+                    if (PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PermissionChecker.PERMISSION_GRANTED) {
+                        sInternalLabels.add(new AppInfoLabel("PhoneNo", easyDeviceMod.getPhoneNo(), null));
+                    }
+
                     sInternalLabels.add(new AppInfoLabel("Product", easyDeviceMod.getProduct(), null));
                     sInternalLabels.add(new AppInfoLabel("RadioVer", easyDeviceMod.getRadioVer(), null));
                     sInternalLabels.add(new AppInfoLabel("ScreenDisplayID", easyDeviceMod.getScreenDisplayID(), null));
@@ -95,11 +99,15 @@ public class AppInfo {
                     sInternalLabels.add(new AppInfoLabel("RefreshRate", String.valueOf(easyDisplayMod.getRefreshRate()), null));
 
                     EasySimMod easySimMod = new EasySimMod(context);
-                    sInternalLabels.add(new AppInfoLabel("MultiSim", String.valueOf(easySimMod.isMultiSim()), null));
+                    if (PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PermissionChecker.PERMISSION_GRANTED) {
+                        sInternalLabels.add(new AppInfoLabel("MultiSim", String.valueOf(easySimMod.isMultiSim()), null));
+                    }
                     sInternalLabels.add(new AppInfoLabel("SimNetworkLocked", String.valueOf(easySimMod.isSimNetworkLocked()), null));
                     sInternalLabels.add(new AppInfoLabel("Carrier", easySimMod.getCarrier(), null));
                     sInternalLabels.add(new AppInfoLabel("Country", easySimMod.getCountry(), null));
-                    sInternalLabels.add(new AppInfoLabel("IMSI", easySimMod.getIMSI(), null));
+                    if (PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PermissionChecker.PERMISSION_GRANTED) {
+                        sInternalLabels.add(new AppInfoLabel("IMSI", easySimMod.getIMSI(), null));
+                    }
                     sInternalLabels.add(new AppInfoLabel("SIMSerial", easySimMod.getSIMSerial(), null));
                     sInternalLabels.add(new AppInfoLabel("ActiveMultiSimInfo", String.valueOf(easySimMod.getActiveMultiSimInfo()), null));
                     sInternalLabels.add(new AppInfoLabel("NumberOfActiveSim", String.valueOf(easySimMod.getNumberOfActiveSim()), null));
