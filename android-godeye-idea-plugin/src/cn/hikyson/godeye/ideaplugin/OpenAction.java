@@ -25,15 +25,20 @@ public class OpenAction extends AnAction {
                 mLogger.error("Can not parse sdk.dir.");
                 return;
             }
-            final String commandTcpProxy = String.format("%s/platform-tools/adb forward tcp:%s tcp:%s", path, PORT, PORT);
+            String finalPort = PORT;
+            String androidGodEyeMonitorPort = parseGradleProperties(anActionEvent.getProject(), "ANDROID_GODEYE_MONITOR_PORT");
+            if (!TextUtils.isEmpty(androidGodEyeMonitorPort)) {
+                finalPort = androidGodEyeMonitorPort;
+            }
+            final String commandTcpProxy = String.format("%s/platform-tools/adb forward tcp:%s tcp:%s", path, finalPort, finalPort);
             mLogger.info("Exec [" + commandTcpProxy + "].");
             Runtime.getRuntime().exec(commandTcpProxy);
             mLogger.info("Current os name is " + SystemUtils.OS_NAME);
             String commandOpenUrl = "";
             if (SystemUtils.IS_OS_WINDOWS) {
-                commandOpenUrl = String.format("cmd /c start http://localhost:%s/index.html", PORT);
+                commandOpenUrl = String.format("cmd /c start http://localhost:%s/index.html", finalPort);
             } else {
-                commandOpenUrl = String.format("open http://localhost:%s/index.html", PORT);
+                commandOpenUrl = String.format("open http://localhost:%s/index.html", finalPort);
             }
             mLogger.info("Exec [" + commandOpenUrl + "].");
             Runtime.getRuntime().exec(commandOpenUrl);
@@ -58,4 +63,19 @@ public class OpenAction extends AnAction {
         return "";
     }
 
+    private String parseGradleProperties(Project project, String key) {
+        try {
+            VirtualFile gradlePropertiesFile = project.getBaseDir().findFileByRelativePath("./gradle.properties");
+            if (gradlePropertiesFile == null) {
+                mLogger.error("Can not find gradle.properties");
+                return "";
+            }
+            Properties gradleProperties = new Properties();
+            gradleProperties.load(gradlePropertiesFile.getInputStream());
+            return gradleProperties.getProperty(key);
+        } catch (Throwable e1) {
+            mLogger.error(e1);
+        }
+        return "";
+    }
 }

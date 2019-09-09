@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>cn.hikyson.godeye.ideaplugin</id>
     <name>AndroidGodEye</name>
-    <version>1.2</version>
+    <version>1.3</version>
     <vendor email="qian_xx@ctrip.com" url="https://github.com/Xiangxingqian">qian_xx</vendor>
 
     <description><![CDATA[
@@ -12,7 +12,7 @@
     </description>
 
     <change-notes><![CDATA[
-       Initial release of the plugin.<br>
+       Support custom monitor port by adding 'ANDROID_GODEYE_MONITOR_PORT' to 'gradle.properties'.<br>
     ]]>
     </change-notes>
 

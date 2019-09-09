@@ -250,7 +250,7 @@ public class MainActivity extends Activity implements Loggable {
                 }).start();
                 break;
             case R.id.activity_main_monitor_work:
-                GodEyeMonitor.work(MainActivity.this);
+                GodEyeMonitor.work(MainActivity.this, MainActivity.this.getResources().getInteger(R.integer.CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT));
                 break;
             case R.id.activity_main_monitor_shutdown:
                 GodEyeMonitor.shutDown();

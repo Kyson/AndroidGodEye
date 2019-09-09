@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+ext {
+    EXT_ANDROID_GODEYE_MONITOR_PORT = project.getProperties().containsKey("ANDROID_GODEYE_MONITOR_PORT") ? project.ANDROID_GODEYE_MONITOR_PORT : "5390"
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -16,8 +20,12 @@ android {
     }
     buildTypes {
         release {
+            resValue("integer", "CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT", project.ext.EXT_ANDROID_GODEYE_MONITOR_PORT)
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            resValue("integer", "CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT", project.ext.EXT_ANDROID_GODEYE_MONITOR_PORT)
         }
     }
 }

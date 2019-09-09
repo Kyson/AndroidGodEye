@@ -1,2 +1,6 @@
-adb forward tcp:5390 tcp:5390 && cmd /c start http://localhost:5390/index.html
+@echo off
+SET /P MONITOR_PORT="Input monitor port, press 'Enter' for default [5390]:"
+if "%MONITOR_PORT%"=="" set MONITOR_PORT=5390
+echo Monitor port is %MONITOR_PORT%
+adb forward tcp:%MONITOR_PORT% tcp:%MONITOR_PORT% && cmd /c start http://localhost:%MONITOR_PORT%/index.html
 pause
