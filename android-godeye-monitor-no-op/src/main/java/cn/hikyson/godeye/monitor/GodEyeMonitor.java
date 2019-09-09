@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
-import cn.hikyson.godeye.monitor.modules.AppInfoLabel;
+import cn.hikyson.godeye.monitor.modules.appinfo.AppInfoLabel;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifier;
 
 /**
