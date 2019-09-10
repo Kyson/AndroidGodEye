@@ -14,15 +14,15 @@ public class StackSampler extends AbstractSampler {
     private static final int DEFAULT_MAX_ENTRY_COUNT = 30;
     private static final LinkedHashMap<Long, StackTraceElement[]> sStackMap = new LinkedHashMap<>();
 
-    private int mMaxEntryCount = DEFAULT_MAX_ENTRY_COUNT;
+    private int mMaxEntryCount;
     private Thread mCurrentThread;
 
-    public StackSampler(Thread thread, long sampleIntervalMillis) {
-        this(thread, DEFAULT_MAX_ENTRY_COUNT, sampleIntervalMillis);
+    StackSampler(Thread thread, long sampleIntervalMillis, long sampleDelay) {
+        this(thread, DEFAULT_MAX_ENTRY_COUNT, sampleIntervalMillis, sampleDelay);
     }
 
-    public StackSampler(Thread thread, int maxEntryCount, long sampleIntervalMillis) {
-        super(sampleIntervalMillis);
+    StackSampler(Thread thread, int maxEntryCount, long sampleIntervalMillis, long sampleDelay) {
+        super(sampleIntervalMillis, sampleDelay);
         mCurrentThread = thread;
         mMaxEntryCount = maxEntryCount;
     }

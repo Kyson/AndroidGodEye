@@ -23,17 +23,6 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
     private SmContext mSmContext;
     private boolean mInstalled = false;
 
-    private Sm() {
-    }
-
-    private static class InstanceHoler {
-        private static Sm sINSTANCE = new Sm();
-    }
-
-    public static Sm instance() {
-        return InstanceHoler.sINSTANCE;
-    }
-
     @Override
     public synchronized void install(SmContext config) {
         if (mInstalled) {
@@ -83,8 +72,8 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
         L.d("sm uninstalled");
     }
 
-    public static SmCore core() {
-        return instance().mBlockCore;
+    public SmCore getBlockCore() {
+        return mBlockCore;
     }
 
     public SmContext getSmContext() {

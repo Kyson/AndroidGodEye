@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core.internal.modules.sm.core;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 
 /**
@@ -9,12 +10,12 @@ import cn.hikyson.godeye.core.internal.modules.sm.Sm;
  */
 public abstract class AbstractSampler {
 
-    private static final int DEFAULT_SAMPLE_INTERVAL = 300;
-
-    protected AtomicBoolean mShouldSample = new AtomicBoolean(false);
+    private AtomicBoolean mShouldSample = new AtomicBoolean(false);
 
     //每隔interval时间dump一次信息
-    protected long mSampleInterval;
+    long mSampleInterval;
+
+    long mSampleDelay;
 
     private Runnable mRunnable = new Runnable() {
         @Override
@@ -28,11 +29,9 @@ public abstract class AbstractSampler {
         }
     };
 
-    public AbstractSampler(long sampleInterval) {
-        if (0 == sampleInterval) {
-            sampleInterval = DEFAULT_SAMPLE_INTERVAL;
-        }
+    AbstractSampler(long sampleInterval, long sampleDelay) {
         mSampleInterval = sampleInterval;
+        mSampleDelay = sampleDelay;
     }
 
     public void start() {
@@ -40,8 +39,7 @@ public abstract class AbstractSampler {
             return;
         }
         HandlerThreadFactory.getDoDumpThreadHandler().removeCallbacks(mRunnable);
-        HandlerThreadFactory.getDoDumpThreadHandler().postDelayed(mRunnable,
-                Sm.core().getSampleDelay());
+        HandlerThreadFactory.getDoDumpThreadHandler().postDelayed(mRunnable, mSampleDelay);
     }
 
     public void stop() {
@@ -52,8 +50,4 @@ public abstract class AbstractSampler {
     }
 
     abstract void doSample();
-
-    public void setSampleInterval(long sampleInterval) {
-        mSampleInterval = sampleInterval;
-    }
 }

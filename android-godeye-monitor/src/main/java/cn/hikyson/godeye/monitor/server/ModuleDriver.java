@@ -11,7 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.exceptions.UnexpectException;
+import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.internal.SubjectSupport;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
+import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
@@ -38,6 +42,7 @@ import cn.hikyson.godeye.core.internal.modules.pageload.PageloadUtil;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
+import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
@@ -47,6 +52,7 @@ import cn.hikyson.godeye.monitor.modules.MethodCanaryStatus;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
+import cn.hikyson.godeye.monitor.modules.battery.BatterySummaryInfo;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfo;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import io.reactivex.Observable;
@@ -77,11 +83,18 @@ public class ModuleDriver {
     private ModuleDriver() {
     }
 
-    private <T> Observable<T> wrapThreadComputationObservable(Observable<T> observable) {
-        if (observable == null) {
-            return null;
+    private <T> Observable<T> wrapThreadComputationObservable(@GodEye.ModuleName String moduleName) {
+        try {
+            T module = GodEye.instance().getModule(moduleName);
+            if (!(module instanceof SubjectSupport)) {
+                throw new UnexpectException(moduleName + " is not instance of SubjectSupport.");
+            }
+            // noinspection unchecked
+            return ((SubjectSupport<T>) module).subject().subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation());
+        } catch (UninstallException e) {
+            L.d(moduleName + " is not installed.");
+            return Observable.empty();
         }
-        return observable.subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation());
     }
 
     /**
@@ -98,66 +111,69 @@ public class ModuleDriver {
         mCompositeDisposable = new CompositeDisposable();
         mMessager = messager;
         mCompositeDisposable.addAll(
-                wrapThreadComputationObservable(godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject())
+                this.<BatteryInfo>wrapThreadComputationObservable(GodEye.ModuleName.BATTERY)
                         .map(BatteryInfoFactory.converter())
                         .map(this.createConvertServerMessageFunction("batteryInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Cpu>getModule(GodEye.ModuleName.CPU).subject())
-                        .map(this.<CpuInfo>createConvertServerMessageFunction("cpuInfo"))
+                this.<CpuInfo>wrapThreadComputationObservable(GodEye.ModuleName.CPU)
+                        .map(this.createConvertServerMessageFunction("cpuInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Traffic>getModule(GodEye.ModuleName.TRAFFIC).subject())
-                        .map(this.<TrafficInfo>createConvertServerMessageFunction("trafficInfo"))
+                this.<TrafficInfo>wrapThreadComputationObservable(GodEye.ModuleName.TRAFFIC)
+                        .map(this.createConvertServerMessageFunction("trafficInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Fps>getModule(GodEye.ModuleName.FPS).subject())
-                        .map(this.<FpsInfo>createConvertServerMessageFunction("fpsInfo"))
+                this.<FpsInfo>wrapThreadComputationObservable(GodEye.ModuleName.FPS)
+                        .map(this.createConvertServerMessageFunction("fpsInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<LeakDetector>getModule(GodEye.ModuleName.LEAK).subject())
-                        .map(this.<LeakQueue.LeakMemoryInfo>createConvertServerMessageFunction("leakInfo"))
+                this.<LeakQueue.LeakMemoryInfo>wrapThreadComputationObservable(GodEye.ModuleName.LEAK)
+                        .map(this.createConvertServerMessageFunction("leakInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Sm>getModule(GodEye.ModuleName.SM).subject())
+                this.<BlockInfo>wrapThreadComputationObservable(GodEye.ModuleName.SM)
                         .map(blockMap())
-                        .map(this.<BlockSimpleInfo>createConvertServerMessageFunction("blockInfo"))
+                        .map(this.createConvertServerMessageFunction("blockInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Network>getModule(GodEye.ModuleName.NETWORK).subject())
+                this.<NetworkInfo>wrapThreadComputationObservable(GodEye.ModuleName.NETWORK)
                         .map(this.networkMap())
                         .map(this.createConvertServerMessageFunction("networkInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Startup>getModule(GodEye.ModuleName.STARTUP).subject())
+                this.<StartupInfo>wrapThreadComputationObservable(GodEye.ModuleName.STARTUP)
                         .map(this.createConvertServerMessageFunction("startupInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Ram>getModule(GodEye.ModuleName.RAM).subject())
-                        .map(this.<RamInfo>createConvertServerMessageFunction("ramInfo"))
+                this.<RamInfo>wrapThreadComputationObservable(GodEye.ModuleName.RAM)
+                        .map(this.createConvertServerMessageFunction("ramInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Pss>getModule(GodEye.ModuleName.PSS).subject())
-                        .map(this.<PssInfo>createConvertServerMessageFunction("pssInfo"))
+                this.<PssInfo>wrapThreadComputationObservable(GodEye.ModuleName.PSS)
+                        .map(this.createConvertServerMessageFunction("pssInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Heap>getModule(GodEye.ModuleName.HEAP).subject())
-                        .map(this.<HeapInfo>createConvertServerMessageFunction("heapInfo"))
+                this.<HeapInfo>wrapThreadComputationObservable(GodEye.ModuleName.HEAP)
+                        .map(this.createConvertServerMessageFunction("heapInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject())
+                this.<List<Thread>>wrapThreadComputationObservable(GodEye.ModuleName.THREAD)
                         .map(ThreadInfoConverter.threadMap())
-                        .map(this.<List<ThreadInfo>>createConvertServerMessageFunction("threadInfo"))
+                        .map(this.createConvertServerMessageFunction("threadInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject())
+                this.<List<CrashInfo>>wrapThreadComputationObservable(GodEye.ModuleName.CRASH)
                         .filter(crashPredicate())
                         .map(firstCrashMap())
                         .map(this.createConvertServerMessageFunction("crashInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject())
+                this.<PageLifecycleEventInfo>wrapThreadComputationObservable(GodEye.ModuleName.PAGELOAD)
                         .map(this.pageLifecycleMap())
-                        .map(this.<PageLifecycleProcessedEvent>createConvertServerMessageFunction("pageLifecycle"))
+                        .map(this.createConvertServerMessageFunction("pageLifecycle"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).subject())
-                        .map(this.<MethodsRecordInfo>createConvertServerMessageFunction("methodCanary"))
+                this.<MethodsRecordInfo>wrapThreadComputationObservable(GodEye.ModuleName.METHOD_CANARY)
+                        .map(this.createConvertServerMessageFunction("methodCanary"))
                         .subscribe(this.createSendMessageConsumer())
         );
-        Observable<String> methodCanaryStatusSubject = wrapThreadComputationObservable(godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject());
-        if (methodCanaryStatusSubject != null) {
-            mCompositeDisposable.add(methodCanaryStatusSubject.map(s -> {
-                MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
-                return new ServerMessage("MethodCanaryStatus",
-                        new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring()));
-            }).subscribe(this.createSendMessageConsumer()));
+        try {
+            Observable<String> methodCanaryStatusSubject = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject();
+            if (methodCanaryStatusSubject != null) {
+                mCompositeDisposable.add(methodCanaryStatusSubject.map(s -> {
+                    MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
+                    return new ServerMessage("MethodCanaryStatus",
+                            new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring()));
+                }).subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation()).subscribe(this.createSendMessageConsumer()));
+            }
+        } catch (UninstallException ignore) {
         }
     }
 

@@ -25,7 +25,6 @@ import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
-import cn.hikyson.godeye.core.internal.modules.deadlock.A;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
@@ -159,6 +158,7 @@ public class MainActivity extends Activity implements Loggable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        GodEye.instance().install(new GodEyeConfig());
         OkNetworkCollectorFactory okNetworkCollectorFactory = new OkNetworkCollectorFactory(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK));
         mZygote = new OkHttpClient.Builder().eventListenerFactory(okNetworkCollectorFactory).addNetworkInterceptor(okNetworkCollectorFactory.createInterceptor()).build();
         ButterKnife.bind(this, this);
@@ -220,7 +220,6 @@ public class MainActivity extends Activity implements Loggable {
                 checkAllInstall();
                 break;
             case R.id.activity_main_test:
-                A.send();
                 break;
             case R.id.activity_main_cancel_all:
                 cancelCheckAllInstall();

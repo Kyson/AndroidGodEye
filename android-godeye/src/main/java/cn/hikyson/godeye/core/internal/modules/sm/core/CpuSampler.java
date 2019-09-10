@@ -31,8 +31,8 @@ public class CpuSampler extends AbstractSampler {
     private long mTotalLast = 0;
     private long mAppCpuTimeLast = 0;
 
-    public CpuSampler(long sampleInterval) {
-        super(sampleInterval);
+    public CpuSampler(long sampleInterval, long sampleDelay) {
+        super(sampleInterval, sampleDelay);
         BUSY_TIME = (int) (mSampleInterval * 1.2f);
     }
 

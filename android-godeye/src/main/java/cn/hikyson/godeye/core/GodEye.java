@@ -9,6 +9,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.exceptions.UnexpectException;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
@@ -72,7 +74,6 @@ public class GodEye {
         return InstanceHolder.sInstance;
     }
 
-
     /**
      * 初始化
      *
@@ -88,7 +89,7 @@ public class GodEye {
         mModules.put(ModuleName.PSS, new Pss());
         mModules.put(ModuleName.RAM, new Ram());
         mModules.put(ModuleName.NETWORK, new Network());
-        mModules.put(ModuleName.SM, Sm.instance());
+        mModules.put(ModuleName.SM, new Sm());
         mModules.put(ModuleName.STARTUP, new Startup());
         mModules.put(ModuleName.TRAFFIC, new Traffic());
         mModules.put(ModuleName.CRASH, new Crash());
@@ -99,43 +100,124 @@ public class GodEye {
 
     public GodEye install(final GodEyeConfig godEyeConfig) {
         if (godEyeConfig.getCpuConfig() != null) {
-            ((Cpu) mModules.get(ModuleName.CPU)).install(godEyeConfig.getCpuConfig());
+            Object moduleObj = mModules.get(ModuleName.CPU);
+            if (moduleObj == null) {
+                moduleObj = new Cpu();
+                mModules.put(ModuleName.CPU, moduleObj);
+            }
+            ((Cpu) moduleObj).install(godEyeConfig.getCpuConfig());
         }
         if (godEyeConfig.getBatteryConfig() != null) {
-            ((Battery) mModules.get(ModuleName.BATTERY)).install(godEyeConfig.getBatteryConfig());
+            Object moduleObj = mModules.get(ModuleName.BATTERY);
+            if (moduleObj == null) {
+                moduleObj = new Battery();
+                mModules.put(ModuleName.BATTERY, moduleObj);
+            }
+            ((Battery) moduleObj).install(godEyeConfig.getBatteryConfig());
         }
         if (godEyeConfig.getFpsConfig() != null) {
-            ((Fps) mModules.get(ModuleName.FPS)).install(godEyeConfig.getFpsConfig());
+            Object moduleObj = mModules.get(ModuleName.FPS);
+            if (moduleObj == null) {
+                moduleObj = new Fps();
+                mModules.put(ModuleName.FPS, moduleObj);
+            }
+            ((Fps) moduleObj).install(godEyeConfig.getFpsConfig());
         }
         if (godEyeConfig.getLeakConfig() != null) {
-            ((LeakDetector) mModules.get(ModuleName.LEAK)).install(godEyeConfig.getLeakConfig());
+            Object moduleObj = mModules.get(ModuleName.LEAK);
+            if (moduleObj == null) {
+                moduleObj = LeakDetector.instance();
+                mModules.put(ModuleName.LEAK, moduleObj);
+            }
+            ((LeakDetector) moduleObj).install(godEyeConfig.getLeakConfig());
         }
         if (godEyeConfig.getHeapConfig() != null) {
-            ((Heap) mModules.get(ModuleName.HEAP)).install(godEyeConfig.getHeapConfig());
+            Object moduleObj = mModules.get(ModuleName.HEAP);
+            if (moduleObj == null) {
+                moduleObj = new Heap();
+                mModules.put(ModuleName.HEAP, moduleObj);
+            }
+            ((Heap) moduleObj).install(godEyeConfig.getHeapConfig());
         }
         if (godEyeConfig.getPssConfig() != null) {
-            ((Pss) mModules.get(ModuleName.PSS)).install(godEyeConfig.getPssConfig());
+            Object moduleObj = mModules.get(ModuleName.PSS);
+            if (moduleObj == null) {
+                moduleObj = new Pss();
+                mModules.put(ModuleName.PSS, moduleObj);
+            }
+            ((Pss) moduleObj).install(godEyeConfig.getPssConfig());
         }
         if (godEyeConfig.getRamConfig() != null) {
-            ((Ram) mModules.get(ModuleName.RAM)).install(godEyeConfig.getRamConfig());
+            Object moduleObj = mModules.get(ModuleName.RAM);
+            if (moduleObj == null) {
+                moduleObj = new Ram();
+                mModules.put(ModuleName.RAM, moduleObj);
+            }
+            ((Ram) moduleObj).install(godEyeConfig.getRamConfig());
+        }
+        if (godEyeConfig.getNetworkConfig() != null) {
+            Object moduleObj = mModules.get(ModuleName.NETWORK);
+            if (moduleObj == null) {
+                moduleObj = new Network();
+                mModules.put(ModuleName.NETWORK, moduleObj);
+            }
+            ((Network) moduleObj).install(godEyeConfig.getNetworkConfig());
         }
         if (godEyeConfig.getSmConfig() != null) {
-            ((Sm) mModules.get(ModuleName.SM)).install(godEyeConfig.getSmConfig());
+            Object moduleObj = mModules.get(ModuleName.SM);
+            if (moduleObj == null) {
+                moduleObj = new Sm();
+                mModules.put(ModuleName.SM, moduleObj);
+            }
+            ((Sm) moduleObj).install(godEyeConfig.getSmConfig());
+        }
+        if (godEyeConfig.getStartupConfig() != null) {
+            Object moduleObj = mModules.get(ModuleName.STARTUP);
+            if (moduleObj == null) {
+                moduleObj = new Startup();
+                mModules.put(ModuleName.STARTUP, moduleObj);
+            }
+            ((Startup) moduleObj).install(godEyeConfig.getStartupConfig());
         }
         if (godEyeConfig.getTrafficConfig() != null) {
-            ((Traffic) mModules.get(ModuleName.TRAFFIC)).install(godEyeConfig.getTrafficConfig());
+            Object moduleObj = mModules.get(ModuleName.TRAFFIC);
+            if (moduleObj == null) {
+                moduleObj = new Traffic();
+                mModules.put(ModuleName.TRAFFIC, moduleObj);
+            }
+            ((Traffic) moduleObj).install(godEyeConfig.getTrafficConfig());
         }
         if (godEyeConfig.getCrashConfig() != null) {
-            ((Crash) mModules.get(ModuleName.CRASH)).install(godEyeConfig.getCrashConfig());
+            Object moduleObj = mModules.get(ModuleName.CRASH);
+            if (moduleObj == null) {
+                moduleObj = new Crash();
+                mModules.put(ModuleName.CRASH, moduleObj);
+            }
+            ((Crash) moduleObj).install(godEyeConfig.getCrashConfig());
         }
         if (godEyeConfig.getThreadConfig() != null) {
-            ((ThreadDump) mModules.get(ModuleName.THREAD)).install(godEyeConfig.getThreadConfig());
+            Object moduleObj = mModules.get(ModuleName.THREAD);
+            if (moduleObj == null) {
+                moduleObj = new ThreadDump();
+                mModules.put(ModuleName.THREAD, moduleObj);
+            }
+            ((ThreadDump) moduleObj).install(godEyeConfig.getThreadConfig());
         }
         if (godEyeConfig.getPageloadConfig() != null) {
-            ((Pageload) mModules.get(ModuleName.PAGELOAD)).install(godEyeConfig.getPageloadConfig());
+            Object moduleObj = mModules.get(ModuleName.PAGELOAD);
+            if (moduleObj == null) {
+                moduleObj = new Pageload();
+                mModules.put(ModuleName.PAGELOAD, moduleObj);
+            }
+            ((Pageload) moduleObj).install(godEyeConfig.getPageloadConfig());
         }
         if (godEyeConfig.getMethodCanaryConfig() != null) {
-            ((MethodCanary) mModules.get(ModuleName.METHOD_CANARY)).install(godEyeConfig.getMethodCanaryConfig());
+            Object moduleObj = mModules.get(ModuleName.METHOD_CANARY);
+            if (moduleObj == null) {
+                moduleObj = new MethodCanary();
+                mModules.put(ModuleName.METHOD_CANARY, moduleObj);
+            }
+            ((MethodCanary) moduleObj).install(godEyeConfig.getMethodCanaryConfig());
         }
         return this;
     }
@@ -161,12 +243,16 @@ public class GodEye {
      * @param <T>
      * @return
      */
-    public <T> T getModule(@ModuleName String moduleName) {
+    public <T> T getModule(@ModuleName String moduleName) throws UninstallException {
+        Object moduleObj = mModules.get(moduleName);
+        if (moduleObj == null) {
+            throw new UninstallException("module [" + moduleName + "] is not installed.");
+        }
         try {
             // noinspection unchecked
-            return (T) mModules.get(moduleName);
+            return (T) moduleObj;
         } catch (Throwable e) {
-            throw new UnexpectException("module [" + moduleName + "] is not exist or type is wrong");
+            throw new UnexpectException("module [" + moduleName + "] has wrong instance type");
         }
     }
 
