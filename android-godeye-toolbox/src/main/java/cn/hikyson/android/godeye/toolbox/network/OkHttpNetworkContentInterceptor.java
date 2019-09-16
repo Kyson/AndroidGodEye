@@ -19,11 +19,11 @@ import okio.Buffer;
 import okio.BufferedSource;
 import okio.GzipSource;
 
-public class OkHttpNetworkContentInterceptor implements Interceptor {
+class OkHttpNetworkContentInterceptor implements Interceptor {
     private static final Charset UTF8 = Charset.forName("UTF-8");
-    private HttpContentTimeMapping mHttpContentTimeMapping;
+    HttpContentTimeMapping mHttpContentTimeMapping;
 
-    public OkHttpNetworkContentInterceptor(HttpContentTimeMapping httpContentTimeMapping) {
+    OkHttpNetworkContentInterceptor(HttpContentTimeMapping httpContentTimeMapping) {
         mHttpContentTimeMapping = httpContentTimeMapping;
     }
 

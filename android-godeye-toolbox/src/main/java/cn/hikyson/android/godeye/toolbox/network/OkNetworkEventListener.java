@@ -23,7 +23,7 @@ import okhttp3.Response;
 /**
  * network is success or not , network time for connection\send\receive...
  */
-public class OkNetworkEventListener extends EventListener {
+class OkNetworkEventListener extends EventListener {
     private Producer<NetworkInfo> mNetworkInfoProducer;
     private NetworkInfo<HttpContent> mNetworkInfo;
     private long mCallStartTimeMillis;
@@ -35,7 +35,7 @@ public class OkNetworkEventListener extends EventListener {
     private long mResponseBodyStartTimeMillis;
     private HttpContentTimeMapping mHttpContentTimeMapping;
 
-    public OkNetworkEventListener(Producer<NetworkInfo> producer, HttpContentTimeMapping httpContentTimeMapping) {
+    OkNetworkEventListener(Producer<NetworkInfo> producer, HttpContentTimeMapping httpContentTimeMapping) {
         this.mNetworkInfoProducer = producer;
         this.mHttpContentTimeMapping = httpContentTimeMapping;
         this.mNetworkInfo = new NetworkInfo<>();

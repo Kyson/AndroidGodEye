@@ -9,9 +9,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.exceptions.UnexpectException;
+import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.Install;
+import cn.hikyson.godeye.core.internal.SubjectSupport;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
@@ -27,6 +28,10 @@ import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 入口
@@ -75,29 +80,20 @@ public class GodEye {
     }
 
     /**
-     * 初始化
+     * init
      *
      * @param application
      */
     public void init(Application application) {
         mApplication = application;
-        mModules.put(ModuleName.CPU, new Cpu());
-        mModules.put(ModuleName.BATTERY, new Battery());
-        mModules.put(ModuleName.FPS, new Fps());
-        mModules.put(ModuleName.LEAK, LeakDetector.instance());
-        mModules.put(ModuleName.HEAP, new Heap());
-        mModules.put(ModuleName.PSS, new Pss());
-        mModules.put(ModuleName.RAM, new Ram());
-        mModules.put(ModuleName.NETWORK, new Network());
-        mModules.put(ModuleName.SM, new Sm());
-        mModules.put(ModuleName.STARTUP, new Startup());
-        mModules.put(ModuleName.TRAFFIC, new Traffic());
-        mModules.put(ModuleName.CRASH, new Crash());
-        mModules.put(ModuleName.THREAD, new ThreadDump());
-        mModules.put(ModuleName.PAGELOAD, new Pageload());
-        mModules.put(ModuleName.METHOD_CANARY, new MethodCanary());
     }
 
+    /**
+     * install modules
+     *
+     * @param godEyeConfig
+     * @return
+     */
     public GodEye install(final GodEyeConfig godEyeConfig) {
         if (godEyeConfig.getCpuConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.CPU);
@@ -254,6 +250,33 @@ public class GodEye {
         } catch (Throwable e) {
             throw new UnexpectException("module [" + moduleName + "] has wrong instance type");
         }
+    }
+
+    /**
+     * get observable of module
+     *
+     * @param moduleName
+     * @param <S>
+     * @param <M>
+     * @return
+     * @throws UninstallException
+     */
+    public <S extends SubjectSupport<M>, M> Observable<M> moduleObservable(@ModuleName String moduleName) throws UninstallException {
+        return this.<S>getModule(moduleName).subject();
+    }
+
+    /**
+     * observe module
+     *
+     * @param moduleName
+     * @param consumer
+     * @param <S>
+     * @param <M>
+     * @return
+     * @throws UninstallException
+     */
+    public <S extends SubjectSupport<M>, M> Disposable observeModule(@ModuleName String moduleName, Consumer<M> consumer) throws UninstallException {
+        return this.<S>getModule(moduleName).subject().subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation()).subscribe(consumer);
     }
 
     public Application getApplication() {

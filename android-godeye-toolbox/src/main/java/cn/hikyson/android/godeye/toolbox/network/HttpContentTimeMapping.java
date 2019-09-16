@@ -5,14 +5,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.Call;
 
-public class HttpContentTimeMapping {
+class HttpContentTimeMapping {
     private Map<Call, HttpContent> mCallHttpContentMap = new ConcurrentHashMap<>();
 
-    public void addRecord(Call call, HttpContent httpContent) {
+    void addRecord(Call call, HttpContent httpContent) {
         mCallHttpContentMap.put(call, httpContent);
     }
 
-    public HttpContent removeAndGetRecord(Call call) {
+    HttpContent removeAndGetRecord(Call call) {
         HttpContent httpContent = mCallHttpContentMap.remove(call);
         if (httpContent == null) {
             return new HttpContent();

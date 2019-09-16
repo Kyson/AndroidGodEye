@@ -160,7 +160,7 @@ public class MainActivity extends Activity implements Loggable {
         setContentView(R.layout.activity_main);
         GodEye.instance().install(new GodEyeConfig());
         OkNetworkCollectorFactory okNetworkCollectorFactory = new OkNetworkCollectorFactory(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK));
-        mZygote = new OkHttpClient.Builder().eventListenerFactory(okNetworkCollectorFactory).addNetworkInterceptor(okNetworkCollectorFactory.createInterceptor()).build();
+        mZygote = new OkHttpClient.Builder().eventListenerFactory(okNetworkCollectorFactory).addNetworkInterceptor(okNetworkCollectorFactory).build();
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
         installableCbs = new CheckBox[14];
