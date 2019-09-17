@@ -3,15 +3,21 @@ package cn.hikyson.godeye.core.utils;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.view.Choreographer;
 import android.view.View;
+import android.view.ViewTreeObserver;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import cn.hikyson.godeye.core.internal.modules.pageload.PageDrawMonitor;
 
 public class ViewUtil {
     public interface OnDrawCallback {
         void didDraw();
     }
-
-    public static Handler sHandler = new Handler(Looper.getMainLooper());
 
     public static void measureActivityDidDraw(final Activity activity, final OnDrawCallback onDrawCallback) {
         measurePageDidDraw(activity.getWindow().getDecorView(), onDrawCallback);
@@ -32,10 +38,6 @@ public class ViewUtil {
     }
 
     private static void measurePageDidDraw(final View view, final OnDrawCallback onDrawCallback) {
-        view.post(() -> sHandler.post(() -> {
-            if (onDrawCallback != null) {
-                onDrawCallback.didDraw();
-            }
-        }));
+        PageDrawMonitor.newInstance(view, onDrawCallback).listen();
     }
 }
