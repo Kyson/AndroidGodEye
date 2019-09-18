@@ -233,11 +233,12 @@ public class GodEye {
     }
 
     /**
-     * 获取模块
+     * get module if exist
      *
      * @param moduleName
      * @param <T>
      * @return
+     * @throws UninstallException if not exist module
      */
     public <T> T getModule(@ModuleName String moduleName) throws UninstallException {
         Object moduleObj = mModules.get(moduleName);
