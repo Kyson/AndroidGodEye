@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeHelper;
+import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 
@@ -40,18 +42,13 @@ public class StartupTracer {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             throw new IllegalStateException("call onHomeCreate ui thread!");
         }
-        activity.getWindow().getDecorView().post(new Runnable() {
-            @Override
-            public void run() {
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Startup startup = GodEye.instance().getModule(GodEye.ModuleName.STARTUP);
-                        startup.produce(generateStartupInfo(System.currentTimeMillis()));
-                    }
-                });
+        activity.getWindow().getDecorView().post(() -> new Handler().post(() -> {
+            try {
+                GodEyeHelper.onAppStartEnd(generateStartupInfo(System.currentTimeMillis()));
+            } catch (UninstallException e) {
+                e.printStackTrace();
             }
-        });
+        }));
     }
 
     private StartupInfo generateStartupInfo(long homeEndTime) {

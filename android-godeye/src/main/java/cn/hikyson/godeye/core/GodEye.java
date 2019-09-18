@@ -34,7 +34,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * 入口
+ * core entrance
  * install -> module.subject() -> uninstall
  * Created by kysonchao on 2017/11/22.
  */

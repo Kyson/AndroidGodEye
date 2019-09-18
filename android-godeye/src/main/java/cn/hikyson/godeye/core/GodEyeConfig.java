@@ -39,6 +39,9 @@ import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
 import cn.hikyson.godeye.core.utils.IoUtil;
 
+/**
+ * core config/module config
+ */
 public class GodEyeConfig {
 
     public static GodEyeConfigBuilder defaultConfigBuilder() {

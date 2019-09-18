@@ -42,7 +42,9 @@ dependencies {
     implementation project(':android-godeye-monitor')
     implementation project(':android-godeye')
     implementation project(':android-godeye-toolbox')
+    implementation 'com.android.support:design:28.0.0'
 }
 
 // TODO KYSON IMPL
 //apply plugin: 'cn.hikyson.methodcanary.plugin'
+

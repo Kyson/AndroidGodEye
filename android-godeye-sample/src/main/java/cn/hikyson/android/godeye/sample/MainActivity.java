@@ -17,26 +17,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.hikyson.android.godeye.toolbox.network.OkNetworkCollectorFactory;
+import cn.hikyson.android.godeye.toolbox.network.GodEyePluginOkNetwork;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
-import cn.hikyson.godeye.core.internal.modules.battery.Battery;
-import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
-import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
-import cn.hikyson.godeye.core.internal.modules.fps.Fps;
-import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
-import cn.hikyson.godeye.core.internal.modules.memory.Heap;
-import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
-import cn.hikyson.godeye.core.internal.modules.memory.Pss;
-import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
-import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
@@ -160,12 +148,8 @@ public class MainActivity extends Activity implements Loggable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         GodEye.instance().install(new GodEyeConfig());
-        try {
-            OkNetworkCollectorFactory okNetworkCollectorFactory = new OkNetworkCollectorFactory(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK));
-            mZygote = new OkHttpClient.Builder().eventListenerFactory(okNetworkCollectorFactory).addNetworkInterceptor(okNetworkCollectorFactory).build();
-        } catch (UninstallException e) {
-            mZygote = new OkHttpClient.Builder().build();
-        }
+        GodEyePluginOkNetwork godEyePluginOkNetwork = new GodEyePluginOkNetwork();
+        mZygote = new OkHttpClient.Builder().eventListenerFactory(godEyePluginOkNetwork).addNetworkInterceptor(godEyePluginOkNetwork).build();
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
         installableCbs = new CheckBox[14];
@@ -219,124 +203,128 @@ public class MainActivity extends Activity implements Loggable {
             R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_leak_v4, R.id.activity_main_make_invocations,
             R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear,
             R.id.activity_main_make_deadlock, R.id.activity_main_make_pageload, R.id.activity_main_test})
-    public void onClick(View v) throws UninstallException {
-        switch (v.getId()) {
-            case R.id.activity_main_all:
-                checkAllInstall();
-                break;
-            case R.id.activity_main_test:
-                break;
-            case R.id.activity_main_cancel_all:
-                cancelCheckAllInstall();
-                break;
-            case R.id.activity_main_install:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        onClickInstall();
-                    }
-                }).start();
-                break;
-            case R.id.activity_main_install_with_assets:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
-                    }
-                }).start();
-                break;
-            case R.id.activity_main_uninstall:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        GodEye.instance().uninstall();
-                    }
-                }).start();
-                break;
-            case R.id.activity_main_monitor_work:
-                GodEyeMonitor.work(MainActivity.this, MainActivity.this.getResources().getInteger(R.integer.CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT));
-                break;
-            case R.id.activity_main_monitor_shutdown:
-                GodEyeMonitor.shutDown();
-                break;
-            case R.id.activity_main_consumer_methodcanary:
-                mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.METHOD_CANARY,new LogObserver<>(GodEye.ModuleName.METHOD_CANARY, this)));
-                break;
-            case R.id.activity_main_consumer_cpu:
-                mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.CPU,new LogObserver<>(GodEye.ModuleName.CPU, this)));
-                break;
-            case R.id.activity_main_consumer_battery:
-                mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.BATTERY,new LogObserver<>(GodEye.ModuleName.BATTERY, this)));
-                break;
-            case R.id.activity_main_consumer_fps:
-                mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.FPS,new LogObserver<>(GodEye.ModuleName.FPS, this)));
-                break;
-            case R.id.activity_main_consumer_leak:
-                mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.LEAK,new LogObserver<>(GodEye.ModuleName.LEAK, this)));
-                break;
-            case R.id.activity_main_consumer_heap:
-                mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.HEAP,new LogObserver<>(GodEye.ModuleName.HEAP, this)));
-                break;
-            case R.id.activity_main_consumer_pss:
-                mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.PSS,new LogObserver<>(GodEye.ModuleName.PSS, this)));
-                break;
-            case R.id.activity_main_consumer_ram:
-                mCompositeDisposable.add(GodEye.instance().<Ram>getModule(GodEye.ModuleName.RAM).subject().subscribe(new LogObserver<RamInfo>("ram", this)));
-                break;
-            case R.id.activity_main_consumer_network:
-                mCompositeDisposable.add(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK).subject().subscribe(new LogObserver<NetworkInfo>("network", this)));
-                break;
-            case R.id.activity_main_consumer_sm:
-                mCompositeDisposable.add(GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).subject().subscribe(new LogObserver<BlockInfo>("sm", this)));
-                break;
-            case R.id.activity_main_consumer_startup:
-                mCompositeDisposable.add(GodEye.instance().<Startup>getModule(GodEye.ModuleName.STARTUP).subject().subscribe(new LogObserver<StartupInfo>("startup", this)));
-                break;
-            case R.id.activity_main_consumer_traffic:
-                mCompositeDisposable.add(GodEye.instance().<Traffic>getModule(GodEye.ModuleName.TRAFFIC).subject().subscribe(new LogObserver<TrafficInfo>("traffic", this)));
-                break;
-            case R.id.activity_main_consumer_crash:
-                mCompositeDisposable.add(GodEye.instance().<Crash>getModule(GodEye.ModuleName.CRASH).subject().subscribe(new LogObserver<List<CrashInfo>>("crash", this)));
-                break;
-            case R.id.activity_main_consumer_thread:
-                mCompositeDisposable.add(GodEye.instance().<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject().subscribe(new LogObserver<List<Thread>>("thread", this)));
-                break;
-            case R.id.activity_main_consumer_pageload:
-                mCompositeDisposable.add(GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject().subscribe(new LogObserver<>("pageload", this)));
-                break;
-            case R.id.activity_main_make_block:
-                block();
-                break;
-            case R.id.activity_main_make_request:
-                request();
-                break;
-            case R.id.activity_main_make_invocations:
-                makeInvocations();
-                break;
-            case R.id.activity_main_make_leak:
-                jumpToLeak();
-                break;
-            case R.id.activity_main_make_leak_v4:
-                jumpToLeakV4();
-                break;
-            case R.id.activity_main_make_crash:
-                throw new RuntimeException("this is a crash made by AndroidGodEye");
-            case R.id.activity_main_make_deadlock:
-                DeadLockMaker.makeBlock(this);
-                DeadLockMaker.makeNormal();
-                break;
-            case R.id.activity_main_make_pageload:
-                Intent intent = new Intent(this, SecondActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.activity_main_consumer_cancel_watch:
-                mCompositeDisposable.clear();
-                break;
-            case R.id.activity_main_make_clear:
-                mActivityMainLogview.clear();
-                break;
-            default:
-                break;
+    public void onClick(View v) {
+        try {
+            switch (v.getId()) {
+                case R.id.activity_main_all:
+                    checkAllInstall();
+                    break;
+                case R.id.activity_main_test:
+                    break;
+                case R.id.activity_main_cancel_all:
+                    cancelCheckAllInstall();
+                    break;
+                case R.id.activity_main_install:
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onClickInstall();
+                        }
+                    }).start();
+                    break;
+                case R.id.activity_main_install_with_assets:
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+                        }
+                    }).start();
+                    break;
+                case R.id.activity_main_uninstall:
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            GodEye.instance().uninstall();
+                        }
+                    }).start();
+                    break;
+                case R.id.activity_main_monitor_work:
+                    GodEyeMonitor.work(MainActivity.this, MainActivity.this.getResources().getInteger(R.integer.CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT));
+                    break;
+                case R.id.activity_main_monitor_shutdown:
+                    GodEyeMonitor.shutDown();
+                    break;
+                case R.id.activity_main_consumer_methodcanary:
+                    mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.METHOD_CANARY, new LogObserver<>(GodEye.ModuleName.METHOD_CANARY, this)));
+                    break;
+                case R.id.activity_main_consumer_cpu:
+                    mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.CPU, new LogObserver<>(GodEye.ModuleName.CPU, this)));
+                    break;
+                case R.id.activity_main_consumer_battery:
+                    mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.BATTERY, new LogObserver<>(GodEye.ModuleName.BATTERY, this)));
+                    break;
+                case R.id.activity_main_consumer_fps:
+                    mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.FPS, new LogObserver<>(GodEye.ModuleName.FPS, this)));
+                    break;
+                case R.id.activity_main_consumer_leak:
+                    mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.LEAK, new LogObserver<>(GodEye.ModuleName.LEAK, this)));
+                    break;
+                case R.id.activity_main_consumer_heap:
+                    mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.HEAP, new LogObserver<>(GodEye.ModuleName.HEAP, this)));
+                    break;
+                case R.id.activity_main_consumer_pss:
+                    mCompositeDisposable.add(GodEye.instance().observeModule(GodEye.ModuleName.PSS, new LogObserver<>(GodEye.ModuleName.PSS, this)));
+                    break;
+                case R.id.activity_main_consumer_ram:
+                    mCompositeDisposable.add(GodEye.instance().<Ram>getModule(GodEye.ModuleName.RAM).subject().subscribe(new LogObserver<RamInfo>("ram", this)));
+                    break;
+                case R.id.activity_main_consumer_network:
+                    mCompositeDisposable.add(GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK).subject().subscribe(new LogObserver<NetworkInfo>("network", this)));
+                    break;
+                case R.id.activity_main_consumer_sm:
+                    mCompositeDisposable.add(GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).subject().subscribe(new LogObserver<BlockInfo>("sm", this)));
+                    break;
+                case R.id.activity_main_consumer_startup:
+                    mCompositeDisposable.add(GodEye.instance().<Startup>getModule(GodEye.ModuleName.STARTUP).subject().subscribe(new LogObserver<StartupInfo>("startup", this)));
+                    break;
+                case R.id.activity_main_consumer_traffic:
+                    mCompositeDisposable.add(GodEye.instance().<Traffic>getModule(GodEye.ModuleName.TRAFFIC).subject().subscribe(new LogObserver<TrafficInfo>("traffic", this)));
+                    break;
+                case R.id.activity_main_consumer_crash:
+                    mCompositeDisposable.add(GodEye.instance().<Crash>getModule(GodEye.ModuleName.CRASH).subject().subscribe(new LogObserver<List<CrashInfo>>("crash", this)));
+                    break;
+                case R.id.activity_main_consumer_thread:
+                    mCompositeDisposable.add(GodEye.instance().<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject().subscribe(new LogObserver<List<Thread>>("thread", this)));
+                    break;
+                case R.id.activity_main_consumer_pageload:
+                    mCompositeDisposable.add(GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject().subscribe(new LogObserver<>("pageload", this)));
+                    break;
+                case R.id.activity_main_make_block:
+                    block();
+                    break;
+                case R.id.activity_main_make_request:
+                    request();
+                    break;
+                case R.id.activity_main_make_invocations:
+                    makeInvocations();
+                    break;
+                case R.id.activity_main_make_leak:
+                    jumpToLeak();
+                    break;
+                case R.id.activity_main_make_leak_v4:
+                    jumpToLeakV4();
+                    break;
+                case R.id.activity_main_make_crash:
+                    throw new RuntimeException("this is a crash made by AndroidGodEye");
+                case R.id.activity_main_make_deadlock:
+                    DeadLockMaker.makeBlock(this);
+                    DeadLockMaker.makeNormal();
+                    break;
+                case R.id.activity_main_make_pageload:
+                    Intent intent = new Intent(this, SecondActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.activity_main_consumer_cancel_watch:
+                    mCompositeDisposable.clear();
+                    break;
+                case R.id.activity_main_make_clear:
+                    mActivityMainLogview.clear();
+                    break;
+                default:
+                    break;
+            }
+        } catch (UninstallException e) {
+            e.printStackTrace();
         }
     }
 
