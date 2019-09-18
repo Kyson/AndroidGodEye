@@ -210,6 +210,8 @@ public class MainActivity extends Activity implements Loggable {
                     checkAllInstall();
                     break;
                 case R.id.activity_main_test:
+                    Intent i1 = new Intent(MainActivity.this, Main2Activity.class);
+                    startActivity(i1);
                     break;
                 case R.id.activity_main_cancel_all:
                     cancelCheckAllInstall();
