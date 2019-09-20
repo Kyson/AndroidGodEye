@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Main2Activity"
-            android:theme="@style/Theme.AppCompat"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"></activity>

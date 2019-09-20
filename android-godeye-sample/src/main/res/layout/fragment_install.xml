@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".InstallFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <Button
+        android:id="@+id/fragment_install_assets"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="install" />
+        android:layout_height="wrap_content"
+        android:text="Install(assets config)" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/fragment_install_default"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Install(default)" />
+
+</LinearLayout>
