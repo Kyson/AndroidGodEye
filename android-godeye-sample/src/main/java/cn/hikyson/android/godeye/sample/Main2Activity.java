@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 import cn.hikyson.android.godeye.sample.fragmentlifecycle.BlankFragment1;
+import cn.hikyson.godeye.core.utils.L;
 
 public class Main2Activity extends AppCompatActivity implements InstallFragment.OnFragmentInteractionListener
         , ConsumeFragment.OnFragmentInteractionListener, ToolsFragment.OnFragmentInteractionListener {
@@ -23,13 +24,27 @@ public class Main2Activity extends AppCompatActivity implements InstallFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         LogView logView = findViewById(R.id.activity_main2_logview);
-        TabLayout tabLayout = findViewById(R.id.activity_main2_tab);
-        FrameLayout tabContent = findViewById(R.id.activity_main2_tabcontent);
+        L.setProxy(new L.LogProxy() {
+            @Override
+            public void d(String msg) {
+                logView.log("DEBUG: " + msg);
+            }
 
+            @Override
+            public void e(String msg) {
+                logView.log("!ERROR: " + msg);
+            }
+
+            @Override
+            public void onRuntimeException(RuntimeException e) {
+                logView.log("!!EXCEPTION: " + e.getLocalizedMessage());
+            }
+        });
+        TabLayout tabLayout = findViewById(R.id.activity_main2_tab);
         // 添加 tab item
-        tabLayout.addTab(tabLayout.newTab().setText("1. Install"));
-        tabLayout.addTab(tabLayout.newTab().setText("2. Consume"));
-        tabLayout.addTab(tabLayout.newTab().setText("3. Tools"));
+        tabLayout.addTab(tabLayout.newTab().setText("Step1:Install"));
+        tabLayout.addTab(tabLayout.newTab().setText("Step2:Consume"));
+        tabLayout.addTab(tabLayout.newTab().setText("Tools"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.activity_main2_tabcontent, new InstallFragment(), InstallFragment.class.getSimpleName())

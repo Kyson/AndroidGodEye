@@ -7,9 +7,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
+import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class InstallFragment extends Fragment {
@@ -47,16 +59,39 @@ public class InstallFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_install, container, false);
-        view.findViewById(R.id.fragment_install_assets).setOnClickListener(v -> {
-            GodEye.instance().install(GodEyeConfig.fromAssets())
+        TextView contentTv = view.findViewById(R.id.fragment_install_stream_content);
+
+        view.findViewById(R.id.fragment_install_default).setOnClickListener(v -> {
+            GodEye.instance().install(GodEyeConfig.defaultConfig());
+        });
+        view.findViewById(R.id.fragment_install_stream).setOnClickListener(v -> {
+            contentTv.setText("Loading...");
+            OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+            Request request = new Request.Builder().url("https://raw.githubusercontent.com/Kyson/AndroidGodEye/feature-refactor/android-godeye-sample/src/main/assets/android-godeye-config/install.config")
+                    .get().build();
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    L.e(String.valueOf(e));
+                    AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                        contentTv.setText("Fail to load config content to install!");
+                    });
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String contentStr = response.body().string();
+                    AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                        contentTv.setText(contentStr);
+                    });
+                    GodEye.instance().install(GodEyeConfig.fromInputStream(new ByteArrayInputStream(contentStr.getBytes(Charset.forName("utf-8")))));
+                }
+            });
+        });
+        view.findViewById(R.id.fragment_install_uninstall).setOnClickListener(v -> {
+            GodEye.instance().uninstall();
         });
         return view;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import cn.hikyson.godeye.core.exceptions.UnexpectException;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
@@ -94,7 +95,7 @@ public class GodEye {
      * @param godEyeConfig
      * @return
      */
-    public GodEye install(final GodEyeConfig godEyeConfig) {
+    public synchronized GodEye install(final GodEyeConfig godEyeConfig) {
         if (godEyeConfig.getCpuConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.CPU);
             if (moduleObj == null) {
@@ -223,12 +224,13 @@ public class GodEye {
      *
      * @return
      */
-    public GodEye uninstall() {
+    public synchronized GodEye uninstall() {
         for (Map.Entry<String, Object> entry : mModules.entrySet()) {
             if (entry.getValue() instanceof Install) {
                 ((Install) entry.getValue()).uninstall();
             }
         }
+        mModules.clear();
         return this;
     }
 
@@ -240,7 +242,7 @@ public class GodEye {
      * @return
      * @throws UninstallException if not exist module
      */
-    public <T> T getModule(@ModuleName String moduleName) throws UninstallException {
+    public synchronized <T> T getModule(@ModuleName String moduleName) throws UninstallException {
         Object moduleObj = mModules.get(moduleName);
         if (moduleObj == null) {
             throw new UninstallException("module [" + moduleName + "] is not installed.");
@@ -251,6 +253,11 @@ public class GodEye {
         } catch (Throwable e) {
             throw new UnexpectException("module [" + moduleName + "] has wrong instance type");
         }
+    }
+
+    public synchronized @ModuleName
+    Set<String> getInstalledModuleNames() {
+        return mModules.keySet();
     }
 
     /**

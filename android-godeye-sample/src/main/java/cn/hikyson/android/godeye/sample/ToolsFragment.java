@@ -7,6 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 
 public class ToolsFragment extends Fragment {
@@ -43,13 +48,11 @@ public class ToolsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tools, container, false);
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        View view = inflater.inflate(R.layout.fragment_tools, container, false);
+        view.findViewById(R.id.fragment_tools_block_bt).setOnClickListener(v -> {
+            block();
+        });
+        return view;
     }
 
     @Override
@@ -72,4 +75,24 @@ public class ToolsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
+
+    private void block() {
+        EditText editText = getView().findViewById(R.id.fragment_tools_block_et);
+        try {
+            final long blockTime = Long.parseLong(String.valueOf(editText.getText()));
+            Thread.sleep(blockTime);
+            AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                    } catch (Throwable e) {
+                    }
+                }
+            });
+        } catch (Throwable e) {
+            L.e("Input valid time for block(jank)!");
+        }
+    }
+
 }

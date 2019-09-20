@@ -7,15 +7,35 @@
     tools:context=".InstallFragment">
 
     <Button
-        android:id="@+id/fragment_install_assets"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Install(assets config)" />
-
-    <Button
         android:id="@+id/fragment_install_default"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Install(default)" />
+        android:text="Install(Default Config)" />
+
+    <Button
+        android:id="@+id/fragment_install_stream"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Install(InputStream Config)" />
+
+    <Button
+        android:id="@+id/fragment_install_uninstall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Uninstall" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/fragment_install_stream_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:textSize="13dp" />
+
+    </ScrollView>
 
 </LinearLayout>

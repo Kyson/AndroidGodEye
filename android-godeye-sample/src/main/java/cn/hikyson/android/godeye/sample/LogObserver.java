@@ -1,8 +1,6 @@
 package cn.hikyson.android.godeye.sample;
 
-import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by kysonchao on 2017/12/9.
