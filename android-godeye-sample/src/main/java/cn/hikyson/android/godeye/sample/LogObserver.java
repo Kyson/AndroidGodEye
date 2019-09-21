@@ -17,6 +17,6 @@ public class LogObserver<T> implements Consumer<T> {
 
     @Override
     public void accept(T t) throws Exception {
-        mLoggable.log("DEBUG: " + mName + " , " + String.valueOf(t));
+        mLoggable.log(mName + " , " + t);
     }
 }

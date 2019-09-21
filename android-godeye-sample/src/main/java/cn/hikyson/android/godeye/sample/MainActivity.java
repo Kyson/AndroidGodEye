@@ -186,7 +186,7 @@ public class MainActivity extends Activity implements Loggable {
         mActivityMainFollow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mActivityMainLogview.follow(isChecked);
+//                mActivityMainLogview.follow(isChecked);
             }
         });
         StartupTracer.get().onHomeCreate(this);
@@ -298,7 +298,7 @@ public class MainActivity extends Activity implements Loggable {
                     request();
                     break;
                 case R.id.activity_main_make_invocations:
-                    makeInvocations();
+//                    makeInvocations();
                     break;
                 case R.id.activity_main_make_leak:
                     jumpToLeak();
@@ -320,7 +320,7 @@ public class MainActivity extends Activity implements Loggable {
                     mCompositeDisposable.clear();
                     break;
                 case R.id.activity_main_make_clear:
-                    mActivityMainLogview.clear();
+//                    mActivityMainLogview.clear();
                     break;
                 default:
                     break;
@@ -330,75 +330,7 @@ public class MainActivity extends Activity implements Loggable {
         }
     }
 
-    private void methodA() throws InterruptedException {
-        methodB();
-        methodB();
-        methodB();
-        methodC();
-        methodD();
-        int j = 0;
-        String m = "m" + j;
-    }
 
-    private void methodB() throws InterruptedException {
-        Thread.sleep(200);
-        int i = 0;
-    }
-
-    private int[] methodC() {
-        int[] i = new int[1000];
-        for (int m = 0; m < i.length; m++) {
-            i[m] = m;
-        }
-        return i;
-    }
-
-    private void methodD() {
-        String[] i = new String[1000];
-        for (int m = 0; m < i.length; m++) {
-            i[m] = m + "this is a string";
-        }
-    }
-
-    private void methodE() {
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void makeInvocations() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 10; i++) {
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-//                    request();
-                }
-            }
-        }).start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 100; i++) {
-                    try {
-                        methodA();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-        for (int i = 0; i < 1000; i++) {
-            methodC();
-            methodD();
-        }
-    }
 
     private void request() {
         new Thread(new Runnable() {

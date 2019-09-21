@@ -11,14 +11,19 @@
         android:id="@+id/activity_main2_logview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#505050" />
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="#aaaaaa" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/activity_main2_tab"

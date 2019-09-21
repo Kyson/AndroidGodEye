@@ -1,80 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ConsumeFragment">
-
-    <Button
-        android:id="@+id/fragment_consume_start_debug_monitor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start Debug Monitor" />
-
-    <Button
-        android:id="@+id/fragment_consume_stop_debug_monitor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Stop Debug Monitor" />
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Switch
-            android:id="@+id/fragment_consume_select_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:background="#aaaaaa"
-            android:layout_width="1dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_height="match_parent" />
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/fragment_consume_cb_group"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-            </LinearLayout>
-        </HorizontalScrollView>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/fragment_consume_start_log_consumer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start Log Consumer" />
-
-    <Button
-        android:id="@+id/fragment_consume_stop_log_consumer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Stop Log Consumer" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp">
-
-        <TextView
-            android:id="@+id/fragment_consume_observe"
+        <Button
+            android:id="@+id/fragment_consume_start_debug_monitor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
-            android:textSize="13dp" />
+            android:text="Start Debug Monitor" />
 
-    </ScrollView>
-</LinearLayout>
+        <Button
+            android:id="@+id/fragment_consume_stop_debug_monitor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Stop Debug Monitor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Switch
+                android:id="@+id/fragment_consume_select_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="#aaaaaa" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/fragment_consume_cb_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/fragment_consume_start_log_consumer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start Log Consumer" />
+
+        <Button
+            android:id="@+id/fragment_consume_stop_log_consumer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Stop Log Consumer" />
+
+    </LinearLayout>
+</ScrollView>

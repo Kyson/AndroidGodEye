@@ -1,5 +1,6 @@
 package cn.hikyson.android.godeye.sample;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,7 +32,7 @@ public class InstallFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnInstallModuleChangeListener mListener;
 
     public InstallFragment() {
         // Required empty public constructor
@@ -55,41 +56,46 @@ public class InstallFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_install, container, false);
-        TextView contentTv = view.findViewById(R.id.fragment_install_stream_content);
-
         view.findViewById(R.id.fragment_install_default).setOnClickListener(v -> {
             GodEye.instance().install(GodEyeConfig.defaultConfig());
+            mListener.onInstallModuleChanged();
         });
         view.findViewById(R.id.fragment_install_stream).setOnClickListener(v -> {
-            contentTv.setText("Loading...");
+            ((TextView) v).setText("Loading...");
             OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
             Request request = new Request.Builder().url("https://raw.githubusercontent.com/Kyson/AndroidGodEye/feature-refactor/android-godeye-sample/src/main/assets/android-godeye-config/install.config")
                     .get().build();
             okHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    L.e(String.valueOf(e));
+                    L.e("Fail to load config content to install:" + e);
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                        contentTv.setText("Fail to load config content to install!");
+                        ((TextView) v).setText("Install(InputStream Config)");
                     });
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String contentStr = response.body().string();
-                    AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                        contentTv.setText(contentStr);
-                    });
+                    L.d("--------------Config START--------------");
+                    L.d(contentStr);
+                    L.d("--------------Config END--------------");
                     GodEye.instance().install(GodEyeConfig.fromInputStream(new ByteArrayInputStream(contentStr.getBytes(Charset.forName("utf-8")))));
+                    AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                        ((TextView) v).setText("Install(InputStream Config)");
+                        mListener.onInstallModuleChanged();
+                    });
                 }
             });
         });
         view.findViewById(R.id.fragment_install_uninstall).setOnClickListener(v -> {
             GodEye.instance().uninstall();
+            mListener.onInstallModuleChanged();
         });
         return view;
     }
@@ -97,8 +103,8 @@ public class InstallFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnInstallModuleChangeListener) {
+            mListener = (OnInstallModuleChangeListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -111,7 +117,7 @@ public class InstallFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    public interface OnInstallModuleChangeListener {
+        void onInstallModuleChanged();
     }
 }

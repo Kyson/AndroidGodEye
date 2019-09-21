@@ -3,11 +3,8 @@ package cn.hikyson.android.godeye.sample;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -15,10 +12,11 @@ import android.widget.TextView;
  * 用于展示打印日志的View
  * Created by kysonchao on 2017/12/9.
  */
-public class LogView extends ScrollView implements Loggable {
+public class LogView extends ConstraintLayout implements Loggable {
     private TextView mLogTv;
     private Handler mMainHandler;
-    private boolean mIsFollow;
+    private ScrollView mSv;
+    private boolean mIsFollow = true;
 
     public LogView(Context context) {
         this(context, null);
@@ -32,40 +30,41 @@ public class LogView extends ScrollView implements Loggable {
     private void init() {
         inflate(getContext(), R.layout.view_log_layout, this);
         mLogTv = this.findViewById(R.id.view_log_layout_log_tv);
+        mSv = this.findViewById(R.id.view_log_layout_sc);
         mMainHandler = new Handler(Looper.getMainLooper());
+        this.findViewById(R.id.view_log_layout_follow).setSelected(this.mIsFollow);
+        this.findViewById(R.id.view_log_layout_follow).setOnClickListener(v -> {
+            v.setSelected(!v.isSelected());
+            follow(v.isSelected());
+        });
+        this.findViewById(R.id.view_log_layout_clear).setOnClickListener(v -> {
+            clear();
+        });
     }
 
     @Override
     public void log(final String msg) {
-        mMainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mLogTv.append(msg + "\n");
-                if (mIsFollow) {
-                    postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            fullScroll(ScrollView.FOCUS_DOWN);
-                        }
-                    }, 250);
-                }
+        mMainHandler.post(() -> {
+            mLogTv.append(msg + "\n");
+            if (mIsFollow) {
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSv.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                }, 250);
             }
         });
     }
 
-    public void clear() {
+    private void clear() {
         mLogTv.setText("");
     }
 
-    public void follow(boolean follow) {
+    private void follow(boolean follow) {
         mIsFollow = follow;
         if (mIsFollow) {
-            postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    fullScroll(ScrollView.FOCUS_DOWN);
-                }
-            }, 250);
+            postDelayed(() -> mSv.fullScroll(ScrollView.FOCUS_DOWN), 250);
         }
     }
 }

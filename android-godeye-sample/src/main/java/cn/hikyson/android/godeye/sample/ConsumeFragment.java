@@ -1,24 +1,17 @@
 package cn.hikyson.android.godeye.sample;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -30,34 +23,9 @@ import io.reactivex.disposables.CompositeDisposable;
 
 
 public class ConsumeFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
+    private CompositeDisposable mCompositeDisposable;
 
     public ConsumeFragment() {
-        // Required empty public constructor
-    }
-
-    public static ConsumeFragment newInstance(String param1, String param2) {
-        ConsumeFragment fragment = new ConsumeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     private LinearLayout mCbGroup;
@@ -80,25 +48,30 @@ public class ConsumeFragment extends Fragment {
         });
         Switch switchView = view.findViewById(R.id.fragment_consume_select_all);
         switchView.setOnCheckedChangeListener((buttonView, isChecked) -> toggleAllModule(isChecked));
-        CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-        ((TextView) view.findViewById(R.id.fragment_consume_observe)).setText("Log Consumers:");
         view.findViewById(R.id.fragment_consume_start_log_consumer).setOnClickListener(v -> {
-            mCompositeDisposable.dispose();
+            if (mCompositeDisposable != null) {
+                mCompositeDisposable.dispose();
+            }
+            mCompositeDisposable = new CompositeDisposable();
             Set<String> modules = getModulesSelected();
-            StringBuilder sb = new StringBuilder("Log Consumers:\n");
+            StringBuilder sb = new StringBuilder();
             for (@GodEye.ModuleName String module : modules) {
                 try {
-                    mCompositeDisposable.add(GodEye.instance().observeModule(module, new LogObserver<>(module, L::d)));
+                    mCompositeDisposable.add(GodEye.instance().observeModule(module, new LogObserver<>(module, msg -> {
+                        L.d(msg);
+                    })));
                     sb.append(module).append(", ");
                 } catch (UninstallException e) {
                     L.e(String.valueOf(e));
                 }
             }
-            ((TextView) view.findViewById(R.id.fragment_consume_observe)).setText(String.valueOf(sb));
+            L.d("Current Log Consumers:" + sb);
         });
         view.findViewById(R.id.fragment_consume_stop_log_consumer).setOnClickListener(v -> {
-            mCompositeDisposable.dispose();
-            ((TextView) view.findViewById(R.id.fragment_consume_observe)).setText("Log Consumers:");
+            if (mCompositeDisposable != null) {
+                mCompositeDisposable.dispose();
+            }
+            L.d("Current No Log Consumers");
         });
         return view;
     }
@@ -121,9 +94,7 @@ public class ConsumeFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+    public void onInstallModuleChanged() {
         mCbGroup.removeAllViews();
         Set<String> modules = GodEye.instance().getInstalledModuleNames();
         for (@GodEye.ModuleName String module : modules) {
@@ -131,26 +102,5 @@ public class ConsumeFragment extends Fragment {
             appCompatCheckBox.setText(module);
             mCbGroup.addView(appCompatCheckBox);
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
     }
 }

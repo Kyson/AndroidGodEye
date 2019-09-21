@@ -4,20 +4,16 @@ import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.FrameLayout;
 
 import java.util.List;
 import java.util.Objects;
 
-import cn.hikyson.android.godeye.sample.fragmentlifecycle.BlankFragment1;
 import cn.hikyson.godeye.core.utils.L;
 
-public class Main2Activity extends AppCompatActivity implements InstallFragment.OnFragmentInteractionListener
-        , ConsumeFragment.OnFragmentInteractionListener, ToolsFragment.OnFragmentInteractionListener {
+public class Main2Activity extends AppCompatActivity implements InstallFragment.OnInstallModuleChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +84,8 @@ public class Main2Activity extends AppCompatActivity implements InstallFragment.
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onInstallModuleChanged() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ((ConsumeFragment) Objects.requireNonNull(fragmentManager.findFragmentByTag(ConsumeFragment.class.getSimpleName()))).onInstallModuleChanged();
     }
 }

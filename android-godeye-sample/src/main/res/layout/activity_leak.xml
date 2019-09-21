@@ -16,7 +16,7 @@
         android:id="@+id/btn_fragment"
         android:layout_width="wrap_content"
         android:layout_height="64dp"
-        android:text="Show app fragment (Android O and above)" />
+        android:text="Leak fragment (Android O and above)" />
 
     <FrameLayout
         android:id="@+id/frame_layout"
