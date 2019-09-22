@@ -104,8 +104,7 @@ function isInclude(classInfo,methodInfo){
 }
 ```
 
-[如何配置MethodCanary.js]]()
-> 更多配置说明可以参考[MethodCanary](https://github.com/Kyson/MethodCanary)
+[如何配置MethodCanary.js](https://github.com/Kyson/AndroidGodEye/wiki/0x01-Module-MethodCanary)
 
 ### STEP2 初始化并安装所需模块
 
@@ -127,33 +126,7 @@ if (ProcessUtils.isMainProcess(this)) {//install in main process
 
 "\<config path\>"为配置文件在assets下的目录路径，内容参考：[install.config](https://github.com/Kyson/AndroidGodEye/blob/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config)
 
-[卸载模块]()
-
-#### 可选部分 卸载模块
-
-不需要的时候卸载模块(不推荐)：
-
-```java
-// 卸载已经安装的所有模块
-GodEye.instance().uninstall();
-```
-
-安装完之后相应的模块就开始输出数据了，比如内存模块：
-
-```java
-        try {
-            GodEye.instance().observeModule(GodEye.ModuleName.HEAP, new Consumer<HeapInfo>() {
-                @Override
-                public void accept(HeapInfo heapInfo) throws Exception {
-                    Log.d("AndroidGodEye",String.valueOf(heapInfo));
-                }
-            });
-        } catch (UninstallException e) {
-            e.printStackTrace();
-        }
-```
-
-> 就像下文的性能可视化面板，也是通过消费这些数据进行展示的
+[卸载模块](https://github.com/Kyson/AndroidGodEye/wiki/0x00-Work-Flow-Overview)
 
 ### STEP3 安装性能可视化面板
 
@@ -172,6 +145,8 @@ GodEyeMonitor.shutDown()
 ```
 
 usb连上你的手机，接下来可以开始运行你的项目了！
+
+[生产环境使用AndroidGodEye](https://github.com/Kyson/AndroidGodEye/wiki/0x00-Work-Flow-Overview)
 
 ### STEP4 安装IDE插件
 
