@@ -7,6 +7,8 @@ import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> implements Install<LeakContext> {
 
@@ -58,6 +60,11 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
 
     public ExecutorService getsSingleForLeakExecutor() {
         return sSingleForLeakExecutor;
+    }
+
+    @Override
+    protected Subject<LeakQueue.LeakMemoryInfo> createSubject() {
+        return ReplaySubject.create();
     }
 }
 

@@ -46,7 +46,7 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
         if (ThreadUtil.isMainThread()) {
             uninstallInMain();
         } else {
-            ThreadUtil.sMain.execute(() -> uninstallInMain());
+            ThreadUtil.sMain.execute(this::uninstallInMain);
         }
     }
 

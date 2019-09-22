@@ -1,50 +1,31 @@
 package cn.hikyson.godeye.monitor.server;
 
-import android.support.v4.util.ArrayMap;
-
-
 import java.util.Collections;
-import java.util.Comparator;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.exceptions.UnexpectException;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.SubjectSupport;
-import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
-import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
-import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
-import cn.hikyson.godeye.core.internal.modules.fps.Fps;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
-import cn.hikyson.godeye.core.internal.modules.memory.Heap;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
-import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
-import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodsRecordInfo;
-import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.ActivityLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.FragmentLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageLifecycleEventInfo;
-import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadUtil;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
-import cn.hikyson.godeye.core.internal.modules.sm.Sm;
-import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
-import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
-import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
@@ -52,8 +33,6 @@ import cn.hikyson.godeye.monitor.modules.MethodCanaryStatus;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
-import cn.hikyson.godeye.monitor.modules.battery.BatterySummaryInfo;
-import cn.hikyson.godeye.monitor.modules.thread.ThreadInfo;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -68,8 +47,6 @@ import io.reactivex.schedulers.Schedulers;
 public class ModuleDriver {
     private CompositeDisposable mCompositeDisposable;
     private Messager mMessager;
-    //cache lastest message
-    private MessageCache mMessageCache;
     private boolean mIsRunning;
 
     private static class InstanceHolder {
@@ -106,8 +83,6 @@ public class ModuleDriver {
         }
         mIsRunning = true;
         L.d("ModuleDriver start running.");
-        GodEye godEye = GodEye.instance();
-        mMessageCache = new MessageCache();
         mCompositeDisposable = new CompositeDisposable();
         mMessager = messager;
         mCompositeDisposable.addAll(
@@ -188,7 +163,6 @@ public class ModuleDriver {
             mCompositeDisposable = null;
         }
         mMessager = null;
-        mMessageCache = null;
     }
 
     private SendMessageConsumer createSendMessageConsumer() {
@@ -196,14 +170,7 @@ public class ModuleDriver {
     }
 
     private <T> ConvertServerMessageFunction<T> createConvertServerMessageFunction(String module) {
-        return new ConvertServerMessageFunction<T>(mMessageCache, module);
-    }
-
-    Map<String, Object> messageCacheCopy() {
-        if (mMessageCache == null) {
-            return new ArrayMap<>();
-        }
-        return mMessageCache.copy();
+        return new ConvertServerMessageFunction<T>(module);
     }
 
     private Predicate<List<CrashInfo>> crashPredicate() {
@@ -236,17 +203,14 @@ public class ModuleDriver {
     private Function<List<CrashInfo>, CrashInfo> firstCrashMap() {
         return crashInfos -> {
             //获取最近的一次崩溃
-            Collections.sort(crashInfos, new Comparator<CrashInfo>() {
-                @Override
-                public int compare(CrashInfo o1, CrashInfo o2) {
-                    if (o1.timestampMillis < o2.timestampMillis) {
-                        return 1;
-                    }
-                    if (o1.timestampMillis > o2.timestampMillis) {
-                        return -1;
-                    }
-                    return 0;
+            Collections.sort(crashInfos, (o1, o2) -> {
+                if (o1.timestampMillis < o2.timestampMillis) {
+                    return 1;
                 }
+                if (o1.timestampMillis > o2.timestampMillis) {
+                    return -1;
+                }
+                return 0;
             });
             return crashInfos.get(0);
         };

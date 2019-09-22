@@ -127,7 +127,7 @@ public class ToolsFragment extends Fragment {
             }
             L.d("ToolsFragment makeInvocations thread[" + Thread.currentThread().getName() + "] end.");
         }).start();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 1000; i++) {
             methodCanaryTest.methodC();
             methodCanaryTest.methodD();
         }

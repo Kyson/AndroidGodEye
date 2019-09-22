@@ -21,7 +21,7 @@ public class SplashActivity extends Activity {
             Toast.makeText(this, "permission " + Manifest.permission.WRITE_EXTERNAL_STORAGE + " need!!!", Toast.LENGTH_SHORT).show();
         }
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            Intent intent = new Intent(SplashActivity.this, Main2Activity.class);
             startActivity(intent);
             finish();
         }, 1000);

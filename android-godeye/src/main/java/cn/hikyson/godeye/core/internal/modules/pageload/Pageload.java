@@ -9,6 +9,11 @@ import android.support.v4.app.Fragment;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.ObservableConverter;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * 页面加载模块
@@ -36,6 +41,11 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         this.mConfig.application().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         this.mInstalled = true;
         L.d("pageload installed.");
+    }
+
+    @Override
+    protected Subject<PageLifecycleEventInfo> createSubject() {
+        return ReplaySubject.create();
     }
 
     @Override

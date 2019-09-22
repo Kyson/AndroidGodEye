@@ -3,6 +3,8 @@ package cn.hikyson.godeye.core.internal.modules.network;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * 网络模块
@@ -41,5 +43,10 @@ public class Network extends ProduceableSubject<NetworkInfo> implements Install<
             return;
         }
         super.produce(data);
+    }
+
+    @Override
+    protected Subject<NetworkInfo> createSubject() {
+        return ReplaySubject.create();
     }
 }

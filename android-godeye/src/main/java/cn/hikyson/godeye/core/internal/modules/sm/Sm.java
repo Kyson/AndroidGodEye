@@ -11,6 +11,8 @@ import cn.hikyson.godeye.core.internal.modules.sm.core.ShortBlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.core.SmCore;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * 卡顿模块
@@ -70,6 +72,11 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
         this.mSmContext = null;
         mBlockCore.uninstall();
         L.d("sm uninstalled");
+    }
+
+    @Override
+    protected Subject<BlockInfo> createSubject() {
+        return ReplaySubject.create();
     }
 
     public SmCore getBlockCore() {

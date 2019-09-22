@@ -63,6 +63,7 @@ public class Main2Activity extends AppCompatActivity implements InstallFragment.
 
             }
         });
+        StartupTracer.get().onHomeCreate(this);
     }
 
     private void showFragment(int index) {
