@@ -116,34 +116,12 @@ GodEye.instance().init(this);
 在需要的时候安装所有模块（建议在`application onCreate`中）：
 
 ```java
-if (ProcessUtils.isMainProcess(this)) {//安装只能在主进程
-    GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+if (ProcessUtils.isMainProcess(this)) {//install in main process
+    GodEye.instance().install(GodEyeConfig.fromAssets("<config path>"));
 }
 ```
 
-assets目录下放模块的配置文件`android-godeye-config/install.config`，内容如下：
-
-```xml
-<config>
-    <battery />
-    <cpu intervalMillis="2000" sampleMillis="1000"/>
-    <crash crashProvider="cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider"/>
-    <fps intervalMillis="2000"/>
-    <heap intervalMillis="2000"/>
-    <leakMemory debug="true" debugNotification="true" leakRefInfoProvider="cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider"/>
-    <pageload pageInfoProvider="cn.hikyson.godeye.core.internal.modules.pageload.DefaultPageInfoProvider"/>
-    <pss intervalMillis="2000"/>
-    <ram intervalMillis="2000"/>
-    <sm debugNotification="true"
-        dumpIntervalMillis="1000"
-        longBlockThresholdMillis="500"
-        shortBlockThresholdMillis="300"/>
-    <thread intervalMillis="3000"
-            threadFilter="cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter"/>
-    <traffic intervalMillis="2000" sampleMillis="1000"/>
-    <methodCanary maxMethodCountSingleThreadByCost="300" lowCostMethodThresholdMillis="10"/>
-</config>
-```
+<config path>为配置文件在assets下的目录路径，内容参考：[install.config](https://github.com/Kyson/AndroidGodEye/blob/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config)
 
 #### 可选部分 卸载模块
 

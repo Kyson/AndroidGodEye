@@ -68,7 +68,7 @@ public class InstallFragment extends Fragment {
         view.findViewById(R.id.fragment_install_stream).setOnClickListener(v -> {
             ((TextView) v).setText("Loading...");
             OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-            Request request = new Request.Builder().url("https://raw.githubusercontent.com/Kyson/AndroidGodEye/feature-refactor/android-godeye-sample/src/main/assets/android-godeye-config/install.config")
+            Request request = new Request.Builder().url("https://raw.githubusercontent.com/Kyson/AndroidGodEye/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config")
                     .get().build();
             okHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
