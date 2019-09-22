@@ -121,7 +121,7 @@ if (ProcessUtils.isMainProcess(this)) {//install in main process
 }
 ```
 
-"<config path>"为配置文件在assets下的目录路径，内容参考：[install.config](https://github.com/Kyson/AndroidGodEye/blob/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config)
+"\<config path\>"为配置文件在assets下的目录路径，内容参考：[install.config](https://github.com/Kyson/AndroidGodEye/blob/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config)
 
 #### 可选部分 卸载模块
 

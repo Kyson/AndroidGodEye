@@ -118,7 +118,7 @@ if (ProcessUtils.isMainProcess(this)) {//install in main process
 }
 ```
 
-"<config path>" is assets path of config, content reference: [install.config](https://github.com/Kyson/AndroidGodEye/blob/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config)
+"\<config path\>" is assets path of config, content reference: [install.config](https://github.com/Kyson/AndroidGodEye/blob/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config)
 
 #### Optional Uninstall Modules
 
