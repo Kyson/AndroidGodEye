@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,7 +43,7 @@ import cn.hikyson.godeye.core.utils.IoUtil;
 /**
  * core config/module config
  */
-public class GodEyeConfig {
+public class GodEyeConfig implements Serializable {
 
     public static GodEyeConfigBuilder defaultConfigBuilder() {
         GodEyeConfigBuilder builder = GodEyeConfigBuilder.godEyeConfig();
@@ -277,7 +278,7 @@ public class GodEyeConfig {
         return godEyeConfig;
     }
 
-    public static class CpuConfig implements CpuContext {
+    public static class CpuConfig implements CpuContext, Serializable {
         public long intervalMillis;
         public long sampleMillis;
 
@@ -302,7 +303,7 @@ public class GodEyeConfig {
         }
     }
 
-    public static class BatteryConfig implements BatteryContext {
+    public static class BatteryConfig implements BatteryContext, Serializable {
 
         public BatteryConfig() {
         }
@@ -313,7 +314,7 @@ public class GodEyeConfig {
         }
     }
 
-    public static class FpsConfig implements FpsContext {
+    public static class FpsConfig implements FpsContext, Serializable {
         public long intervalMillis;
 
         public FpsConfig(long intervalMillis) {
@@ -335,7 +336,7 @@ public class GodEyeConfig {
         }
     }
 
-    public static class LeakConfig implements LeakContext {
+    public static class LeakConfig implements LeakContext, Serializable {
         // if you want leak module work in production,set debug false
         public boolean debug;
         public boolean debugNotification;
@@ -377,7 +378,7 @@ public class GodEyeConfig {
     }
 
 
-    public static class HeapConfig implements HeapContext {
+    public static class HeapConfig implements HeapContext, Serializable {
         public long intervalMillis;
 
         public HeapConfig(long intervalMillis) {
@@ -395,7 +396,7 @@ public class GodEyeConfig {
     }
 
 
-    public static class PssConfig implements PssContext {
+    public static class PssConfig implements PssContext, Serializable {
         public long intervalMillis;
 
         public PssConfig(long intervalMillis) {
@@ -417,7 +418,7 @@ public class GodEyeConfig {
         }
     }
 
-    public static class RamConfig implements RamContext {
+    public static class RamConfig implements RamContext, Serializable {
         public long intervalMillis;
 
         public RamConfig(long intervalMillis) {
@@ -440,10 +441,10 @@ public class GodEyeConfig {
     }
 
 
-    public static class NetworkConfig implements NetworkContext {
+    public static class NetworkConfig implements NetworkContext, Serializable {
     }
 
-    public static class SmConfig implements SmContext {
+    public static class SmConfig implements SmContext, Serializable {
         public boolean debugNotification;
         public long longBlockThresholdMillis;
         public long shortBlockThresholdMillis;
@@ -532,10 +533,10 @@ public class GodEyeConfig {
     }
 
 
-    public static class StartupConfig implements StartupContext {
+    public static class StartupConfig implements StartupContext, Serializable {
     }
 
-    public static class TrafficConfig implements TrafficContext {
+    public static class TrafficConfig implements TrafficContext, Serializable {
         public long intervalMillis;
         public long sampleMillis;
 
@@ -560,7 +561,7 @@ public class GodEyeConfig {
         }
     }
 
-    public static class CrashConfig implements CrashProvider {
+    public static class CrashConfig implements CrashProvider, Serializable {
         public CrashProvider crashProvider;
 
         public CrashConfig(CrashProvider crashProvider) {
@@ -582,7 +583,7 @@ public class GodEyeConfig {
         }
     }
 
-    public static class ThreadConfig implements ThreadContext {
+    public static class ThreadConfig implements ThreadContext, Serializable {
         public long intervalMillis;
         public ThreadFilter threadFilter;
 
@@ -608,7 +609,7 @@ public class GodEyeConfig {
     }
 
 
-    public static class PageloadConfig implements PageloadContext {
+    public static class PageloadConfig implements PageloadContext, Serializable {
         public PageInfoProvider pageInfoProvider;
 
         public PageloadConfig() {
@@ -626,7 +627,7 @@ public class GodEyeConfig {
         }
     }
 
-    public static class MethodCanaryConfig implements MethodCanaryContext {
+    public static class MethodCanaryConfig implements MethodCanaryContext, Serializable {
         public int maxMethodCountSingleThreadByCost;
         public long lowCostMethodThresholdMillis;
 

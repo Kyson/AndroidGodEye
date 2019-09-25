@@ -54,9 +54,9 @@ public class L {
         if (o instanceof String) {
             return (String) o;
         }
-        if (o instanceof GodEyeConfig) {
-            return JsonUtil.toJson(o);
-        }
+//        if (o instanceof GodEyeConfig) {
+//            return JsonUtil.toJson(o);
+//        }
         return String.valueOf(o);
     }
 }
