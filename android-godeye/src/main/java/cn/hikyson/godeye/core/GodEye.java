@@ -29,6 +29,7 @@ import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
+import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -87,6 +88,7 @@ public class GodEye {
      */
     public void init(Application application) {
         mApplication = application;
+        L.d("GodEye init.");
     }
 
     /**
@@ -216,6 +218,7 @@ public class GodEye {
             }
             ((MethodCanary) moduleObj).install(godEyeConfig.getMethodCanaryConfig());
         }
+        L.d("GodEye install, config: ", godEyeConfig);
         return this;
     }
 
@@ -231,6 +234,7 @@ public class GodEye {
             }
         }
         mModules.clear();
+        L.d("GodEye uninstall success.");
         return this;
     }
 

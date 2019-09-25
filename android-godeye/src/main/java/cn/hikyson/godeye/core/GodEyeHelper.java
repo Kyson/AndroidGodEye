@@ -10,6 +10,7 @@ import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
+import cn.hikyson.godeye.core.utils.L;
 
 /**
  * core extension helper
@@ -31,6 +32,7 @@ public class GodEyeHelper {
         } else {
             throw new UnexpectException("GodEyeHelper.onPageLoaded's page must be instance of Fragment or Activity.");
         }
+        L.d("GodEyeHelper onPageLoaded: " + page.getClass().getSimpleName());
     }
 
     /**
@@ -56,6 +58,7 @@ public class GodEyeHelper {
         } else {
             throw new UnexpectException("GodEyeHelper.onFragmentPageVisibilityChange's fragmentPage must be instance of Fragment.");
         }
+        L.d("GodEyeHelper onFragmentPageVisibilityChange: " + fragmentPage.getClass().getSimpleName() + ", visible:" + visible);
     }
 
     /**
@@ -66,6 +69,7 @@ public class GodEyeHelper {
      */
     public static void onAppStartEnd(StartupInfo startupInfo) throws UninstallException {
         GodEye.instance().<Startup>getModule(GodEye.ModuleName.STARTUP).produce(startupInfo);
+        L.d("GodEyeHelper onAppStartEnd: " + startupInfo);
     }
 
     /**
@@ -76,5 +80,6 @@ public class GodEyeHelper {
      */
     public static void onNetworkEnd(NetworkInfo networkInfo) throws UninstallException {
         GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK).produce(networkInfo);
+        L.d("GodEyeHelper onNetworkEnd: " + networkInfo);
     }
 }

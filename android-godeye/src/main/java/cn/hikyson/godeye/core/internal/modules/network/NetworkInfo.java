@@ -17,7 +17,7 @@ public class NetworkInfo<T extends NetworkContent> {
                 ", isSuccessful=" + isSuccessful +
                 ", message='" + message + '\'' +
                 ", networkTime=" + networkTime +
-                ", networkContent=" + networkContent +
+                ", networkContent=**" +
                 ", extraInfo=" + extraInfo +
                 '}';
     }
