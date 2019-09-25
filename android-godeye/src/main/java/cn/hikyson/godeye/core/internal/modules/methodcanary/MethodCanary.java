@@ -24,7 +24,7 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
     @Override
     public synchronized void install(final MethodCanaryContext methodCanaryContext) {
         if (this.mInstalled) {
-            L.d("method canary already installed, ignore.");
+            L.d("MethodCanary already installed, ignore.");
             return;
         }
         this.mStatusSubject = PublishSubject.create();
@@ -53,13 +53,13 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
         this.mMethodCanaryContext = methodCanaryContext;
         this.mStatusSubject.onNext("INSTALLED");
         this.mInstalled = true;
-        L.d("method canary installed.");
+        L.d("MethodCanary installed.");
     }
 
     @Override
     public synchronized void uninstall() {
         if (!this.mInstalled) {
-            L.d("method canary already uninstalled, ignore.");
+            L.d("MethodCanary already uninstalled, ignore.");
             return;
         }
         this.mMethodCanaryContext = null;
@@ -68,7 +68,7 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
         this.mStatusSubject.onComplete();
         this.mStatusSubject = null;
         this.mInstalled = false;
-        L.d("method canary uninstalled.");
+        L.d("MethodCanary uninstalled.");
     }
 
     public synchronized MethodCanaryContext getMethodCanaryContext() {
@@ -89,9 +89,9 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
             if (this.mStatusSubject != null && !this.mStatusSubject.hasComplete() && !this.mStatusSubject.hasThrowable()) {
                 this.mStatusSubject.onNext("STARTED");
             }
-            L.d("method canary  start monitor success.");
+            L.d("MethodCanary start monitor success.");
         } catch (Exception e) {
-            L.d("method canary  start monitor fail:" + e);
+            L.d("MethodCanary start monitor fail:" + e);
         }
     }
 
@@ -100,7 +100,7 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
         if (this.mStatusSubject != null && !this.mStatusSubject.hasComplete() && !this.mStatusSubject.hasThrowable()) {
             this.mStatusSubject.onNext("STOPPED");
         }
-        L.d("method canary  stop monitor success.");
+        L.d("MethodCanary stop monitor success.");
     }
 
     public @Nullable

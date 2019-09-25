@@ -25,6 +25,7 @@ public class Network extends ProduceableSubject<NetworkInfo> implements Install<
             return;
         }
         mConfig = config;
+        L.d("Network installed.");
     }
 
     @Override
@@ -34,6 +35,7 @@ public class Network extends ProduceableSubject<NetworkInfo> implements Install<
             return;
         }
         mConfig = null;
+        L.d("Network uninstalled.");
     }
 
     @Override

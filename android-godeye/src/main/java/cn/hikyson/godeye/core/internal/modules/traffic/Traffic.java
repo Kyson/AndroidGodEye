@@ -16,22 +16,22 @@ public class Traffic extends ProduceableSubject<TrafficInfo> implements Install<
     @Override
     public synchronized void install(TrafficContext config) {
         if (mTrafficEngine != null) {
-            L.d("traffic already installed , ignore.");
+            L.d("Traffic already installed, ignore.");
             return;
         }
         mTrafficEngine = new TrafficEngine(this, config.intervalMillis(), config.sampleMillis());
         mTrafficEngine.work();
-        L.d("traffic installed");
+        L.d("Traffic installed.");
     }
 
     @Override
     public synchronized void uninstall() {
         if (mTrafficEngine == null) {
-            L.d("traffic already uninstalled , ignore.");
+            L.d("Traffic already uninstalled, ignore.");
             return;
         }
         mTrafficEngine.shutdown();
         mTrafficEngine = null;
-        L.d("traffic uninstalled");
+        L.d("Traffic uninstalled.");
     }
 }

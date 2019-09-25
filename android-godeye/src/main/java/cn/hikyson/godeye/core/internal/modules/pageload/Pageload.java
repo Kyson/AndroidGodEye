@@ -29,7 +29,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
     @Override
     public synchronized void install(PageloadContext config) {
         if (mInstalled) {
-            L.d("pageload already installed, ignore.");
+            L.d("Pageload already installed, ignore.");
             return;
         }
         this.mConfig = config;
@@ -40,7 +40,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         this.mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks(pageLifecycleRecords, this.mConfig.pageInfoProvider(), this, mHandler);
         this.mConfig.application().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         this.mInstalled = true;
-        L.d("pageload installed.");
+        L.d("Pageload installed.");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
     @Override
     public synchronized void uninstall() {
         if (!mInstalled) {
-            L.d("pageload already uninstalled, ignore.");
+            L.d("Pageload already uninstalled, ignore.");
             return;
         }
         this.mConfig.application().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
@@ -59,7 +59,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         this.mHandler.getLooper().quit();
         this.mHandler = null;
         this.mInstalled = false;
-        L.d("pageload uninstalled.");
+        L.d("Pageload uninstalled.");
     }
 
     public synchronized void onActivityLoad(Activity activity) {

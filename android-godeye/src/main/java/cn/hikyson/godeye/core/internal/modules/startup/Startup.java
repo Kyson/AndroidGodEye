@@ -25,6 +25,7 @@ public class Startup extends ProduceableSubject<StartupInfo> implements Install<
             return;
         }
         mConfig = config;
+        L.d("Startup installed.");
     }
 
     @Override
@@ -34,6 +35,7 @@ public class Startup extends ProduceableSubject<StartupInfo> implements Install<
             return;
         }
         mConfig = null;
+        L.d("Startup uninstall.");
     }
 
     @Override

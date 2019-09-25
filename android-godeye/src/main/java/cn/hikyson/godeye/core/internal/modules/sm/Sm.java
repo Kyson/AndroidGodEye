@@ -28,7 +28,7 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
     @Override
     public synchronized void install(SmContext config) {
         if (mInstalled) {
-            L.d("sm already installed, ignore.");
+            L.d("Sm already installed, ignore.");
             return;
         }
         this.mInstalled = true;
@@ -59,19 +59,19 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
             }
         });
         mBlockCore.install();
-        L.d("sm installed");
+        L.d("Sm installed");
     }
 
     @Override
     public synchronized void uninstall() {
         if (!mInstalled) {
-            L.d("sm already uninstalled, ignore.");
+            L.d("Sm already uninstalled, ignore.");
             return;
         }
         mInstalled = false;
         this.mSmContext = null;
         mBlockCore.uninstall();
-        L.d("sm uninstalled");
+        L.d("Sm uninstalled");
     }
 
     @Override

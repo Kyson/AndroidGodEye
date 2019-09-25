@@ -16,22 +16,22 @@ public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapCo
     @Override
     public synchronized void install(HeapContext heapContext) {
         if (mHeapEngine != null) {
-            L.d("heap already installed, ignore.");
+            L.d("Heap already installed, ignore.");
             return;
         }
         mHeapEngine = new HeapEngine(this, heapContext.intervalMillis());
         mHeapEngine.work();
-        L.d("heap installed.");
+        L.d("Heap installed.");
     }
 
     @Override
     public synchronized void uninstall() {
         if (mHeapEngine == null) {
-            L.d("heap already uninstalled, ignore.");
+            L.d("Heap already uninstalled, ignore.");
             return;
         }
         mHeapEngine.shutdown();
         mHeapEngine = null;
-        L.d("heap uninstalled.");
+        L.d("Heap uninstalled.");
     }
 }

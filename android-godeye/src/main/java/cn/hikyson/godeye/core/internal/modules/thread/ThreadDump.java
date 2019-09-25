@@ -18,22 +18,22 @@ public class ThreadDump extends ProduceableSubject<List<Thread>> implements Inst
     @Override
     public synchronized void install(ThreadContext config) {
         if (mThreadEngine != null) {
-            L.d("thread dump already installed, ignore.");
+            L.d("ThreadDump already installed, ignore.");
             return;
         }
         mThreadEngine = new ThreadEngine(this, config.intervalMillis(), config.threadFilter());
         mThreadEngine.work();
-        L.d("thread dump installed.");
+        L.d("ThreadDump installed.");
     }
 
     @Override
     public synchronized void uninstall() {
         if (mThreadEngine == null) {
-            L.d("thread dump already uninstalled, ignore.");
+            L.d("ThreadDump already uninstalled, ignore.");
             return;
         }
         mThreadEngine.shutdown();
         mThreadEngine = null;
-        L.d("thread dump uninstalled.");
+        L.d("ThreadDump uninstalled.");
     }
 }

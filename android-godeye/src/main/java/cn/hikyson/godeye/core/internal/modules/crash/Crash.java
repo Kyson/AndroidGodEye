@@ -32,13 +32,13 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
 
     private void installInMain(CrashProvider crashProvider) {
         if (mInstalled) {
-            L.d("crash already installed , ignore");
+            L.d("Crash already installed, ignore.");
             return;
         }
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(new CrashHandler(this, crashProvider, mDefaultHandler));
         mInstalled = true;
-        L.d("crash installed");
+        L.d("Crash installed.");
     }
 
     @Override
@@ -52,12 +52,12 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
 
     private void uninstallInMain() {
         if (!mInstalled) {
-            L.d("crash already uninstalled , ignore");
+            L.d("Crash already uninstalled, ignore.");
             return;
         }
         Thread.setDefaultUncaughtExceptionHandler(mDefaultHandler);
         mInstalled = false;
-        L.d("crash uninstalled");
+        L.d("Crash uninstalled.");
     }
 
     @Override
