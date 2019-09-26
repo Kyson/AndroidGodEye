@@ -20,7 +20,7 @@ public class StartupInfo {
     String startupType;
     public long startupTime;
 
-    public StartupInfo(String startupType, long startupTime) {
+    public StartupInfo(@StartUpType String startupType, long startupTime) {
         this.startupType = startupType;
         this.startupTime = startupTime;
     }

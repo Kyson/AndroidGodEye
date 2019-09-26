@@ -39,6 +39,7 @@ import cn.hikyson.godeye.core.internal.modules.thread.ThreadContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
 import cn.hikyson.godeye.core.utils.IoUtil;
+import cn.hikyson.godeye.core.utils.L;
 
 /**
  * core config/module config
@@ -252,7 +253,7 @@ public class GodEyeConfig implements Serializable {
                 builder.withMethodCanaryConfig(methodCanaryConfig);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            L.e(e);
         }
         return builder.build();
     }
@@ -266,16 +267,17 @@ public class GodEyeConfig implements Serializable {
         return null;
     }
 
-    public static GodEyeConfig fromAssets(String path) {
+    public static GodEyeConfig fromAssets(String assetsPath) {
         InputStream is = null;
         try {
-            is = GodEye.instance().getApplication().getAssets().open(path);
+            is = GodEye.instance().getApplication().getAssets().open(assetsPath);
+            return fromInputStream(is);
         } catch (Exception e) {
-            e.printStackTrace();
+            L.e(e);
+            return defaultConfig();
+        } finally {
+            IoUtil.closeSilently(is);
         }
-        GodEyeConfig godEyeConfig = fromInputStream(is);
-        IoUtil.closeSilently(is);
-        return godEyeConfig;
     }
 
     public static class CpuConfig implements CpuContext, Serializable {
@@ -301,6 +303,14 @@ public class GodEyeConfig implements Serializable {
         public long sampleMillis() {
             return sampleMillis;
         }
+
+        @Override
+        public String toString() {
+            return "CpuConfig{" +
+                    "intervalMillis=" + intervalMillis +
+                    ", sampleMillis=" + sampleMillis +
+                    '}';
+        }
     }
 
     public static class BatteryConfig implements BatteryContext, Serializable {
@@ -311,6 +321,11 @@ public class GodEyeConfig implements Serializable {
         @Override
         public Context context() {
             return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public String toString() {
+            return "BatteryConfig{}";
         }
     }
 
@@ -333,6 +348,13 @@ public class GodEyeConfig implements Serializable {
         @Override
         public long intervalMillis() {
             return intervalMillis;
+        }
+
+        @Override
+        public String toString() {
+            return "FpsConfig{" +
+                    "intervalMillis=" + intervalMillis +
+                    '}';
         }
     }
 
@@ -375,6 +397,15 @@ public class GodEyeConfig implements Serializable {
         public LeakRefInfoProvider leakRefInfoProvider() {
             return leakRefInfoProvider == null ? new DefaultLeakRefInfoProvider() : leakRefInfoProvider;
         }
+
+        @Override
+        public String toString() {
+            return "LeakConfig{" +
+                    "debug=" + debug +
+                    ", debugNotification=" + debugNotification +
+                    ", leakRefInfoProvider=" + leakRefInfoProvider +
+                    '}';
+        }
     }
 
 
@@ -392,6 +423,13 @@ public class GodEyeConfig implements Serializable {
         @Override
         public long intervalMillis() {
             return intervalMillis;
+        }
+
+        @Override
+        public String toString() {
+            return "HeapConfig{" +
+                    "intervalMillis=" + intervalMillis +
+                    '}';
         }
     }
 
@@ -416,6 +454,13 @@ public class GodEyeConfig implements Serializable {
         public long intervalMillis() {
             return intervalMillis;
         }
+
+        @Override
+        public String toString() {
+            return "PssConfig{" +
+                    "intervalMillis=" + intervalMillis +
+                    '}';
+        }
     }
 
     public static class RamConfig implements RamContext, Serializable {
@@ -438,10 +483,21 @@ public class GodEyeConfig implements Serializable {
         public long intervalMillis() {
             return intervalMillis;
         }
+
+        @Override
+        public String toString() {
+            return "RamConfig{" +
+                    "intervalMillis=" + intervalMillis +
+                    '}';
+        }
     }
 
 
     public static class NetworkConfig implements NetworkContext, Serializable {
+        @Override
+        public String toString() {
+            return "NetworkConfig{}";
+        }
     }
 
     public static class SmConfig implements SmContext, Serializable {
@@ -489,6 +545,16 @@ public class GodEyeConfig implements Serializable {
             return dumpIntervalMillis;
         }
 
+        @Override
+        public String toString() {
+            return "SmConfig{" +
+                    "debugNotification=" + debugNotification +
+                    ", longBlockThresholdMillis=" + longBlockThresholdMillis +
+                    ", shortBlockThresholdMillis=" + shortBlockThresholdMillis +
+                    ", dumpIntervalMillis=" + dumpIntervalMillis +
+                    '}';
+        }
+
         public static class Factory {
 
             public static SmConfig convert(SmContext smContext) {
@@ -532,8 +598,11 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
-
     public static class StartupConfig implements StartupContext, Serializable {
+        @Override
+        public String toString() {
+            return "StartupConfig{}";
+        }
     }
 
     public static class TrafficConfig implements TrafficContext, Serializable {
@@ -559,6 +628,14 @@ public class GodEyeConfig implements Serializable {
         public long sampleMillis() {
             return sampleMillis;
         }
+
+        @Override
+        public String toString() {
+            return "TrafficConfig{" +
+                    "intervalMillis=" + intervalMillis +
+                    ", sampleMillis=" + sampleMillis +
+                    '}';
+        }
     }
 
     public static class CrashConfig implements CrashProvider, Serializable {
@@ -580,6 +657,13 @@ public class GodEyeConfig implements Serializable {
         @Override
         public List<CrashInfo> restoreCrash() throws Throwable {
             return crashProvider.restoreCrash();
+        }
+
+        @Override
+        public String toString() {
+            return "CrashConfig{" +
+                    "crashProvider=" + crashProvider +
+                    '}';
         }
     }
 
@@ -606,6 +690,14 @@ public class GodEyeConfig implements Serializable {
         public ThreadFilter threadFilter() {
             return threadFilter;
         }
+
+        @Override
+        public String toString() {
+            return "ThreadConfig{" +
+                    "intervalMillis=" + intervalMillis +
+                    ", threadFilter=" + threadFilter +
+                    '}';
+        }
     }
 
 
@@ -624,6 +716,13 @@ public class GodEyeConfig implements Serializable {
         @Override
         public PageInfoProvider pageInfoProvider() {
             return pageInfoProvider == null ? new DefaultPageInfoProvider() : pageInfoProvider;
+        }
+
+        @Override
+        public String toString() {
+            return "PageloadConfig{" +
+                    "pageInfoProvider=" + pageInfoProvider +
+                    '}';
         }
     }
 
@@ -655,6 +754,14 @@ public class GodEyeConfig implements Serializable {
         public Application app() {
             return GodEye.instance().getApplication();
         }
+
+        @Override
+        public String toString() {
+            return "MethodCanaryConfig{" +
+                    "maxMethodCountSingleThreadByCost=" + maxMethodCountSingleThreadByCost +
+                    ", lowCostMethodThresholdMillis=" + lowCostMethodThresholdMillis +
+                    '}';
+        }
     }
 
     private CpuConfig mCpuConfig;
@@ -672,6 +779,9 @@ public class GodEyeConfig implements Serializable {
     private ThreadConfig mThreadConfig;
     private PageloadConfig mPageloadConfig;
     private MethodCanaryConfig mMethodCanaryConfig;
+
+    private GodEyeConfig() {
+    }
 
     public CpuConfig getCpuConfig() {
         return mCpuConfig;
@@ -793,6 +903,27 @@ public class GodEyeConfig implements Serializable {
         mMethodCanaryConfig = methodCanaryConfig;
     }
 
+    @Override
+    public String toString() {
+        return "GodEyeConfig{" +
+                "mCpuConfig=" + mCpuConfig +
+                ", mBatteryConfig=" + mBatteryConfig +
+                ", mFpsConfig=" + mFpsConfig +
+                ", mLeakConfig=" + mLeakConfig +
+                ", mHeapConfig=" + mHeapConfig +
+                ", mPssConfig=" + mPssConfig +
+                ", mRamConfig=" + mRamConfig +
+                ", mNetworkConfig=" + mNetworkConfig +
+                ", mSmConfig=" + mSmConfig +
+                ", mStartupConfig=" + mStartupConfig +
+                ", mTrafficConfig=" + mTrafficConfig +
+                ", mCrashConfig=" + mCrashConfig +
+                ", mThreadConfig=" + mThreadConfig +
+                ", mPageloadConfig=" + mPageloadConfig +
+                ", mMethodCanaryConfig=" + mMethodCanaryConfig +
+                '}';
+    }
+
     public static final class GodEyeConfigBuilder {
         private CpuConfig mCpuConfig;
         private BatteryConfig mBatteryConfig;
@@ -809,9 +940,6 @@ public class GodEyeConfig implements Serializable {
         private ThreadConfig mThreadConfig;
         private PageloadConfig mPageloadConfig;
         private MethodCanaryConfig mMethodCanaryConfig;
-
-        private GodEyeConfigBuilder() {
-        }
 
         public static GodEyeConfigBuilder godEyeConfig() {
             return new GodEyeConfigBuilder();

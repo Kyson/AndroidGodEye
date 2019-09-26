@@ -173,9 +173,6 @@ public class ModuleDriver {
         return new ConvertServerMessageFunction<T>(module);
     }
 
-    private Predicate<List<CrashInfo>> crashPredicate() {
-        return crashInfos -> crashInfos != null && !crashInfos.isEmpty();
-    }
 
     private Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent> pageLifecycleMap() {
         return tPageLifecycleEventInfo -> {
@@ -200,20 +197,12 @@ public class ModuleDriver {
         };
     }
 
+    private Predicate<List<CrashInfo>> crashPredicate() {
+        return crashInfos -> crashInfos != null && !crashInfos.isEmpty();
+    }
+
     private Function<List<CrashInfo>, CrashInfo> firstCrashMap() {
-        return crashInfos -> {
-            //获取最近的一次崩溃
-            Collections.sort(crashInfos, (o1, o2) -> {
-                if (o1.timestampMillis < o2.timestampMillis) {
-                    return 1;
-                }
-                if (o1.timestampMillis > o2.timestampMillis) {
-                    return -1;
-                }
-                return 0;
-            });
-            return crashInfos.get(0);
-        };
+        return crashInfos -> crashInfos.get(0);
     }
 
     private Function<BlockInfo, BlockSimpleInfo> blockMap() {

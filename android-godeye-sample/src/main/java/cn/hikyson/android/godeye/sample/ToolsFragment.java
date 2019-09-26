@@ -1,6 +1,9 @@
 package cn.hikyson.android.godeye.sample;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,8 +12,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.Random;
 
 import cn.hikyson.android.godeye.toolbox.network.GodEyePluginOkNetwork;
+import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeHelper;
+import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.OkHttpClient;
@@ -32,6 +41,7 @@ public class ToolsFragment extends Fragment {
         mZygote = new OkHttpClient.Builder().eventListenerFactory(godEyePluginOkNetwork).addNetworkInterceptor(godEyePluginOkNetwork).build();
     }
 
+    @SuppressLint("ApplySharedPref")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,11 +62,21 @@ public class ToolsFragment extends Fragment {
             makeInvocations();
         });
         view.findViewById(R.id.fragment_tools_crash_bt).setOnClickListener(v -> {
-            throw new IllegalStateException("This is a crash made by AndroidGodEye.");
+            SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("AndroidGodEye", Context.MODE_PRIVATE);
+            int index = sharedPreferences.getInt("CrashIndex", 0);
+            sharedPreferences.edit().putInt("CrashIndex", index + 1).commit();
+            throw new IllegalStateException("This is a crash made by AndroidGodEye " + index + ".");
         });
         view.findViewById(R.id.fragment_tools_pageload_bt).setOnClickListener(v -> {
             Intent intent = new Intent(ToolsFragment.this.getActivity(), SecondActivity.class);
             startActivity(intent);
+        });
+        view.findViewById(R.id.fragment_tools_startup_bt).setOnClickListener(v -> {
+            try {
+                GodEyeHelper.onAppStartEnd(new StartupInfo(StartupInfo.StartUpType.COLD, new Random().nextInt(1000) + 1000));
+            } catch (UninstallException e) {
+                e.printStackTrace();
+            }
         });
         return view;
     }

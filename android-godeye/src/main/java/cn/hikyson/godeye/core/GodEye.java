@@ -218,7 +218,7 @@ public class GodEye {
             }
             ((MethodCanary) moduleObj).install(godEyeConfig.getMethodCanaryConfig());
         }
-        L.d("GodEye install, config: ", godEyeConfig);
+        L.d("GodEye install. ", godEyeConfig);
         return this;
     }
 

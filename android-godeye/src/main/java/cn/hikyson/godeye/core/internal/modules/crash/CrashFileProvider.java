@@ -13,6 +13,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +22,7 @@ import java.util.Locale;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.helper.GsonSerializer;
 import cn.hikyson.godeye.core.helper.Serializer;
+import cn.hikyson.godeye.core.utils.FileUtil;
 import cn.hikyson.godeye.core.utils.IoUtil;
 
 /**
@@ -27,23 +30,38 @@ import cn.hikyson.godeye.core.utils.IoUtil;
  */
 @Keep
 public class CrashFileProvider implements CrashProvider {
-    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS_Z", Locale.US);
 
     private Context mContext;
     private Serializer mSerializer;
+    private int mMaxStoreCount;
 
-    public CrashFileProvider(Serializer serializer) {
+    public CrashFileProvider(Serializer serializer, int maxStoreCount) {
         mContext = GodEye.instance().getApplication();
         mSerializer = serializer;
+        mMaxStoreCount = maxStoreCount;
     }
 
     public CrashFileProvider() {
-        this(new GsonSerializer());
+        this(new GsonSerializer(), 10);
     }
 
     @Override
-    public synchronized void storeCrash(CrashInfo crashInfo) throws IOException {
-        File file = getStoreFile(mContext, getStoreFileName());
+    public synchronized void storeCrash(CrashInfo crashInfo) throws IOException, FileUtil.FileException {
+        List<File> crashFiles = Arrays.asList(makeSureCrashDir(mContext).listFiles(mCrashFilenameFilter));
+        if (crashFiles.size() >= mMaxStoreCount) {
+            Collections.sort(crashFiles, (o1, o2) -> {
+                try {
+                    return Long.compare(FORMATTER.parse(o2.getName()).getTime(), FORMATTER.parse(o1.getName()).getTime());
+                } catch (Throwable e) {
+                    return Long.compare(o2.lastModified(), o1.lastModified());
+                }
+            });
+            for (int i = 0; i < (crashFiles.size() + 1 - mMaxStoreCount); i++) {
+                FileUtil.deleteIfExists(crashFiles.get(crashFiles.size() - i - 1));
+            }
+        }
+        File file = getStoreFile(mContext, getStoreFileName(crashInfo.timestampMillis));
         FileWriter fileWriter = null;
         try {
             fileWriter = new FileWriter(file);
@@ -68,6 +86,8 @@ public class CrashFileProvider implements CrashProvider {
                 IoUtil.closeSilently(reader);
             }
         }
+        // sort by crash time [2019_09_04_12_00_00.crash,2019_09_02_12_00_00.crash,2019_09_02_11_00_00.crash]
+        Collections.sort(crashInfos, (o1, o2) -> Long.compare(o2.timestampMillis, o1.timestampMillis));
         return crashInfos;
     }
 
@@ -75,8 +95,8 @@ public class CrashFileProvider implements CrashProvider {
 
     private FilenameFilter mCrashFilenameFilter = (dir, filename) -> filename.endsWith(SUFFIX);
 
-    private static String getStoreFileName() {
-        return FORMATTER.format(new Date(System.currentTimeMillis())) + SUFFIX;
+    private static String getStoreFileName(long crashTime) {
+        return FORMATTER.format(new Date(crashTime)) + SUFFIX;
     }
 
     private static File getStoreFile(Context context, String fileName) throws IOException {
