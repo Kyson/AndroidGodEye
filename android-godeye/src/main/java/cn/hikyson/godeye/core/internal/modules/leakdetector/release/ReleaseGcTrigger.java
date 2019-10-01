@@ -2,7 +2,8 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector.release;
 
 import com.squareup.leakcanary.GcTrigger;
 
-import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
+import cn.hikyson.godeye.core.utils.L;
+
 
 public class ReleaseGcTrigger implements GcTrigger {
     @Override
@@ -17,7 +18,7 @@ public class ReleaseGcTrigger implements GcTrigger {
             enqueueReferences();
             System.runFinalization();
         } catch (Exception e) {
-            GodEyeCanaryLog.d("GC failed: " + e.toString());
+            L.d("GC failed: " + e.toString());
         }
     }
 

@@ -371,8 +371,8 @@ public class GodEyeConfig implements Serializable {
         }
 
         public LeakConfig() {
-            this.debug = false;
-            this.debugNotification = false;
+            this.debug = true;
+            this.debugNotification = true;
             this.leakRefInfoProvider = new DefaultLeakRefInfoProvider();
         }
 
@@ -514,7 +514,7 @@ public class GodEyeConfig implements Serializable {
         }
 
         public SmConfig() {
-            this.debugNotification = false;
+            this.debugNotification = true;
             this.longBlockThresholdMillis = 500;
             this.shortBlockThresholdMillis = 300;
             this.dumpIntervalMillis = 1000;

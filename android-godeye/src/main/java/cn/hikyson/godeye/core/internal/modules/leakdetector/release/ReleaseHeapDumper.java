@@ -6,6 +6,8 @@ import com.squareup.leakcanary.HeapDumper;
 
 import java.io.File;
 
+import cn.hikyson.godeye.core.utils.L;
+
 public class ReleaseHeapDumper implements HeapDumper {
 
     private File mFile;
@@ -17,6 +19,7 @@ public class ReleaseHeapDumper implements HeapDumper {
     @Override
     public File dumpHeap() {
         //只返回空的file，不dump文件
+        L.d("LeakDetector release dumpHeap done.");
         return mFile;
     }
 }

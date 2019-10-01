@@ -17,7 +17,7 @@ import com.squareup.leakcanary.LeakTraceElement;
 import java.util.ArrayList;
 
 import cn.hikyson.godeye.core.helper.Notifier;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
+import cn.hikyson.godeye.core.utils.L;
 
 import static android.text.format.Formatter.formatShortFileSize;
 import static com.squareup.leakcanary.LeakCanary.leakInfo;
@@ -40,7 +40,7 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
     private String leakRefInfo;
 
     public DebugHeapAnalyzerService() {
-        super("内存泄漏分析服务");
+        super("LeakMemory Analyzer Service");
     }
 
     public static void runAnalysis(Context context, HeapDump heapDump, boolean showNotification) {
@@ -54,7 +54,7 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) {
-            GodEyeCanaryLog.d("HeapAnalyzerService received a null intent, ignoring.");
+            L.d("LeakDetector HeapAnalyzerService received a null intent, ignoring.");
             return;
         }
         boolean showNotification = intent.getBooleanExtra(SHOW_NOTIFICATION, false);
@@ -62,24 +62,19 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
         if (showNotification) {
             id = showNotification();
         }
-        GodEyeCanaryLog.d("开始分析dump");
         HeapDump heapDump = (HeapDump) intent.getSerializableExtra(HEAPDUMP_EXTRA);
         referenceKey = heapDump.referenceKey;
         leakRefInfo = heapDump.referenceName;
-        GodEyeCanaryLog.d("referenceKey:" + heapDump.referenceKey);
-        GodEyeCanaryLog.d("leakRefInfo:" + heapDump.referenceName);
-        GodEyeCanaryLog.d("heapDumpFile:" + heapDump.heapDumpFile.getAbsolutePath());
+        L.d("LeakDetector Dump analyzing start, referenceKey:" + heapDump.referenceKey + ", leakRefInfo:" + heapDump.referenceName + ", heapDumpFile:" + heapDump.heapDumpFile.getAbsolutePath());
         HeapAnalyzer heapAnalyzer =
                 new HeapAnalyzer(heapDump.excludedRefs, this, heapDump.reachabilityInspectorClasses);
-        GodEyeCanaryLog.d("checkForLeak...");
         //分析
         AnalysisResult result = heapAnalyzer.checkForLeak(heapDump.heapDumpFile, heapDump.referenceKey,
                 heapDump.computeRetainedHeapSize);
-        GodEyeCanaryLog.d("分析dump完成");
         onHeapAnalyzed(this, heapDump, result);
         //删除dump文件
         heapDump.heapDumpFile.delete();
-        GodEyeCanaryLog.d("dump文件删除");
+        L.d("LeakDetector dump file deleted.");
         if (id > 0) {
             Notifier.cancelNotice(this, id);
         }
@@ -95,15 +90,13 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
     @Override
     public void onProgressUpdate(@NonNull Step step) {
         sendOutputBroadcastProgress(this, referenceKey, leakRefInfo, step);
-        GodEyeCanaryLog.d(step.toString());
     }
-
 
     private void onHeapAnalyzed(Context context, @NonNull HeapDump heapDump, AnalysisResult result) {
         String leakInfo = leakInfo(this, heapDump, result, true);
-        GodEyeCanaryLog.d("%s", leakInfo);
+        L.d("LeakDetector Dump analyzing done, leakInfo:%s", leakInfo);
         if (!result.leakFound) {//没有泄漏
-            GodEyeCanaryLog.d("没有泄漏");
+            L.d("LeakDetector No leak found.");
             return;
         }
         if (result.failure != null || result.leakTrace == null) {
@@ -119,7 +112,6 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
     }
 
     private String getSummary(AnalysisResult result) {
-        GodEyeCanaryLog.d("开始生成摘要");
         String summary;
         if (result.failure != null) {
             summary = "Leak analysis failed";
@@ -146,8 +138,6 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
                 summary = String.format("%1$s was never GCed but no leak found", className);
             }
         }
-        GodEyeCanaryLog.d("摘要信息获取完成: %s", summary);
-        GodEyeCanaryLog.d("输出信息，done!");
         return summary;
     }
 

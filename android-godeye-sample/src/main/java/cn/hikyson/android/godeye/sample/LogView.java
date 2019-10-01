@@ -45,7 +45,7 @@ public class LogView extends ConstraintLayout implements Loggable {
     @Override
     public void log(final String msg) {
         mMainHandler.post(() -> {
-            mLogTv.append(msg + "\n");
+            mLogTv.append(msg + "\n\n");
             if (mIsFollow) {
                 postDelayed(new Runnable() {
                     @Override

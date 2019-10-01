@@ -11,9 +11,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
+import cn.hikyson.godeye.core.utils.L;
 
 public class LeakOutputReceiver extends BroadcastReceiver {
 
@@ -41,7 +41,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
     private void onLeakDumpStart(Intent intent) {
         String referenceKey = intent.getStringExtra("referenceKey");
         String leakRefInfo = intent.getStringExtra("leakRefInfo");
-        GodEyeCanaryLog.d("onLeakDumpStart:" + referenceKey);
+        L.d("LeakDetector STATUS_START, %s, %s", referenceKey, leakRefInfo);
         Map<String, Object> map = new ArrayMap<>();
         map.put(LeakQueue.LeakMemoryInfo.Fields.LEAK_TIME, LeakQueue.LeakMemoryInfo.DF.format(new Date(System.currentTimeMillis())));
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, "Leak detected");
@@ -54,7 +54,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         String referenceKey = intent.getStringExtra("referenceKey");
         String leakRefInfo = intent.getStringExtra("leakRefInfo");
         String progress = intent.getStringExtra("progress");
-        GodEyeCanaryLog.d("onLeakDumpProgress:" + referenceKey + " , progress:" + progress);
+        L.d("LeakDetector STATUS_PROGRESS, %s, %s, %s", referenceKey, leakRefInfo, progress);
         Map<String, Object> map = new ArrayMap<>();
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS_SUMMARY, progress);
         map.put(LeakQueue.LeakMemoryInfo.Fields.STATUS, LeakQueue.LeakMemoryInfo.Status.STATUS_PROGRESS);
@@ -69,7 +69,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         AnalysisResultWrapper analysisResult = (AnalysisResultWrapper) intent.getSerializableExtra("result");
         String summary = intent.getStringExtra("summary");
         ArrayList<String> elementStack = intent.getStringArrayListExtra("elementStack");
-        GodEyeCanaryLog.d("onLeakDumpDone:" + referenceKey + " , leak:" + analysisResult.className + " , summary:" + summary);
+        L.d("LeakDetector STATUS_DONE, %s, %s, %s", referenceKey, leakRefInfo, analysisResult.className);
         Map<String, Object> map = new ArrayMap<>();
         map.put(LeakQueue.LeakMemoryInfo.Fields.LEAK_OBJ_NAME, analysisResult.className + (analysisResult.excludedLeak ? "[Excluded]" : ""));
         map.put(LeakQueue.LeakMemoryInfo.Fields.PATH_TO_ROOT, elementStack);
@@ -86,7 +86,7 @@ public class LeakOutputReceiver extends BroadcastReceiver {
         String leakRefInfo = intent.getStringExtra("leakRefInfo");
         AnalysisResultWrapper analysisResult = (AnalysisResultWrapper) intent.getSerializableExtra("result");
         String summary = intent.getStringExtra("summary");
-        GodEyeCanaryLog.d("onLeakDumpFailure:" + referenceKey + " , leak:" + analysisResult.className + " , summary:" + summary);
+        L.d("LeakDetector STATUS_DONE_FAIL! %s, %s, %s", referenceKey, leakRefInfo, analysisResult.className);
         Map<String, Object> map = new ArrayMap<>();
         map.put(LeakQueue.LeakMemoryInfo.Fields.LEAK_OBJ_NAME, analysisResult.className + (analysisResult.excludedLeak ? "[Excluded]" : ""));
         //因为计算对象引用的所有对象大小很耗时导致分析失败，所以分析跳过了这步，这里永远是0

@@ -1,7 +1,5 @@
 package cn.hikyson.godeye.core.utils;
 
-import cn.hikyson.godeye.core.GodEyeConfig;
-
 /**
  * Description: <日志打印> Author: hui.zhao Date: 2016/7/13 Copyright: Ctrip
  */
@@ -28,13 +26,13 @@ public class L {
         }
     }
 
-    public static void d(Object... msgs) {
+    public static void d(String format, Object... msgs) {
         if (sLogProxy != null) {
-            StringBuilder sb = new StringBuilder();
-            for (Object msg : msgs) {
-                sb.append(o2String(msg));
+            String[] args = new String[msgs.length];
+            for (int i = 0; i < msgs.length; i++) {
+                args[i] = o2String(msgs[i]);
             }
-            sLogProxy.d(sb.toString());
+            sLogProxy.d(String.format(format, args));
         }
     }
 
