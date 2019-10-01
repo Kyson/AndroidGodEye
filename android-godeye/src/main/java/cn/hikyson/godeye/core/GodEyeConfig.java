@@ -291,7 +291,7 @@ public class GodEyeConfig implements Serializable {
 
         public CpuConfig() {
             this.intervalMillis = 2000;
-            this.sampleMillis = 1000;
+            this.sampleMillis = 2000;
         }
 
         @Override
@@ -516,7 +516,7 @@ public class GodEyeConfig implements Serializable {
         public SmConfig() {
             this.debugNotification = true;
             this.longBlockThresholdMillis = 500;
-            this.shortBlockThresholdMillis = 300;
+            this.shortBlockThresholdMillis = 500;
             this.dumpIntervalMillis = 1000;
         }
 
@@ -705,6 +705,11 @@ public class GodEyeConfig implements Serializable {
         public PageInfoProvider pageInfoProvider;
 
         public PageloadConfig() {
+            this.pageInfoProvider = new DefaultPageInfoProvider();
+        }
+
+        public PageloadConfig(PageInfoProvider pageInfoProvider) {
+            this.pageInfoProvider = pageInfoProvider;
         }
 
         @Override
@@ -715,7 +720,7 @@ public class GodEyeConfig implements Serializable {
         @NonNull
         @Override
         public PageInfoProvider pageInfoProvider() {
-            return pageInfoProvider == null ? new DefaultPageInfoProvider() : pageInfoProvider;
+            return pageInfoProvider;
         }
 
         @Override

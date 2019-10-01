@@ -45,7 +45,7 @@ public class GodEye {
     @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
             ModuleName.HEAP, ModuleName.PSS, ModuleName.TRAFFIC, ModuleName.CRASH,
             ModuleName.THREAD, ModuleName.RAM, ModuleName.NETWORK, ModuleName.SM,
-            ModuleName.STARTUP, ModuleName.DEADLOCK, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY
+            ModuleName.STARTUP, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY
     })
     public @interface ModuleName {
         public static final String CPU = "CPU";
@@ -61,7 +61,6 @@ public class GodEye {
         public static final String TRAFFIC = "TRAFFIC";
         public static final String CRASH = "CRASH";
         public static final String THREAD = "THREAD";
-        public static final String DEADLOCK = "DEADLOCK";
         public static final String PAGELOAD = "PAGELOAD";
         public static final String METHOD_CANARY = "METHOD_CANARY";
     }
