@@ -214,7 +214,6 @@ class Mock {
             eventTimeMillis: 1469433907836,
         });
         this.recvFun("crashInfo", [
-
             {
                 timestampMillis: new Date().getMilliseconds(),
                 throwableMessage: "11111throwableMessagethrowableMessagethrowableMessagethrowab",

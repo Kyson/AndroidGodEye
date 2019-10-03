@@ -53,6 +53,10 @@ class Crash extends Component {
                 bordered
                 dataSource={moreCrashInfos}
                 renderItem={item => <List.Item>
+                    Time(崩溃时间):&nbsp;
+                    <strong>{item.timestampMillis ? new Date(item.timestampMillis).toISOString() : "**"}</strong><br/>
+                    Message(异常信息):&nbsp;
+                    <strong>{item.throwableMessage ? item.throwableMessage : "**"}</strong><br/><br/>
                     <JSONPretty id="json-pretty" json={item}/>
                 </List.Item>}
             />
@@ -69,10 +73,12 @@ class Crash extends Component {
                       <Button onClick={this.handleShowCrashList}>More Crashes</Button></div>}>
                 <div>
                     <p>
-                        <strong>Time(崩溃时间):&nbsp;</strong>{lastCrashInfo.timestampMillis ? new Date(lastCrashInfo.timestampMillis).toISOString() : "**"}
+                        Time(崩溃时间):&nbsp;
+                        <strong>{lastCrashInfo.timestampMillis ? new Date(lastCrashInfo.timestampMillis).toISOString() : "**"}</strong>
                     </p>
                     <p style={{wordWrap: "break-word", wordBreak: "break-all"}}>
-                        <strong>Message(异常信息):&nbsp;</strong>{lastCrashInfo.throwableMessage ? lastCrashInfo.throwableMessage : "**"}
+                        Message(异常信息):&nbsp;
+                        <strong>{lastCrashInfo.throwableMessage ? lastCrashInfo.throwableMessage : "**"}</strong>
                     </p>
                 </div>
                 <Modal visible={this.state.showLastCrashInfo} onCancel={this.handleCloseLastCrashInfo}
