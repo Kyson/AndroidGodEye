@@ -88,7 +88,6 @@ class App extends Component {
         this.canRefresh = canRefresh;
     }
 
-
     render() {
         return (
             <Layout>

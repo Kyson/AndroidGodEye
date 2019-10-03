@@ -128,7 +128,6 @@ public class ModuleDriver {
                         .subscribe(this.createSendMessageConsumer()),
                 this.<List<CrashInfo>>wrapThreadComputationObservable(GodEye.ModuleName.CRASH)
                         .filter(crashPredicate())
-                        .map(firstCrashMap())
                         .map(this.createConvertServerMessageFunction("crashInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 this.<PageLifecycleEventInfo>wrapThreadComputationObservable(GodEye.ModuleName.PAGELOAD)
@@ -199,10 +198,6 @@ public class ModuleDriver {
 
     private Predicate<List<CrashInfo>> crashPredicate() {
         return crashInfos -> crashInfos != null && !crashInfos.isEmpty();
-    }
-
-    private Function<List<CrashInfo>, CrashInfo> firstCrashMap() {
-        return crashInfos -> crashInfos.get(0);
     }
 
     private Function<BlockInfo, BlockSimpleInfo> blockMap() {
