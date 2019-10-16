@@ -4,13 +4,20 @@ public class AppSizeInfo {
     public long cacheSize;
     public long dataSize;
     public long codeSize;
+    public Throwable error;
 
     @Override
     public String toString() {
-        return "AppSizeInfo{" +
-                "cacheSize=" + cacheSize +
-                ", dataSize=" + dataSize +
-                ", codeSize=" + codeSize +
-                '}';
+        if (error != null) {
+            return "AppSizeInfo{" +
+                    "error=" + error.toString() +
+                    '}';
+        } else  {
+            return "AppSizeInfo{" +
+                    "cacheSize=" + cacheSize +
+                    ", dataSize=" + dataSize +
+                    ", codeSize=" + codeSize +
+                    '}';
+        }
     }
 }

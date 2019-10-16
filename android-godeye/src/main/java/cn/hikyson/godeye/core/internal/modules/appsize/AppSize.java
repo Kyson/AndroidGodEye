@@ -32,6 +32,9 @@ public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<
 
             @Override
             public void onError(Throwable t) {
+                AppSizeInfo appSizeInfo = new AppSizeInfo();
+                appSizeInfo.error = t;
+                produce(appSizeInfo);
             }
         }), config.delayMilliseconds(), TimeUnit.MILLISECONDS);
     }
