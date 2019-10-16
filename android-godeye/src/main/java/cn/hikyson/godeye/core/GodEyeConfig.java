@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeContext;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryContext;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider;
@@ -554,6 +555,19 @@ public class GodEyeConfig {
         }
     }
 
+    public static class AppSizeConfig implements AppSizeContext {
+
+        @Override
+        public Context context() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public long delayMilliseconds() {
+            return 0;
+        }
+    }
+
     public static class MethodCanaryConfig implements MethodCanaryContext {
         public int maxMethodCountSingleThreadByCost;
         public long lowCostMethodThresholdMillis;
@@ -597,6 +611,7 @@ public class GodEyeConfig {
     private ThreadConfig mThreadConfig;
     private TrafficConfig mTrafficConfig;
     private MethodCanaryConfig mMethodCanaryConfig;
+    private AppSizeConfig mAppSizeConfig;
 
     public BatteryConfig getBatteryConfig() {
         return mBatteryConfig;
@@ -702,6 +717,14 @@ public class GodEyeConfig {
         mTrafficConfig = trafficConfig;
     }
 
+    public void setAppSizeConfig(AppSizeConfig appSizeConfig) {
+        mAppSizeConfig = appSizeConfig;
+    }
+
+    public AppSizeConfig getAppSizeConfig() {
+        return mAppSizeConfig;
+    }
+
     private static @Nullable
     Element getFirstElementByTagInRoot(Element root, String moduleName) {
         NodeList elements = root.getElementsByTagName(moduleName);
@@ -726,6 +749,7 @@ public class GodEyeConfig {
         private ThreadConfig mThreadConfig;
         private TrafficConfig mTrafficConfig;
         private MethodCanaryConfig mMethodCanaryConfig;
+        private AppSizeConfig mAppSizeConfig;
 
         private GodEyeConfigBuilder() {
         }
@@ -799,6 +823,11 @@ public class GodEyeConfig {
             return this;
         }
 
+        public GodEyeConfigBuilder withAppSizeConfig(AppSizeConfig appSizeConfig) {
+            this.mAppSizeConfig = appSizeConfig;
+            return this;
+        }
+
         public GodEyeConfig build() {
             GodEyeConfig godEyeConfig = new GodEyeConfig();
             godEyeConfig.mRamConfig = this.mRamConfig;
@@ -814,6 +843,7 @@ public class GodEyeConfig {
             godEyeConfig.mFpsConfig = this.mFpsConfig;
             godEyeConfig.mTrafficConfig = this.mTrafficConfig;
             godEyeConfig.mPageloadConfig = this.mPageloadConfig;
+            godEyeConfig.mAppSizeConfig = this.mAppSizeConfig;
             return godEyeConfig;
         }
     }

@@ -20,6 +20,8 @@ import butterknife.OnClick;
 import cn.hikyson.android.godeye.toolbox.network.OkNetworkCollectorFactory;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSize;
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeInfo;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
@@ -89,6 +91,8 @@ public class MainActivity extends Activity implements Loggable {
     CheckBox mActivityMainDeadLock;
     @BindView(R.id.activity_main_pageload)
     CheckBox mActivityMainPageload;
+    @BindView(R.id.activity_main_appsize)
+    CheckBox mActivityMainAppSize;
     @BindView(R.id.activity_main_all)
     Button mActivityMainAll;
     @BindView(R.id.activity_main_cancel_all)
@@ -113,6 +117,8 @@ public class MainActivity extends Activity implements Loggable {
     Button mActivityMainConsumerFps;
     @BindView(R.id.activity_main_consumer_leak)
     Button mActivityMainConsumerLeak;
+    @BindView(R.id.activity_main_consumer_appsize)
+    Button mActivityMainConsumerAppSize;
     @BindView(R.id.activity_main_consumer_heap)
     Button mActivityMainConsumerHeap;
     @BindView(R.id.activity_main_consumer_pss)
@@ -163,7 +169,7 @@ public class MainActivity extends Activity implements Loggable {
         mZygote = new OkHttpClient.Builder().eventListenerFactory(okNetworkCollectorFactory).addNetworkInterceptor(okNetworkCollectorFactory.createInterceptor()).build();
         ButterKnife.bind(this, this);
         mCompositeDisposable = new CompositeDisposable();
-        installableCbs = new CheckBox[14];
+        installableCbs = new CheckBox[15];
         installableCbs[0] = mActivityMainMethodCanary;
         installableCbs[1] = mActivityMainCpu;
         installableCbs[2] = mActivityMainBattery;
@@ -178,6 +184,7 @@ public class MainActivity extends Activity implements Loggable {
         installableCbs[11] = mActivityMainThread;
         installableCbs[12] = mActivityMainDeadLock;
         installableCbs[13] = mActivityMainPageload;
+        installableCbs[14] = mActivityMainAppSize;
         L.setProxy(new L.LogProxy() {
             @Override
             public void d(String msg) {
@@ -209,7 +216,7 @@ public class MainActivity extends Activity implements Loggable {
             R.id.activity_main_consumer_methodcanary, R.id.activity_main_consumer_cpu, R.id.activity_main_consumer_battery, R.id.activity_main_consumer_fps,
             R.id.activity_main_consumer_leak, R.id.activity_main_consumer_heap, R.id.activity_main_consumer_pss,
             R.id.activity_main_consumer_ram, R.id.activity_main_consumer_network, R.id.activity_main_consumer_sm,
-            R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash,
+            R.id.activity_main_consumer_startup, R.id.activity_main_consumer_traffic, R.id.activity_main_consumer_crash, R.id.activity_main_consumer_appsize,
             R.id.activity_main_consumer_thread, R.id.activity_main_consumer_deadlock, R.id.activity_main_consumer_pageload,
             R.id.activity_main_make_block, R.id.activity_main_make_request, R.id.activity_main_make_leak, R.id.activity_main_make_leak_v4, R.id.activity_main_make_invocations,
             R.id.activity_main_make_crash, R.id.activity_main_consumer_cancel_watch, R.id.activity_main_make_clear,
@@ -266,6 +273,9 @@ public class MainActivity extends Activity implements Loggable {
                 break;
             case R.id.activity_main_consumer_fps:
                 mCompositeDisposable.add(GodEye.instance().<Fps>getModule(GodEye.ModuleName.FPS).subject().subscribe(new LogObserver<FpsInfo>("fps", this)));
+                break;
+            case R.id.activity_main_consumer_appsize:
+                mCompositeDisposable.add(GodEye.instance().<AppSize>getModule(GodEye.ModuleName.APP_SIZE).subject().subscribe(new LogObserver<AppSizeInfo>("appsize", this)));
                 break;
             case R.id.activity_main_consumer_leak:
                 mCompositeDisposable.add(GodEye.instance().<LeakDetector>getModule(GodEye.ModuleName.LEAK).subject().subscribe(new LogObserver<LeakQueue.LeakMemoryInfo>("leak", this)));
@@ -513,6 +523,9 @@ public class MainActivity extends Activity implements Loggable {
                 }
                 if (mActivityMainPageload.isChecked()) {
                     GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).install(new GodEyeConfig.PageloadConfig());
+                }
+                if (mActivityMainAppSize.isChecked()) {
+                    GodEye.instance().<AppSize>getModule(GodEye.ModuleName.APP_SIZE).install(new GodEyeConfig.AppSizeConfig());
                 }
             }
         }).start();

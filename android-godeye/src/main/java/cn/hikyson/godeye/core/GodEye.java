@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.hikyson.godeye.core.internal.Install;
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSize;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
@@ -36,7 +37,7 @@ public class GodEye {
     @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
             ModuleName.HEAP, ModuleName.PSS, ModuleName.TRAFFIC, ModuleName.CRASH,
             ModuleName.THREAD, ModuleName.RAM, ModuleName.NETWORK, ModuleName.SM,
-            ModuleName.STARTUP, ModuleName.DEADLOCK, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY
+            ModuleName.STARTUP, ModuleName.DEADLOCK, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY, ModuleName.APP_SIZE
     })
     public @interface ModuleName {
         public static final String CPU = "CPU";
@@ -55,6 +56,7 @@ public class GodEye {
         public static final String DEADLOCK = "DEADLOCK";
         public static final String PAGELOAD = "PAGELOAD";
         public static final String METHOD_CANARY = "METHOD_CANARY";
+        public static final String APP_SIZE = "APP_SIZE";
     }
 
     private Application mApplication;
@@ -95,6 +97,7 @@ public class GodEye {
         mModules.put(ModuleName.THREAD, new ThreadDump());
         mModules.put(ModuleName.PAGELOAD, new Pageload());
         mModules.put(ModuleName.METHOD_CANARY, new MethodCanary());
+        mModules.put(ModuleName.APP_SIZE, new AppSize());
     }
 
     public GodEye install(final GodEyeConfig godEyeConfig) {
@@ -136,6 +139,9 @@ public class GodEye {
         }
         if (godEyeConfig.getMethodCanaryConfig() != null) {
             ((MethodCanary) mModules.get(ModuleName.METHOD_CANARY)).install(godEyeConfig.getMethodCanaryConfig());
+        }
+        if (godEyeConfig.getAppSizeConfig() != null) {
+            ((AppSize) mModules.get(ModuleName.APP_SIZE)).install(godEyeConfig.getAppSizeConfig());
         }
         return this;
     }
