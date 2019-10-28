@@ -14,6 +14,7 @@ import cn.hikyson.godeye.core.exceptions.UnexpectException;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.SubjectSupport;
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSize;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
@@ -45,7 +46,7 @@ public class GodEye {
     @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
             ModuleName.HEAP, ModuleName.PSS, ModuleName.TRAFFIC, ModuleName.CRASH,
             ModuleName.THREAD, ModuleName.RAM, ModuleName.NETWORK, ModuleName.SM,
-            ModuleName.STARTUP, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY
+            ModuleName.STARTUP, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY, ModuleName.APP_SIZE
     })
     public @interface ModuleName {
         public static final String CPU = "CPU";
@@ -63,6 +64,7 @@ public class GodEye {
         public static final String THREAD = "THREAD";
         public static final String PAGELOAD = "PAGELOAD";
         public static final String METHOD_CANARY = "METHOD_CANARY";
+        public static final String APP_SIZE = "APP_SIZE";
     }
 
     private Application mApplication;
@@ -88,6 +90,22 @@ public class GodEye {
     public void init(Application application) {
         mApplication = application;
         L.d("GodEye init.");
+        mModules.put(ModuleName.CPU, new Cpu());
+        mModules.put(ModuleName.BATTERY, new Battery());
+        mModules.put(ModuleName.FPS, new Fps());
+        mModules.put(ModuleName.LEAK, LeakDetector.instance());
+        mModules.put(ModuleName.HEAP, new Heap());
+        mModules.put(ModuleName.PSS, new Pss());
+        mModules.put(ModuleName.RAM, new Ram());
+        mModules.put(ModuleName.NETWORK, new Network());
+        mModules.put(ModuleName.SM, Sm.instance());
+        mModules.put(ModuleName.STARTUP, new Startup());
+        mModules.put(ModuleName.TRAFFIC, new Traffic());
+        mModules.put(ModuleName.CRASH, new Crash());
+        mModules.put(ModuleName.THREAD, new ThreadDump());
+        mModules.put(ModuleName.PAGELOAD, new Pageload());
+        mModules.put(ModuleName.METHOD_CANARY, new MethodCanary());
+        mModules.put(ModuleName.APP_SIZE, new AppSize());
     }
 
     /**
@@ -216,6 +234,9 @@ public class GodEye {
                 mModules.put(ModuleName.METHOD_CANARY, moduleObj);
             }
             ((MethodCanary) moduleObj).install(godEyeConfig.getMethodCanaryConfig());
+        }
+        if (godEyeConfig.getAppSizeConfig() != null) {
+            ((AppSize) mModules.get(ModuleName.APP_SIZE)).install(godEyeConfig.getAppSizeConfig());
         }
         L.d("GodEye install, godEyeConfig: %s", godEyeConfig);
         return this;

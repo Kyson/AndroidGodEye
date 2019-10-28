@@ -7,6 +7,7 @@ import android.content.Intent;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 
 import com.squareup.leakcanary.AnalysisResult;
 import com.squareup.leakcanary.AnalyzerProgressListener;
@@ -48,7 +49,7 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
         Intent intent = new Intent(context, DebugHeapAnalyzerService.class);
         intent.putExtra(HEAPDUMP_EXTRA, heapDump);
         intent.putExtra(SHOW_NOTIFICATION, showNotification);
-        context.startService(intent);
+        ContextCompat.startForegroundService(context, intent);
     }
 
     @Override

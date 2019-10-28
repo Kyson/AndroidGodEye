@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeContext;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryContext;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider;
@@ -731,7 +732,20 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
-    public static class MethodCanaryConfig implements MethodCanaryContext, Serializable {
+    public static class AppSizeConfig implements AppSizeContext {
+
+        @Override
+        public Context context() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public long delayMilliseconds() {
+            return 0;
+        }
+    }
+
+    public static class MethodCanaryConfig implements MethodCanaryContext {
         public int maxMethodCountSingleThreadByCost;
         public long lowCostMethodThresholdMillis;
 
@@ -784,6 +798,7 @@ public class GodEyeConfig implements Serializable {
     private ThreadConfig mThreadConfig;
     private PageloadConfig mPageloadConfig;
     private MethodCanaryConfig mMethodCanaryConfig;
+    private AppSizeConfig mAppSizeConfig;
 
     private GodEyeConfig() {
     }
@@ -896,6 +911,14 @@ public class GodEyeConfig implements Serializable {
         return mPageloadConfig;
     }
 
+    public void setAppSizeConfig(AppSizeConfig appSizeConfig) {
+        mAppSizeConfig = appSizeConfig;
+    }
+
+    public AppSizeConfig getAppSizeConfig() {
+        return mAppSizeConfig;
+    }
+
     public void setPageloadConfig(PageloadConfig pageloadConfig) {
         mPageloadConfig = pageloadConfig;
     }
@@ -945,6 +968,7 @@ public class GodEyeConfig implements Serializable {
         private ThreadConfig mThreadConfig;
         private PageloadConfig mPageloadConfig;
         private MethodCanaryConfig mMethodCanaryConfig;
+        private AppSizeConfig mAppSizeConfig;
 
         public static GodEyeConfigBuilder godEyeConfig() {
             return new GodEyeConfigBuilder();
@@ -1025,6 +1049,11 @@ public class GodEyeConfig implements Serializable {
             return this;
         }
 
+        public GodEyeConfigBuilder withAppSizeConfig(AppSizeConfig appSizeConfig) {
+            this.mAppSizeConfig = appSizeConfig;
+            return this;
+        }
+
         public GodEyeConfig build() {
             GodEyeConfig godEyeConfig = new GodEyeConfig();
             godEyeConfig.mStartupConfig = this.mStartupConfig;
@@ -1042,6 +1071,7 @@ public class GodEyeConfig implements Serializable {
             godEyeConfig.mThreadConfig = this.mThreadConfig;
             godEyeConfig.mCrashConfig = this.mCrashConfig;
             godEyeConfig.mCpuConfig = this.mCpuConfig;
+            godEyeConfig.mAppSizeConfig = this.mAppSizeConfig;
             return godEyeConfig;
         }
     }

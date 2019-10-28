@@ -130,6 +130,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="pageload"/>
+
+                    <CheckBox
+                        android:id="@+id/activity_main_appsize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="appsize"/>
                 </LinearLayout>
 
             </HorizontalScrollView>
@@ -358,7 +364,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="thread"/>
+                    android:text="thread" />
 
                 <Button
                     android:id="@+id/activity_main_consumer_deadlock"
@@ -373,6 +379,19 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="pageload"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/activity_main_consumer_appsize"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="appsize" />
 
             </LinearLayout>
 
