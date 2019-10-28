@@ -27,6 +27,7 @@ android {
         debug {
             minifyEnabled true
             resValue("integer", "CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT", project.ext.EXT_ANDROID_GODEYE_MONITOR_PORT)
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }

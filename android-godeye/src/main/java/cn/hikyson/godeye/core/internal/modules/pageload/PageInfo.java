@@ -1,11 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
 import android.app.Activity;
+import android.support.annotation.Keep;
 import android.support.v4.app.Fragment;
 
 import java.io.Serializable;
 import java.util.Map;
 
+@Keep
 public class PageInfo<T> implements Serializable {
     public PageType pageType;
     public String pageClassName;

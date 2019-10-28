@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -45,6 +46,7 @@ import cn.hikyson.godeye.core.utils.L;
 /**
  * core config/module config
  */
+@Keep
 public class GodEyeConfig implements Serializable {
 
     public static GodEyeConfigBuilder defaultConfigBuilder() {
@@ -292,6 +294,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class CpuConfig implements CpuContext, Serializable {
         public long intervalMillis;
         public long sampleMillis;
@@ -325,6 +328,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class BatteryConfig implements BatteryContext, Serializable {
 
         public BatteryConfig() {
@@ -341,6 +345,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class FpsConfig implements FpsContext, Serializable {
         public long intervalMillis;
 
@@ -370,6 +375,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class LeakConfig implements LeakContext, Serializable {
         // if you want leak module work in production,set debug false
         public boolean debug;
@@ -420,7 +426,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
-
+    @Keep
     public static class HeapConfig implements HeapContext, Serializable {
         public long intervalMillis;
 
@@ -445,7 +451,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
-
+    @Keep
     public static class PssConfig implements PssContext, Serializable {
         public long intervalMillis;
 
@@ -475,6 +481,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class RamConfig implements RamContext, Serializable {
         public long intervalMillis;
 
@@ -504,7 +511,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
-
+    @Keep
     public static class NetworkConfig implements NetworkContext, Serializable {
         @Override
         public String toString() {
@@ -512,6 +519,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class SmConfig implements SmContext, Serializable {
         public boolean debugNotification;
         public long longBlockThresholdMillis;
@@ -610,6 +618,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class StartupConfig implements StartupContext, Serializable {
         @Override
         public String toString() {
@@ -617,6 +626,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class TrafficConfig implements TrafficContext, Serializable {
         public long intervalMillis;
         public long sampleMillis;
@@ -650,6 +660,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class CrashConfig implements CrashProvider, Serializable {
         public CrashProvider crashProvider;
 
@@ -679,6 +690,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class ThreadConfig implements ThreadContext, Serializable {
         public long intervalMillis;
         public ThreadFilter threadFilter;
@@ -712,7 +724,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
-
+    @Keep
     public static class PageloadConfig implements PageloadContext, Serializable {
         public PageInfoProvider pageInfoProvider;
 
@@ -743,6 +755,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class AppSizeConfig implements AppSizeContext, Serializable {
         public long delayMillis;
 
@@ -765,6 +778,7 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
+    @Keep
     public static class MethodCanaryConfig implements MethodCanaryContext, Serializable {
         public int maxMethodCountSingleThreadByCost;
         public long lowCostMethodThresholdMillis;

@@ -1,10 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.fps;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 
 /**
  * Created by kysonchao on 2017/11/23.
  */
+@Keep
 public class FpsInfo implements Serializable {
     public int currentFps;
     public int systemFps;

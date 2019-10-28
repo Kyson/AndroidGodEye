@@ -1,7 +1,10 @@
 package cn.hikyson.godeye.monitor.modules.thread;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.Expose;
 
+import java.io.Serializable;
 import java.util.List;
 
 import cn.hikyson.godeye.core.utils.StacktraceUtil;
@@ -9,7 +12,8 @@ import cn.hikyson.godeye.core.utils.StacktraceUtil;
 /**
  * Created by kysonchao on 2018/1/17.
  */
-public class ThreadInfo {
+@Keep
+public class ThreadInfo implements Serializable {
     @Expose
     public long id;
     @Expose

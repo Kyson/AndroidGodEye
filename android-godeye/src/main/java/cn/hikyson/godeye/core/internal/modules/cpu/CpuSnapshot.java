@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.cpu;
 
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
@@ -16,6 +17,7 @@ import cn.hikyson.godeye.core.utils.IoUtil;
  * <p>
  * Created by kysonchao on 2017/5/22.
  */
+@Keep
 public class CpuSnapshot implements Serializable {
     public long user = 0;
     public long system = 0;

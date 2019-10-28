@@ -1,8 +1,13 @@
 package cn.hikyson.godeye.monitor.modules;
 
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
+
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryContext;
 
-public class MethodCanaryStatus {
+@Keep
+public class MethodCanaryStatus implements Serializable {
     public long lowCostMethodThresholdMillis;
     public int maxMethodCountSingleThreadByCost;
     public boolean isMonitoring;

@@ -1,6 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
@@ -21,6 +22,7 @@ import java.util.Map;
  */
 public class LeakQueue{
 
+    @Keep
     public static class LeakMemoryInfo implements Serializable, Comparable<LeakMemoryInfo> {
         public static final SimpleDateFormat DF = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
 

@@ -1,5 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.traffic;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -7,6 +9,7 @@ import java.util.Locale;
  * 流量消耗情况，单位kb/秒
  * Created by kysonchao on 2017/5/22.
  */
+@Keep
 public class TrafficInfo implements Serializable {
     public float rxTotalRate;
     public float txTotalRate;

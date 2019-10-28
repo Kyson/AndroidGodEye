@@ -1,10 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.battery;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 
 /**
  * Created by kysonchao on 2017/11/22.
  */
+@Keep
 public class BatteryInfo implements Serializable {
     // int类型，状态，定义值是BatteryManager.BATTERY_STATUS_XXX / 正在充电、充满等等
     public int status;

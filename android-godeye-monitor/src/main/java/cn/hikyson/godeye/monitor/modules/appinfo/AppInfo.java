@@ -3,9 +3,11 @@ package cn.hikyson.godeye.monitor.modules.appinfo;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.support.annotation.Keep;
 import android.support.v4.content.PermissionChecker;
 import android.text.TextUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +21,8 @@ import github.nisrulz.easydeviceinfo.base.EasyLocationMod;
 import github.nisrulz.easydeviceinfo.base.EasyNetworkMod;
 import github.nisrulz.easydeviceinfo.base.EasySimMod;
 
-public class AppInfo {
+@Keep
+public class AppInfo implements Serializable {
     private static GodEyeMonitor.AppInfoConext sAppInfoConext;
 
     public static void injectAppInfoConext(GodEyeMonitor.AppInfoConext appInfoConext) {

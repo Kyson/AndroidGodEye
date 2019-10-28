@@ -1,5 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.crash;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import cn.hikyson.godeye.core.utils.StacktraceUtil;
 /**
  * Created by kysonchao on 2017/12/18.
  */
+@Keep
 public class CrashInfo implements Serializable {
     public long timestampMillis;
     public String threadName;

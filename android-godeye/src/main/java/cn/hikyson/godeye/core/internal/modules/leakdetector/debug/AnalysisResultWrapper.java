@@ -1,9 +1,12 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector.debug;
 
+import android.support.annotation.Keep;
+
 import com.squareup.leakcanary.AnalysisResult;
 
 import java.io.Serializable;
 
+@Keep
 public class AnalysisResultWrapper implements Serializable {
     public String className;
     public boolean excludedLeak;

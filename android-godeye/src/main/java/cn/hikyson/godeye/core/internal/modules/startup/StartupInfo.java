@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.startup;
 
+import android.support.annotation.Keep;
 import android.support.annotation.StringDef;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Created by kysonchao on 2017/11/23.
  */
+@Keep
 public class StartupInfo implements Serializable {
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({StartUpType.COLD, StartUpType.HOT})

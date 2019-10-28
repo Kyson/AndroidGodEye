@@ -1,7 +1,10 @@
 package cn.hikyson.godeye.core.internal.modules.appsize;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 
+@Keep
 public class AppSizeInfo implements Serializable {
     public static AppSizeInfo INVALID = new AppSizeInfo();
     public long cacheSize;

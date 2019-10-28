@@ -1,5 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.sm.core;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
@@ -9,6 +11,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 /**
  * Created by kysonchao on 2017/11/22.
  */
+@Keep
 public class MemoryInfo implements Serializable {
     public HeapInfo heapInfo;
     public PssInfo pssInfo;
