@@ -1,12 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.traffic;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
  * 流量消耗情况，单位kb/秒
  * Created by kysonchao on 2017/5/22.
  */
-public class TrafficInfo {
+public class TrafficInfo implements Serializable {
     public float rxTotalRate;
     public float txTotalRate;
     //应用下载流量速度

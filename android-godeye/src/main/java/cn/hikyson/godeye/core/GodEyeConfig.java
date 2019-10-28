@@ -64,6 +64,7 @@ public class GodEyeConfig implements Serializable {
         builder.withThreadConfig(new ThreadConfig());
         builder.withPageloadConfig(new PageloadConfig());
         builder.withMethodCanaryConfig(new MethodCanaryConfig());
+        builder.withAppSizeConfig(new AppSizeConfig());
         return builder;
     }
 
@@ -252,6 +253,16 @@ public class GodEyeConfig implements Serializable {
                     methodCanaryConfig.lowCostMethodThresholdMillis = Long.parseLong(lowCostMethodThresholdMillisString);
                 }
                 builder.withMethodCanaryConfig(methodCanaryConfig);
+            }
+            // appSize
+            element = getFirstElementByTagInRoot(root, "appSize");
+            if (element != null) {
+                final String delayMillisString = element.getAttribute("delayMillis");
+                AppSizeConfig appSizeConfig = new AppSizeConfig();
+                if (!TextUtils.isEmpty(delayMillisString)) {
+                    appSizeConfig.delayMillis = Long.parseLong(delayMillisString);
+                }
+                builder.withAppSizeConfig(appSizeConfig);
             }
         } catch (Exception e) {
             L.e(e);
@@ -732,7 +743,16 @@ public class GodEyeConfig implements Serializable {
         }
     }
 
-    public static class AppSizeConfig implements AppSizeContext {
+    public static class AppSizeConfig implements AppSizeContext, Serializable {
+        public long delayMillis;
+
+        public AppSizeConfig(long delayMillis) {
+            this.delayMillis = delayMillis;
+        }
+
+        public AppSizeConfig() {
+            this.delayMillis = 0;
+        }
 
         @Override
         public Context context() {
@@ -740,12 +760,12 @@ public class GodEyeConfig implements Serializable {
         }
 
         @Override
-        public long delayMilliseconds() {
-            return 0;
+        public long delayMillis() {
+            return delayMillis;
         }
     }
 
-    public static class MethodCanaryConfig implements MethodCanaryContext {
+    public static class MethodCanaryConfig implements MethodCanaryContext, Serializable {
         public int maxMethodCountSingleThreadByCost;
         public long lowCostMethodThresholdMillis;
 
@@ -911,16 +931,17 @@ public class GodEyeConfig implements Serializable {
         return mPageloadConfig;
     }
 
+
+    public void setPageloadConfig(PageloadConfig pageloadConfig) {
+        mPageloadConfig = pageloadConfig;
+    }
+
     public void setAppSizeConfig(AppSizeConfig appSizeConfig) {
         mAppSizeConfig = appSizeConfig;
     }
 
     public AppSizeConfig getAppSizeConfig() {
         return mAppSizeConfig;
-    }
-
-    public void setPageloadConfig(PageloadConfig pageloadConfig) {
-        mPageloadConfig = pageloadConfig;
     }
 
     public MethodCanaryConfig getMethodCanaryConfig() {
@@ -949,6 +970,7 @@ public class GodEyeConfig implements Serializable {
                 ", mThreadConfig=" + mThreadConfig +
                 ", mPageloadConfig=" + mPageloadConfig +
                 ", mMethodCanaryConfig=" + mMethodCanaryConfig +
+                ", mAppSizeConfig=" + mAppSizeConfig +
                 '}';
     }
 

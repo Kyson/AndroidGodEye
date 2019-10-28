@@ -1,5 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.sm.core;
 
+import java.io.Serializable;
+
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
@@ -7,7 +9,7 @@ import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public class MemoryInfo {
+public class MemoryInfo implements Serializable {
     public HeapInfo heapInfo;
     public PssInfo pssInfo;
     public RamInfo ramInfo;

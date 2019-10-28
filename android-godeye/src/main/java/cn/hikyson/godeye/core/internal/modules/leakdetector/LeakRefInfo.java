@@ -2,9 +2,10 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class LeakRefInfo {
+public class LeakRefInfo implements Serializable {
 
     private final boolean excludeRef;
     @Nullable

@@ -1,9 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.fps;
 
+import java.io.Serializable;
+
 /**
  * Created by kysonchao on 2017/11/23.
  */
-public class FpsInfo {
+public class FpsInfo implements Serializable {
     public int currentFps;
     public int systemFps;
 

@@ -1,10 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.methodcanary;
 
+import java.io.Serializable;
 import java.util.List;
 
 import cn.hikyson.methodcanary.lib.ThreadInfo;
 
-public class MethodsRecordInfo {
+public class MethodsRecordInfo implements Serializable {
     //nano time
     public long start;
     public long end;
@@ -16,7 +17,7 @@ public class MethodsRecordInfo {
         this.methodInfoOfThreadInfos = methodInfoOfThreadInfos;
     }
 
-    public static class MethodInfoOfThreadInfo {
+    public static class MethodInfoOfThreadInfo implements Serializable {
         public ThreadInfo threadInfo;
         public List<MethodInfo> methodInfos;
 
@@ -25,7 +26,7 @@ public class MethodsRecordInfo {
             this.methodInfos = methodInfos;
         }
 
-        public static class MethodInfo {
+        public static class MethodInfo implements Serializable {
             public int stack;
             public long start;
             public long end;

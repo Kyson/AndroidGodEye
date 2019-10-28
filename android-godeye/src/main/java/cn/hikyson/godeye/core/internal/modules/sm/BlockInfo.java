@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core.internal.modules.sm;
 
 import android.support.annotation.StringDef;
 
+import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -11,7 +12,7 @@ import cn.hikyson.godeye.core.internal.modules.sm.core.ShortBlockInfo;
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public class BlockInfo {
+public class BlockInfo implements Serializable {
     public LongBlockInfo longBlockInfo;
     public ShortBlockInfo shortBlockInfo;
     public @BlockType

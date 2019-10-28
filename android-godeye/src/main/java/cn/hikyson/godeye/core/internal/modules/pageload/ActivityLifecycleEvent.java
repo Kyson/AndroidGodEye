@@ -1,6 +1,8 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
-public enum ActivityLifecycleEvent implements LifecycleEvent {
+import java.io.Serializable;
+
+public enum ActivityLifecycleEvent implements LifecycleEvent, Serializable {
     ON_CREATE,
     ON_START,
     ON_RESUME,

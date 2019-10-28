@@ -6,6 +6,8 @@ import android.support.annotation.WorkerThread;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
+
 import cn.hikyson.godeye.core.utils.IoUtil;
 
 /**
@@ -14,7 +16,7 @@ import cn.hikyson.godeye.core.utils.IoUtil;
  * <p>
  * Created by kysonchao on 2017/5/22.
  */
-public class CpuSnapshot {
+public class CpuSnapshot implements Serializable {
     public long user = 0;
     public long system = 0;
     public long idle = 0;

@@ -1,10 +1,12 @@
 package cn.hikyson.godeye.core.internal.modules.memory;
 
+import java.io.Serializable;
+
 /**
  * Created by kysonchao on 2017/11/22.
  */
 
-public class PssInfo {
+public class PssInfo implements Serializable {
     public int totalPssKb;
     public int dalvikPssKb;
     public int nativePssKb;

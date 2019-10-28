@@ -1,9 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.sm.core;
 
+import java.io.Serializable;
+
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public class ShortBlockInfo {
+public class ShortBlockInfo implements Serializable {
     //卡顿开始时间
     public long timeStart;
     //卡顿结束时间

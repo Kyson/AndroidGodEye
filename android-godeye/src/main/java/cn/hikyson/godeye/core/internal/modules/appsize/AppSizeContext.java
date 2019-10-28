@@ -4,5 +4,5 @@ import android.content.Context;
 
 public interface AppSizeContext {
     Context context();
-    long delayMilliseconds();
+    long delayMillis();
 }

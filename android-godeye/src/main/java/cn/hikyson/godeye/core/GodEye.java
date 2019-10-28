@@ -90,22 +90,6 @@ public class GodEye {
     public void init(Application application) {
         mApplication = application;
         L.d("GodEye init.");
-        mModules.put(ModuleName.CPU, new Cpu());
-        mModules.put(ModuleName.BATTERY, new Battery());
-        mModules.put(ModuleName.FPS, new Fps());
-        mModules.put(ModuleName.LEAK, LeakDetector.instance());
-        mModules.put(ModuleName.HEAP, new Heap());
-        mModules.put(ModuleName.PSS, new Pss());
-        mModules.put(ModuleName.RAM, new Ram());
-        mModules.put(ModuleName.NETWORK, new Network());
-        mModules.put(ModuleName.SM, Sm.instance());
-        mModules.put(ModuleName.STARTUP, new Startup());
-        mModules.put(ModuleName.TRAFFIC, new Traffic());
-        mModules.put(ModuleName.CRASH, new Crash());
-        mModules.put(ModuleName.THREAD, new ThreadDump());
-        mModules.put(ModuleName.PAGELOAD, new Pageload());
-        mModules.put(ModuleName.METHOD_CANARY, new MethodCanary());
-        mModules.put(ModuleName.APP_SIZE, new AppSize());
     }
 
     /**
@@ -236,7 +220,12 @@ public class GodEye {
             ((MethodCanary) moduleObj).install(godEyeConfig.getMethodCanaryConfig());
         }
         if (godEyeConfig.getAppSizeConfig() != null) {
-            ((AppSize) mModules.get(ModuleName.APP_SIZE)).install(godEyeConfig.getAppSizeConfig());
+            Object moduleObj = mModules.get(ModuleName.APP_SIZE);
+            if (moduleObj == null) {
+                moduleObj = new AppSize();
+                mModules.put(ModuleName.APP_SIZE, moduleObj);
+            }
+            ((AppSize) moduleObj).install(godEyeConfig.getAppSizeConfig());
         }
         L.d("GodEye install, godEyeConfig: %s", godEyeConfig);
         return this;

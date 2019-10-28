@@ -1,6 +1,8 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
-public class PageLifecycleEventWithTime<T> {
+import java.io.Serializable;
+
+public class PageLifecycleEventWithTime<T> implements Serializable {
     public PageInfo<T> pageInfo;
     public LifecycleEvent lifecycleEvent;
     public long eventTimeMillis;

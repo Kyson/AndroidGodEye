@@ -1,9 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.memory;
 
+import java.io.Serializable;
+
 /**
  * Created by kysonchao on 2017/11/22.
  */
-public class RamInfo {
+public class RamInfo implements Serializable {
     //可用RAM
     public long availMemKb;
     //手机总RAM
