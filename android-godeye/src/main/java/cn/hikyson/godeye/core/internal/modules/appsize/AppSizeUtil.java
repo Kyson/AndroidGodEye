@@ -86,6 +86,7 @@ class AppSizeUtil {
     /**
      * 获取应用大小8.0以下
      */
+    @SuppressWarnings("JavaReflectionMemberAccess")
     private static void getAppSizeLowerO(Context context, @NonNull final OnGetSizeListener listener) {
         try {
             Method method = PackageManager.class.getMethod("getPackageSizeInfo", String.class,

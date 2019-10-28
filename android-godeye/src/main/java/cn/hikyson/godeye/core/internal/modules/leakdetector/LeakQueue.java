@@ -19,8 +19,7 @@ import java.util.Map;
 /**
  * Created by kysonchao on 2017/11/23.
  */
-public class LeakQueue implements Serializable {
-
+public class LeakQueue{
 
     public static class LeakMemoryInfo implements Serializable, Comparable<LeakMemoryInfo> {
         public static final SimpleDateFormat DF = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);

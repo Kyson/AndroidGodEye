@@ -32,7 +32,7 @@ public class L {
             for (int i = 0; i < msgs.length; i++) {
                 args[i] = o2String(msgs[i]);
             }
-            sLogProxy.d(String.format(format, args));
+            sLogProxy.d(String.format(format, (Object[]) args));
         }
     }
 

@@ -21,10 +21,11 @@ android {
     buildTypes {
         release {
             resValue("integer", "CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT", project.ext.EXT_ANDROID_GODEYE_MONITOR_PORT)
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            minifyEnabled true
             resValue("integer", "CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT", project.ext.EXT_ANDROID_GODEYE_MONITOR_PORT)
         }
     }
