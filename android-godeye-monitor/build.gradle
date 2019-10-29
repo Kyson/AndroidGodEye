@@ -26,6 +26,7 @@ android {
     lintOptions {
         abortOnError false
     }
+    buildToolsVersion = '28.0.3'
 }
 
 dependencies {
