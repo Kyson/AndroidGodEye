@@ -25,9 +25,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             resValue("integer", "CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT", project.ext.EXT_ANDROID_GODEYE_MONITOR_PORT)
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     buildToolsVersion = '28.0.3'

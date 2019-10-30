@@ -20,11 +20,7 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConte
             L.d("Cpu already installed, ignore.");
             return;
         }
-        if (!CpuUsable.usability()) {
-            L.d("Cpu is not usable, install ignore.");
-            return;
-        }
-        mCpuEngine = new CpuEngine(this, config.intervalMillis(), config.sampleMillis());
+        mCpuEngine = new CpuEngine(this, config.intervalMillis());
         mCpuEngine.work();
         L.d("Cpu installed");
     }

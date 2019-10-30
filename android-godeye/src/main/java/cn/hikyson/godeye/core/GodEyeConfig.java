@@ -86,13 +86,9 @@ public class GodEyeConfig implements Serializable {
             Element element = getFirstElementByTagInRoot(root, "cpu");
             if (element != null) {
                 final String intervalMillisString = element.getAttribute("intervalMillis");
-                final String sampleMillisString = element.getAttribute("sampleMillis");
                 CpuConfig cpuConfig = new CpuConfig();
                 if (!TextUtils.isEmpty(intervalMillisString)) {
                     cpuConfig.intervalMillis = Long.parseLong(intervalMillisString);
-                }
-                if (!TextUtils.isEmpty(intervalMillisString)) {
-                    cpuConfig.sampleMillis = Long.parseLong(sampleMillisString);
                 }
                 builder.withCpuConfig(cpuConfig);
             }
@@ -297,16 +293,13 @@ public class GodEyeConfig implements Serializable {
     @Keep
     public static class CpuConfig implements CpuContext, Serializable {
         public long intervalMillis;
-        public long sampleMillis;
 
-        public CpuConfig(long intervalMillis, long sampleMillis) {
+        public CpuConfig(long intervalMillis) {
             this.intervalMillis = intervalMillis;
-            this.sampleMillis = sampleMillis;
         }
 
         public CpuConfig() {
             this.intervalMillis = 2000;
-            this.sampleMillis = 2000;
         }
 
         @Override
@@ -315,15 +308,9 @@ public class GodEyeConfig implements Serializable {
         }
 
         @Override
-        public long sampleMillis() {
-            return sampleMillis;
-        }
-
-        @Override
         public String toString() {
             return "CpuConfig{" +
                     "intervalMillis=" + intervalMillis +
-                    ", sampleMillis=" + sampleMillis +
                     '}';
         }
     }

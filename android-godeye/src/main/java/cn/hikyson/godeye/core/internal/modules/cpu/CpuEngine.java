@@ -4,10 +4,8 @@ import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
-import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -19,13 +17,11 @@ import io.reactivex.functions.Predicate;
 public class CpuEngine implements Engine {
     private Producer<CpuInfo> mProducer;
     private long mIntervalMillis;
-    private long mSampleMillis;
     private CompositeDisposable mCompositeDisposable;
 
-    public CpuEngine(Producer<CpuInfo> producer, long intervalMillis, long sampleMillis) {
+    public CpuEngine(Producer<CpuInfo> producer, long intervalMillis) {
         mProducer = producer;
         mIntervalMillis = intervalMillis;
-        mSampleMillis = sampleMillis;
         mCompositeDisposable = new CompositeDisposable();
     }
 
@@ -34,11 +30,11 @@ public class CpuEngine implements Engine {
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
                 .subscribeOn(ThreadUtil.sComputationScheduler)
                 .observeOn(ThreadUtil.sComputationScheduler)
-                .concatMap(new Function<Long, ObservableSource<CpuInfo>>() {
+                .map(new Function<Long, CpuInfo>() {
                     @Override
-                    public ObservableSource<CpuInfo> apply(Long aLong) throws Exception {
+                    public CpuInfo apply(Long aLong) throws Exception {
                         ThreadUtil.ensureWorkThread("CpuEngine apply");
-                        return create();
+                        return CpuUsage.getCpuInfo();
                     }
                 })
                 .filter(new Predicate<CpuInfo>() {
@@ -60,40 +56,5 @@ public class CpuEngine implements Engine {
     @Override
     public void shutdown() {
         mCompositeDisposable.dispose();
-    }
-
-    private Observable<CpuInfo> create() {
-        final CpuSnapshot startSnapshot = CpuSnapshot.snapshot();
-        return Observable.timer(mSampleMillis, TimeUnit.MILLISECONDS).map(new Function<Long, CpuInfo>() {
-            @Override
-            public CpuInfo apply(Long aLong) throws Exception {
-                CpuSnapshot endSnapshot = CpuSnapshot.snapshot();
-                float totalTime = (endSnapshot.total - startSnapshot.total) * 1.0f;
-                if (totalTime <= 0) {
-                    L.e("totalTime must greater than 0");
-                    return CpuInfo.INVALID;
-                }
-                long idleTime = endSnapshot.idle - startSnapshot.idle;
-                double totalRatio = (totalTime - idleTime) / totalTime;
-                double appRatio = (endSnapshot.app - startSnapshot.app) / totalTime;
-                double userRatio = (endSnapshot.user - startSnapshot.user) / totalTime;
-                double systemRatio = (endSnapshot.system - startSnapshot.system) / totalTime;
-                double ioWaitRatio = (endSnapshot.ioWait - startSnapshot.ioWait) / totalTime;
-                if (!isValidRatios(totalRatio, appRatio, userRatio, systemRatio, ioWaitRatio)) {
-                    L.e("not valid ratio");
-                    return CpuInfo.INVALID;
-                }
-                return new CpuInfo(totalRatio, appRatio, userRatio, systemRatio, ioWaitRatio);
-            }
-        });
-    }
-
-    private boolean isValidRatios(Double... ratios) {
-        for (double ratio : ratios) {
-            if (ratio < 0 || ratio > 1) {
-                return false;
-            }
-        }
-        return true;
     }
 }
