@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.Random;
 
 import cn.hikyson.android.godeye.toolbox.network.GodEyePluginOkNetwork;
-import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeHelper;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
@@ -25,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import xcrash.XCrash;
 
 
 public class ToolsFragment extends Fragment {
@@ -61,11 +61,14 @@ public class ToolsFragment extends Fragment {
         view.findViewById(R.id.fragment_tools_call_functions_bt).setOnClickListener(v -> {
             makeInvocations();
         });
-        view.findViewById(R.id.fragment_tools_crash_bt).setOnClickListener(v -> {
+        view.findViewById(R.id.fragment_tools_java_crash_bt).setOnClickListener(v -> {
             SharedPreferences sharedPreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("AndroidGodEye", Context.MODE_PRIVATE);
             int index = sharedPreferences.getInt("CrashIndex", 0);
             sharedPreferences.edit().putInt("CrashIndex", index + 1).commit();
             throw new IllegalStateException("This is a crash made by AndroidGodEye " + index + ".");
+        });
+        view.findViewById(R.id.fragment_tools_native_crash_bt).setOnClickListener(v -> {
+            XCrash.testNativeCrash(false);
         });
         view.findViewById(R.id.fragment_tools_pageload_bt).setOnClickListener(v -> {
             Intent intent = new Intent(ToolsFragment.this.getActivity(), SecondActivity.class);

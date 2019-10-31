@@ -12,16 +12,13 @@ import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeContext;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryContext;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
-import cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider;
-import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
-import cn.hikyson.godeye.core.internal.modules.crash.CrashProvider;
+import cn.hikyson.godeye.core.internal.modules.crash.CrashContext;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
@@ -204,15 +201,10 @@ public class GodEyeConfig implements Serializable {
                 }
                 builder.withTrafficConfig(trafficConfig);
             }
-            // crash
+            // crash TODO KYSON IMPL immediate
             element = getFirstElementByTagInRoot(root, "crash");
             if (element != null) {
-                final String crashProviderString = element.getAttribute("crashProvider");
-                CrashConfig crashConfig = new CrashConfig();
-                if (!TextUtils.isEmpty(crashProviderString)) {
-                    crashConfig.crashProvider = (CrashProvider) Class.forName(crashProviderString).newInstance();
-                }
-                builder.withCrashConfig(crashConfig);
+                builder.withCrashConfig(new CrashConfig());
             }
             // thread
             element = getFirstElementByTagInRoot(root, "thread");
@@ -648,32 +640,29 @@ public class GodEyeConfig implements Serializable {
     }
 
     @Keep
-    public static class CrashConfig implements CrashProvider, Serializable {
-        public CrashProvider crashProvider;
-
-        public CrashConfig(CrashProvider crashProvider) {
-            this.crashProvider = crashProvider;
-        }
+    public static class CrashConfig implements CrashContext, Serializable {
+        public boolean immediate;
 
         public CrashConfig() {
-            this.crashProvider = new CrashFileProvider();
+        }
+
+        public CrashConfig(boolean immediate) {
+            this.immediate = immediate;
         }
 
         @Override
-        public void storeCrash(CrashInfo crashInfo) throws Throwable {
-            crashProvider.storeCrash(crashInfo);
+        public Context context() {
+            return GodEye.instance().getApplication();
         }
 
         @Override
-        public List<CrashInfo> restoreCrash() throws Throwable {
-            return crashProvider.restoreCrash();
+        public boolean immediate() {
+            return immediate;
         }
 
         @Override
         public String toString() {
-            return "CrashConfig{" +
-                    "crashProvider=" + crashProvider +
-                    '}';
+            return "CrashConfig{}";
         }
     }
 

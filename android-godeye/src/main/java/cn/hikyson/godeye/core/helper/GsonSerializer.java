@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.Reader;
+import java.lang.reflect.Type;
 
 /**
  * Created by kysonchao on 2018/1/19.
@@ -21,7 +22,7 @@ public class GsonSerializer implements Serializer {
     }
 
     @Override
-    public <T> T deserialize(Reader reader, Class<T> clz) {
-        return mGson.fromJson(reader, clz);
+    public <T> T deserialize(Reader reader, Type type) {
+        return mGson.fromJson(reader, type);
     }
 }

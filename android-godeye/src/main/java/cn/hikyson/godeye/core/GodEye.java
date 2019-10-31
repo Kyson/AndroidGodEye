@@ -99,6 +99,7 @@ public class GodEye {
      * @return
      */
     public synchronized GodEye install(final GodEyeConfig godEyeConfig) {
+        long startTime = System.currentTimeMillis();
         if (godEyeConfig.getCpuConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.CPU);
             if (moduleObj == null) {
@@ -227,7 +228,7 @@ public class GodEye {
             }
             ((AppSize) moduleObj).install(godEyeConfig.getAppSizeConfig());
         }
-        L.d("GodEye install, godEyeConfig: %s", godEyeConfig);
+        L.d("GodEye install, godEyeConfig: %s, cost %s ms", godEyeConfig, (System.currentTimeMillis() - startTime));
         return this;
     }
 
@@ -237,13 +238,14 @@ public class GodEye {
      * @return
      */
     public synchronized GodEye uninstall() {
+        long startTime = System.currentTimeMillis();
         for (Map.Entry<String, Object> entry : mModules.entrySet()) {
             if (entry.getValue() instanceof Install) {
                 ((Install) entry.getValue()).uninstall();
             }
         }
         mModules.clear();
-        L.d("GodEye uninstall success.");
+        L.d("GodEye uninstall success, cost %s ms", (System.currentTimeMillis() - startTime));
         return this;
     }
 

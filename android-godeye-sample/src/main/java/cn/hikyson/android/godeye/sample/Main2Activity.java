@@ -1,12 +1,12 @@
 package cn.hikyson.android.godeye.sample;
 
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,16 +24,19 @@ public class Main2Activity extends AppCompatActivity implements InstallFragment.
             @Override
             public void d(String msg) {
                 logView.log("DEBUG: " + msg);
+                Log.d(L.DEFAULT_TAG, "DEBUG: " + msg);
             }
 
             @Override
             public void e(String msg) {
                 logView.log("!ERROR: " + msg);
+                Log.e(L.DEFAULT_TAG, "!ERROR: " + msg);
             }
 
             @Override
             public void onRuntimeException(RuntimeException e) {
                 logView.log("!!EXCEPTION: " + e.getLocalizedMessage());
+                Log.e(L.DEFAULT_TAG, "!!EXCEPTION: " + e.getLocalizedMessage());
             }
         });
         TabLayout tabLayout = findViewById(R.id.activity_main2_tab);

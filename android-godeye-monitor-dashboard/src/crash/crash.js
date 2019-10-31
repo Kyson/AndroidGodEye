@@ -3,7 +3,7 @@ import '../App.css';
 
 import JSONPretty from '../../node_modules/react-json-pretty';
 
-import {Card, Modal, Button, List} from 'antd'
+import {Card, Modal, Button, List, Collapse} from 'antd'
 
 /**
  * Crash
@@ -16,6 +16,8 @@ class Crash extends Component {
         this.handleCloseLastCrashInfo = this.handleCloseLastCrashInfo.bind(this);
         this.handleShowCrashList = this.handleShowCrashList.bind(this);
         this.handleCloseCrashList = this.handleCloseCrashList.bind(this);
+        this.renderLastCrashInfoModal = this.renderLastCrashInfoModal.bind(this);
+        this.renderCrashInfoListModal = this.renderCrashInfoListModal.bind(this);
         Crash.renderCrashList = Crash.renderCrashList.bind(this);
         this.state = {
             moreCrashInfos: [],
@@ -53,14 +55,64 @@ class Crash extends Component {
                 bordered
                 dataSource={moreCrashInfos}
                 renderItem={item => <List.Item>
-                    Time(崩溃时间):&nbsp;
-                    <strong>{item.timestampMillis ? new Date(item.timestampMillis).toISOString() : "**"}</strong><br/>
-                    Message(异常信息):&nbsp;
-                    <strong>{item.throwableMessage ? item.throwableMessage : "**"}</strong><br/><br/>
-                    <JSONPretty id="json-pretty" json={item}/>
+                    {Crash.renderCrashDetailItem(item, false)}
                 </List.Item>}
             />
         );
+    }
+
+    static renderCrashDetailItem(crashInfo, expand) {
+        let renderItems = [];
+        let allKeys = [];
+        for (let crashInfoKey in crashInfo) {
+            if (crashInfoKey !== "Crash time" && crashInfoKey !== "crash_message") {
+                renderItems.push(
+                    <Collapse.Panel header={crashInfoKey} key={crashInfoKey}>
+                        <JSONPretty id="json-pretty" json={crashInfo[crashInfoKey]}/>
+                    </Collapse.Panel>
+                );
+                allKeys.push(crashInfoKey);
+            }
+        }
+        return (
+            <div style={{width: "100%"}}>
+                <Collapse defaultActiveKey={expand ? ["1"] : []}>
+                    <Collapse.Panel
+                        header={"Time(崩溃时间):" + crashInfo["Crash time"] + "    ||    Message(异常信息):" + crashInfo["crash_message"]}
+                        key={"1"}>
+                        <Collapse defaultActiveKey={"java stacktrace"}>
+                            {renderItems}
+                        </Collapse>
+                    </Collapse.Panel>
+                </Collapse>
+            </div>
+        );
+    }
+
+    renderLastCrashInfoModal() {
+        if (this.state.showLastCrashInfo) {
+            return (<Modal visible={this.state.showLastCrashInfo} onCancel={this.handleCloseLastCrashInfo}
+                           title="Crash Detail"
+                           closable={true}
+                           onOk={this.handleCloseLastCrashInfo} width={1000} footer={null}>
+                {Crash.renderCrashDetailItem(this.state.lastCrashInfo, true)}
+            </Modal>)
+        } else {
+            return <div/>
+        }
+    }
+
+    renderCrashInfoListModal(moreCrashInfos) {
+        if (this.state.showCrashList) {
+            return (<Modal visible={this.state.showCrashList} onCancel={this.handleCloseCrashList}
+                           title="Crash List"
+                           closable={true}
+                           onOk={this.handleCloseCrashList} width={1000} footer={null}>
+                {Crash.renderCrashList(moreCrashInfos)}
+            </Modal>)
+        } else {
+            return <div/>
+        }
     }
 
     render() {
@@ -74,25 +126,15 @@ class Crash extends Component {
                 <div>
                     <p>
                         Time(崩溃时间):&nbsp;
-                        <strong>{lastCrashInfo.timestampMillis ? new Date(lastCrashInfo.timestampMillis).toISOString() : "**"}</strong>
+                        <strong>{lastCrashInfo["Crash time"]}</strong>
                     </p>
                     <p style={{wordWrap: "break-word", wordBreak: "break-all"}}>
                         Message(异常信息):&nbsp;
-                        <strong>{lastCrashInfo.throwableMessage ? lastCrashInfo.throwableMessage : "**"}</strong>
+                        <strong>{lastCrashInfo["crash_message"]}</strong>
                     </p>
                 </div>
-                <Modal visible={this.state.showLastCrashInfo} onCancel={this.handleCloseLastCrashInfo}
-                       title="Crash Detail"
-                       closable={true}
-                       onOk={this.handleCloseLastCrashInfo} width={1000} footer={null}>
-                    <JSONPretty id="json-pretty" json={this.state.lastCrashInfo}/>
-                </Modal>
-                <Modal visible={this.state.showCrashList} onCancel={this.handleCloseCrashList}
-                       title="Crash List"
-                       closable={true}
-                       onOk={this.handleCloseCrashList} width={1000} footer={null}>
-                    {Crash.renderCrashList(moreCrashInfos)}
-                </Modal>
+                {this.renderLastCrashInfoModal()}
+                {this.renderCrashInfoListModal(moreCrashInfos)}
             </Card>);
     }
 }

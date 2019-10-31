@@ -215,19 +215,70 @@ class Mock {
         });
         this.recvFun("crashInfo", [
             {
-                timestampMillis: new Date().getMilliseconds(),
-                throwableMessage: "11111throwableMessagethrowableMessagethrowableMessagethrowab",
-                throwableStacktrace: ["1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111"]
+                "Crash time": "1990-12-11 12:21:33.SSSZ",
+                "crash_message":"this is a message1",
+                "java stacktrace": "at xcrash.NativeHandler.nativeTestCrash(Native method)\n" +
+                "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
+                "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
+                "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
+                "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
+                "at android.view.View.performClick(View.java:7352)\n" +
+                "at android.widget.TextView.performClick(TextView.java:14177)\n" +
+                "at android.view.View.performClickInternal(View.java:7318)\n" +
+                "at android.view.View.access$3200(View.java:846)\n" +
+                "at android.view.View$PerformClick.run(View.java:27807)\n" +
+                "at android.os.Handler.handleCallback(Handler.java:873)\n" +
+                "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
+                "at android.os.Looper.loop(Looper.java:214)\n" +
+                "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
+                "at java.lang.reflect.Method.invoke(Native method)\n" +
+                "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
+                "code": "1 (SEGV_MAPERR)",
+                "Crash type":"native"
             },
             {
-                timestampMillis: new Date().getMilliseconds() - 1000 * 60,
-                throwableMessage: "22222throwableMessagethrowableMessagethrowableMessagethrowab",
-                throwableStacktrace: ["222", "222", "222", "222", "222", "222", "222", "222", "222", "222"]
+                "Crash time": "1990-12-11 12:21:33.SSSZ",
+                "crash_message":"this is a message2",
+                "java stacktrace": "at xcrash.NativeHa2342342342method)\n" +
+                "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
+                "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
+                "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
+                "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
+                "at android.view.View.performClick(View.java:7352)\n" +
+                "at android.widget.TextView.performClick(TextView.java:14177)\n" +
+                "at android.view.View.performClickInternal(View.java:7318)\n" +
+                "at android.view.View.access$3200(View.java:846)\n" +
+                "at android.view.View$PerformClick.run(View.java:27807)\n" +
+                "at android.os.Handler.handleCallback(Handler.java:873)\n" +
+                "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
+                "at android.os.Looper.loop(Looper.java:214)\n" +
+                "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
+                "at java.lang.reflect.Method.invoke(Native method)\n" +
+                "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
+                "code": "1 (SEGV_MAPERR)",
+                "Crash type":"java"
             },
             {
-                timestampMillis: new Date().getMilliseconds() - 1000 * 60 * 3,
-                throwableMessage: "3333throwableMessageb",
-                throwableStacktrace: ["33333", "33333", "33333", "33333", "33333", "33333", "33333", "33333", "33333", "33333"]
+                "Crash time": "1920-12-11 12:21:33.SSSZ",
+                "crash_message":"this is a message3",
+                "java stacktrace": "at xcrash.4123f34334fveTestCrash(Native method)\n" +
+                "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
+                "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
+                "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
+                "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
+                "at android.view.View.performClick(View.java:7352)\n" +
+                "at android.widget.TextView.performClick(TextView.java:14177)\n" +
+                "at android.view.View.performClickInternal(View.java:7318)\n" +
+                "at android.view.View.access$3200(View.java:846)\n" +
+                "at android.view.View$PerformClick.run(View.java:27807)\n" +
+                "at android.os.Handler.handleCallback(Handler.java:873)\n" +
+                "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
+                "at android.os.Looper.loop(Looper.java:214)\n" +
+                "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
+                "at java.lang.reflect.Method.invoke(Native method)\n" +
+                "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
+                "code": "1 (SEGV_MAPERR)",
+                "Crash type":"java"
             }
 
         ]);

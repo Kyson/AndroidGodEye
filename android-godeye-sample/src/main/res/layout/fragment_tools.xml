@@ -10,10 +10,22 @@
         android:orientation="vertical"
         tools:context=".ToolsFragment">
 
+        <Button
+            android:id="@+id/fragment_tools_request_bt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Test Network" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/fragment_tools_block_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test Block(Jank)!" />
 
             <EditText
                 android:id="@+id/fragment_tools_block_et"
@@ -23,19 +35,7 @@
                 android:hint="Input Block(Jank) Time(ms)"
                 android:inputType="number" />
 
-            <Button
-                android:id="@+id/fragment_tools_block_bt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Test Block(Jank)!" />
-
         </LinearLayout>
-
-        <Button
-            android:id="@+id/fragment_tools_request_bt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Test Network" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,12 +92,24 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/fragment_tools_crash_bt"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Test Crash!!!" />
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/fragment_tools_java_crash_bt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Java Crash!!!" />
 
+            <Button
+                android:id="@+id/fragment_tools_native_crash_bt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Native Crash!!!" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -1,9 +1,8 @@
 package cn.hikyson.godeye.monitor.server;
 
-import java.util.Collections;
-
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.exceptions.UnexpectException;
@@ -11,7 +10,6 @@ import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.SubjectSupport;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
-import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
@@ -33,6 +31,7 @@ import cn.hikyson.godeye.monitor.modules.MethodCanaryStatus;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
+import cn.hikyson.godeye.monitor.modules.crash.CrashStore;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -126,16 +125,18 @@ public class ModuleDriver {
                         .map(ThreadInfoConverter.threadMap())
                         .map(this.createConvertServerMessageFunction("threadInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                this.<List<CrashInfo>>wrapThreadComputationObservable(GodEye.ModuleName.CRASH)
-                        .filter(crashPredicate())
-                        .map(this.createConvertServerMessageFunction("crashInfo"))
-                        .subscribe(this.createSendMessageConsumer()),
                 this.<PageLifecycleEventInfo>wrapThreadComputationObservable(GodEye.ModuleName.PAGELOAD)
                         .map(this.pageLifecycleMap())
                         .map(this.createConvertServerMessageFunction("pageLifecycle"))
                         .subscribe(this.createSendMessageConsumer()),
                 this.<MethodsRecordInfo>wrapThreadComputationObservable(GodEye.ModuleName.METHOD_CANARY)
                         .map(this.createConvertServerMessageFunction("methodCanary"))
+                        .subscribe(this.createSendMessageConsumer()),
+                CrashStore.observeCrashAndCache(GodEye.instance().getApplication())
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
+                        .filter(crashPredicate())
+                        .map(this.createConvertServerMessageFunction("crashInfo"))
                         .subscribe(this.createSendMessageConsumer())
         );
         try {
@@ -172,7 +173,6 @@ public class ModuleDriver {
         return new ConvertServerMessageFunction<T>(module);
     }
 
-
     private Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent> pageLifecycleMap() {
         return tPageLifecycleEventInfo -> {
             PageLifecycleProcessedEvent pageLifecycleProcessedEvent = new PageLifecycleProcessedEvent();
@@ -196,7 +196,7 @@ public class ModuleDriver {
         };
     }
 
-    private Predicate<List<CrashInfo>> crashPredicate() {
+    private Predicate<List<Map<String, String>>> crashPredicate() {
         return crashInfos -> crashInfos != null && !crashInfos.isEmpty();
     }
 
