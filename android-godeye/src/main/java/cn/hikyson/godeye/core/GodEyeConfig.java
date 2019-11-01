@@ -36,6 +36,7 @@ import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanaryContext;
 import cn.hikyson.godeye.core.utils.IoUtil;
 
 public class GodEyeConfig {
@@ -215,6 +216,19 @@ public class GodEyeConfig {
         GodEyeConfig godEyeConfig = fromInputStream(is);
         IoUtil.closeSilently(is);
         return godEyeConfig;
+    }
+
+    public static class ViewCanaryConfig implements ViewCanaryContext {
+
+        @Override
+        public Application application() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public int maxDepth() {
+            return 10;
+        }
     }
 
     public static class BatteryConfig implements BatteryContext {
@@ -612,6 +626,7 @@ public class GodEyeConfig {
     private TrafficConfig mTrafficConfig;
     private MethodCanaryConfig mMethodCanaryConfig;
     private AppSizeConfig mAppSizeConfig;
+    private ViewCanaryConfig mViewCanaryConfig;
 
     public BatteryConfig getBatteryConfig() {
         return mBatteryConfig;
@@ -725,6 +740,14 @@ public class GodEyeConfig {
         return mAppSizeConfig;
     }
 
+    public ViewCanaryConfig getViewCanaryConfig() {
+        return mViewCanaryConfig;
+    }
+
+    public void setViewCanaryConfig(ViewCanaryConfig viewCanaryConfig) {
+        mViewCanaryConfig = viewCanaryConfig;
+    }
+
     private static @Nullable
     Element getFirstElementByTagInRoot(Element root, String moduleName) {
         NodeList elements = root.getElementsByTagName(moduleName);
@@ -750,6 +773,7 @@ public class GodEyeConfig {
         private TrafficConfig mTrafficConfig;
         private MethodCanaryConfig mMethodCanaryConfig;
         private AppSizeConfig mAppSizeConfig;
+        private ViewCanaryConfig mViewCanaryConfig;
 
         private GodEyeConfigBuilder() {
         }
@@ -828,6 +852,11 @@ public class GodEyeConfig {
             return this;
         }
 
+        public GodEyeConfigBuilder withAppSizeConfig(ViewCanaryConfig viewCanaryConfig) {
+            this.mViewCanaryConfig = viewCanaryConfig;
+            return this;
+        }
+
         public GodEyeConfig build() {
             GodEyeConfig godEyeConfig = new GodEyeConfig();
             godEyeConfig.mRamConfig = this.mRamConfig;
@@ -844,6 +873,7 @@ public class GodEyeConfig {
             godEyeConfig.mTrafficConfig = this.mTrafficConfig;
             godEyeConfig.mPageloadConfig = this.mPageloadConfig;
             godEyeConfig.mAppSizeConfig = this.mAppSizeConfig;
+            godEyeConfig.mViewCanaryConfig = this.mViewCanaryConfig;
             return godEyeConfig;
         }
     }

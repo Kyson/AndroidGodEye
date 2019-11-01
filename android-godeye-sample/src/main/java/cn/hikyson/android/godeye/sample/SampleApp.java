@@ -1,6 +1,7 @@
 package cn.hikyson.android.godeye.sample;
 
 import android.app.Application;
+import android.webkit.WebSettings;
 
 import java.util.Collections;
 

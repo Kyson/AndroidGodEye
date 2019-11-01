@@ -7,12 +7,14 @@ import AppInfo from "./appinfo/appInfo";
 import globalWs from './communication/websocket'
 import BatteryInfo from "./batteryinfo/batteryInfo";
 import Startup from "./startup/startup";
+import AppSize from "./appSizeInfo/appsize";
 import Ram from "./ram/ram";
 import Pss from "./pss/pss";
 import Fps from "./fps/fps";
 import Cpu from "./cpu/cpu";
 import Heap from "./heap/heap";
 import Pageload from "./pageload/pageload";
+import ViewCanary from "./viewcanary/viewcanary";
 import Traffic from "./traffic/traffic";
 import Crash from "./crash/crash";
 import Block from "./block/block";
@@ -41,7 +43,7 @@ class App extends Component {
         };
         globalWs.registerCallback(this.onWsOpenCallback);
         globalWs.start();
-        // this.mock.start(this._onReceiveMessage);
+         this.mock.start(this._onReceiveMessage);
     }
 
     componentWillUnmount() {
@@ -65,7 +67,9 @@ class App extends Component {
             "networkInfo": this.refs.networkInfo,
             "threadInfo": this.refs.threadInfo,
             "leakInfo": this.refs.leakInfo,
-            "methodCanary": this.refs.methodCanary
+            "methodCanary": this.refs.methodCanary,
+            "appSizeInfo": this.refs.appSizeInfo,
+            "viewIssueInfo": this.refs.viewIssueInfo
         };
         return moduleMap[moduleName];
     }
@@ -80,7 +84,9 @@ class App extends Component {
         } else if ("reinstallBlock" === moduleName) {
             this.refs.blockInfo.refreshStatus(payload);
         } else {
-            this._getModuleRef(moduleName).refresh(payload);
+            if (this._getModuleRef(moduleName)) {
+                this._getModuleRef(moduleName).refresh(payload);
+            }
         }
     }
 
@@ -123,10 +129,13 @@ class App extends Component {
                         </Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col lg={24} xl={11}>
+                        <Col lg={24} xl={7}>
                             <Startup ref="startupInfo"/>
                         </Col>
-                        <Col lg={24} xl={13}>
+                        <Col lg={24} xl={9}>
+                            <AppSize ref="appSizeInfo"/>
+                        </Col>
+                        <Col lg={24} xl={8}>
                             <Crash ref="crashInfo"/>
                         </Col>
                     </Row>
@@ -144,6 +153,9 @@ class App extends Component {
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col lg={24} xl={11}><Pageload ref="pageLifecycle"/></Col>
                         <Col lg={24} xl={13}><Thread ref="threadInfo"/></Col>
+                    </Row>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
+                        <Col span={24}><ViewCanary ref="viewIssueInfo"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Network ref="networkInfo"/></Col>

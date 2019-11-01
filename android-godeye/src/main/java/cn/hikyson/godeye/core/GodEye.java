@@ -26,6 +26,7 @@ import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanary;
 
 /**
  * 入口
@@ -37,7 +38,7 @@ public class GodEye {
     @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
             ModuleName.HEAP, ModuleName.PSS, ModuleName.TRAFFIC, ModuleName.CRASH,
             ModuleName.THREAD, ModuleName.RAM, ModuleName.NETWORK, ModuleName.SM,
-            ModuleName.STARTUP, ModuleName.DEADLOCK, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY, ModuleName.APP_SIZE
+            ModuleName.STARTUP, ModuleName.DEADLOCK, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY, ModuleName.APP_SIZE, ModuleName.VIEW_CANARY
     })
     public @interface ModuleName {
         public static final String CPU = "CPU";
@@ -57,6 +58,7 @@ public class GodEye {
         public static final String PAGELOAD = "PAGELOAD";
         public static final String METHOD_CANARY = "METHOD_CANARY";
         public static final String APP_SIZE = "APP_SIZE";
+        public static final String VIEW_CANARY = "VIEW_CANARY";
     }
 
     private Application mApplication;
@@ -98,6 +100,7 @@ public class GodEye {
         mModules.put(ModuleName.PAGELOAD, new Pageload());
         mModules.put(ModuleName.METHOD_CANARY, new MethodCanary());
         mModules.put(ModuleName.APP_SIZE, new AppSize());
+        mModules.put(ModuleName.VIEW_CANARY, new ViewCanary());
     }
 
     public GodEye install(final GodEyeConfig godEyeConfig) {
@@ -142,6 +145,10 @@ public class GodEye {
         }
         if (godEyeConfig.getAppSizeConfig() != null) {
             ((AppSize) mModules.get(ModuleName.APP_SIZE)).install(godEyeConfig.getAppSizeConfig());
+        }
+
+        if (godEyeConfig.getAppSizeConfig() != null) {
+            ((ViewCanary) mModules.get(ModuleName.VIEW_CANARY)).install(godEyeConfig.getViewCanaryConfig());
         }
         return this;
     }

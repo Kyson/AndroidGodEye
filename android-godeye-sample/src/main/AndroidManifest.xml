@@ -21,6 +21,7 @@
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
         </activity>
         <activity android:name=".LeakActivity"/>
+        <activity android:name=".ComplexLayoutActivity"/>
         <activity android:name=".LeakActivityV4"/>
         <activity
             android:name=".SplashActivity"

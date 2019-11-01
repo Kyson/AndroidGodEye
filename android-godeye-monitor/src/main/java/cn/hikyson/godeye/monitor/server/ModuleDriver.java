@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSize;
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeInfo;
 import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
@@ -41,6 +43,8 @@ import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanary;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewIssueInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modules.MethodCanaryStatus;
@@ -149,6 +153,12 @@ public class ModuleDriver {
                         .subscribe(this.createSendMessageConsumer()),
                 wrapThreadComputationObservable(godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).subject())
                         .map(this.<MethodsRecordInfo>createConvertServerMessageFunction("methodCanary"))
+                        .subscribe(this.createSendMessageConsumer()),
+                wrapThreadComputationObservable(godEye.<AppSize>getModule(GodEye.ModuleName.APP_SIZE).subject())
+                        .map(this.<AppSizeInfo>createConvertServerMessageFunction("appSizeInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                wrapThreadComputationObservable(godEye.<ViewCanary>getModule(GodEye.ModuleName.VIEW_CANARY).subject())
+                        .map(this.<ViewIssueInfo>createConvertServerMessageFunction("viewIssueInfo"))
                         .subscribe(this.createSendMessageConsumer())
         );
         Observable<String> methodCanaryStatusSubject = wrapThreadComputationObservable(godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject());

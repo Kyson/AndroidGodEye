@@ -12,11 +12,41 @@
         android:layout_height="wrap_content"
         android:text="Leak will happen when you finish this activity and wait for a moment." />
 
-    <Button
-        android:id="@+id/btn_fragment"
+    <LinearLayout
+        android:background="@android:color/holo_blue_dark"
         android:layout_width="wrap_content"
-        android:layout_height="64dp"
-        android:text="Show app fragment (Android O and above)" />
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:background="@android:color/holo_blue_dark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:background="@android:color/holo_blue_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:background="@android:color/holo_blue_dark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btn_fragment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="64dp"
+                        android:text="Show app fragment (Android O and above)" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        </LinearLayout>
+
 
     <FrameLayout
         android:id="@+id/frame_layout"

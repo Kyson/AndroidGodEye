@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:background="@android:color/holo_blue_dark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:background="@android:color/holo_blue_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:background="@android:color/holo_blue_dark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:background="@android:color/holo_blue_dark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/btn_fragment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="64dp"
+                            android:text="Show app fragment (Android O and above)" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:stretchColumns="1" >
+
+            <TableRow>
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dip"
+                    android:layout_marginRight="5dip"
+                    android:layout_marginTop="10dip"
+                    android:tint="#55ff0000" >
+                </ImageView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  Name " >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/name1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Veer" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  Age" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/age1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="23" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  Gender" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/gender1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Male" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/profession"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  Professsion" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/profession1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Mobile Developer" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  Phone" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/phone1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="03333736767" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  Email" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/email1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="veer.developer@gmail.com" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/hobby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  Hobby" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/hobby1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Play Games" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/ilike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  I like" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/ilike1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Java, Objective-c" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/idislike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  I dislike" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/idislike1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Microsoft" >
+                </TextView>
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dip"
+                    android:text="  Address" >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/address1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="Johar Mor" >
+                </TextView>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+
+</ScrollView>

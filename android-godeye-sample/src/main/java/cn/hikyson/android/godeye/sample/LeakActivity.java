@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.widget.TextView;
 
 
@@ -14,6 +15,8 @@ public class LeakActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leak);
+
+
 
         findViewById(R.id.btn_fragment).setOnClickListener(new View.OnClickListener() {
             @Override
