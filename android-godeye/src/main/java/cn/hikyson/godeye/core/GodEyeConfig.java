@@ -201,10 +201,15 @@ public class GodEyeConfig implements Serializable {
                 }
                 builder.withTrafficConfig(trafficConfig);
             }
-            // crash TODO KYSON IMPL immediate
+            // crash
             element = getFirstElementByTagInRoot(root, "crash");
             if (element != null) {
-                builder.withCrashConfig(new CrashConfig());
+                final String immediateString = element.getAttribute("immediate");
+                CrashConfig crashConfig = new CrashConfig();
+                if (!TextUtils.isEmpty(immediateString)) {
+                    crashConfig.immediate = Boolean.parseBoolean(immediateString);
+                }
+                builder.withCrashConfig(crashConfig);
             }
             // thread
             element = getFirstElementByTagInRoot(root, "thread");
@@ -641,7 +646,7 @@ public class GodEyeConfig implements Serializable {
 
     @Keep
     public static class CrashConfig implements CrashContext, Serializable {
-        public boolean immediate;
+        public boolean immediate = false;
 
         public CrashConfig() {
         }

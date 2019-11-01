@@ -28,6 +28,7 @@ import static cn.hikyson.godeye.core.internal.modules.crash.CrashConstant.CRASH_
  * crash collector
  * not immediate:send crash info when crash if emergency(file store error) or crash module installed if not
  * immediate:send crash info when crash
+ * <p>
  * Created by kysonchao on 2017/12/18.
  */
 public class Crash extends ProduceableSubject<List<Map<String, String>>> implements Install<CrashContext> {
@@ -42,7 +43,7 @@ public class Crash extends ProduceableSubject<List<Map<String, String>>> impleme
         Context context = crashContext.context();
         ICrashCallback callback = (logPath, emergency) -> {
             try {
-                sendThenDeleteCrashLog(logPath, emergency);
+                sendThenDeleteCrashLog(logPath, emergency, crashContext);
             } catch (IOException e) {
                 L.e(e);
             }
@@ -89,8 +90,8 @@ public class Crash extends ProduceableSubject<List<Map<String, String>>> impleme
         return "";
     }
 
-    private void sendThenDeleteCrashLog(String logPath, String emergency) throws IOException {
-        if (emergency != null) {
+    private void sendThenDeleteCrashLog(String logPath, String emergency, CrashContext crashContext) throws IOException {
+        if (emergency != null || crashContext.immediate()) {// if emergency or immediate,output right now
             L.d("Crash produce message when emergency, crash count:%s, emergency:%s, logPath:%s", 1, emergency, logPath);
             produce(Collections.singletonList(wrapCrashMessage(TombstoneParser.parse(logPath, emergency))));
             TombstoneManager.deleteTombstone(logPath);
