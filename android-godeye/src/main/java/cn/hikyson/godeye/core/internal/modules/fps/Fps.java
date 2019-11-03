@@ -14,6 +14,7 @@ import cn.hikyson.godeye.core.utils.ThreadUtil;
  */
 public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsContext> {
     private FpsEngine mFpsEngine;
+    private FpsContext mConfig;
 
     @Override
     public void install(final FpsContext config) {
@@ -29,14 +30,25 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConte
         }
     }
 
-    private void installInMain(FpsContext config) {
+    private synchronized void installInMain(FpsContext config) {
         if (mFpsEngine != null) {
             L.d("Fps already installed, ignore.");
             return;
         }
+        mConfig = config;
         mFpsEngine = new FpsEngine(config.context(), this, config.intervalMillis());
         mFpsEngine.work();
         L.d("Fps installed.");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mFpsEngine != null;
+    }
+
+    @Override
+    public FpsContext config() {
+        return mConfig;
     }
 
     @Override
@@ -53,11 +65,12 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConte
         }
     }
 
-    private void uninstallInMain() {
+    private synchronized void uninstallInMain() {
         if (mFpsEngine == null) {
             L.d("Fps already uninstalled, ignore.");
             return;
         }
+        mConfig = null;
         mFpsEngine.shutdown();
         mFpsEngine = null;
         L.d("Fps uninstalled.");

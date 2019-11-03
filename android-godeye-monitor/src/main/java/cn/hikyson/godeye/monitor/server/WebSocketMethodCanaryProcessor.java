@@ -4,6 +4,8 @@ import com.koushikdutta.async.http.WebSocket;
 
 import org.json.JSONObject;
 
+import java.util.Collections;
+
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
@@ -15,10 +17,11 @@ public class WebSocketMethodCanaryProcessor implements WebSocketProcessor {
         try {
             final MethodCanary methodCanary = GodEye.instance().getModule(GodEye.ModuleName.METHOD_CANARY);
             if ("start".equals(msgJSONObject.optString("payload"))) {
-                methodCanary.startMonitor();
+                methodCanary.startMonitor("AndroidGodEye-Monitor-Tag");
             } else if ("stop".equals(msgJSONObject.optString("payload"))) {
-                methodCanary.stopMonitor();
+                methodCanary.stopMonitor("AndroidGodEye-Monitor-Tag");
             }
+            webSocket.send(new ServerMessage("methodCanaryMonitorState", Collections.singletonMap("isRunning", methodCanary.isRunning("AndroidGodEye-Monitor-Tag"))).toString());
         } catch (UninstallException e) {
             L.e(String.valueOf(e));
         }

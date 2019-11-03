@@ -1,25 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.methodcanary;
 
-import java.util.List;
-import java.util.Map;
-
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
-import cn.hikyson.methodcanary.lib.MethodCanaryCallback;
 import cn.hikyson.methodcanary.lib.MethodCanaryConfig;
-import cn.hikyson.methodcanary.lib.MethodCanaryInject;
-import cn.hikyson.methodcanary.lib.MethodEvent;
-import cn.hikyson.methodcanary.lib.ThreadInfo;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
 
 public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implements Install<MethodCanaryContext> {
     private boolean mInstalled = false;
     private MethodCanaryContext mMethodCanaryContext;
-    private Subject<String> mStatusSubject;
 
     @Override
     public synchronized void install(final MethodCanaryContext methodCanaryContext) {
@@ -27,31 +15,7 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
             L.d("MethodCanary already installed, ignore.");
             return;
         }
-        this.mStatusSubject = PublishSubject.create();
-        MethodCanaryInject.install(MethodCanaryConfig.MethodCanaryConfigBuilder
-                .aMethodCanaryConfig()
-                .lowCostThreshold(methodCanaryContext.lowCostMethodThresholdMillis() * 1000000)
-                .methodCanaryCallback(new MethodCanaryCallback() {
-                    @Override
-                    public void onStopped(long startTimeNanos, long stopTimeNanos) {
-                    }
-
-                    @Override
-                    public void outputToMemory(final long startTimeNanos, final long stopTimeNanos, final Map<ThreadInfo, List<MethodEvent>> methodEventMap) {
-                        Schedulers.computation().scheduleDirect(() -> {
-                            long start0 = System.currentTimeMillis();
-                            MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startTimeNanos, stopTimeNanos, methodEventMap);
-                            long start1 = System.currentTimeMillis();
-                            MethodCanaryConverter.filter(methodsRecordInfo, methodCanaryContext);
-                            long end = System.currentTimeMillis();
-                            L.d(String.format("MethodCanary outputToMemory cost %s ms, filter cost %s ms", end - start0, end - start1));
-                            mStatusSubject.onNext("OUTPUT");
-                            produce(methodsRecordInfo);
-                        });
-                    }
-                }).build());
         this.mMethodCanaryContext = methodCanaryContext;
-        this.mStatusSubject.onNext("INSTALLED");
         this.mInstalled = true;
         L.d("MethodCanary installed.");
     }
@@ -63,48 +27,56 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
             return;
         }
         this.mMethodCanaryContext = null;
-        MethodCanaryInject.uninstall();
-        this.mStatusSubject.onNext("UNINSTALLED");
-        this.mStatusSubject.onComplete();
-        this.mStatusSubject = null;
         this.mInstalled = false;
         L.d("MethodCanary uninstalled.");
     }
 
-    public synchronized MethodCanaryContext getMethodCanaryContext() {
-        return this.mMethodCanaryContext;
-    }
-
-    public synchronized boolean isMonitoring() {
-        return MethodCanaryInject.isMonitoring();
-    }
-
+    @Override
     public synchronized boolean isInstalled() {
         return this.mInstalled;
     }
 
-    public void startMonitor() {
+    @Override
+    public MethodCanaryContext config() {
+        return mMethodCanaryContext;
+    }
+
+    public synchronized void startMonitor(String tag) {
         try {
-            MethodCanaryInject.startMonitor();
-            if (this.mStatusSubject != null && !this.mStatusSubject.hasComplete() && !this.mStatusSubject.hasThrowable()) {
-                this.mStatusSubject.onNext("STARTED");
+            if (!isInstalled()) {
+                L.d("MethodCanary start monitor fail, not installed.");
+                return;
             }
+            cn.hikyson.methodcanary.lib.MethodCanary.get().start(tag);
             L.d("MethodCanary start monitor success.");
         } catch (Exception e) {
             L.d("MethodCanary start monitor fail:" + e);
         }
     }
 
-    public void stopMonitor() {
-        MethodCanaryInject.stopMonitor();
-        if (this.mStatusSubject != null && !this.mStatusSubject.hasComplete() && !this.mStatusSubject.hasThrowable()) {
-            this.mStatusSubject.onNext("STOPPED");
+    public synchronized void stopMonitor(String tag) {
+        try {
+            if (!isInstalled()) {
+                L.d("MethodCanary stop monitor fail, not installed.");
+                return;
+            }
+            cn.hikyson.methodcanary.lib.MethodCanary.get().stop(tag
+                    , new MethodCanaryConfig(this.mMethodCanaryContext.lowCostMethodThresholdMillis() * 1000000), (sessionTag, startNanoTime, stopNanoTime, methodEventMap) -> {
+                        long start0 = System.currentTimeMillis();
+                        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startNanoTime, stopNanoTime, methodEventMap);
+                        long start1 = System.currentTimeMillis();
+                        MethodCanaryConverter.filter(methodsRecordInfo, this.mMethodCanaryContext);
+                        long end = System.currentTimeMillis();
+                        L.d(String.format("MethodCanary output converter cost %s ms, filter cost %s ms", end - start0, end - start1));
+                        produce(methodsRecordInfo);
+                    });
+            L.d("MethodCanary stop monitor success.");
+        } catch (Exception e) {
+            L.d("MethodCanary stop monitor fail:" + e);
         }
-        L.d("MethodCanary stop monitor success.");
     }
 
-    public @Nullable
-    Subject<String> statusSubject() {
-        return this.mStatusSubject;
+    public synchronized boolean isRunning(String tag) {
+        return cn.hikyson.methodcanary.lib.MethodCanary.get().isRunning(tag);
     }
 }

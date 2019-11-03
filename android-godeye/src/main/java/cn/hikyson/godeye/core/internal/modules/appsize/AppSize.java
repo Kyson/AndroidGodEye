@@ -14,6 +14,7 @@ public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<
 
     private Disposable disposable;
     private boolean mInstalled = false;
+    private AppSizeContext mConfig;
 
     @Override
     public synchronized void install(AppSizeContext config) {
@@ -22,6 +23,7 @@ public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<
             return;
         }
         mInstalled = true;
+        mConfig = config;
         disposable = Schedulers.single().scheduleDirect(() -> AppSizeUtil.getAppSize(config.context(), new AppSizeUtil.OnGetSizeListener() {
             @Override
             public void onGetSize(AppSizeInfo appSizeInfo) {
@@ -48,8 +50,19 @@ public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<
         if (disposable != null) {
             disposable.dispose();
         }
+        mConfig = null;
         mInstalled = false;
         L.d("AppSize uninstalled.");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return this.mInstalled;
+    }
+
+    @Override
+    public AppSizeContext config() {
+        return mConfig;
     }
 
     @Override

@@ -17,12 +17,18 @@ class Mock {
     }
 
     refreshMethodCanary() {
-        // this.recvFun("MethodCanaryStatus", {
-        //     lowCostMethodThresholdMillis: 10,
-        //     maxMethodCountSingleThreadByCost: 200,
-        //     isMonitoring: true,
-        //     isInstalled: true
-        // });
+        this.recvFun("installedModuleConfigs", {
+            METHOD_CANARY: {
+                maxMethodCountSingleThreadByCost: 101,
+                lowCostMethodThresholdMillis: 13
+            },
+            SM: {
+                longBlockThresholdMillis: 100,
+                shortBlockThresholdMillis: 100,
+                dumpIntervalMillis: 1000,
+                debugNotify: true
+            }
+        });
 
         this.recvFun("methodCanary", {
             start: 10,
@@ -145,6 +151,11 @@ class Mock {
                     name: "lablel3", value: "value66666"
                 }]
         });
+
+        this.recvFun("methodCanaryMonitorState", {
+            isRunning: this.index % 2 === 0
+        });
+
         this.recvFun("startupInfo", {
             startupType: "cold",
             startupTime: 1003
@@ -216,7 +227,7 @@ class Mock {
         this.recvFun("crashInfo", [
             {
                 "Crash time": "1990-12-11 12:21:33.SSSZ",
-                "crash_message":"this is a message1",
+                "crash_message": "this is a message1",
                 "java stacktrace": "at xcrash.NativeHandler.nativeTestCrash(Native method)\n" +
                 "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
                 "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
@@ -234,11 +245,11 @@ class Mock {
                 "at java.lang.reflect.Method.invoke(Native method)\n" +
                 "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
                 "code": "1 (SEGV_MAPERR)",
-                "Crash type":"native"
+                "Crash type": "native"
             },
             {
                 "Crash time": "1990-12-11 12:21:33.SSSZ",
-                "crash_message":"this is a message2",
+                "crash_message": "this is a message2",
                 "java stacktrace": "at xcrash.NativeHa2342342342method)\n" +
                 "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
                 "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
@@ -256,11 +267,11 @@ class Mock {
                 "at java.lang.reflect.Method.invoke(Native method)\n" +
                 "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
                 "code": "1 (SEGV_MAPERR)",
-                "Crash type":"java"
+                "Crash type": "java"
             },
             {
                 "Crash time": "1920-12-11 12:21:33.SSSZ",
-                "crash_message":"this is a message3",
+                "crash_message": "this is a message3",
                 "java stacktrace": "at xcrash.4123f34334fveTestCrash(Native method)\n" +
                 "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
                 "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
@@ -278,7 +289,7 @@ class Mock {
                 "at java.lang.reflect.Method.invoke(Native method)\n" +
                 "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
                 "code": "1 (SEGV_MAPERR)",
-                "Crash type":"java"
+                "Crash type": "java"
             }
 
         ]);
@@ -290,13 +301,12 @@ class Mock {
             blockTime: 300,
             blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
         });
-        this.recvFun("reinstallBlock", {
+        this.recvFun("blockConfig", {
             longBlockThresholdMillis: 100,
             shortBlockThresholdMillis: 100,
             dumpIntervalMillis: 1000,
             debugNotify: true
         });
-
         this.recvFun("networkInfo", {
             summary: "POST www.trip.com" + this.index,
             isSuccessful: true,

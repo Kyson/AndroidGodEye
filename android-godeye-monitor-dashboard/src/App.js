@@ -75,10 +75,13 @@ class App extends Component {
             return;
         }
         this.refs.refreshStatus.refresh(new Date());
-        if ("MethodCanaryStatus" === moduleName) {
+        if ("installedModuleConfigs" === moduleName) {
+            this.refs.methodCanary.refreshConfig(payload["METHOD_CANARY"]);
+            this.refs.blockInfo.refreshConfig(payload["SM"]);
+        } else if ("methodCanaryMonitorState" === moduleName) {
             this.refs.methodCanary.refreshStatus(payload);
-        } else if ("reinstallBlock" === moduleName) {
-            this.refs.blockInfo.refreshStatus(payload);
+        } else if ("blockConfig" === moduleName) {
+            this.refs.blockInfo.refreshConfig(payload);
         } else {
             this._getModuleRef(moduleName).refresh(payload);
         }

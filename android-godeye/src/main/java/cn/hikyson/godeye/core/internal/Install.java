@@ -7,4 +7,8 @@ public interface Install<T> {
     void install(T config);
 
     void uninstall();
+
+    boolean isInstalled();
+
+    T config();
 }

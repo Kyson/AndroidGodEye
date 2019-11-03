@@ -39,6 +39,16 @@ public class Startup extends ProduceableSubject<StartupInfo> implements Install<
     }
 
     @Override
+    public synchronized boolean isInstalled() {
+        return mConfig != null;
+    }
+
+    @Override
+    public StartupContext config() {
+        return mConfig;
+    }
+
+    @Override
     public void produce(StartupInfo data) {
         if (mConfig == null) {
             L.d("Startup is not installed, produce data fail.");

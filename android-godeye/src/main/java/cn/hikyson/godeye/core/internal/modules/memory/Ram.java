@@ -13,6 +13,7 @@ import cn.hikyson.godeye.core.utils.L;
  */
 public class Ram extends ProduceableSubject<RamInfo> implements Install<RamContext> {
     private RamEngine mRamEngine;
+    private RamContext mConfig;
 
     @Override
     public synchronized void install(RamContext config) {
@@ -20,6 +21,7 @@ public class Ram extends ProduceableSubject<RamInfo> implements Install<RamConte
             L.d("Ram already installed, ignore.");
             return;
         }
+        mConfig = config;
         mRamEngine = new RamEngine(config.context(), this, config.intervalMillis());
         mRamEngine.work();
         L.d("Ram installed.");
@@ -31,8 +33,20 @@ public class Ram extends ProduceableSubject<RamInfo> implements Install<RamConte
             L.d("Ram already uninstalled, ignore.");
             return;
         }
+        mConfig = null;
         mRamEngine.shutdown();
         mRamEngine = null;
         L.d("Ram uninstalled.");
+    }
+
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mRamEngine != null;
+    }
+
+    @Override
+    public RamContext config() {
+        return mConfig;
     }
 }

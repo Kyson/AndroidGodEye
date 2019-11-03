@@ -17,7 +17,7 @@ public class WebSocketBizRouter implements WebSocketProcessor {
         mRouterMap.put("clientOnline", new WebSocketClientOnlineProcessor());
         mRouterMap.put("appInfo", new WebSocketAppinfoProcessor());
         mRouterMap.put("methodCanary", new WebSocketMethodCanaryProcessor());
-        mRouterMap.put("MethodCanaryStatus", new WebSocketMethodCanaryStatusProcessor());
+//        mRouterMap.put("MethodCanaryStatus", new WebSocketMethodCanaryStatusProcessor());
         mRouterMap.put("reinstallBlock", new WebSocketChangeBlockConfigProcessor());
     }
 

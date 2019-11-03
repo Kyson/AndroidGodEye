@@ -12,7 +12,6 @@ import io.reactivex.subjects.Subject;
  * Created by kysonchao on 2017/11/22.
  */
 public class Network extends ProduceableSubject<NetworkInfo> implements Install<NetworkContext> {
-
     private NetworkContext mConfig;
 
     @Override
@@ -36,6 +35,16 @@ public class Network extends ProduceableSubject<NetworkInfo> implements Install<
         }
         mConfig = null;
         L.d("Network uninstalled.");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mConfig != null;
+    }
+
+    @Override
+    public NetworkContext config() {
+        return mConfig;
     }
 
     @Override

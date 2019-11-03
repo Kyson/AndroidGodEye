@@ -17,7 +17,8 @@ class MethodCanary extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            MethodCanaryStatus: {}
+            config: {},
+            isRunning: false
         };
         this.record = {};
         this.chart = null;
@@ -26,21 +27,10 @@ class MethodCanary extends Component {
         this.openMethodCanaryThread = this.openMethodCanaryThread.bind(this);
     }
 
-    componentDidMount() {
-        this.onWsOpenCallback = () => {
-            this.props.globalWs.sendMessage('{"moduleName": "MethodCanaryStatus"}');
-        };
-        this.props.globalWs.registerCallback(this.onWsOpenCallback);
-    }
-
-    componentWillUnmount() {
-        this.props.globalWs.unregisterCallback(this.onWsOpenCallback);
-    }
-
     toggleIsMonitor() {
-        if (this.state.MethodCanaryStatus.isInstalled && !this.state.MethodCanaryStatus.isMonitoring) {
+        if (!this.state.isRunning) {
             this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"start"}');
-        } else if (this.state.MethodCanaryStatus.isInstalled && this.state.MethodCanaryStatus.isMonitoring) {
+        } else {
             this.props.globalWs.sendMessage('{"moduleName": "methodCanary","payload":"stop"}');
         }
     }
@@ -62,9 +52,15 @@ class MethodCanary extends Component {
         return "id:[" + threadInfo.id + "],name:[" + threadInfo.name + "]"
     }
 
-    refreshStatus(record) {
+    refreshConfig(config) {
         this.setState({
-            MethodCanaryStatus: record
+            config: config
+        });
+    }
+
+    refreshStatus(payload) {
+        this.setState({
+            isRunning: payload.isRunning
         });
     }
 
@@ -149,19 +145,19 @@ class MethodCanary extends Component {
 
     render() {
         let instruction = "";
-        if (!this.state.MethodCanaryStatus.isInstalled) {
+        if (!this.state.config) {
             instruction = "Please install method canary first!"
-        } else if (this.state.MethodCanaryStatus.isMonitoring) {
-            instruction = `Monitoring... | lowCostMethod: ${this.state.MethodCanaryStatus.lowCostMethodThresholdMillis}ms, maxSingleThread: ${this.state.MethodCanaryStatus.maxMethodCountSingleThreadByCost}`
+        } else if (this.state.isRunning) {
+            instruction = `Monitoring... | lowCostMethod: ${this.state.config.lowCostMethodThresholdMillis}ms, maxSingleThread: ${this.state.config.maxMethodCountSingleThreadByCost}`
         } else {
-            instruction = ``
+            instruction = `lowCostMethod: ${this.state.config.lowCostMethodThresholdMillis}ms, maxSingleThread: ${this.state.config.maxMethodCountSingleThreadByCost}`
         }
         return (
             <Card title="MethodCanary" extra={
                 <div>
                     <span>{instruction}&nbsp;&nbsp;</span>
                     <Button
-                        onClick={this.toggleIsMonitor}>{this.state.MethodCanaryStatus.isMonitoring ? "Stop" : "Start"}</Button>
+                        onClick={this.toggleIsMonitor}>{this.state.isRunning ? "Stop" : "Start"}</Button>
                     &nbsp;&nbsp;
                     <Button
                         onClick={this.clear}>Clear</Button>

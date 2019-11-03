@@ -3,7 +3,6 @@ package cn.hikyson.godeye.core.internal.modules.methodcanary;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -37,9 +36,8 @@ class MethodCanaryConverter {
                     methodEventsStackOfCurrentThread.push(methodInfo);
                 } else if (methodEvent instanceof MethodExitEvent) {
                     MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo = null;
-                    try {
+                    if (!methodEventsStackOfCurrentThread.empty()) {
                         methodInfo = methodEventsStackOfCurrentThread.pop();
-                    } catch (EmptyStackException ignore) {
                     }
                     if (methodInfo != null) {
                         methodInfo.end = methodEvent.eventNanoTime;
@@ -81,7 +79,7 @@ class MethodCanaryConverter {
     }
 
     private static Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator(final long start, final long end) {
-        return (o1, o2) ->  Long.compare(computeMethodCost(start, end, o2), computeMethodCost(start, end, o1));
+        return (o1, o2) -> Long.compare(computeMethodCost(start, end, o2), computeMethodCost(start, end, o1));
     }
 
     private static long computeMethodCost(long start, long end, MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo) {

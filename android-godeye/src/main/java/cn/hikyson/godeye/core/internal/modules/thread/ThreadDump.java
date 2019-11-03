@@ -14,6 +14,7 @@ import cn.hikyson.godeye.core.utils.L;
  */
 public class ThreadDump extends ProduceableSubject<List<Thread>> implements Install<ThreadContext> {
     private ThreadEngine mThreadEngine;
+    private ThreadContext mConfig;
 
     @Override
     public synchronized void install(ThreadContext config) {
@@ -21,6 +22,7 @@ public class ThreadDump extends ProduceableSubject<List<Thread>> implements Inst
             L.d("ThreadDump already installed, ignore.");
             return;
         }
+        mConfig = config;
         mThreadEngine = new ThreadEngine(this, config.intervalMillis(), config.threadFilter());
         mThreadEngine.work();
         L.d("ThreadDump installed.");
@@ -32,8 +34,19 @@ public class ThreadDump extends ProduceableSubject<List<Thread>> implements Inst
             L.d("ThreadDump already uninstalled, ignore.");
             return;
         }
+        mConfig = null;
         mThreadEngine.shutdown();
         mThreadEngine = null;
         L.d("ThreadDump uninstalled.");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mThreadEngine != null;
+    }
+
+    @Override
+    public ThreadContext config() {
+        return mConfig;
     }
 }
