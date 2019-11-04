@@ -7,10 +7,14 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.InputValidator;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.http.util.TextUtils;
 
+import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -23,16 +27,15 @@ public class OpenAction extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {
         try {
-            String path = parseAndroidSDKPath(anActionEvent.getProject());
+            String path = parseAndroidSDKPath(Objects.requireNonNull(anActionEvent.getProject()));
             if (TextUtils.isEmpty(path)) {
-                mLogger.error("Can not parse sdk.dir.");
                 Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Failed", "Can not parse sdk.dir, Please add 'sdk.dir' to 'local.properties'.", NotificationType.ERROR));
                 return;
             }
             String finalPort = PORT;
-            String androidGodEyeMonitorPort = parseGradleProperties(anActionEvent.getProject(), "ANDROID_GODEYE_MONITOR_PORT");
-            if (!TextUtils.isEmpty(androidGodEyeMonitorPort)) {
-                finalPort = androidGodEyeMonitorPort;
+            String inputPort = askForPort(anActionEvent.getProject());
+            if (inputPort != null && inputPort.length() > 0) {
+                finalPort = inputPort;
             }
             final String commandTcpProxy = String.format("%s/platform-tools/adb forward tcp:%s tcp:%s", path, finalPort, finalPort);
             mLogger.info("Exec [" + commandTcpProxy + "].");
@@ -48,40 +51,46 @@ public class OpenAction extends AnAction {
             Runtime.getRuntime().exec(commandOpenUrl);
             Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Success", String.format("http://localhost:%s/index.html", finalPort), NotificationType.INFORMATION));
         } catch (Throwable e) {
-            mLogger.error(e);
             Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Failed", e.getLocalizedMessage(), NotificationType.ERROR));
         }
     }
 
-    private String parseAndroidSDKPath(Project project) {
-        try {
-            VirtualFile localP = project.getBaseDir().findFileByRelativePath("./local.properties");
-            if (localP == null) {
-                mLogger.error("Can not find local.properties");
-                return "";
-            }
-            Properties localProperties = new Properties();
-            localProperties.load(localP.getInputStream());
-            return localProperties.getProperty("sdk.dir");
-        } catch (Throwable e1) {
-            mLogger.error(e1);
-        }
-        return "";
+    private String askForPort(Project project) {
+        return Messages.showInputDialog(project,
+                "Input Dashboard Port, Default is " + PORT, "AndroidGodEye",
+                Messages.getQuestionIcon(), PORT, new InputValidator() {
+
+                    private boolean isValid(String s) {
+                        if (s == null || s.length() == 0) {
+                            return false;
+                        }
+                        try {
+                            int port = Integer.parseInt(s);
+                            return true;
+                        } catch (Throwable e) {
+                            return false;
+                        }
+                    }
+
+                    @Override
+                    public boolean checkInput(String s) {
+                        return isValid(s);
+                    }
+
+                    @Override
+                    public boolean canClose(String s) {
+                        return isValid(s);
+                    }
+                });
     }
 
-    private String parseGradleProperties(Project project, String key) {
-        try {
-            VirtualFile gradlePropertiesFile = project.getBaseDir().findFileByRelativePath("./gradle.properties");
-            if (gradlePropertiesFile == null) {
-                mLogger.error("Can not find gradle.properties");
-                return "";
-            }
-            Properties gradleProperties = new Properties();
-            gradleProperties.load(gradlePropertiesFile.getInputStream());
-            return gradleProperties.getProperty(key);
-        } catch (Throwable e1) {
-            mLogger.error(e1);
+    private String parseAndroidSDKPath(Project project) throws IOException {
+        VirtualFile localP = project.getBaseDir().findFileByRelativePath("./local.properties");
+        if (localP == null) {
+            return "";
         }
-        return "";
+        Properties localProperties = new Properties();
+        localProperties.load(localP.getInputStream());
+        return localProperties.getProperty("sdk.dir");
     }
 }
