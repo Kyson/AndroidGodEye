@@ -15,7 +15,7 @@ import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
 import xcrash.ICrashCallback;
 import xcrash.TombstoneManager;
@@ -144,6 +144,6 @@ public class Crash extends ProduceableSubject<List<Map<String, String>>> impleme
 
     @Override
     protected Subject<List<Map<String, String>>> createSubject() {
-        return BehaviorSubject.create();
+        return ReplaySubject.create();
     }
 }
