@@ -42,6 +42,6 @@ dependencies {
     implementation "com.github.nisrulz:easydeviceinfo-base:2.4.1"
 }
 
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+//apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
 apply from: rootProject.file('gradle/jitpack.gradle')
 apply from: rootProject.file('gradle/gradle-jcenter-push.gradle')

@@ -25,6 +25,6 @@ android {
 dependencies {
 }
 
-apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+//apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
 apply from: rootProject.file('gradle/jitpack.gradle')
 apply from: rootProject.file('gradle/gradle-jcenter-push.gradle')
