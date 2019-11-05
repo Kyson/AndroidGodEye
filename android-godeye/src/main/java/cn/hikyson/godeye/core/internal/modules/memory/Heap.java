@@ -12,6 +12,7 @@ import cn.hikyson.godeye.core.utils.L;
  */
 public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapContext> {
     private HeapEngine mHeapEngine;
+    private HeapContext mConfig;
 
     @Override
     public synchronized void install(HeapContext heapContext) {
@@ -19,6 +20,7 @@ public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapCo
             L.d("Heap already installed, ignore.");
             return;
         }
+        mConfig = heapContext;
         mHeapEngine = new HeapEngine(this, heapContext.intervalMillis());
         mHeapEngine.work();
         L.d("Heap installed.");
@@ -30,8 +32,19 @@ public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapCo
             L.d("Heap already uninstalled, ignore.");
             return;
         }
+        mConfig = null;
         mHeapEngine.shutdown();
         mHeapEngine = null;
         L.d("Heap uninstalled.");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mHeapEngine != null;
+    }
+
+    @Override
+    public HeapContext config() {
+        return mConfig;
     }
 }

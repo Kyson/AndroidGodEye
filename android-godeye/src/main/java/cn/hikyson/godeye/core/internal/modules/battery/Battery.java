@@ -13,6 +13,7 @@ import io.reactivex.subjects.Subject;
  */
 public class Battery extends ProduceableSubject<BatteryInfo> implements Install<BatteryContext> {
     private BatteryEngine mBatteryEngine;
+    private BatteryContext mConfig;
 
     /**
      * 安装电池模块，任意线程
@@ -25,6 +26,7 @@ public class Battery extends ProduceableSubject<BatteryInfo> implements Install<
             L.d("Battery already installed, ignore.");
             return;
         }
+        mConfig = config;
         mBatteryEngine = new BatteryEngine(config.context(), this);
         mBatteryEngine.work();
         L.d("Battery installed.");
@@ -39,9 +41,20 @@ public class Battery extends ProduceableSubject<BatteryInfo> implements Install<
             L.d("Battery already uninstalled, ignore.");
             return;
         }
+        mConfig = null;
         mBatteryEngine.shutdown();
         mBatteryEngine = null;
         L.d("Battery uninstalled.");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mBatteryEngine != null;
+    }
+
+    @Override
+    public BatteryContext config() {
+        return mConfig;
     }
 
     @Override

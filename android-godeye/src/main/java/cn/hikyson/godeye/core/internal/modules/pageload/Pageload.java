@@ -9,9 +9,6 @@ import android.support.v4.app.Fragment;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
-import io.reactivex.ObservableConverter;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
 
@@ -60,6 +57,16 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         this.mHandler = null;
         this.mInstalled = false;
         L.d("Pageload uninstalled.");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mInstalled;
+    }
+
+    @Override
+    public PageloadContext config() {
+        return mConfig;
     }
 
     public synchronized void onActivityLoad(Activity activity) {

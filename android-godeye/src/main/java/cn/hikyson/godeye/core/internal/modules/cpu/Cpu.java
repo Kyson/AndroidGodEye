@@ -13,6 +13,7 @@ import cn.hikyson.godeye.core.utils.L;
  */
 public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuContext> {
     private CpuEngine mCpuEngine;
+    private CpuContext mConfig;
 
     @Override
     public synchronized void install(CpuContext config) {
@@ -20,6 +21,7 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConte
             L.d("Cpu already installed, ignore.");
             return;
         }
+        mConfig = config;
         mCpuEngine = new CpuEngine(this, config.intervalMillis());
         mCpuEngine.work();
         L.d("Cpu installed");
@@ -31,8 +33,19 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConte
             L.d("Cpu already uninstalled , ignore.");
             return;
         }
+        mConfig= null;
         mCpuEngine.shutdown();
         mCpuEngine = null;
         L.d("Cpu uninstalled");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mCpuEngine != null;
+    }
+
+    @Override
+    public CpuContext config() {
+        return mConfig;
     }
 }

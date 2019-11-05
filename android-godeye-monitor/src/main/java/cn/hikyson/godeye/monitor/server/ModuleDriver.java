@@ -16,7 +16,6 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
-import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodsRecordInfo;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.ActivityLifecycleEvent;
@@ -29,7 +28,6 @@ import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewIssueInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
-import cn.hikyson.godeye.monitor.modules.MethodCanaryStatus;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
@@ -147,17 +145,6 @@ public class ModuleDriver {
                         .map(this.createConvertServerMessageFunction("crashInfo"))
                         .subscribe(this.createSendMessageConsumer())
         );
-        try {
-            Observable<String> methodCanaryStatusSubject = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject();
-            if (methodCanaryStatusSubject != null) {
-                mCompositeDisposable.add(methodCanaryStatusSubject.map(s -> {
-                    MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
-                    return new ServerMessage("MethodCanaryStatus",
-                            new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring()));
-                }).subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation()).subscribe(this.createSendMessageConsumer()));
-            }
-        } catch (UninstallException ignore) {
-        }
     }
 
     public synchronized void stop() {

@@ -45,6 +45,16 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
         mInstalled = false;
     }
 
+    @Override
+    public boolean isInstalled() {
+        return mInstalled;
+    }
+
+    @Override
+    public ViewCanaryContext config() {
+        return config;
+    }
+
     public void inspect() {
         Activity activity = ActivityStackUtil.getTopActivity();
         if (activity == null) {
@@ -171,18 +181,6 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
             if (!TextUtils.isEmpty(charSequence)) {
                 viewInfo.text = charSequence.toString();
                 viewInfo.textSize = ((TextView) view).getTextSize();
-//                // handle textview text overdraw
-//                if (overDrawMap.containsKey(rect)) {
-//                    Set<Object> set = overDrawMap.get(rect);
-//                    if (set != null && set.contains(view)) {
-//                        if (ViewBgUtil.getLayer(view) <= 1) {
-//                            overDrawMap.remove(rect);
-//                            viewInfo.textOverDrawTimes = getOverDrawTimes(set) - 1;
-//                        } else {
-//
-//                        }
-//                    }
-//                }
             }
             viewInfo.hasBackground = ViewBgUtil.getLayer(view) > 1;
         } else {

@@ -12,6 +12,7 @@ import cn.hikyson.godeye.core.utils.L;
  */
 public class Pss extends ProduceableSubject<PssInfo> implements Install<PssContext> {
     private PssEngine mPssEngine;
+    private PssContext mConfig;
 
     @Override
     public synchronized void install(PssContext config) {
@@ -19,6 +20,7 @@ public class Pss extends ProduceableSubject<PssInfo> implements Install<PssConte
             L.d("Pss already installed, ignore.");
             return;
         }
+        mConfig = config;
         mPssEngine = new PssEngine(config.context(), this, config.intervalMillis());
         mPssEngine.work();
         L.d("Pss installed.");
@@ -30,8 +32,19 @@ public class Pss extends ProduceableSubject<PssInfo> implements Install<PssConte
             L.d("Pss already uninstalled, ignore.");
             return;
         }
+        mConfig = null;
         mPssEngine.shutdown();
         mPssEngine = null;
         L.d("Pss uninstalled.");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mPssEngine != null;
+    }
+
+    @Override
+    public PssContext config() {
+        return mConfig;
     }
 }

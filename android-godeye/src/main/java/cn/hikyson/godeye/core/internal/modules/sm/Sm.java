@@ -75,15 +75,21 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
     }
 
     @Override
+    public synchronized boolean isInstalled() {
+        return mInstalled;
+    }
+
+    @Override
+    public SmContext config() {
+        return mSmContext;
+    }
+
+    @Override
     protected Subject<BlockInfo> createSubject() {
         return ReplaySubject.create();
     }
 
     public SmCore getBlockCore() {
         return mBlockCore;
-    }
-
-    public SmContext getSmContext() {
-        return mSmContext;
     }
 }

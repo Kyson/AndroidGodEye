@@ -101,7 +101,7 @@ class Block extends Component {
         return this.index;
     }
 
-    refreshStatus(blockConfig) {
+    refreshConfig(blockConfig) {
         this.setState({
             blockConfig
         })
@@ -142,7 +142,7 @@ class Block extends Component {
                     title="Change Threshold"
                     trigger="click"
                 >
-                    <Button>Long:{this.state.blockConfig.longBlockThresholdMillis}ms</Button>
+                    <Button>Long:{this.state.blockConfig ? this.state.blockConfig.longBlockThresholdMillis : "**"}ms</Button>
                 </Popover>
                 &nbsp;&nbsp;
                 <Popover
@@ -154,7 +154,7 @@ class Block extends Component {
                     title="Change Threshold"
                     trigger="click"
                 >
-                    <Button>Short:{this.state.blockConfig.shortBlockThresholdMillis}ms</Button>
+                    <Button>Short:{this.state.blockConfig ? this.state.blockConfig.shortBlockThresholdMillis : "**"}ms</Button>
                 </Popover>
             </div>
         );

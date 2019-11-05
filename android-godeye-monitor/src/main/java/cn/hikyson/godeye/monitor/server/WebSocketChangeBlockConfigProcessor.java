@@ -17,7 +17,7 @@ public class WebSocketChangeBlockConfigProcessor implements WebSocketProcessor {
         final JSONObject payloadJSONObject = msgJSONObject.optJSONObject("payload");
         try {
             Sm sm = GodEye.instance().getModule(GodEye.ModuleName.SM);
-            SmContext smContext = sm.getSmContext();
+            SmContext smContext = sm.config();
             GodEyeConfig.SmConfig newSmConfig;
             if (smContext == null) {
                 newSmConfig = new GodEyeConfig.SmConfig();
@@ -34,7 +34,7 @@ public class WebSocketChangeBlockConfigProcessor implements WebSocketProcessor {
             }
             sm.uninstall();
             sm.install(newSmConfig);
-            webSocket.send(new ServerMessage("reinstallBlock", newSmConfig).toString());
+            webSocket.send(new ServerMessage("blockConfig", newSmConfig).toString());
         } catch (UninstallException e) {
             L.e(String.valueOf(e));
         }

@@ -15,7 +15,7 @@ import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
 import xcrash.ICrashCallback;
 import xcrash.TombstoneManager;
@@ -33,6 +33,7 @@ import static cn.hikyson.godeye.core.internal.modules.crash.CrashConstant.CRASH_
  */
 public class Crash extends ProduceableSubject<List<Map<String, String>>> implements Install<CrashContext> {
     private boolean mInstalled;
+    private CrashContext mConfig;
 
     @Override
     public synchronized void install(final CrashContext crashContext) {
@@ -40,6 +41,7 @@ public class Crash extends ProduceableSubject<List<Map<String, String>>> impleme
             L.d("Crash already installed, ignore.");
             return;
         }
+        mConfig = crashContext;
         Context context = crashContext.context();
         ICrashCallback callback = (logPath, emergency) -> {
             try {
@@ -77,8 +79,19 @@ public class Crash extends ProduceableSubject<List<Map<String, String>>> impleme
             L.d("Crash already uninstalled, ignore.");
             return;
         }
+        mConfig = null;
         mInstalled = false;
         L.d("Crash uninstalled.");
+    }
+
+    @Override
+    public synchronized boolean isInstalled() {
+        return mInstalled;
+    }
+
+    @Override
+    public CrashContext config() {
+        return mConfig;
     }
 
     private static String getAppVersion(Context context) {
@@ -131,6 +144,6 @@ public class Crash extends ProduceableSubject<List<Map<String, String>>> impleme
 
     @Override
     protected Subject<List<Map<String, String>>> createSubject() {
-        return BehaviorSubject.create();
+        return ReplaySubject.create();
     }
 }
