@@ -131,9 +131,10 @@ public class CrashStore {
         // sort by crash time [2019-09-04 12:00:00.crash,2019-09-02 12:00:00.crash,2019-09-02 11:00:00.crash]
         Collections.sort(crashInfos, (o1, o2) -> {
             try {
+                // TODO KYSON Attempt to invoke interface method 'java.lang.Object java.util.Map.get(java.lang.Object)' on a null object reference
                 return Long.compare(FORMATTER_2.parse(o2.get(TombstoneParser.keyCrashTime)).getTime(), FORMATTER_2.parse(o1.get(TombstoneParser.keyCrashTime)).getTime());
-            } catch (ParseException e) {
-                L.e(e);
+            } catch (Throwable throwable) {
+                L.e(throwable);
             }
             return 0;
         });

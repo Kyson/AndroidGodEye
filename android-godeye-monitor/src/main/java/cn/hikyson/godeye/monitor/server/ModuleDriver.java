@@ -8,6 +8,7 @@ import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.exceptions.UnexpectException;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.SubjectSupport;
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeInfo;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
@@ -24,6 +25,7 @@ import cn.hikyson.godeye.core.internal.modules.pageload.PageloadUtil;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewIssueInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
@@ -129,6 +131,12 @@ public class ModuleDriver {
                         .subscribe(this.createSendMessageConsumer()),
                 this.<MethodsRecordInfo>wrapThreadComputationObservable(GodEye.ModuleName.METHOD_CANARY)
                         .map(this.createConvertServerMessageFunction("methodCanary"))
+                        .subscribe(this.createSendMessageConsumer()),
+                this.<AppSizeInfo>wrapThreadComputationObservable(GodEye.ModuleName.APP_SIZE)
+                        .map(this.createConvertServerMessageFunction("appSizeInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                this.<ViewIssueInfo>wrapThreadComputationObservable(GodEye.ModuleName.VIEW_CANARY)
+                        .map(this.createConvertServerMessageFunction("viewIssueInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 CrashStore.observeCrashAndCache(GodEye.instance().getApplication())
                         .subscribeOn(Schedulers.computation())

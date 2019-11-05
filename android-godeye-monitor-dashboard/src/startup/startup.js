@@ -28,9 +28,9 @@ class Startup extends Component {
                 <div style={{paddingTop: 4, paddingBottom: 4}}>
                     <span >
                         Startup Type:&nbsp;&nbsp;
-                        <span style={{fontSize: 48}}>{info.startupType}</span>
+                        <span style={{fontSize: 32}}>{info.startupType}</span>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cost time:&nbsp;&nbsp;
-                        <span style={{fontSize: 48}}>{info.startupTime}</span>&nbsp;&nbsp;ms
+                        <span style={{fontSize: 32}}>{info.startupTime}</span>&nbsp;&nbsp;ms
                     </span>
                 </div>
             </Card>);

@@ -30,6 +30,8 @@ import cn.hikyson.godeye.core.internal.modules.sm.Sm;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanary;
+import cn.hikyson.godeye.core.utils.ActivityStackUtil;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -46,7 +48,7 @@ public class GodEye {
     @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
             ModuleName.HEAP, ModuleName.PSS, ModuleName.TRAFFIC, ModuleName.CRASH,
             ModuleName.THREAD, ModuleName.RAM, ModuleName.NETWORK, ModuleName.SM,
-            ModuleName.STARTUP, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY, ModuleName.APP_SIZE
+            ModuleName.STARTUP, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY, ModuleName.APP_SIZE, ModuleName.VIEW_CANARY
     })
     public @interface ModuleName {
         public static final String CPU = "CPU";
@@ -65,6 +67,7 @@ public class GodEye {
         public static final String PAGELOAD = "PAGELOAD";
         public static final String METHOD_CANARY = "METHOD_CANARY";
         public static final String APP_SIZE = "APP_SIZE";
+        public static final String VIEW_CANARY = "VIEW_CANARY";
     }
 
     private Application mApplication;
@@ -89,6 +92,7 @@ public class GodEye {
      */
     public void init(Application application) {
         mApplication = application;
+        ActivityStackUtil.register(application);
         L.d("GodEye init.");
     }
 
@@ -227,6 +231,14 @@ public class GodEye {
                 mModules.put(ModuleName.APP_SIZE, moduleObj);
             }
             ((AppSize) moduleObj).install(godEyeConfig.getAppSizeConfig());
+        }
+        if (godEyeConfig.getViewCanaryConfig() != null) {
+            Object moduleObj = mModules.get(ModuleName.VIEW_CANARY);
+            if (moduleObj == null) {
+                moduleObj = new ViewCanary();
+                mModules.put(ModuleName.VIEW_CANARY, moduleObj);
+            }
+            ((ViewCanary) mModules.get(ModuleName.VIEW_CANARY)).install(godEyeConfig.getViewCanaryConfig());
         }
         L.d("GodEye install, godEyeConfig: %s, cost %s ms", godEyeConfig, (System.currentTimeMillis() - startTime));
         return this;

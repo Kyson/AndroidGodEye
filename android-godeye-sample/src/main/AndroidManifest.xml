@@ -13,8 +13,9 @@
             android:name=".Main2Activity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
-        <activity android:name=".LeakActivity" />
-        <activity android:name=".LeakActivityV4" />
+        <activity android:name=".LeakActivity"/>
+        <activity android:name=".ComplexLayoutActivity"/>
+        <activity android:name=".LeakActivityV4"/>
         <activity
             android:name=".SplashActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">

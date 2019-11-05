@@ -136,6 +136,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="appsize"/>
+
+                    <CheckBox
+                        android:id="@+id/activity_main_view_canary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="viewcanary"/>
                 </LinearLayout>
 
             </HorizontalScrollView>
@@ -392,6 +398,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="appsize" />
+
+                <Button
+                    android:id="@+id/activity_main_consumer_view_canary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="view canary" />
 
             </LinearLayout>
 

@@ -37,6 +37,7 @@ import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanaryContext;
 import cn.hikyson.godeye.core.utils.IoUtil;
 import cn.hikyson.godeye.core.utils.L;
 
@@ -64,6 +65,7 @@ public class GodEyeConfig implements Serializable {
         builder.withPageloadConfig(new PageloadConfig());
         builder.withMethodCanaryConfig(new MethodCanaryConfig());
         builder.withAppSizeConfig(new AppSizeConfig());
+        builder.withViewCanaryConfig(new ViewCanaryConfig());
         return builder;
     }
 
@@ -258,6 +260,16 @@ public class GodEyeConfig implements Serializable {
                     appSizeConfig.delayMillis = Long.parseLong(delayMillisString);
                 }
                 builder.withAppSizeConfig(appSizeConfig);
+            }
+            // view canary
+            element = getFirstElementByTagInRoot(root, "viewCanary");
+            if (element != null) {
+                final String maxDepth = element.getAttribute("maxDepth");
+                ViewCanaryConfig viewCanaryConfig = new ViewCanaryConfig();
+                if (!TextUtils.isEmpty(maxDepth)) {
+                    viewCanaryConfig.maxDepth = Integer.parseInt(maxDepth);
+                }
+                builder.withViewCanaryConfig(viewCanaryConfig);
             }
         } catch (Exception e) {
             L.e(e);
@@ -735,6 +747,29 @@ public class GodEyeConfig implements Serializable {
                     '}';
         }
     }
+    @Keep
+    public static class ViewCanaryConfig implements ViewCanaryContext, Serializable {
+
+        public int maxDepth;
+
+        public ViewCanaryConfig() {
+            this.maxDepth = 10;
+        }
+
+        public ViewCanaryConfig(int maxDepth) {
+            this.maxDepth = maxDepth;
+        }
+
+        @Override
+        public Application application() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public int maxDepth() {
+            return maxDepth;
+        }
+    }
 
     @Keep
     public static class AppSizeConfig implements AppSizeContext, Serializable {
@@ -814,6 +849,7 @@ public class GodEyeConfig implements Serializable {
     private PageloadConfig mPageloadConfig;
     private MethodCanaryConfig mMethodCanaryConfig;
     private AppSizeConfig mAppSizeConfig;
+    private ViewCanaryConfig mViewCanaryConfig;
 
     private GodEyeConfig() {
     }
@@ -943,6 +979,14 @@ public class GodEyeConfig implements Serializable {
         return mMethodCanaryConfig;
     }
 
+    public ViewCanaryConfig getViewCanaryConfig() {
+        return mViewCanaryConfig;
+    }
+
+    public void setViewCanaryConfig(ViewCanaryConfig viewCanaryConfig) {
+        mViewCanaryConfig = viewCanaryConfig;
+    }
+
     public void setMethodCanaryConfig(MethodCanaryConfig methodCanaryConfig) {
         mMethodCanaryConfig = methodCanaryConfig;
     }
@@ -986,6 +1030,7 @@ public class GodEyeConfig implements Serializable {
         private PageloadConfig mPageloadConfig;
         private MethodCanaryConfig mMethodCanaryConfig;
         private AppSizeConfig mAppSizeConfig;
+        private ViewCanaryConfig mViewCanaryConfig;
 
         public static GodEyeConfigBuilder godEyeConfig() {
             return new GodEyeConfigBuilder();
@@ -1071,6 +1116,11 @@ public class GodEyeConfig implements Serializable {
             return this;
         }
 
+        public GodEyeConfigBuilder withViewCanaryConfig(ViewCanaryConfig viewCanaryConfig) {
+            this.mViewCanaryConfig = viewCanaryConfig;
+            return this;
+        }
+
         public GodEyeConfig build() {
             GodEyeConfig godEyeConfig = new GodEyeConfig();
             godEyeConfig.mStartupConfig = this.mStartupConfig;
@@ -1089,6 +1139,7 @@ public class GodEyeConfig implements Serializable {
             godEyeConfig.mCrashConfig = this.mCrashConfig;
             godEyeConfig.mCpuConfig = this.mCpuConfig;
             godEyeConfig.mAppSizeConfig = this.mAppSizeConfig;
+            godEyeConfig.mViewCanaryConfig = this.mViewCanaryConfig;
             return godEyeConfig;
         }
     }
