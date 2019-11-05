@@ -17,26 +17,22 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConte
     @Override
     public synchronized void install(CpuContext config) {
         if (mCpuEngine != null) {
-            L.d("cpu already installed, ignore.");
+            L.d("Cpu already installed, ignore.");
             return;
         }
-        if (!CpuUsable.usability()) {
-            L.d("cpu is not usable, install ignore.");
-            return;
-        }
-        mCpuEngine = new CpuEngine(this, config.intervalMillis(), config.sampleMillis());
+        mCpuEngine = new CpuEngine(this, config.intervalMillis());
         mCpuEngine.work();
-        L.d("cpu installed");
+        L.d("Cpu installed");
     }
 
     @Override
     public synchronized void uninstall() {
         if (mCpuEngine == null) {
-            L.d("cpu already uninstalled , ignore.");
+            L.d("Cpu already uninstalled , ignore.");
             return;
         }
         mCpuEngine.shutdown();
         mCpuEngine = null;
-        L.d("cpu uninstalled");
+        L.d("Cpu uninstalled");
     }
 }

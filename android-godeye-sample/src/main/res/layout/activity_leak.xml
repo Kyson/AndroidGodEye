@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@android:color/white"
     tools:context="cn.hikyson.android.godeye.sample.LeakActivity">
 
     <TextView
@@ -12,41 +13,11 @@
         android:layout_height="wrap_content"
         android:text="Leak will happen when you finish this activity and wait for a moment." />
 
-    <LinearLayout
-        android:background="@android:color/holo_blue_dark"
+    <Button
+        android:id="@+id/btn_fragment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:background="@android:color/holo_blue_dark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:background="@android:color/holo_blue_dark"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:background="@android:color/holo_blue_dark"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/btn_fragment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="64dp"
-                        android:text="Show app fragment (Android O and above)" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-        </LinearLayout>
-
+        android:layout_height="64dp"
+        android:text="Leak fragment (Android O and above)" />
 
     <FrameLayout
         android:id="@+id/frame_layout"

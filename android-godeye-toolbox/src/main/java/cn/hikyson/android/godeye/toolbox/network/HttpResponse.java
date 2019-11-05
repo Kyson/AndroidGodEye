@@ -1,8 +1,12 @@
 package cn.hikyson.android.godeye.toolbox.network;
 
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
 import java.util.Map;
 
-public class HttpResponse {
+@Keep
+public class HttpResponse implements Serializable {
     public String protocol;
     public int code;
     public String message;

@@ -42,6 +42,7 @@ class ViewCanary extends Component {
         this.renderItem = this.renderItem.bind(this);
         this.refresh = this.refresh.bind(this);
         this.getBgColor = this.getBgColor.bind(this);
+        this.inspectCurrentActivity = this.inspectCurrentActivity.bind(this);
         this.state = {
             searchText: null,
             show: false,
@@ -63,21 +64,30 @@ class ViewCanary extends Component {
         });
     }
 
-    getBgColor(times) {
+    getBgColor(times, isText) {
+        if (isText && times === 0) {
+            return 'black'
+        }
         if (times === 1) {
             return '#959BD3'
         } else if (times === 2) {
             return '#D0FFD0'
         } else if (times === 3) {
             return '#FFC0C0'
-        } else {
+        } else if (times >= 4) {
             return '#FF8080'
+        } else {
+            return 'transparent'
         }
     }
 
+    inspectCurrentActivity() {
+        this.props.globalWs.sendMessage('{"moduleName": "viewCanary","payload":"inspect"}');
+    }
+
     renderItem(issues, key) {
-        let screenHeight = 2340
-        let screenWidth = 1080
+        let screenHeight = issues.screenHeight
+        let screenWidth = issues.screenWidth
         let hw = screenHeight / screenWidth
         let popHeight = 300 * hw
         let popWidth = 300
@@ -86,18 +96,15 @@ class ViewCanary extends Component {
         let viewsOnPop = []
 
         let overDrawOnPop = []
-//        issues.overDrawAreas.sort(function(a, b) {
-//            return a.rect.times - b.rect.times
-//        })
         issues.overDrawAreas.forEach(e => {
             if (e.rect.top > screenHeight) {
                 return
             }
             viewsOnPop.push(
                 <div style={{
-                backgroundColor: this.getBgColor(e.times),
+                backgroundColor: this.getBgColor(e.overDrawTimes),
                 position:'absolute',
-                zIndex: e.times,
+                zIndex: e.overDrawTimes,
                 left: e.rect.left / ratio,
                 top: e.rect.top / ratio,
                 width: (e.rect.right - e.rect.left) / ratio,
@@ -117,7 +124,7 @@ class ViewCanary extends Component {
                 borderStyle:'solid',
                 borderWidth: e.hasBackground ? 1 : 0,
                 width: (e.rect.right - e.rect.left) / ratio,
-                height: (e.rect.bottom - e.rect.top) / ratio}}><div style= {{textAlignVertical: 'center',position: 'relative', overflow: 'hidden', fontSize: e.textSize? e.textSize / (ratio) : 10}}>{e.text ? e.text : ''}</div></div>
+                height: (e.rect.bottom - e.rect.top) / ratio}}><div style= {{textAlignVertical: 'center',position: 'relative', overflow: 'hidden', color: this.getBgColor(e.textOverDrawTimes, true), fontSize: e.textSize? e.textSize / (ratio) : 10}}>{e.text ? e.text : ''}</div></div>
             )
         })
         let depthOnPop = []
@@ -178,8 +185,8 @@ class ViewCanary extends Component {
               onSearch={value => this.setState({searchText: value})}
           />
             &nbsp;&nbsp;
-            <Button
-                onClick={this.handleClear}>Clear</Button>
+            <Button style={{marginRight: 8}} onClick={this.inspectCurrentActivity}>Inspect</Button>
+            <Button onClick={this.handleClear}>Clear</Button>
 
         </span>)
     }

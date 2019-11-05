@@ -16,22 +16,22 @@ public class Pss extends ProduceableSubject<PssInfo> implements Install<PssConte
     @Override
     public synchronized void install(PssContext config) {
         if (mPssEngine != null) {
-            L.d("pss already installed, ignore.");
+            L.d("Pss already installed, ignore.");
             return;
         }
         mPssEngine = new PssEngine(config.context(), this, config.intervalMillis());
         mPssEngine.work();
-        L.d("pss installed.");
+        L.d("Pss installed.");
     }
 
     @Override
     public synchronized void uninstall() {
         if (mPssEngine == null) {
-            L.d("pss already uninstalled, ignore.");
+            L.d("Pss already uninstalled, ignore.");
             return;
         }
         mPssEngine.shutdown();
         mPssEngine = null;
-        L.d("pss uninstalled.");
+        L.d("Pss uninstalled.");
     }
 }

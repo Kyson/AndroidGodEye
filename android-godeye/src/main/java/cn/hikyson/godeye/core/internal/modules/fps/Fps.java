@@ -31,12 +31,12 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConte
 
     private void installInMain(FpsContext config) {
         if (mFpsEngine != null) {
-            L.d("fps already installed, ignore.");
+            L.d("Fps already installed, ignore.");
             return;
         }
         mFpsEngine = new FpsEngine(config.context(), this, config.intervalMillis());
         mFpsEngine.work();
-        L.d("fps installed.");
+        L.d("Fps installed.");
     }
 
     @Override
@@ -55,11 +55,11 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConte
 
     private void uninstallInMain() {
         if (mFpsEngine == null) {
-            L.d("fps already uninstalled, ignore.");
+            L.d("Fps already uninstalled, ignore.");
             return;
         }
         mFpsEngine.shutdown();
         mFpsEngine = null;
-        L.d("fps uninstalled.");
+        L.d("Fps uninstalled.");
     }
 }

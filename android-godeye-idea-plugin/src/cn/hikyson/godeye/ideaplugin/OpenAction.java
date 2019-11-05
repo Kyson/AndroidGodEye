@@ -1,5 +1,8 @@
 package cn.hikyson.godeye.ideaplugin;
 
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -23,6 +26,7 @@ public class OpenAction extends AnAction {
             String path = parseAndroidSDKPath(anActionEvent.getProject());
             if (TextUtils.isEmpty(path)) {
                 mLogger.error("Can not parse sdk.dir.");
+                Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Failed", "Can not parse sdk.dir, Please add 'sdk.dir' to 'local.properties'.", NotificationType.ERROR));
                 return;
             }
             String finalPort = PORT;
@@ -34,7 +38,7 @@ public class OpenAction extends AnAction {
             mLogger.info("Exec [" + commandTcpProxy + "].");
             Runtime.getRuntime().exec(commandTcpProxy);
             mLogger.info("Current os name is " + SystemUtils.OS_NAME);
-            String commandOpenUrl = "";
+            String commandOpenUrl;
             if (SystemUtils.IS_OS_WINDOWS) {
                 commandOpenUrl = String.format("cmd /c start http://localhost:%s/index.html", finalPort);
             } else {
@@ -42,8 +46,10 @@ public class OpenAction extends AnAction {
             }
             mLogger.info("Exec [" + commandOpenUrl + "].");
             Runtime.getRuntime().exec(commandOpenUrl);
+            Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Success", String.format("http://localhost:%s/index.html", finalPort), NotificationType.INFORMATION));
         } catch (Throwable e) {
             mLogger.error(e);
+            Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Failed", e.getLocalizedMessage(), NotificationType.ERROR));
         }
     }
 

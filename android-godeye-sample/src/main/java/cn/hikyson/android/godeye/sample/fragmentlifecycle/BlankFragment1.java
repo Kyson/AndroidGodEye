@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeHelper;
+import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 
 /**
@@ -70,15 +72,23 @@ public class BlankFragment1 extends Fragment {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onFragmentV4Load(BlankFragment1.this);
+                try {
+                    GodEyeHelper.onPageLoaded(BlankFragment1.this);
+                } catch (UninstallException e) {
+                    e.printStackTrace();
+                }
             }
-        },3500);
+        }, 3500);
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onFragmentV4Load(BlankFragment1.this);
+                try {
+                    GodEyeHelper.onPageLoaded(BlankFragment1.this);
+                } catch (UninstallException e) {
+                    e.printStackTrace();
+                }
             }
-        },4500);
+        }, 4500);
         return inflater.inflate(R.layout.fragment_blank_fragment1, container, false);
     }
 
@@ -89,10 +99,10 @@ public class BlankFragment1 extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(hidden){
-            GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onFragmentV4Hide(BlankFragment1.this);
-        }else{
-            GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onFragmentV4Show(BlankFragment1.this);
+        try {
+            GodEyeHelper.onFragmentPageVisibilityChange(BlankFragment1.this, !hidden);
+        } catch (UninstallException e) {
+            e.printStackTrace();
         }
     }
 

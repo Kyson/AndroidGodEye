@@ -9,6 +9,11 @@ import android.support.v4.app.Fragment;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.ObservableConverter;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * 页面加载模块
@@ -24,7 +29,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
     @Override
     public synchronized void install(PageloadContext config) {
         if (mInstalled) {
-            L.d("pageload already installed, ignore.");
+            L.d("Pageload already installed, ignore.");
             return;
         }
         this.mConfig = config;
@@ -35,13 +40,18 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         this.mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks(pageLifecycleRecords, this.mConfig.pageInfoProvider(), this, mHandler);
         this.mConfig.application().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         this.mInstalled = true;
-        L.d("pageload installed.");
+        L.d("Pageload installed.");
+    }
+
+    @Override
+    protected Subject<PageLifecycleEventInfo> createSubject() {
+        return ReplaySubject.create();
     }
 
     @Override
     public synchronized void uninstall() {
         if (!mInstalled) {
-            L.d("pageload already uninstalled, ignore.");
+            L.d("Pageload already uninstalled, ignore.");
             return;
         }
         this.mConfig.application().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
@@ -49,7 +59,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         this.mHandler.getLooper().quit();
         this.mHandler = null;
         this.mInstalled = false;
-        L.d("pageload uninstalled.");
+        L.d("Pageload uninstalled.");
     }
 
     public synchronized void onActivityLoad(Activity activity) {

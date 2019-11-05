@@ -1,5 +1,10 @@
 package cn.hikyson.godeye.monitor.modules.thread;
 
-public enum ThreadRunningProcess {
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
+
+@Keep
+public enum ThreadRunningProcess implements Serializable {
     UNKNOWN, APP, SYSTEM
 }

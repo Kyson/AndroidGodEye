@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeHelper;
+import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 
 public class SecondActivity extends Activity {
@@ -16,19 +18,21 @@ public class SecondActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ((TextView)findViewById(R.id.textView)).setText("I am SecondActivity111!");
-                GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onActivityLoad(SecondActivity.this);
+        new Handler().postDelayed(() -> {
+            ((TextView)findViewById(R.id.textView)).setText("I am SecondActivity111!");
+            try {
+                GodEyeHelper.onPageLoaded(SecondActivity.this);
+            } catch (UninstallException e) {
+                e.printStackTrace();
             }
         }, 2000);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ((TextView)findViewById(R.id.textView)).setText("I am SecondActivity222!");
-                GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onActivityLoad(SecondActivity.this);
+        new Handler().postDelayed(() -> {
+            ((TextView)findViewById(R.id.textView)).setText("I am SecondActivity222!");
+            try {
+                GodEyeHelper.onPageLoaded(SecondActivity.this);
+            } catch (UninstallException e) {
+                e.printStackTrace();
             }
         }, 3000);
     }

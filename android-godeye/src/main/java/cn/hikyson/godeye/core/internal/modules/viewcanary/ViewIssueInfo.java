@@ -9,6 +9,8 @@ public class ViewIssueInfo {
     public String activityName;
     public long timestamp;
     public int maxDepth;
+    public int screenWidth;
+    public int screenHeight;
     public List<ViewInfo> views = new ArrayList<>();
     public List<OverDrawArea> overDrawAreas = new ArrayList<>();
 
@@ -18,6 +20,7 @@ public class ViewIssueInfo {
         public Rect rect;
         public int depth;
         public String text;
+        public int textOverDrawTimes;
         public float textSize;
         public boolean hasBackground;
         public boolean isViewGroup;
@@ -25,6 +28,6 @@ public class ViewIssueInfo {
 
     public static class OverDrawArea {
         public Rect rect;
-        public int times;
+        public int overDrawTimes;
     }
 }

@@ -1,23 +1,22 @@
 package cn.hikyson.godeye.core.internal.modules.appsize;
 
-public class AppSizeInfo {
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
+
+@Keep
+public class AppSizeInfo implements Serializable {
+    public static AppSizeInfo INVALID = new AppSizeInfo();
     public long cacheSize;
     public long dataSize;
     public long codeSize;
-    public Throwable error;
 
     @Override
     public String toString() {
-        if (error != null) {
-            return "AppSizeInfo{" +
-                    "error=" + error.toString() +
-                    '}';
-        } else  {
-            return "AppSizeInfo{" +
-                    "cacheSize=" + cacheSize +
-                    ", dataSize=" + dataSize +
-                    ", codeSize=" + codeSize +
-                    '}';
-        }
+        return "AppSizeInfo{" +
+                "cacheSize=" + cacheSize +
+                ", dataSize=" + dataSize +
+                ", codeSize=" + codeSize +
+                '}';
     }
 }

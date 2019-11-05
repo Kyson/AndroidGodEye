@@ -1,5 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.cpu;
 
+import android.support.annotation.Keep;
+
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -15,6 +17,7 @@ import java.util.Locale;
  * Date: 2017/2/8
  * Copyright: Ctrip
  */
+@Keep
 public class CpuInfo implements Serializable {
     public static final CpuInfo INVALID = new CpuInfo();
     // 总的cpu使用率(user + system+io+其他)

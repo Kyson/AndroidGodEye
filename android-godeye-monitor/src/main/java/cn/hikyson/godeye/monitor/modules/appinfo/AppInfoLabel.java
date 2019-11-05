@@ -1,6 +1,11 @@
 package cn.hikyson.godeye.monitor.modules.appinfo;
 
-public class AppInfoLabel {
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
+
+@Keep
+public class AppInfoLabel implements Serializable {
     public String name;
     public String value;
     public String url;

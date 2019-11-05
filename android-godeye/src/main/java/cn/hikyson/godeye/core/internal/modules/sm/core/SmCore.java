@@ -29,8 +29,8 @@ public final class SmCore {
         this.mContext = context;
         this.mLongBlockThresholdMillis = longBlockThresholdMillis;
         this.stackSampler = new StackSampler(
-                Looper.getMainLooper().getThread(), dumpIntervalMillis);
-        this.cpuSampler = new CpuSampler(dumpIntervalMillis);
+                Looper.getMainLooper().getThread(), dumpIntervalMillis, getSampleDelay());
+        this.cpuSampler = new CpuSampler(dumpIntervalMillis, getSampleDelay());
         this.mMonitor = new LooperMonitor(new LooperMonitor.BlockListener() {
 
             @Override
@@ -120,7 +120,7 @@ public final class SmCore {
      *
      * @return
      */
-    long getSampleDelay() {
+    private long getSampleDelay() {
         return (long) (this.mLongBlockThresholdMillis * 0.9f);
     }
 

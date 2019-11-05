@@ -1,8 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.network;
 
-import java.util.Map;
+import android.support.annotation.Keep;
 
-public class NetworkInfo<T extends NetworkContent> {
+import java.io.Serializable;
+import java.util.Map;
+@Keep
+public class NetworkInfo<T extends NetworkContent> implements Serializable {
     public String summary;
     public boolean isSuccessful;
     public String message;
@@ -17,7 +20,7 @@ public class NetworkInfo<T extends NetworkContent> {
                 ", isSuccessful=" + isSuccessful +
                 ", message='" + message + '\'' +
                 ", networkTime=" + networkTime +
-                ", networkContent=" + networkContent +
+                ", networkContent=**" +
                 ", extraInfo=" + extraInfo +
                 '}';
     }

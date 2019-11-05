@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class AppSizeUtil {
+class AppSizeUtil {
 
-    public static void getAppSize(Context context, OnGetSizeListener listener) {
+    static void getAppSize(Context context, OnGetSizeListener listener) {
         if (listener == null) {
             return;
         }
@@ -86,6 +86,7 @@ public class AppSizeUtil {
     /**
      * 获取应用大小8.0以下
      */
+    @SuppressWarnings("JavaReflectionMemberAccess")
     private static void getAppSizeLowerO(Context context, @NonNull final OnGetSizeListener listener) {
         try {
             Method method = PackageManager.class.getMethod("getPackageSizeInfo", String.class,
@@ -111,7 +112,7 @@ public class AppSizeUtil {
         void onError(Throwable t);
     }
 
-    public static String formatSize(long size) {
+    static String formatSize(long size) {
         try {
             if (size / (1024 * 1024 * 1024) > 0) {
                 float tmpSize = (float) (size) / (float) (1024 * 1024 * 1024);

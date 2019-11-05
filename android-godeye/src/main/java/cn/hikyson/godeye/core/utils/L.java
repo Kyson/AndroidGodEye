@@ -1,12 +1,10 @@
 package cn.hikyson.godeye.core.utils;
 
-import android.util.Log;
-
 /**
  * Description: <日志打印> Author: hui.zhao Date: 2016/7/13 Copyright: Ctrip
  */
 public class L {
-    private static final String DEFAULT_TAG = "AndroidGodEye";
+    public static final String DEFAULT_TAG = "AndroidGodEye";
 
     public interface LogProxy {
         public void d(String msg);
@@ -22,41 +20,41 @@ public class L {
         sLogProxy = logProxy;
     }
 
-
-    private static LogProxy getLogProxy() {
-        if (sLogProxy == null) {
-            return new LogProxy() {
-
-                @Override
-                public void d(String msg) {
-                    Log.d(DEFAULT_TAG, msg);
-                }
-
-                @Override
-                public void e(String msg) {
-                    Log.e(DEFAULT_TAG, msg);
-                }
-
-                @Override
-                public void onRuntimeException(RuntimeException e) {
-                    throw e;
-                }
-            };
+    public static void d(Object msg) {
+        if (sLogProxy != null) {
+            sLogProxy.d(o2String(msg));
         }
-        return sLogProxy;
     }
 
-
-    public static void d(String msg) {
-        getLogProxy().d(msg);
+    public static void d(String format, Object... msgs) {
+        if (sLogProxy != null) {
+            String[] args = new String[msgs.length];
+            for (int i = 0; i < msgs.length; i++) {
+                args[i] = o2String(msgs[i]);
+            }
+            sLogProxy.d(String.format(format, (Object[]) args));
+        }
     }
 
-    public static void e(String msg) {
-        getLogProxy().e(msg);
+    public static void e(Object msg) {
+        if (sLogProxy != null) {
+            sLogProxy.e(o2String(msg));
+        }
     }
 
     public static void onRuntimeException(RuntimeException e) {
-        getLogProxy().onRuntimeException(e);
+        if (sLogProxy != null) {
+            sLogProxy.onRuntimeException(e);
+        }
     }
 
+    private static String o2String(Object o) {
+        if (o instanceof String) {
+            return (String) o;
+        }
+//        if (o instanceof GodEyeConfig) {
+//            return JsonUtil.toJson(o);
+//        }
+        return String.valueOf(o);
+    }
 }

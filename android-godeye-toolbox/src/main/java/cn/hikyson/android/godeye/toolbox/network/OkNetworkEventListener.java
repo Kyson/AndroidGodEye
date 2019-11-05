@@ -9,6 +9,9 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeHelper;
+import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkTime;
@@ -23,8 +26,7 @@ import okhttp3.Response;
 /**
  * network is success or not , network time for connection\send\receive...
  */
-public class OkNetworkEventListener extends EventListener {
-    private Producer<NetworkInfo> mNetworkInfoProducer;
+class OkNetworkEventListener extends EventListener {
     private NetworkInfo<HttpContent> mNetworkInfo;
     private long mCallStartTimeMillis;
     private long mDnsStartTimeMillis;
@@ -35,8 +37,7 @@ public class OkNetworkEventListener extends EventListener {
     private long mResponseBodyStartTimeMillis;
     private HttpContentTimeMapping mHttpContentTimeMapping;
 
-    public OkNetworkEventListener(Producer<NetworkInfo> producer, HttpContentTimeMapping httpContentTimeMapping) {
-        this.mNetworkInfoProducer = producer;
+    OkNetworkEventListener(HttpContentTimeMapping httpContentTimeMapping) {
         this.mHttpContentTimeMapping = httpContentTimeMapping;
         this.mNetworkInfo = new NetworkInfo<>();
         this.mNetworkInfo.networkTime = new NetworkTime();
@@ -167,7 +168,11 @@ public class OkNetworkEventListener extends EventListener {
         mNetworkInfo.isSuccessful = true;
         mNetworkInfo.message = "";
         mNetworkInfo.networkContent = mHttpContentTimeMapping.removeAndGetRecord(call);
-        this.mNetworkInfoProducer.produce(mNetworkInfo);
+        try {
+            GodEyeHelper.onNetworkEnd(mNetworkInfo);
+        } catch (UninstallException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -177,6 +182,10 @@ public class OkNetworkEventListener extends EventListener {
         mNetworkInfo.isSuccessful = false;
         mNetworkInfo.message = String.valueOf(ioe);
         mNetworkInfo.networkContent = mHttpContentTimeMapping.removeAndGetRecord(call);
-        this.mNetworkInfoProducer.produce(mNetworkInfo);
+        try {
+            GodEyeHelper.onNetworkEnd(mNetworkInfo);
+        } catch (UninstallException e) {
+            e.printStackTrace();
+        }
     }
 }

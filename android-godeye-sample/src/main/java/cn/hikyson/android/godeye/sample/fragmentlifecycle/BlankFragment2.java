@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeHelper;
+import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 
 /**
@@ -70,7 +72,11 @@ public class BlankFragment2 extends Fragment {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onFragmentV4Load(BlankFragment2.this);
+                try {
+                    GodEyeHelper.onPageLoaded(BlankFragment2.this);
+                } catch (UninstallException e) {
+                    e.printStackTrace();
+                }
             }
         }, 1200);
         return inflater.inflate(R.layout.fragment_blank_fragment2, container, false);
@@ -84,10 +90,10 @@ public class BlankFragment2 extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (hidden) {
-            GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onFragmentV4Hide(BlankFragment2.this);
-        } else {
-            GodEye.instance().<Pageload>getModule(GodEye.ModuleName.PAGELOAD).onFragmentV4Show(BlankFragment2.this);
+        try {
+            GodEyeHelper.onFragmentPageVisibilityChange(BlankFragment2.this, !hidden);
+        } catch (UninstallException e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,9 +1,14 @@
 package cn.hikyson.godeye.monitor.modules;
 
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
+
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
 
-public class BlockSimpleInfo {
+@Keep
+public class BlockSimpleInfo implements Serializable {
     public long blockTime;
     public String blockBaseinfo;
 

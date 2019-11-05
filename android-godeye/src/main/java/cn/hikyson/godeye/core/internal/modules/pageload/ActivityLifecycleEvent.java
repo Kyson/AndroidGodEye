@@ -1,6 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
-public enum ActivityLifecycleEvent implements LifecycleEvent {
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
+
+@Keep
+public enum ActivityLifecycleEvent implements LifecycleEvent, Serializable {
     ON_CREATE,
     ON_START,
     ON_RESUME,

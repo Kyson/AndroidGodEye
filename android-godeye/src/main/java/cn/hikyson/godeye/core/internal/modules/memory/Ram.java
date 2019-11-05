@@ -17,22 +17,22 @@ public class Ram extends ProduceableSubject<RamInfo> implements Install<RamConte
     @Override
     public synchronized void install(RamContext config) {
         if (mRamEngine != null) {
-            L.d("ram already installed, ignore.");
+            L.d("Ram already installed, ignore.");
             return;
         }
         mRamEngine = new RamEngine(config.context(), this, config.intervalMillis());
         mRamEngine.work();
-        L.d("ram installed.");
+        L.d("Ram installed.");
     }
 
     @Override
     public synchronized void uninstall() {
         if (mRamEngine == null) {
-            L.d("ram already uninstalled, ignore.");
+            L.d("Ram already uninstalled, ignore.");
             return;
         }
         mRamEngine.shutdown();
         mRamEngine = null;
-        L.d("ram uninstalled.");
+        L.d("Ram uninstalled.");
     }
 }

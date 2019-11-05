@@ -1,49 +1,31 @@
 package cn.hikyson.godeye.monitor.server;
 
-import android.support.v4.util.ArrayMap;
-
-
-import java.util.Collections;
-import java.util.Comparator;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import cn.hikyson.godeye.core.GodEye;
-import cn.hikyson.godeye.core.internal.modules.appsize.AppSize;
+import cn.hikyson.godeye.core.exceptions.UnexpectException;
+import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.internal.SubjectSupport;
 import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeInfo;
-import cn.hikyson.godeye.core.internal.modules.battery.Battery;
-import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
+import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
-import cn.hikyson.godeye.core.internal.modules.crash.Crash;
-import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
-import cn.hikyson.godeye.core.internal.modules.fps.Fps;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
-import cn.hikyson.godeye.core.internal.modules.memory.Heap;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
-import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
-import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodsRecordInfo;
-import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.ActivityLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.FragmentLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageLifecycleEventInfo;
-import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadUtil;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
-import cn.hikyson.godeye.core.internal.modules.sm.Sm;
-import cn.hikyson.godeye.core.internal.modules.startup.Startup;
-import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
-import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
+import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
-import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanary;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewIssueInfo;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
@@ -51,7 +33,7 @@ import cn.hikyson.godeye.monitor.modules.MethodCanaryStatus;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
-import cn.hikyson.godeye.monitor.modules.thread.ThreadInfo;
+import cn.hikyson.godeye.monitor.modules.crash.CrashStore;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -66,8 +48,6 @@ import io.reactivex.schedulers.Schedulers;
 public class ModuleDriver {
     private CompositeDisposable mCompositeDisposable;
     private Messager mMessager;
-    //cache lastest message
-    private MessageCache mMessageCache;
     private boolean mIsRunning;
 
     private static class InstanceHolder {
@@ -81,11 +61,18 @@ public class ModuleDriver {
     private ModuleDriver() {
     }
 
-    private <T> Observable<T> wrapThreadComputationObservable(Observable<T> observable) {
-        if (observable == null) {
-            return null;
+    private <T> Observable<T> wrapThreadComputationObservable(@GodEye.ModuleName String moduleName) {
+        try {
+            T module = GodEye.instance().getModule(moduleName);
+            if (!(module instanceof SubjectSupport)) {
+                throw new UnexpectException(moduleName + " is not instance of SubjectSupport.");
+            }
+            // noinspection unchecked
+            return ((SubjectSupport<T>) module).subject().subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation());
+        } catch (UninstallException e) {
+            L.d(moduleName + " is not installed.");
+            return Observable.empty();
         }
-        return observable.subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation());
     }
 
     /**
@@ -97,77 +84,79 @@ public class ModuleDriver {
         }
         mIsRunning = true;
         L.d("ModuleDriver start running.");
-        GodEye godEye = GodEye.instance();
-        mMessageCache = new MessageCache();
         mCompositeDisposable = new CompositeDisposable();
         mMessager = messager;
         mCompositeDisposable.addAll(
-                wrapThreadComputationObservable(godEye.<Battery>getModule(GodEye.ModuleName.BATTERY).subject())
+                this.<BatteryInfo>wrapThreadComputationObservable(GodEye.ModuleName.BATTERY)
                         .map(BatteryInfoFactory.converter())
                         .map(this.createConvertServerMessageFunction("batteryInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Cpu>getModule(GodEye.ModuleName.CPU).subject())
-                        .map(this.<CpuInfo>createConvertServerMessageFunction("cpuInfo"))
+                this.<CpuInfo>wrapThreadComputationObservable(GodEye.ModuleName.CPU)
+                        .map(this.createConvertServerMessageFunction("cpuInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Traffic>getModule(GodEye.ModuleName.TRAFFIC).subject())
-                        .map(this.<TrafficInfo>createConvertServerMessageFunction("trafficInfo"))
+                this.<TrafficInfo>wrapThreadComputationObservable(GodEye.ModuleName.TRAFFIC)
+                        .map(this.createConvertServerMessageFunction("trafficInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Fps>getModule(GodEye.ModuleName.FPS).subject())
-                        .map(this.<FpsInfo>createConvertServerMessageFunction("fpsInfo"))
+                this.<FpsInfo>wrapThreadComputationObservable(GodEye.ModuleName.FPS)
+                        .map(this.createConvertServerMessageFunction("fpsInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<LeakDetector>getModule(GodEye.ModuleName.LEAK).subject())
-                        .map(this.<LeakQueue.LeakMemoryInfo>createConvertServerMessageFunction("leakInfo"))
+                this.<LeakQueue.LeakMemoryInfo>wrapThreadComputationObservable(GodEye.ModuleName.LEAK)
+                        .map(this.createConvertServerMessageFunction("leakInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Sm>getModule(GodEye.ModuleName.SM).subject())
+                this.<BlockInfo>wrapThreadComputationObservable(GodEye.ModuleName.SM)
                         .map(blockMap())
-                        .map(this.<BlockSimpleInfo>createConvertServerMessageFunction("blockInfo"))
+                        .map(this.createConvertServerMessageFunction("blockInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Network>getModule(GodEye.ModuleName.NETWORK).subject())
+                this.<NetworkInfo>wrapThreadComputationObservable(GodEye.ModuleName.NETWORK)
                         .map(this.networkMap())
                         .map(this.createConvertServerMessageFunction("networkInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Startup>getModule(GodEye.ModuleName.STARTUP).subject())
+                this.<StartupInfo>wrapThreadComputationObservable(GodEye.ModuleName.STARTUP)
                         .map(this.createConvertServerMessageFunction("startupInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Ram>getModule(GodEye.ModuleName.RAM).subject())
-                        .map(this.<RamInfo>createConvertServerMessageFunction("ramInfo"))
+                this.<RamInfo>wrapThreadComputationObservable(GodEye.ModuleName.RAM)
+                        .map(this.createConvertServerMessageFunction("ramInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Pss>getModule(GodEye.ModuleName.PSS).subject())
-                        .map(this.<PssInfo>createConvertServerMessageFunction("pssInfo"))
+                this.<PssInfo>wrapThreadComputationObservable(GodEye.ModuleName.PSS)
+                        .map(this.createConvertServerMessageFunction("pssInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Heap>getModule(GodEye.ModuleName.HEAP).subject())
-                        .map(this.<HeapInfo>createConvertServerMessageFunction("heapInfo"))
+                this.<HeapInfo>wrapThreadComputationObservable(GodEye.ModuleName.HEAP)
+                        .map(this.createConvertServerMessageFunction("heapInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<ThreadDump>getModule(GodEye.ModuleName.THREAD).subject())
+                this.<List<Thread>>wrapThreadComputationObservable(GodEye.ModuleName.THREAD)
                         .map(ThreadInfoConverter.threadMap())
-                        .map(this.<List<ThreadInfo>>createConvertServerMessageFunction("threadInfo"))
+                        .map(this.createConvertServerMessageFunction("threadInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Crash>getModule(GodEye.ModuleName.CRASH).subject())
-                        .filter(crashPredicate())
-                        .map(firstCrashMap())
-                        .map(this.createConvertServerMessageFunction("crashInfo"))
-                        .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<Pageload>getModule(GodEye.ModuleName.PAGELOAD).subject())
+                this.<PageLifecycleEventInfo>wrapThreadComputationObservable(GodEye.ModuleName.PAGELOAD)
                         .map(this.pageLifecycleMap())
-                        .map(this.<PageLifecycleProcessedEvent>createConvertServerMessageFunction("pageLifecycle"))
+                        .map(this.createConvertServerMessageFunction("pageLifecycle"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).subject())
-                        .map(this.<MethodsRecordInfo>createConvertServerMessageFunction("methodCanary"))
+                this.<MethodsRecordInfo>wrapThreadComputationObservable(GodEye.ModuleName.METHOD_CANARY)
+                        .map(this.createConvertServerMessageFunction("methodCanary"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<AppSize>getModule(GodEye.ModuleName.APP_SIZE).subject())
-                        .map(this.<AppSizeInfo>createConvertServerMessageFunction("appSizeInfo"))
+                this.<AppSizeInfo>wrapThreadComputationObservable(GodEye.ModuleName.APP_SIZE)
+                        .map(this.createConvertServerMessageFunction("appSizeInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                wrapThreadComputationObservable(godEye.<ViewCanary>getModule(GodEye.ModuleName.VIEW_CANARY).subject())
-                        .map(this.<ViewIssueInfo>createConvertServerMessageFunction("viewIssueInfo"))
+                this.<ViewIssueInfo>wrapThreadComputationObservable(GodEye.ModuleName.VIEW_CANARY)
+                        .map(this.createConvertServerMessageFunction("viewIssueInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                CrashStore.observeCrashAndCache(GodEye.instance().getApplication())
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(Schedulers.computation())
+                        .filter(crashPredicate())
+                        .map(this.createConvertServerMessageFunction("crashInfo"))
                         .subscribe(this.createSendMessageConsumer())
         );
-        Observable<String> methodCanaryStatusSubject = wrapThreadComputationObservable(godEye.<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject());
-        if (methodCanaryStatusSubject != null) {
-            mCompositeDisposable.add(methodCanaryStatusSubject.map(s -> {
-                MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
-                return new ServerMessage("MethodCanaryStatus",
-                        new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring()));
-            }).subscribe(this.createSendMessageConsumer()));
+        try {
+            Observable<String> methodCanaryStatusSubject = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).statusSubject();
+            if (methodCanaryStatusSubject != null) {
+                mCompositeDisposable.add(methodCanaryStatusSubject.map(s -> {
+                    MethodCanary methodCanary = GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY);
+                    return new ServerMessage("MethodCanaryStatus",
+                            new MethodCanaryStatus(methodCanary.getMethodCanaryContext(), methodCanary.isInstalled(), methodCanary.isMonitoring()));
+                }).subscribeOn(Schedulers.computation()).observeOn(Schedulers.computation()).subscribe(this.createSendMessageConsumer()));
+            }
+        } catch (UninstallException ignore) {
         }
     }
 
@@ -182,7 +171,6 @@ public class ModuleDriver {
             mCompositeDisposable = null;
         }
         mMessager = null;
-        mMessageCache = null;
     }
 
     private SendMessageConsumer createSendMessageConsumer() {
@@ -190,18 +178,7 @@ public class ModuleDriver {
     }
 
     private <T> ConvertServerMessageFunction<T> createConvertServerMessageFunction(String module) {
-        return new ConvertServerMessageFunction<T>(mMessageCache, module);
-    }
-
-    Map<String, Object> messageCacheCopy() {
-        if (mMessageCache == null) {
-            return new ArrayMap<>();
-        }
-        return mMessageCache.copy();
-    }
-
-    private Predicate<List<CrashInfo>> crashPredicate() {
-        return crashInfos -> crashInfos != null && !crashInfos.isEmpty();
+        return new ConvertServerMessageFunction<T>(module);
     }
 
     private Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent> pageLifecycleMap() {
@@ -227,23 +204,8 @@ public class ModuleDriver {
         };
     }
 
-    private Function<List<CrashInfo>, CrashInfo> firstCrashMap() {
-        return crashInfos -> {
-            //获取最近的一次崩溃
-            Collections.sort(crashInfos, new Comparator<CrashInfo>() {
-                @Override
-                public int compare(CrashInfo o1, CrashInfo o2) {
-                    if (o1.timestampMillis < o2.timestampMillis) {
-                        return 1;
-                    }
-                    if (o1.timestampMillis > o2.timestampMillis) {
-                        return -1;
-                    }
-                    return 0;
-                }
-            });
-            return crashInfos.get(0);
-        };
+    private Predicate<List<Map<String, String>>> crashPredicate() {
+        return crashInfos -> crashInfos != null && !crashInfos.isEmpty();
     }
 
     private Function<BlockInfo, BlockSimpleInfo> blockMap() {

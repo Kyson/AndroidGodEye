@@ -13,11 +13,16 @@ public class LeakFragmentV4 extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(100000);
                 } catch (InterruptedException e) {
                 }
             }

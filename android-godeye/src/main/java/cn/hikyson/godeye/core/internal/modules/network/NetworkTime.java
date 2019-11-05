@@ -1,8 +1,12 @@
 package cn.hikyson.godeye.core.internal.modules.network;
 
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 
-public class NetworkTime {
+@Keep
+public class NetworkTime implements Serializable {
     public long totalTimeMillis;
     public LinkedHashMap<String, Long> networkTimeMillisMap;
 

@@ -1,7 +1,10 @@
 package cn.hikyson.godeye.core.internal.modules.traffic;
 
 import android.net.TrafficStats;
+import android.support.annotation.Keep;
 import android.support.annotation.WorkerThread;
+
+import java.io.Serializable;
 
 /**
  * 流量快照
@@ -9,7 +12,8 @@ import android.support.annotation.WorkerThread;
  * 单位kb
  * Created by kysonchao on 2017/5/22.
  */
-public class TrafficSnapshot {
+@Keep
+public class TrafficSnapshot implements Serializable {
     //下行总字节数
     public float rxTotalKB;
     //上行总字节数

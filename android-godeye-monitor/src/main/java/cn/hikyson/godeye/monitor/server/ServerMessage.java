@@ -1,11 +1,16 @@
 package cn.hikyson.godeye.monitor.server;
 
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
+
 import cn.hikyson.godeye.monitor.utils.GsonUtil;
 
 /**
  * 服务端发出的消息体
  */
-public class ServerMessage {
+@Keep
+public class ServerMessage implements Serializable {
 
     public static final int SUCCESS = 1;
     public static final int DEFAULT_FAIL = 0;
@@ -25,7 +30,8 @@ public class ServerMessage {
         this.data = new DataWithName(moduleName, data);
     }
 
-    public static class DataWithName {
+    @Keep
+    public static class DataWithName implements Serializable {
         public String moduleName;
         public Object payload;
 

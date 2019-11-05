@@ -22,12 +22,12 @@ public class Battery extends ProduceableSubject<BatteryInfo> implements Install<
     @Override
     public synchronized void install(BatteryContext config) {
         if (mBatteryEngine != null) {
-            L.d("battery already installed, ignore.");
+            L.d("Battery already installed, ignore.");
             return;
         }
         mBatteryEngine = new BatteryEngine(config.context(), this);
         mBatteryEngine.work();
-        L.d("battery installed.");
+        L.d("Battery installed.");
     }
 
     /**
@@ -36,12 +36,12 @@ public class Battery extends ProduceableSubject<BatteryInfo> implements Install<
     @Override
     public synchronized void uninstall() {
         if (mBatteryEngine == null) {
-            L.d("battery already uninstalled, ignore.");
+            L.d("Battery already uninstalled, ignore.");
             return;
         }
         mBatteryEngine.shutdown();
         mBatteryEngine = null;
-        L.d("battery uninstalled.");
+        L.d("Battery uninstalled.");
     }
 
     @Override

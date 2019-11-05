@@ -11,6 +11,8 @@ import cn.hikyson.godeye.core.internal.modules.sm.core.ShortBlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.core.SmCore;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * 卡顿模块
@@ -23,21 +25,10 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
     private SmContext mSmContext;
     private boolean mInstalled = false;
 
-    private Sm() {
-    }
-
-    private static class InstanceHoler {
-        private static Sm sINSTANCE = new Sm();
-    }
-
-    public static Sm instance() {
-        return InstanceHoler.sINSTANCE;
-    }
-
     @Override
     public synchronized void install(SmContext config) {
         if (mInstalled) {
-            L.d("sm already installed, ignore.");
+            L.d("Sm already installed, ignore.");
             return;
         }
         this.mInstalled = true;
@@ -68,23 +59,28 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
             }
         });
         mBlockCore.install();
-        L.d("sm installed");
+        L.d("Sm installed");
     }
 
     @Override
     public synchronized void uninstall() {
         if (!mInstalled) {
-            L.d("sm already uninstalled, ignore.");
+            L.d("Sm already uninstalled, ignore.");
             return;
         }
         mInstalled = false;
         this.mSmContext = null;
         mBlockCore.uninstall();
-        L.d("sm uninstalled");
+        L.d("Sm uninstalled");
     }
 
-    public static SmCore core() {
-        return instance().mBlockCore;
+    @Override
+    protected Subject<BlockInfo> createSubject() {
+        return ReplaySubject.create();
+    }
+
+    public SmCore getBlockCore() {
+        return mBlockCore;
     }
 
     public SmContext getSmContext() {

@@ -1,5 +1,8 @@
 package cn.hikyson.godeye.monitor.modules;
 
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +12,8 @@ import cn.hikyson.godeye.core.internal.modules.network.NetworkContent;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkTime;
 
-public class NetworkSummaryInfo {
+@Keep
+public class NetworkSummaryInfo implements Serializable {
     public String summary;
     public boolean isSuccessful;
     public String message;
@@ -18,7 +22,8 @@ public class NetworkSummaryInfo {
     public Content networkContent;
     public Map<String, Object> extraInfo;
 
-    public static class TimePair {
+    @Keep
+    public static class TimePair implements Serializable {
         public String name;
         public long time;
 
@@ -28,7 +33,8 @@ public class NetworkSummaryInfo {
         }
     }
 
-    public static class Content {
+    @Keep
+    public static class Content implements Serializable {
         public String networkType;
         public String requestContent;
         public String responseContent;

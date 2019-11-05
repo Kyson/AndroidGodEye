@@ -1,8 +1,12 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class PageLifecycleEventInfo<T> {
+@Keep
+public class PageLifecycleEventInfo<T> implements Serializable {
     public PageInfo<T> pageInfo;
     public PageLifecycleEventWithTime<T> currentEvent;
     public List<PageLifecycleEventWithTime> allEvents;

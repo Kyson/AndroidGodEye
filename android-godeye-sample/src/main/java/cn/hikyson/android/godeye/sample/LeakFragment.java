@@ -7,19 +7,25 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 
 public class LeakFragment extends Fragment {
+    private TextView mTv;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        new Thread(() -> {
+            try {
+                Thread.sleep(100000);
+                mTv.setText("Leak");
+            } catch (InterruptedException e) {
             }
         }).start();
     }
@@ -27,6 +33,8 @@ public class LeakFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_leak, container, false);
+        View view = inflater.inflate(R.layout.fragment_leak, container, false);
+        mTv = view.findViewById(R.id.fragment_leak_test);
+        return view;
     }
 }

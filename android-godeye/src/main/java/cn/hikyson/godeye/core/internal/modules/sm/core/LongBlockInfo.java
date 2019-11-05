@@ -1,5 +1,8 @@
 package cn.hikyson.godeye.core.internal.modules.sm.core;
 
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +14,8 @@ import cn.hikyson.godeye.core.utils.StacktraceUtil;
  * 时间单位毫秒
  * Created by kysonchao on 2017/5/17.
  */
-public class LongBlockInfo {
+@Keep
+public class LongBlockInfo implements Serializable {
     //卡顿开始时间
     public long timeStart;
     //卡顿结束时间

@@ -8,32 +8,21 @@ import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
-import android.app.Application;
+import android.content.res.Resources;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
-import cn.hikyson.godeye.core.internal.modules.pageload.PageDrawMonitor;
+import cn.hikyson.godeye.core.utils.ActivityStackUtil;
 import cn.hikyson.godeye.core.utils.L;
-import cn.hikyson.godeye.core.utils.ViewUtil;
-import io.reactivex.schedulers.Schedulers;
 
 public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Install<ViewCanaryContext> {
 
-    private Application.ActivityLifecycleCallbacks activityLifecycleCallbacks;
     private ViewCanaryContext config;
-    private ViewUtil.OnDrawCallback currentListener;
     private boolean mInstalled = false;
 
     @Override
@@ -44,23 +33,6 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
         }
         L.d("view canary size installed.");
         this.config = config;
-        activityLifecycleCallbacks = new SimpleActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                super.onActivityCreated(activity, savedInstanceState);
-                currentListener = () -> Schedulers.io().scheduleDirect(() -> inspect(activity));
-                PageDrawMonitor.newInstance(activity.getWindow().getDecorView(),currentListener).listen();
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-                super.onActivityDestroyed(activity);
-                currentListener = null;
-            }
-        };
-        if (config.application() != null) {
-            config.application().registerActivityLifecycleCallbacks(activityLifecycleCallbacks);
-        }
         mInstalled = true;
     }
 
@@ -70,47 +42,64 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
             L.d("View canary already uninstalled, ignore.");
             return;
         }
-        if (activityLifecycleCallbacks != null && this.config != null && this.config.application() != null) {
-            this.config.application().unregisterActivityLifecycleCallbacks(activityLifecycleCallbacks);
-        }
         mInstalled = false;
     }
 
-    private void inspect(Activity activity) {
-        ViewGroup root = (ViewGroup) activity.getWindow().getDecorView().getRootView();
-        ViewGroup content = root.findViewById(android.R.id.content);
-        Map<View, Integer> map = new HashMap<>();
+    public void inspect() {
+        Activity activity = ActivityStackUtil.getTopActivity();
+        if (activity == null) {
+            return;
+        }
+        ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
+        Map<View, Integer> depthMap = new HashMap<>();
         List<View> allViews = new ArrayList<>();
-        recursiveLoopChildren(content, map, allViews);
+        // allViews should include decor view for inspecting overdraw. However, there is no need for depth inspection to include decor view
+        allViews.add(root);
+        recursiveLoopChildren(root, depthMap, allViews);
         Map<Rect, Set<Object>> overDrawMap = checkOverDraw(allViews);
         ViewIssueInfo info = new ViewIssueInfo();
+        int[] resolution = getResolution();
         info.activityName = activity.getClass().getName();
         info.timestamp = System.currentTimeMillis();
         info.maxDepth = config.maxDepth();
-        for (Map.Entry<View, Integer> entry : map.entrySet()) {
-            if (entry.getKey() instanceof ViewGroup && !hasNoTransparentBg(entry.getKey())) {
+        info.screenWidth = resolution[0];
+        info.screenHeight = resolution[1];
+        for (Map.Entry<View, Integer> entry : depthMap.entrySet()) {
+            if (entry.getKey() instanceof ViewGroup) {
                 continue;
             }
-            info.views.add(getViewInfo(entry.getKey(), entry.getValue()));
+            info.views.add(getViewInfo(entry.getKey(), entry.getValue(), overDrawMap));
         }
         for (Map.Entry<Rect, Set<Object>> entry : overDrawMap.entrySet()) {
             ViewIssueInfo.OverDrawArea overDrawArea = new ViewIssueInfo.OverDrawArea();
             overDrawArea.rect = entry.getKey();
-            overDrawArea.times = entry.getValue().size();
+            overDrawArea.overDrawTimes = getOverDrawTimes(entry.getValue()) - 1;
             info.overDrawAreas.add(overDrawArea);
         }
         produce(info);
-        map.clear();
+    }
+
+    private int getOverDrawTimes(Set<Object> objects) {
+        int overdrawTimes = 0;
+        for (Object object : objects) {
+            if (object instanceof View) {
+                overdrawTimes += ViewBgUtil.getLayer((View) object);
+            } else {
+                overdrawTimes ++;
+            }
+        }
+        return overdrawTimes;
     }
 
     private Map<Rect, Set<Object>> checkOverDraw(List<View> allViews) {
         Map<Rect, Set<Object>> map = new HashMap<>();
-        for(View view : allViews) {
-            if (!hasNoTransparentBg(view)) {
-                continue;
-            }
-            for (View other: allViews) {
-                if (view == other || !hasNoTransparentBg(other)) {
+        for(int i = 0; i < allViews.size(); i ++) {
+            View view = allViews.get(i);
+            for (int j = i + 1; j < allViews.size(); j ++) {
+                View other = allViews.get(j);
+                int viewLayer = ViewBgUtil.getLayer(view);
+                int otherLayer = ViewBgUtil.getLayer(other);
+                if (view == other || viewLayer == 0 || otherLayer == 0) {
                     continue;
                 }
                 Rect r1 = new Rect();
@@ -127,6 +116,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
                 } else {
                     set = new HashSet<>();
                 }
+                set.add(view);
                 set.add(other);
                 map.put(overDraw, set);
             }
@@ -168,7 +158,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
         return overDrawArea;
     }
 
-    private static ViewIssueInfo.ViewInfo getViewInfo(View view, int depth) {
+    private ViewIssueInfo.ViewInfo getViewInfo(View view, int depth, Map<Rect, Set<Object>> overDrawMap) {
         ViewIssueInfo.ViewInfo viewInfo = new ViewIssueInfo.ViewInfo();
         viewInfo.className = view.getClass().getName();
         viewInfo.id = getId(view);
@@ -178,12 +168,26 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
         viewInfo.depth = depth;
         if (view instanceof TextView) {
             CharSequence charSequence = ((TextView) view).getText();
-            if (charSequence != null) {
+            if (!TextUtils.isEmpty(charSequence)) {
                 viewInfo.text = charSequence.toString();
                 viewInfo.textSize = ((TextView) view).getTextSize();
+//                // handle textview text overdraw
+//                if (overDrawMap.containsKey(rect)) {
+//                    Set<Object> set = overDrawMap.get(rect);
+//                    if (set != null && set.contains(view)) {
+//                        if (ViewBgUtil.getLayer(view) <= 1) {
+//                            overDrawMap.remove(rect);
+//                            viewInfo.textOverDrawTimes = getOverDrawTimes(set) - 1;
+//                        } else {
+//
+//                        }
+//                    }
+//                }
             }
+            viewInfo.hasBackground = ViewBgUtil.getLayer(view) > 1;
+        } else {
+            viewInfo.hasBackground = ViewBgUtil.getLayer(view) > 0;
         }
-        viewInfo.hasBackground = view.getBackground() != null;
         viewInfo.isViewGroup = view instanceof ViewGroup;
         return viewInfo;
     }
@@ -222,43 +226,10 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
         }
     }
 
-    private boolean hasNoTransparentBg(View view) {
-        if (view == null || view.getVisibility() != View.VISIBLE) {
-            return false;
-        }
-        Drawable background = view.getBackground();
-        if (background != null) {
-            if (background instanceof ColorDrawable) {
-                int color = ((ColorDrawable) background).getColor();
-                // 有背景且背景为透明
-                return color != 0;
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                if (background instanceof RippleDrawable) {
-                    return false;
-                } else {
-                    return true;
-                }
-            } else {
-                return true;
-            }
-        } else {
-            // 不可见的即为没有背景
-            if (view.getVisibility() != View.VISIBLE) {
-                return false;
-            }
-            // image view 没有src也为没有背景
-            if (view instanceof ImageView) {
-                if (((ImageView) view).getDrawable() == null) {
-                    return false;
-                }
-            }
-            // 没有文字也为没有背景
-            if (view instanceof TextView) {
-                if (TextUtils.isEmpty(((TextView) view).getText())) {
-                    return false;
-                }
-            }
-            return !(view instanceof ViewGroup);
-        }
+    private int[] getResolution() {
+        int[] resolution = new int[2];
+        resolution[0] = Resources.getSystem().getDisplayMetrics().widthPixels;
+        resolution[1] = Resources.getSystem().getDisplayMetrics().heightPixels;
+        return resolution;
     }
 }

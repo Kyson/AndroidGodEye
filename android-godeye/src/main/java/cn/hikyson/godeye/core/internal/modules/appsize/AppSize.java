@@ -4,10 +4,11 @@ import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.GodEyeCanaryLog;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<AppSizeContext> {
 
@@ -15,40 +16,44 @@ public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<
     private boolean mInstalled = false;
 
     @Override
-    public void install(AppSizeContext config) {
+    public synchronized void install(AppSizeContext config) {
         if (mInstalled) {
-            L.d("pageload already installed, ignore.");
+            L.d("AppSize already installed, ignore.");
             return;
         }
-        L.d("app size installed.");
         mInstalled = true;
         disposable = Schedulers.single().scheduleDirect(() -> AppSizeUtil.getAppSize(config.context(), new AppSizeUtil.OnGetSizeListener() {
             @Override
             public void onGetSize(AppSizeInfo appSizeInfo) {
-                GodEyeCanaryLog.d(String.format("Godeye app size report: cache size: %s, data size: %s, codeSize: %s", AppSizeUtil.formatSize(appSizeInfo.cacheSize),
-                        AppSizeUtil.formatSize(appSizeInfo.dataSize), AppSizeUtil.formatSize(appSizeInfo.codeSize)));
+                L.d("AppSize onGetSize: cache size: %s, data size: %s, codeSize: %s", AppSizeUtil.formatSize(appSizeInfo.cacheSize),
+                        AppSizeUtil.formatSize(appSizeInfo.dataSize), AppSizeUtil.formatSize(appSizeInfo.codeSize));
                 produce(appSizeInfo);
             }
 
             @Override
             public void onError(Throwable t) {
-                AppSizeInfo appSizeInfo = new AppSizeInfo();
-                appSizeInfo.error = t;
-                produce(appSizeInfo);
+                L.d("AppSize onGetError: %s", String.valueOf(t));
+                produce(AppSizeInfo.INVALID);
             }
-        }), config.delayMilliseconds(), TimeUnit.MILLISECONDS);
+        }), config.delayMillis(), TimeUnit.MILLISECONDS);
+        L.d("AppSize installed.");
     }
 
     @Override
-    public void uninstall() {
+    public synchronized void uninstall() {
         if (!mInstalled) {
-            L.d("pageload already uninstalled, ignore.");
+            L.d("AppSize already uninstalled, ignore.");
             return;
         }
-        L.d("app size uninstalled.");
         if (disposable != null) {
             disposable.dispose();
         }
         mInstalled = false;
+        L.d("AppSize uninstalled.");
+    }
+
+    @Override
+    protected Subject<AppSizeInfo> createSubject() {
+        return BehaviorSubject.create();
     }
 }

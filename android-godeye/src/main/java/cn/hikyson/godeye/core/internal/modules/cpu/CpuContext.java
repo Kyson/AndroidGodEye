@@ -6,6 +6,4 @@ package cn.hikyson.godeye.core.internal.modules.cpu;
 
 public interface CpuContext {
     long intervalMillis();
-
-    long sampleMillis();
 }

@@ -1,6 +1,11 @@
 package cn.hikyson.godeye.monitor.modules.battery;
 
-public class BatterySummaryInfo {
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
+
+@Keep
+public class BatterySummaryInfo implements Serializable {
     public String status;
     public String health;
     // boolean类型

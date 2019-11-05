@@ -1,11 +1,15 @@
 package cn.hikyson.godeye.monitor.modules;
 
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
 import java.util.Map;
 
 import cn.hikyson.godeye.core.internal.modules.pageload.LifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageType;
 
-public class PageLifecycleProcessedEvent {
+@Keep
+public class PageLifecycleProcessedEvent implements Serializable {
     public PageType pageType;
     public String pageClassName;
     public int pageHashCode;

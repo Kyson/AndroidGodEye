@@ -18,13 +18,13 @@
 <a href="README_zh.md">中文 README_zh.md</a>
 </p>
 
-> Android开发者在性能检测方面的工具一直比较匮乏，仅有的一些工具，比如Android Device Monitor，使用起来也有些繁琐，使用起来对开发者有一定的要求。而线上的App监控更无从谈起。所以需要有一个系统能够提供Debug和Release阶段全方位的监控，更深入地了解对App运行时的状态。
+> Android开发者在性能检测方面的工具一直比较匮乏，仅有的一些工具，比如Android Device Monitor，使用起来也有些繁琐，对开发者能力有一定的要求。而线上的App监控更无从谈起。所以需要有一个系统能够提供Debug和Release阶段全方位的监控，更深入地了解对App运行时的状态。
 
 ## 概览
 
 ![android_godeye_connect](ART/android_god_eye_connect.jpg)
 
-AndroidGodEye是一个可以在PC浏览器中实时监控Android数据指标（比如性能指标，但是不局限于性能）的工具，你可以通过wifi/usb连接手机和pc，通过pc浏览器实时监控手机性能。
+AndroidGodEye是一个可以在PC浏览器中实时监控Android性能数据指标的工具，你可以通过wifi/usb连接手机和pc，通过pc浏览器实时监控手机性能。
 
 系统分为三部分：
 
@@ -32,8 +32,7 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android数据指标（�
 2. Debug Monitor部分，提供Debug阶段开发者面板
 3. Toolbox 快速接入工具集，给开发者提供各种便捷接入的工具
 
-AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存泄漏等等，并且提供了Debug阶段的Monitor看板实时展示这
-些数据。而且提供了api供开发者在release阶段进行数据上报。
+AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存泄漏等等，并且提供了Debug阶段的Monitor看板实时展示这些数据。而且提供了api供开发者在release阶段进行数据上报。
 
 ## 快速开始
 
@@ -43,7 +42,9 @@ AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存�
 
 ### STEP1 依赖引入
 
-#### Module Project `build.gradle`
+#### 1. 添加AndroidGodEye依赖
+
+在需要的Module的`build.gradle`中添加
 
 ```groovy
 dependencies {
@@ -56,7 +57,9 @@ dependencies {
 
 > VERSION_NAME参考 [Github release](https://github.com/Kyson/AndroidGodEye/releases)
 
-#### Root Project `build.gradle`
+#### 2. 添加MethodCanary依赖
+
+在Root Project的`build.gradle`中添加
 
 ```groovy
 buildscript {
@@ -71,7 +74,13 @@ buildscript {
 
 > PLUGIN_VERSION_NAME参考 [MethodCanary github release](https://github.com/Kyson/MethodCanary/releases)
 
-需要配置MethodCanary的插桩逻辑，在项目根目录下新建js文件：`MethodCanary.js`，内容如下：
+在Application Module Project（`'com.android.application'`）的`build.gradle`中添加
+
+```groovy
+apply plugin: 'cn.hikyson.methodcanary.plugin'
+```
+
+在项目根目录下新建js文件：`MethodCanary.js`用于配置MethodCanary的插桩逻辑，内容如下：
 
 ```
 /**
@@ -95,13 +104,7 @@ function isInclude(classInfo,methodInfo){
 }
 ```
 
-> 配置说明可以参考[MethodCanary](https://github.com/Kyson/MethodCanary)
-
-#### Module Project `'com.android.application'` `build.gradle`
-
-```groovy
-apply plugin: 'cn.hikyson.methodcanary.plugin'
-```
+[如何配置MethodCanary.js](https://github.com/Kyson/AndroidGodEye/wiki/0x01-Module-MethodCanary)
 
 ### STEP2 初始化并安装所需模块
 
@@ -116,59 +119,20 @@ GodEye.instance().init(this);
 在需要的时候安装所有模块（建议在`application onCreate`中）：
 
 ```java
-if (ProcessUtils.isMainProcess(this)) {//安装只能在主进程
-    GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+if (ProcessUtils.isMainProcess(this)) {//install in main process
+    GodEye.instance().install(GodEyeConfig.fromAssets("<config path>"));
 }
 ```
 
-assets目录下放模块的配置文件`android-godeye-config/install.config`，内容如下：
+"\<config path\>"为配置文件在assets下的目录路径，内容参考：[install.config](https://github.com/Kyson/AndroidGodEye/blob/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config)
 
-```xml
-<config>
-    <battery />
-    <cpu intervalMillis="2000" sampleMillis="1000"/>
-    <crash crashProvider="cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider"/>
-    <fps intervalMillis="2000"/>
-    <heap intervalMillis="2000"/>
-    <leakMemory debug="true" debugNotification="true" leakRefInfoProvider="cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider"/>
-    <pageload pageInfoProvider="cn.hikyson.godeye.core.internal.modules.pageload.DefaultPageInfoProvider"/>
-    <pss intervalMillis="2000"/>
-    <ram intervalMillis="2000"/>
-    <sm debugNotification="true"
-        dumpIntervalMillis="1000"
-        longBlockThresholdMillis="500"
-        shortBlockThresholdMillis="300"/>
-    <thread intervalMillis="3000"
-            threadFilter="cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter"/>
-    <traffic intervalMillis="2000" sampleMillis="1000"/>
-    <methodCanary maxMethodCountSingleThreadByCost="300" lowCostMethodThresholdMillis="10"/>
-</config>
-```
-
-#### 可选部分 卸载模块
-
-不需要的时候卸载模块(不推荐)：
-
-```java
-// 卸载已经安装的所有模块
-GodEye.instance().uninstall();
-```
-
-> 注意：network和startup模块不需要安装和卸载
-
-安装完之后相应的模块就开始输出数据了，一般来说可以使用模块的consume方法进行消费，比如cpu模块：
-
-```java
-GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).subject().subscribe()
-```
-
-> 就像我们之后会提到的Debug Monitor，也是通过消费这些数据进行展示的
+[卸载模块](https://github.com/Kyson/AndroidGodEye/wiki/0x00-Work-Flow-Overview)
 
 ### STEP3 安装性能可视化面板
 
 GodEyeMonitor类是AndroidGodEye的性能可视化面板的主要类，用来开始或者停止性能可视化面板的监控。
 
-开启性能可视化面板，不建议在生产包中开启：
+开启性能可视化面板：
 
 ```java
 GodEyeMonitor.work(context)
@@ -180,13 +144,19 @@ GodEyeMonitor.work(context)
 GodEyeMonitor.shutDown()
 ```
 
-usb连上你的手机，接下来可以开始运行项目了！
+usb连上你的手机，接下来可以开始运行你的项目了！
+
+[生产环境使用AndroidGodEye](https://github.com/Kyson/AndroidGodEye/wiki/0x00-Work-Flow-Overview)
 
 ### STEP4 安装IDE插件
 
 在AndroidStudio中安装AndroidGodEye插件，在AndroidStudio plugin中直接搜索AndroidGodEye即可，安装完之后会在工具栏中出现AndroidGodEye的icon，点击即可在浏览器中打开性能监控面板。
 
 ![https://github.com/Kyson/AndroidGodEye/blob/master/ART/android-godeye-plugin-position.png](https://github.com/Kyson/AndroidGodEye/blob/master/ART/android-godeye-plugin-position.png)
+
+[没有USB线?]()
+
+[没有安装Android Studio?]()
 
 #### 可选部分
 
@@ -252,23 +222,23 @@ Done!
 
 ## 模块详情
 
-|模块名|需要安装|数据生产时机|配置|备注|
+|模块名|数据生产时机|配置|备注|
 |-----|-------|---------|---|----|
-|network|否|外部输入时输出|无|-|
-|startup|否|外部输入时输出|无|-|
-|battery|是|电池变化时输出|无|-|
-|cpu|是|定时输出|intervalMillis-每隔x毫秒输出数据，sampleMillis-采样间隔|系统版本大于8.0失效|
-|crash|是|安装后，输出上次崩溃|crashProvider-实现CrashProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider即可|-|
-|fps|是|定时输出|intervalMillis-输出间隔|-|
-|heap|是|定时输出|intervalMillis-输出间隔|-|
-|leakDetector(leakMemory)|是|页面销毁且泄漏时|debug-是否需要解析gc引用链，debugNotification泄漏时是否需要通知，leakRefInfoProvider-实现LeakRefInfoProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider|-|
-|pageload|是|页面create/draw/destory/load/hide/show等输出|pageInfoProvider-根据页面实例提供页面信息|fragment的显示隐藏需要手动调用show hide api,页面加载手动调用load api|
-|pss|是|定时输出|intervalMillis-输出间隔|-|
-|ram|是|定时输出|intervalMillis-输出间隔|-|
-|sm|是|卡顿时输出|debugNotify-卡顿是否需要通知，dumpIntervalMillis-dump堆栈间隔，longBlockThresholdMillis-长卡顿阈值，shortBlockThresholdMillis-短卡顿阈值|-|
-|thread|是|定时|intervalMillis-输出间隔，threadFilter-过滤器，实现ThreadFilter类path，一般用内置cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter即可|-|
-|traffic|是|定时输出|intervalMillis-输出间隔，sampleMillis-采样间隔|-|
-|methodCanary|是|停止后输出|maxMethodCountSingleThreadByCost-每个线程最多记录的方法数，lowCostMethodThresholdMillis-方法耗时阈值|-|
+|network|外部输入时输出|无|-|
+|startup|外部输入时输出|无|-|
+|battery|电池变化时输出|无|-|
+|cpu|定时输出|intervalMillis-每隔x毫秒输出数据，sampleMillis-采样间隔|系统版本大于8.0失效|
+|crash|安装后，输出上次崩溃|crashProvider-实现CrashProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider即可|-|
+|fps|定时输出|intervalMillis-输出间隔|-|
+|heap|定时输出|intervalMillis-输出间隔|-|
+|leakDetector(leakMemory)|页面销毁且泄漏时|debug-是否需要解析gc引用链，debugNotification泄漏时是否需要通知，leakRefInfoProvider-实现LeakRefInfoProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider|-|
+|pageload|页面create/draw/destory/load/hide/show等输出|pageInfoProvider-根据页面实例提供页面信息|fragment的显示隐藏需要手动调用show hide api,页面加载手动调用load api|
+|pss|定时输出|intervalMillis-输出间隔|-|
+|ram|定时输出|intervalMillis-输出间隔|-|
+|sm|卡顿时输出|debugNotify-卡顿是否需要通知，dumpIntervalMillis-dump堆栈间隔，longBlockThresholdMillis-长卡顿阈值，shortBlockThresholdMillis-短卡顿阈值|-|
+|thread|定时|intervalMillis-输出间隔，threadFilter-过滤器，实现ThreadFilter类path，一般用内置cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter即可|-|
+|traffic|定时输出|intervalMillis-输出间隔，sampleMillis-采样间隔|-|
+|methodCanary|停止后输出|maxMethodCountSingleThreadByCost-每个线程最多记录的方法数，lowCostMethodThresholdMillis-方法耗时阈值|-|
 
 ## 框架
 
