@@ -26,7 +26,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
     private boolean mInstalled = false;
 
     @Override
-    public void install(ViewCanaryContext config) {
+    public synchronized void install(ViewCanaryContext config) {
         if (mInstalled) {
             L.d("View canary already installed, ignore.");
             return;
@@ -37,7 +37,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
     }
 
     @Override
-    public void uninstall() {
+    public synchronized void uninstall() {
         if (!mInstalled) {
             L.d("View canary already uninstalled, ignore.");
             return;

@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import io.reactivex.annotations.Nullable;
+
 public class ViewBgUtil {
 
     public static int getLayer(View view) {
@@ -45,6 +47,9 @@ public class ViewBgUtil {
                 }
             }
             Bitmap bitmap = drawableToBitmap(current);
+            if (bitmap == null) {
+                return layer;
+            }
             if (!isBitmapTransparent(bitmap)) {
                 layer ++;
                 return layer;
@@ -74,24 +79,29 @@ public class ViewBgUtil {
         return ((bitmap.getPixel(x, y) & 0xff000000) >> 24) != 0;
     }
 
+    @Nullable
     private static Bitmap drawableToBitmap(Drawable drawable) {
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
+        try {
+            if (drawable instanceof BitmapDrawable) {
+                return ((BitmapDrawable) drawable).getBitmap();
+            }
+            // We ask for the bounds if they have been set as they would be most
+            // correct, then we check we are  > 0
+            final int width = !drawable.getBounds().isEmpty() ?
+                    drawable.getBounds().width() : drawable.getIntrinsicWidth();
+
+            final int height = !drawable.getBounds().isEmpty() ?
+                    drawable.getBounds().height() : drawable.getIntrinsicHeight();
+
+            // Now we check we are > 0
+            final Bitmap bitmap = Bitmap.createBitmap(width, height,
+                    Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, width, height);
+            drawable.draw(canvas);
+            return bitmap;
+        } catch (Exception e) {
+            return null;
         }
-        // We ask for the bounds if they have been set as they would be most
-        // correct, then we check we are  > 0
-        final int width = !drawable.getBounds().isEmpty() ?
-                drawable.getBounds().width() : drawable.getIntrinsicWidth();
-
-        final int height = !drawable.getBounds().isEmpty() ?
-                drawable.getBounds().height() : drawable.getIntrinsicHeight();
-
-        // Now we check we are > 0
-        final Bitmap bitmap = Bitmap.createBitmap(width, height,
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, width, height);
-        drawable.draw(canvas);
-        return bitmap;
     }
 }
