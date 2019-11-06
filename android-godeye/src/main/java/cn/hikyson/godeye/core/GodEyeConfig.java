@@ -747,6 +747,7 @@ public class GodEyeConfig implements Serializable {
                     '}';
         }
     }
+
     @Keep
     public static class ViewCanaryConfig implements ViewCanaryContext, Serializable {
 
