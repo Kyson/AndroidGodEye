@@ -1,7 +1,6 @@
 package cn.hikyson.godeye.core.utils;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -25,7 +24,7 @@ public class FileUtil {
      * 删除文件
      *
      * @param file
-     * @throws IOException
+     * @throws FileException
      */
     public static void deleteIfExists(File file) throws FileException {
         if (file.exists() && !file.delete()) {

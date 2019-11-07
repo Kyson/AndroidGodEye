@@ -1,8 +1,5 @@
 package cn.hikyson.godeye.core.utils;
 
-/**
- * Description: <日志打印> Author: hui.zhao Date: 2016/7/13 Copyright: Ctrip
- */
 public class L {
     public static final String DEFAULT_TAG = "AndroidGodEye";
 

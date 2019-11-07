@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * core entrance
- * install -> module.subject() -> uninstall
+ * install then module.subject() then uninstall
  * Created by kysonchao on 2017/11/22.
  */
 public class GodEye {

@@ -47,7 +47,7 @@ public class GodEyeMonitor {
     }
 
     /**
-     * set the class path of app process, indicate whether code is running in app process or system process<br/>
+     * set the class path of app process, indicate whether code is running in app process or system process
      * it will show in thread info list module of AndroidGodEye dashboard
      *
      * @param classPathPrefixes
@@ -57,7 +57,7 @@ public class GodEyeMonitor {
     }
 
     /**
-     * set the ThreadRunningProcessClassifier of app process, indicate whether code is running in app process or system process<br/>
+     * set the ThreadRunningProcessClassifier of app process, indicate whether code is running in app process or system process
      * it will show in thread info list module of AndroidGodEye dashboard
      *
      * @param threadRunningProcessClassifier
