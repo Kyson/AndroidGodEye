@@ -4,10 +4,10 @@ import android.support.annotation.Keep;
 
 import java.io.Serializable;
 
-@Keep
 /**
  * unit：byte
  */
+@Keep
 public class AppSizeInfo implements Serializable {
     public static AppSizeInfo INVALID = new AppSizeInfo();
     public long cacheSize;

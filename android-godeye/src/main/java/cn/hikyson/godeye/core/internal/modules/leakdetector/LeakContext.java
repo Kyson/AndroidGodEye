@@ -16,6 +16,7 @@ public interface LeakContext {
 
     boolean debugNotification();
 
+    //LeakRefInfoProvider
     @NonNull
-    LeakRefInfoProvider leakRefInfoProvider();
+    String leakRefInfoProvider();
 }

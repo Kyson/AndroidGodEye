@@ -1,11 +1,14 @@
 package cn.hikyson.godeye.core.internal.modules.viewcanary;
 
+import android.graphics.Rect;
+import android.support.annotation.Keep;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.graphics.Rect;
-
-public class ViewIssueInfo {
+@Keep
+public class ViewIssueInfo implements Serializable {
     public String activityName;
     public long timestamp;
     public int maxDepth;
@@ -14,7 +17,8 @@ public class ViewIssueInfo {
     public List<ViewInfo> views = new ArrayList<>();
     public List<OverDrawArea> overDrawAreas = new ArrayList<>();
 
-    public static class ViewInfo {
+    @Keep
+    public static class ViewInfo implements Serializable {
         public String className;
         public String id;
         public Rect rect;
@@ -26,7 +30,8 @@ public class ViewIssueInfo {
         public boolean isViewGroup;
     }
 
-    public static class OverDrawArea {
+    @Keep
+    public static class OverDrawArea implements Serializable {
         public Rect rect;
         public int overDrawTimes;
     }

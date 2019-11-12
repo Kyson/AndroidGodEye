@@ -22,20 +22,17 @@ import cn.hikyson.godeye.core.internal.modules.crash.CrashContext;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapContext;
 import cn.hikyson.godeye.core.internal.modules.memory.PssContext;
 import cn.hikyson.godeye.core.internal.modules.memory.RamContext;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryContext;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkContext;
 import cn.hikyson.godeye.core.internal.modules.pageload.DefaultPageInfoProvider;
-import cn.hikyson.godeye.core.internal.modules.pageload.PageInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadContext;
 import cn.hikyson.godeye.core.internal.modules.sm.SmContext;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupContext;
 import cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadContext;
-import cn.hikyson.godeye.core.internal.modules.thread.ThreadFilter;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficContext;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanaryContext;
 import cn.hikyson.godeye.core.utils.IoUtil;
@@ -123,7 +120,7 @@ public class GodEyeConfig implements Serializable {
                     leakConfig.debugNotification = Boolean.parseBoolean(debugNotification);
                 }
                 if (!TextUtils.isEmpty(leakRefInfoProvider)) {
-                    leakConfig.leakRefInfoProvider = (LeakRefInfoProvider) Class.forName(leakRefInfoProvider).newInstance();
+                    leakConfig.leakRefInfoProvider = leakRefInfoProvider;
                 }
                 builder.withLeakConfig(leakConfig);
             }
@@ -223,7 +220,7 @@ public class GodEyeConfig implements Serializable {
                     threadConfig.intervalMillis = Long.parseLong(intervalMillisString);
                 }
                 if (!TextUtils.isEmpty(threadFilterString)) {
-                    threadConfig.threadFilter = (ThreadFilter) Class.forName(threadFilterString).newInstance();
+                    threadConfig.threadFilter = threadFilterString;
                 }
                 builder.withThreadConfig(threadConfig);
             }
@@ -233,7 +230,7 @@ public class GodEyeConfig implements Serializable {
                 final String pageInfoProvider = element.getAttribute("pageInfoProvider");
                 PageloadConfig pageloadConfig = new PageloadConfig();
                 if (!TextUtils.isEmpty(pageInfoProvider)) {
-                    pageloadConfig.pageInfoProvider = (PageInfoProvider) Class.forName(pageInfoProvider).newInstance();
+                    pageloadConfig.pageInfoProvider = pageInfoProvider;
                 }
                 builder.withPageloadConfig(pageloadConfig);
             }
@@ -376,9 +373,10 @@ public class GodEyeConfig implements Serializable {
         // if you want leak module work in production,set debug false
         public boolean debug;
         public boolean debugNotification;
-        public LeakRefInfoProvider leakRefInfoProvider;
+        //LeakRefInfoProvider
+        public String leakRefInfoProvider;
 
-        public LeakConfig(boolean debug, boolean debugNotification, LeakRefInfoProvider leakRefInfoProvider) {
+        public LeakConfig(boolean debug, boolean debugNotification, String leakRefInfoProvider) {
             this.debug = debug;
             this.debugNotification = debugNotification;
             this.leakRefInfoProvider = leakRefInfoProvider;
@@ -387,7 +385,7 @@ public class GodEyeConfig implements Serializable {
         public LeakConfig() {
             this.debug = true;
             this.debugNotification = true;
-            this.leakRefInfoProvider = new DefaultLeakRefInfoProvider();
+            this.leakRefInfoProvider = DefaultLeakRefInfoProvider.class.getName();
         }
 
         @NonNull
@@ -406,10 +404,11 @@ public class GodEyeConfig implements Serializable {
             return debugNotification;
         }
 
+        // LeakRefInfoProvider
         @NonNull
         @Override
-        public LeakRefInfoProvider leakRefInfoProvider() {
-            return leakRefInfoProvider == null ? new DefaultLeakRefInfoProvider() : leakRefInfoProvider;
+        public String leakRefInfoProvider() {
+            return leakRefInfoProvider;
         }
 
         @Override
@@ -679,23 +678,26 @@ public class GodEyeConfig implements Serializable {
 
         @Override
         public String toString() {
-            return "CrashConfig{}";
+            return "CrashConfig{" +
+                    "immediate=" + immediate +
+                    '}';
         }
     }
 
     @Keep
     public static class ThreadConfig implements ThreadContext, Serializable {
         public long intervalMillis;
-        public ThreadFilter threadFilter;
+        //ThreadFilter
+        public String threadFilter;
 
-        public ThreadConfig(long intervalMillis, ThreadFilter threadFilter) {
+        public ThreadConfig(long intervalMillis, String threadFilter) {
             this.intervalMillis = intervalMillis;
             this.threadFilter = threadFilter;
         }
 
         public ThreadConfig() {
             this.intervalMillis = 2000;
-            this.threadFilter = new ExcludeSystemThreadFilter();
+            this.threadFilter = ExcludeSystemThreadFilter.class.getName();
         }
 
         @Override
@@ -704,7 +706,7 @@ public class GodEyeConfig implements Serializable {
         }
 
         @Override
-        public ThreadFilter threadFilter() {
+        public String threadFilter() {
             return threadFilter;
         }
 
@@ -719,13 +721,13 @@ public class GodEyeConfig implements Serializable {
 
     @Keep
     public static class PageloadConfig implements PageloadContext, Serializable {
-        public PageInfoProvider pageInfoProvider;
+        public String pageInfoProvider;
 
         public PageloadConfig() {
-            this.pageInfoProvider = new DefaultPageInfoProvider();
+            this.pageInfoProvider = DefaultPageInfoProvider.class.getName();
         }
 
-        public PageloadConfig(PageInfoProvider pageInfoProvider) {
+        public PageloadConfig(String pageInfoProvider) {
             this.pageInfoProvider = pageInfoProvider;
         }
 
@@ -736,7 +738,7 @@ public class GodEyeConfig implements Serializable {
 
         @NonNull
         @Override
-        public PageInfoProvider pageInfoProvider() {
+        public String pageInfoProvider() {
             return pageInfoProvider;
         }
 

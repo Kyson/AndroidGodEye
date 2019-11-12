@@ -20,6 +20,7 @@ import cn.hikyson.godeye.core.internal.modules.leakdetector.release.ReleaseHeapD
 import cn.hikyson.godeye.core.internal.modules.leakdetector.release.ReleaseHeapDumper;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.watcher.AndroidOFragmentRefWatcher;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.watcher.SupportFragmentRefWatcher;
+import cn.hikyson.godeye.core.utils.L;
 
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.O;
@@ -52,13 +53,20 @@ public class LeakEngine implements Engine {
 
     @Override
     public void work() {
+        LeakRefInfoProvider leakRefInfoProvider = new DefaultLeakRefInfoProvider();
+        try {
+            leakRefInfoProvider = (LeakRefInfoProvider) Class.forName(this.mConfig.leakRefInfoProvider()).newInstance();
+        } catch (Throwable e) {
+            L.e("Leak work warning, can not find LeakRefInfoProvider class, use DefaultLeakRefInfoProvider:" + e);
+        }
         final RefWatcher watcher = mConfig.debug() ? createDebugRefWatcher() : createReleaseRefWatcher();
         FragmentRefWatcher appFragmentWatcher = null;
         if (SDK_INT >= O) {
-            appFragmentWatcher = new AndroidOFragmentRefWatcher(watcher, mConfig.leakRefInfoProvider());
+            appFragmentWatcher = new AndroidOFragmentRefWatcher(watcher, leakRefInfoProvider);
         }
         final FragmentRefWatcher finalAppFragmentWatcher = appFragmentWatcher;
-        final FragmentRefWatcher supportFragmentWatcher = new SupportFragmentRefWatcher(watcher, mConfig.leakRefInfoProvider());
+        final FragmentRefWatcher supportFragmentWatcher = new SupportFragmentRefWatcher(watcher, leakRefInfoProvider);
+        LeakRefInfoProvider finalLeakRefInfoProvider = leakRefInfoProvider;
         lifecycleCallbacks = new SimpleActivityLifecycleCallbacks() {
             @RequiresApi(api = O)
             @Override
@@ -71,7 +79,7 @@ public class LeakEngine implements Engine {
 
             @Override
             public void onActivityDestroyed(Activity activity) {
-                LeakRefInfo leakRefInfo = mConfig.leakRefInfoProvider().getInfoByActivity(activity);
+                LeakRefInfo leakRefInfo = finalLeakRefInfoProvider.getInfoByActivity(activity);
                 if (!leakRefInfo.isExcludeRef()) {
                     watcher.watch(activity, LeakUtil.serialize(leakRefInfo));
                 }

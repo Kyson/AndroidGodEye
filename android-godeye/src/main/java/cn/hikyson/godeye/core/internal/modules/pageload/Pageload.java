@@ -34,7 +34,13 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         handlerThread.start();
         this.mHandler = new Handler(handlerThread.getLooper());
         PageLifecycleRecords pageLifecycleRecords = new PageLifecycleRecords();
-        this.mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks(pageLifecycleRecords, this.mConfig.pageInfoProvider(), this, mHandler);
+        PageInfoProvider pageInfoProvider = new DefaultPageInfoProvider();
+        try {
+            pageInfoProvider = (PageInfoProvider) Class.forName(this.mConfig.pageInfoProvider()).newInstance();
+        } catch (Throwable e) {
+            L.e("Pageload install warning, can not find pageload provider class. use DefaultPageInfoProvider:" + e);
+        }
+        this.mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks(pageLifecycleRecords, pageInfoProvider, this, mHandler);
         this.mConfig.application().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         this.mInstalled = true;
         L.d("Pageload installed.");

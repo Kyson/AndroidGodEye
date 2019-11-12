@@ -23,7 +23,13 @@ public class ThreadDump extends ProduceableSubject<List<Thread>> implements Inst
             return;
         }
         mConfig = config;
-        mThreadEngine = new ThreadEngine(this, config.intervalMillis(), config.threadFilter());
+        ThreadFilter threadFilter = new ExcludeSystemThreadFilter();
+        try {
+            threadFilter = (ThreadFilter) Class.forName(this.mConfig.threadFilter()).newInstance();
+        } catch (Throwable e) {
+            L.e("Thread install warning, can not find ThreadFilter class, use ExcludeSystemThreadFilter:" + e);
+        }
+        mThreadEngine = new ThreadEngine(this, config.intervalMillis(), threadFilter);
         mThreadEngine.work();
         L.d("ThreadDump installed.");
     }

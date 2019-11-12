@@ -9,5 +9,6 @@ import android.support.annotation.NonNull;
 public interface PageloadContext {
     Application application();
     @NonNull
-    PageInfoProvider pageInfoProvider();
+    // PageInfoProvider
+    String pageInfoProvider();
 }

@@ -105,7 +105,7 @@ public class Crash extends ProduceableSubject<List<Map<String, String>>> impleme
 
     private void sendThenDeleteCrashLog(String logPath, String emergency, CrashContext crashContext) throws IOException {
         if (emergency != null || crashContext.immediate()) {// if emergency or immediate,output right now
-            L.d("Crash produce message when emergency, crash count:%s, emergency:%s, logPath:%s", 1, emergency, logPath);
+            L.d("Crash produce message when emergency or immediate, crash count:%s, emergency:%s, logPath:%s", 1, emergency, logPath);
             produce(Collections.singletonList(wrapCrashMessage(TombstoneParser.parse(logPath, emergency))));
             TombstoneManager.deleteTombstone(logPath);
         }
