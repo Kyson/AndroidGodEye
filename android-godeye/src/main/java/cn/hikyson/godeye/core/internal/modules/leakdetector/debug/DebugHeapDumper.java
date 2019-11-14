@@ -1,7 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector.debug;
 
 import android.os.Debug;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.squareup.leakcanary.HeapDumper;
 import com.squareup.leakcanary.LeakDirectoryProvider;

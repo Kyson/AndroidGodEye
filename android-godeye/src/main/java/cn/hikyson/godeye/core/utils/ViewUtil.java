@@ -1,16 +1,11 @@
 package cn.hikyson.godeye.core.utils;
 
 import android.app.Activity;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.view.Choreographer;
-import android.view.View;
-import android.view.ViewTreeObserver;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import android.view.View;
 
 import cn.hikyson.godeye.core.internal.modules.pageload.PageDrawMonitor;
 

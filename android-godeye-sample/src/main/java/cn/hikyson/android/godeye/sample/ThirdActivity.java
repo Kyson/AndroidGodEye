@@ -2,8 +2,8 @@ package cn.hikyson.android.godeye.sample;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import android.view.View;
 
 import cn.hikyson.android.godeye.sample.fragmentlifecycle.BlankFragment1;

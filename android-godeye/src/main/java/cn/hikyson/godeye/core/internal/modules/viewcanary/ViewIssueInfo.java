@@ -1,7 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.viewcanary;
 
 import android.graphics.Rect;
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 import java.io.Serializable;
 import java.util.ArrayList;

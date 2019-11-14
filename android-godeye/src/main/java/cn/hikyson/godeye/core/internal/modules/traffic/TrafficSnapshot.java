@@ -1,8 +1,8 @@
 package cn.hikyson.godeye.core.internal.modules.traffic;
 
 import android.net.TrafficStats;
-import android.support.annotation.Keep;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.Keep;
+import androidx.annotation.WorkerThread;
 
 import java.io.Serializable;
 

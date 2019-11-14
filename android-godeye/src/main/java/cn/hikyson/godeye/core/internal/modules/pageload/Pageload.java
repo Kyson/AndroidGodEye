@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;

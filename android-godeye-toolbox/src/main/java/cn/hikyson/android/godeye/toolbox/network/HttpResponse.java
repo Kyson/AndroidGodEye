@@ -1,6 +1,6 @@
 package cn.hikyson.android.godeye.toolbox.network;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 import java.io.Serializable;
 import java.util.Map;

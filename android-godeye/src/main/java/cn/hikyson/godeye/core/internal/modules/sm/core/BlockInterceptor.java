@@ -1,7 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.sm.core;
 
 import android.content.Context;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.WorkerThread;
 
 
 public interface BlockInterceptor {

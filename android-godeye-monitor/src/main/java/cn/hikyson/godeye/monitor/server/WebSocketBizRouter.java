@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.monitor.server;
 
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 import android.text.TextUtils;
 
 import com.koushikdutta.async.http.WebSocket;

@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.thread;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 /**
  * 排序系统thread组的线程

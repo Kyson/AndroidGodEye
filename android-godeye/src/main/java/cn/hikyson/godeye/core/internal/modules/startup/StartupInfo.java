@@ -1,7 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.startup;
 
-import android.support.annotation.Keep;
-import android.support.annotation.StringDef;
+import androidx.annotation.Keep;
+import androidx.annotation.StringDef;
 
 import java.io.Serializable;
 import java.lang.annotation.Retention;

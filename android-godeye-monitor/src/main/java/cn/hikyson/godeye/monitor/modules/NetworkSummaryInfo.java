@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.monitor.modules;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 import java.io.Serializable;
 import java.util.ArrayList;

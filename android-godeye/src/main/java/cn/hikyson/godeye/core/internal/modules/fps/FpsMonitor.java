@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.fps;
 
-import android.support.annotation.UiThread;
+import androidx.annotation.UiThread;
 import android.view.Choreographer;
 
 public class FpsMonitor implements Choreographer.FrameCallback {
