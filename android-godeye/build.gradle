@@ -1,11 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
+    buildToolsVersion BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion Integer.parseInt(MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(TARGET_SDK_VERSION)
         versionCode 1
         versionName "1.0"
 
@@ -27,14 +28,13 @@ android {
             includeAndroidResources = true
         }
     }
-    buildToolsVersion = '28.0.3'
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    implementation 'androidx.annotation:annotation:1.0.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'com.google.code.gson:gson:2.8.5'
     api 'io.reactivex.rxjava2:rxjava:2.2.2'
@@ -42,7 +42,6 @@ dependencies {
     api 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     api 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
     api 'cn.hikyson.methodcanary:lib:0.12.1'
-    implementation 'com.iqiyi.xcrash:xcrash-android-lib:2.4.6'
 }
 
 apply from: rootProject.file('gradle/gradle-jcenter-push.gradle')

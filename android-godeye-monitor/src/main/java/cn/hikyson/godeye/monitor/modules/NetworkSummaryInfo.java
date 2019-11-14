@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cn.hikyson.android.godeye.toolbox.network.HttpContent;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkContent;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkTime;
@@ -50,18 +49,7 @@ public class NetworkSummaryInfo implements Serializable {
         NetworkSummaryInfo networkSummaryInfo = new NetworkSummaryInfo();
         networkSummaryInfo.isSuccessful = networkInfo.isSuccessful;
         networkSummaryInfo.message = networkInfo.message;
-        if (networkInfo.networkContent instanceof HttpContent) {
-            HttpContent httpContent = (HttpContent) networkInfo.networkContent;
-            if (httpContent.httpResponse != null && networkInfo.isSuccessful) {
-                networkSummaryInfo.message = httpContent.httpResponse.message;
-                if (!isSuccessful(httpContent.httpResponse.code)) {
-                    networkSummaryInfo.isSuccessful = false;
-                }
-            }
-            networkSummaryInfo.networkContent = convertHttpContentToSummaryContent(httpContent);
-        } else {
-            networkSummaryInfo.networkContent = convertUnknownProtocolContentToSummaryContent(networkInfo.networkContent);
-        }
+        networkSummaryInfo.networkContent = convertNetworkContentToSummaryContent(networkInfo.networkContent);
         networkSummaryInfo.summary = networkInfo.summary;
         networkSummaryInfo.totalTime = networkInfo.networkTime == null ? 0 : networkInfo.networkTime.totalTimeMillis;
         networkSummaryInfo.networkTime = convertToTimePairs(networkInfo.networkTime);
@@ -80,21 +68,10 @@ public class NetworkSummaryInfo implements Serializable {
         return networkTimeList;
     }
 
-    private static Content convertHttpContentToSummaryContent(HttpContent httpContent) {
-        if (httpContent != null) {
-            return new Content(httpContent.getClass().getSimpleName(), httpContent.httpRequest.getStandardFormat(), httpContent.httpResponse.getStandardFormat());
-        }
-        return new Content("NULL", "NULL", "NULL");
-    }
-
-    private static Content convertUnknownProtocolContentToSummaryContent(NetworkContent networkContent) {
+    private static Content convertNetworkContentToSummaryContent(NetworkContent networkContent) {
         if (networkContent != null) {
-            return new Content(networkContent.getClass().getSimpleName(), "Request unknown network protocol: " + networkContent.getClass().getSimpleName(), "Response unknown network protocol:" + networkContent.getClass().getSimpleName());
+            return new Content(networkContent.getClass().getSimpleName(), networkContent.requestToString(), networkContent.responseToString());
         }
         return new Content("NULL", "NULL", "NULL");
-    }
-
-    private static boolean isSuccessful(int code) {
-        return code >= 200 && code < 300;
     }
 }

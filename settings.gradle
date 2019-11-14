@@ -1,2 +1,1 @@
-include ':android-godeye-sample', ':android-godeye-monitor', ':android-godeye-monitor-no-op', ':android-godeye', ':android-godeye-toolbox'
-//include ':android-godeye'
+include ':android-godeye-sample', ':android-godeye-monitor', ':android-godeye-monitor-no-op', ':android-godeye', ':android-godeye-toolboxes:android-godeye-xcrash', ':android-godeye-toolboxes:android-godeye-okhttp'
