@@ -11,4 +11,16 @@ public class ImageIssue {
     public int imageViewWidth;
     public int imageViewHeight;
     public IssueType issueType;
+
+    @Override
+    public String toString() {
+        return "ImageIssue{" +
+                "imageViewId=" + imageViewId +
+                ", bitmapWidth=" + bitmapWidth +
+                ", bitmapHeight=" + bitmapHeight +
+                ", imageViewWidth=" + imageViewWidth +
+                ", imageViewHeight=" + imageViewHeight +
+                ", issueType=" + issueType +
+                '}';
+    }
 }
