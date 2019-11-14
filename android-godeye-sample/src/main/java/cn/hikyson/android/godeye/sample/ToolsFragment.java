@@ -26,7 +26,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import xcrash.XCrash;
 
-
 public class ToolsFragment extends Fragment {
 
     public ToolsFragment() {

@@ -40,8 +40,7 @@ public class ConsumeFragment extends Fragment {
         view.findViewById(R.id.fragment_consume_start_debug_monitor).setOnClickListener(v -> {
             GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl());
             GodEyeMonitor.setClassPrefixOfAppProcess(Collections.singletonList("cn.hikyson.android.godeye.sample"));
-            // CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT is define at rootDir/gradle.properties as ANDROID_GODEYE_MONITOR_PORT
-            GodEyeMonitor.work(ConsumeFragment.this.getActivity(), getResources().getInteger(R.integer.CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT));
+            GodEyeMonitor.work(ConsumeFragment.this.getActivity(), 5390);
         });
         view.findViewById(R.id.fragment_consume_stop_debug_monitor).setOnClickListener(v -> {
             GodEyeMonitor.shutDown();

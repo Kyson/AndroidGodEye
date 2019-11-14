@@ -40,6 +40,7 @@ dependencies {
     implementation project(':android-godeye-toolbox')
     api 'com.koushikdutta.async:androidasync:2.2.1'
     implementation "com.github.nisrulz:easydeviceinfo-base:2.4.1"
+    implementation 'com.iqiyi.xcrash:xcrash-android-lib:2.4.6'
 }
 
 apply from: rootProject.file('gradle/gradle-jcenter-push.gradle')
