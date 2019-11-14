@@ -104,6 +104,7 @@ public class GodEyePluginXCrash {
         CrashInfo crashInfo = new CrashInfo();
         crashInfo.startTime = crashMap.remove(TombstoneParser.keyStartTime);
         crashInfo.crashTime = crashMap.remove(TombstoneParser.keyCrashTime);
+        crashInfo.crashType = crashMap.remove(TombstoneParser.keyCrashType);
         crashInfo.processId = crashMap.remove(TombstoneParser.keyProcessId);
         crashInfo.processName = crashMap.remove(TombstoneParser.keyProcessName);
         crashInfo.threadId = crashMap.remove(TombstoneParser.keyThreadId);
@@ -115,10 +116,13 @@ public class GodEyePluginXCrash {
         crashInfo.javaCrashStacktrace = crashMap.remove(TombstoneParser.keyJavaStacktrace);
         crashInfo.extras = crashMap;
         StringBuilder sb = new StringBuilder();
-        if (!TextUtils.isEmpty(crashMap.get(TombstoneParser.keyCode))) {
-            sb.append(crashMap.get(TombstoneParser.keyCode)).append(" | ");
+        if (!TextUtils.isEmpty(crashInfo.nativeCrashCode)) {
+            sb.append(crashInfo.nativeCrashCode).append(" | ");
         }
-        String javaStackTrace = crashMap.get(TombstoneParser.keyJavaStacktrace);
+        if (!TextUtils.isEmpty(crashInfo.nativeCrashSignal)) {
+            sb.append(crashInfo.nativeCrashSignal).append(" | ");
+        }
+        String javaStackTrace = crashInfo.javaCrashStacktrace;
         if (javaStackTrace != null) {
             String[] javaStackTraceLines = javaStackTrace.split("\n");
             if (javaStackTraceLines.length > 0) {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import '../App.css';
 
-import {Card, Badge, Button, Tag, Input, Popover} from 'antd'
+import {Card, Badge, Button, Input, Popover} from 'antd'
 import Util from "../libs/util";
 
 /**
@@ -94,8 +94,6 @@ class ViewCanary extends Component {
         let ratio = screenWidth / popWidth
 
         let viewsOnPop = []
-
-        let overDrawOnPop = []
         issues.overDrawAreas.forEach(e => {
             if (e.rect.top > screenHeight) {
                 return

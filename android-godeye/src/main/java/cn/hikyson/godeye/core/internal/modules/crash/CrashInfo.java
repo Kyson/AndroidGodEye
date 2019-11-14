@@ -9,6 +9,7 @@ import java.util.Map;
 public class CrashInfo implements Serializable {
     public String startTime;
     public String crashTime;
+    public String crashType;
     public String crashMessage;
     public String processId;
     public String processName;
@@ -29,6 +30,7 @@ public class CrashInfo implements Serializable {
         return "CrashInfo{" +
                 "startTime='" + startTime + '\'' +
                 ", crashTime='" + crashTime + '\'' +
+                ", crashType='" + crashType + '\'' +
                 ", crashMessage='" + crashMessage + '\'' +
                 ", processId='" + processId + '\'' +
                 ", processName='" + processName + '\'' +

@@ -3,9 +3,8 @@ package cn.hikyson.godeye.monitor.modules.crash;
 import android.Manifest;
 import android.content.Context;
 import android.os.Environment;
-import androidx.core.content.PermissionChecker;
 
-import com.google.gson.reflect.TypeToken;
+import androidx.core.content.PermissionChecker;
 
 import java.io.File;
 import java.io.FileReader;
@@ -19,26 +18,26 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.Objects;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.GsonSerializer;
 import cn.hikyson.godeye.core.helper.Serializer;
+import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.utils.FileUtil;
 import cn.hikyson.godeye.core.utils.IoUtil;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
-import xcrash.TombstoneParser;
 
 /**
  * observe crash and store for godeye monitor
  */
 public class CrashStore {
-    public static Observable<List<Map<String, String>>> observeCrashAndCache(Context context) {
+    public static Observable<List<CrashInfo>> observeCrashAndCache(Context context) {
         return Observable.create(emitter -> {
             try {
-                GodEye.instance().observeModule(GodEye.ModuleName.CRASH, (List<Map<String, String>> maps) -> {
+                GodEye.instance().observeModule(GodEye.ModuleName.CRASH, (List<CrashInfo> maps) -> {
                     if (!maps.isEmpty()) {
                         storeCrash(context, maps);
                     }
@@ -58,17 +57,17 @@ public class CrashStore {
     private static final String SUFFIX = ".crash";
     private static final FilenameFilter mCrashFilenameFilter = (dir, filename) -> filename.endsWith(SUFFIX);
 
-    private static synchronized void storeCrash(Context context, List<Map<String, String>> crashInfos) {
+    private static synchronized void storeCrash(Context context, List<CrashInfo> crashInfos) {
         List<File> crashFiles = null;
         try {
-            crashFiles = Arrays.asList(makeSureCrashDir(context).listFiles(mCrashFilenameFilter));
-        } catch (IOException e) {
+            crashFiles = Arrays.asList(Objects.requireNonNull(makeSureCrashDir(context).listFiles(mCrashFilenameFilter)));
+        } catch (Throwable e) {
             L.e(e);
         }
         if (crashFiles != null && crashFiles.size() >= sMaxStoreCount) {
             Collections.sort(crashFiles, (o1, o2) -> {
                 try {
-                    return Long.compare(FORMATTER.parse(o2.getName()).getTime(), FORMATTER.parse(o1.getName()).getTime());
+                    return Long.compare(Objects.requireNonNull(FORMATTER.parse(o2.getName())).getTime(), FORMATTER.parse(o1.getName()).getTime());
                 } catch (Throwable e) {
                     return Long.compare(o2.lastModified(), o1.lastModified());
                 }
@@ -81,10 +80,10 @@ public class CrashStore {
                 }
             }
         }
-        for (Map<String, String> m : crashInfos) {
+        for (CrashInfo crashInfo : crashInfos) {
             File file = null;
             try {
-                file = getStoreFile(context, getStoreFileName(FORMATTER_2.parse(m.get(TombstoneParser.keyCrashTime)).getTime()));
+                file = getStoreFile(context, getStoreFileName(Objects.requireNonNull(FORMATTER_2.parse(crashInfo.crashTime)).getTime()));
             } catch (Throwable e) {
                 L.e(e);
             }
@@ -94,7 +93,7 @@ public class CrashStore {
             FileWriter fileWriter = null;
             try {
                 fileWriter = new FileWriter(file);
-                fileWriter.write(sSerializer.serialize(m));
+                fileWriter.write(sSerializer.serialize(crashInfo));
             } catch (IOException e) {
                 L.e(e);
             } finally {
@@ -104,14 +103,14 @@ public class CrashStore {
         L.d("CrashStore storeCrash count:%s", crashInfos.size());
     }
 
-    private static synchronized List<Map<String, String>> restoreCrash(Context context) {
+    private static synchronized List<CrashInfo> restoreCrash(Context context) {
         File[] crashFiles = new File[0];
         try {
             crashFiles = makeSureCrashDir(context).listFiles(mCrashFilenameFilter);
         } catch (IOException e) {
             L.e(e);
         }
-        List<Map<String, String>> crashInfos = new ArrayList<>();
+        List<CrashInfo> crashInfos = new ArrayList<>();
         if (crashFiles == null || crashFiles.length == 0) {
             return crashInfos;
         }
@@ -119,8 +118,7 @@ public class CrashStore {
             FileReader reader = null;
             try {
                 reader = new FileReader(crashFile);
-                crashInfos.add(sSerializer.deserialize(reader, new TypeToken<Map<String, String>>() {
-                }.getType()));
+                crashInfos.add(sSerializer.deserialize(reader, CrashInfo.class));
             } catch (Throwable e) {
                 L.e(e);
             } finally {
@@ -130,8 +128,7 @@ public class CrashStore {
         // sort by crash time [2019-09-04 12:00:00.crash,2019-09-02 12:00:00.crash,2019-09-02 11:00:00.crash]
         Collections.sort(crashInfos, (o1, o2) -> {
             try {
-                // TODO KYSON Attempt to invoke interface method 'java.lang.Object java.util.Map.get(java.lang.Object)' on a null object reference
-                return Long.compare(FORMATTER_2.parse(o2.get(TombstoneParser.keyCrashTime)).getTime(), FORMATTER_2.parse(o1.get(TombstoneParser.keyCrashTime)).getTime());
+                return Long.compare(Objects.requireNonNull(FORMATTER_2.parse(o2.crashTime)).getTime(), FORMATTER_2.parse(o1.crashTime).getTime());
             } catch (Throwable throwable) {
                 L.e(throwable);
             }
