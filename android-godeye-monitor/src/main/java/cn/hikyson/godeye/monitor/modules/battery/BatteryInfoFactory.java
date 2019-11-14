@@ -2,7 +2,7 @@ package cn.hikyson.godeye.monitor.modules.battery;
 
 import android.os.BatteryManager;
 import android.os.Build;
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 
 import java.util.Map;
 

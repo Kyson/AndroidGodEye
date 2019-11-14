@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.Choreographer;
 import android.view.View;
 import android.view.ViewTreeObserver;

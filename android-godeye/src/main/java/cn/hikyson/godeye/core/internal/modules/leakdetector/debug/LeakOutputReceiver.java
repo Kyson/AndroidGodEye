@@ -3,7 +3,7 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector.debug;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 
 
 import java.util.ArrayList;

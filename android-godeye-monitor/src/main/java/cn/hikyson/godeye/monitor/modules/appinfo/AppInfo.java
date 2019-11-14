@@ -3,8 +3,8 @@ package cn.hikyson.godeye.monitor.modules.appinfo;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.annotation.Keep;
-import android.support.v4.content.PermissionChecker;
+import androidx.annotation.Keep;
+import androidx.core.content.PermissionChecker;
 import android.text.TextUtils;
 
 import java.io.Serializable;

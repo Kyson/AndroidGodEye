@@ -2,8 +2,8 @@ package cn.hikyson.android.godeye.sample;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatCheckBox;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +40,7 @@ public class ConsumeFragment extends Fragment {
         view.findViewById(R.id.fragment_consume_start_debug_monitor).setOnClickListener(v -> {
             GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl());
             GodEyeMonitor.setClassPrefixOfAppProcess(Collections.singletonList("cn.hikyson.android.godeye.sample"));
-            // CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT is define at rootDir/gradle.properties as ANDROID_GODEYE_MONITOR_PORT
-            GodEyeMonitor.work(ConsumeFragment.this.getActivity(), getResources().getInteger(R.integer.CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT));
+            GodEyeMonitor.work(ConsumeFragment.this.getActivity(), 5390);
         });
         view.findViewById(R.id.fragment_consume_stop_debug_monitor).setOnClickListener(v -> {
             GodEyeMonitor.shutDown();

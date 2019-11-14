@@ -1,7 +1,7 @@
 package cn.hikyson.godeye.core;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import cn.hikyson.godeye.core.exceptions.UnexpectException;
 import cn.hikyson.godeye.core.exceptions.UninstallException;

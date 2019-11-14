@@ -3,7 +3,7 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 
 import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;

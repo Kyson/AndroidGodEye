@@ -2,9 +2,9 @@ package cn.hikyson.godeye.core;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.Keep;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.w3c.dom.Element;

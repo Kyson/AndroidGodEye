@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.thread;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 /**
  * Created by kysonchao on 2018/1/15.

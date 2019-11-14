@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.thread;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 /**
  * 不需要这个类，默认使用 {@link ExcludeSystemThreadFilter}

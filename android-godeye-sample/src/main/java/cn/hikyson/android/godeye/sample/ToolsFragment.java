@@ -5,17 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.fragment.app.Fragment;
+
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
 
-import cn.hikyson.android.godeye.toolbox.network.GodEyePluginOkNetwork;
+import cn.hikyson.android.godeye.okhttp.GodEyePluginOkNetwork;
 import cn.hikyson.godeye.core.GodEyeHelper;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
@@ -24,8 +25,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import xcrash.XCrash;
-
 
 public class ToolsFragment extends Fragment {
 
@@ -68,7 +67,7 @@ public class ToolsFragment extends Fragment {
             throw new IllegalStateException("This is a crash made by AndroidGodEye " + index + ".");
         });
         view.findViewById(R.id.fragment_tools_native_crash_bt).setOnClickListener(v -> {
-            XCrash.testNativeCrash(false);
+//            XCrash.testNativeCrash(false);
         });
         view.findViewById(R.id.fragment_tools_pageload_bt).setOnClickListener(v -> {
             Intent intent = new Intent(ToolsFragment.this.getActivity(), SecondActivity.class);

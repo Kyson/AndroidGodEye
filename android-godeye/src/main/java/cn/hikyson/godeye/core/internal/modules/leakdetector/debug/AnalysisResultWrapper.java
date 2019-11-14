@@ -1,6 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector.debug;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 import com.squareup.leakcanary.AnalysisResult;
 

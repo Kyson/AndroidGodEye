@@ -3,7 +3,7 @@ package cn.hikyson.godeye.monitor.modules.crash;
 import android.Manifest;
 import android.content.Context;
 import android.os.Environment;
-import android.support.v4.content.PermissionChecker;
+import androidx.core.content.PermissionChecker;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -12,7 +12,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
