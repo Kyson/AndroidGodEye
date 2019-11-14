@@ -17,10 +17,16 @@
             android:text="Install(Default Config)" />
 
         <Button
-            android:id="@+id/fragment_install_stream"
+            android:id="@+id/fragment_install_local_stream"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Install(InputStream Config)" />
+            android:text="Install(Local InputStream Config)" />
+
+        <Button
+            android:id="@+id/fragment_install_remote_stream"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Install(Remote InputStream Config)" />
 
         <Button
             android:id="@+id/fragment_install_uninstall"

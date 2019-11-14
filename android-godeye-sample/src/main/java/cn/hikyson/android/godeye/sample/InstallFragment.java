@@ -64,7 +64,10 @@ public class InstallFragment extends Fragment {
             GodEye.instance().install(GodEyeConfig.defaultConfig());
             mListener.onInstallModuleChanged();
         });
-        view.findViewById(R.id.fragment_install_stream).setOnClickListener(v -> {
+        view.findViewById(R.id.fragment_install_local_stream).setOnClickListener(v -> {
+            GodEye.instance().install(GodEyeConfig.fromAssets("//assets/android-godeye-config/install.config"));
+        });
+        view.findViewById(R.id.fragment_install_remote_stream).setOnClickListener(v -> {
             ((TextView) v).setText("Loading...");
             OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
             Request request = new Request.Builder().url("https://raw.githubusercontent.com/Kyson/AndroidGodEye/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config")
