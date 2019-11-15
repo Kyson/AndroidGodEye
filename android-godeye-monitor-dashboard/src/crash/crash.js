@@ -28,8 +28,20 @@ class Crash extends Component {
     }
 
     refresh(crashInfos) {
-        const lastCrashInfo = crashInfos.shift();
-        this.setState({moreCrashInfos: crashInfos, lastCrashInfo: lastCrashInfo});
+        const wrapCrashInfos = crashInfos;
+        if (wrapCrashInfos) {
+            for (let i = 0; i < wrapCrashInfos.length; i++) {
+                const extras = wrapCrashInfos[i].extras;
+                if (extras) {
+                    for (let key in extras) {
+                        wrapCrashInfos[i][key] = extras[key]
+                    }
+                    wrapCrashInfos[i].extras = null
+                }
+            }
+            const lastCrashInfo = wrapCrashInfos.shift();
+            this.setState({moreCrashInfos: wrapCrashInfos, lastCrashInfo: lastCrashInfo});
+        }
     }
 
     handleShowLastCrashInfoDetail() {
@@ -65,7 +77,7 @@ class Crash extends Component {
         let renderItems = [];
         let allKeys = [];
         for (let crashInfoKey in crashInfo) {
-            if (crashInfoKey !== "Crash time" && crashInfoKey !== "crash_message") {
+            if (crashInfoKey !== "crashTime" && crashInfoKey !== "crashMessage") {
                 renderItems.push(
                     <Collapse.Panel header={crashInfoKey} key={crashInfoKey}>
                         <JSONPretty id="json-pretty" json={crashInfo[crashInfoKey]}/>
@@ -78,9 +90,9 @@ class Crash extends Component {
             <div style={{width: "100%"}}>
                 <Collapse defaultActiveKey={expand ? ["1"] : []}>
                     <Collapse.Panel
-                        header={"Time(崩溃时间):" + crashInfo["Crash time"] + "    ||    Message(异常信息):" + crashInfo["crash_message"]}
+                        header={"Time(崩溃时间):" + crashInfo["crashTime"] + "    ||    Message(异常信息):" + crashInfo["crashMessage"]}
                         key={"1"}>
-                        <Collapse defaultActiveKey={"java stacktrace"}>
+                        <Collapse defaultActiveKey={"javaCrashStacktrace"}>
                             {renderItems}
                         </Collapse>
                     </Collapse.Panel>
@@ -126,11 +138,11 @@ class Crash extends Component {
                 <div>
                     <p>
                         Time(崩溃时间):&nbsp;
-                        <strong>{lastCrashInfo["Crash time"]}</strong>
+                        <strong>{lastCrashInfo["crashTime"]}</strong>
                     </p>
                     <p style={{wordWrap: "break-word", wordBreak: "break-all"}}>
                         Message(异常信息):&nbsp;
-                        <strong>{lastCrashInfo["crash_message"]}</strong>
+                        <strong>{lastCrashInfo["crashMessage"]}</strong>
                     </p>
                 </div>
                 {this.renderLastCrashInfoModal()}

@@ -2,7 +2,6 @@ package cn.hikyson.godeye.monitor.server;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.exceptions.UnexpectException;
@@ -11,6 +10,7 @@ import cn.hikyson.godeye.core.internal.SubjectSupport;
 import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeInfo;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
+import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageIssue;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
@@ -195,7 +195,7 @@ public class ModuleDriver {
         };
     }
 
-    private Predicate<List<Map<String, String>>> crashPredicate() {
+    private Predicate<List<CrashInfo>> crashPredicate() {
         return crashInfos -> crashInfos != null && !crashInfos.isEmpty();
     }
 
