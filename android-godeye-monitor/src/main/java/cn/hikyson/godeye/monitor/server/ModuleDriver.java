@@ -12,6 +12,7 @@ import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeInfo;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
+import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageIssue;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
@@ -137,6 +138,9 @@ public class ModuleDriver {
                         .subscribe(this.createSendMessageConsumer()),
                 this.<ViewIssueInfo>wrapThreadComputationObservable(GodEye.ModuleName.VIEW_CANARY)
                         .map(this.createConvertServerMessageFunction("viewIssueInfo"))
+                        .subscribe(this.createSendMessageConsumer()),
+                this.<ImageIssue>wrapThreadComputationObservable(GodEye.ModuleName.IMAGE_CANARY)
+                        .map(this.createConvertServerMessageFunction("imageIssue"))
                         .subscribe(this.createSendMessageConsumer()),
                 CrashStore.observeCrashAndCache(GodEye.instance().getApplication())
                         .subscribeOn(Schedulers.computation())

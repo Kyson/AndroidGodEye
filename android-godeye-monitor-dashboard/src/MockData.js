@@ -339,6 +339,16 @@ class Mock {
             dataSize: 238,
             codeSize: 114
         });
+        this.recvFun("imageIssue", {
+            imageViewId: 16,
+            bitmapWidth: 238,
+            bitmapHeight: 114,
+            imageViewWidth: 238,
+            imageViewHeight: 114,
+            timestamp: 1572861420958,
+            activityClassName: "cn.hikyson.android.godeye.sample.LeakActivity",
+            issueType: "BITMAP_QUALITY_TOO_HIGH"
+        });
         this.recvFun("viewIssueInfo", {"activityName":"cn.hikyson.android.godeye.sample.LeakActivity","maxDepth":10,"overDrawAreas":[{"overDrawTimes":2,"rect":{"bottom":508,"left":0,"right":963,"top":332}},{"overDrawTimes":1,"rect":{"bottom":2340,"left":0,"right":1080,"top":228}},{"overDrawTimes":1,"rect":{"bottom":96,"left":0,"right":1080,"top":0}},{"overDrawTimes":2,"rect":{"bottom":206,"left":33,"right":121,"top":118}},{"overDrawTimes":1,"rect":{"bottom":228,"left":0,"right":1080,"top":96}}],"screenHeight":2210,"screenWidth":1080,"timestamp":1572861420958,"views":[{"className":"android.widget.TextView","depth":4,"hasBackground":true,"id":"2131230746","isViewGroup":false,"rect":{"bottom":332,"left":0,"right":1080,"top":228},"text":"Leak will happen when you finish this activity and wait for a moment.","textOverDrawTimes":2,"textSize":39.0},{"className":"android.widget.Button","depth":4,"hasBackground":true,"id":"2131230819","isViewGroup":false,"rect":{"bottom":508,"left":0,"right":963,"top":332},"text":"Leak fragment (Android O and above)","textOverDrawTimes":3,"textSize":50.0},{"className":"android.widget.TextView","depth":6,"hasBackground":true,"id":"16908688","isViewGroup":false,"rect":{"bottom":196,"left":132,"right":502,"top":128},"text":"AndroidGodEye","textOverDrawTimes":2,"textSize":50.0},{"className":"android.widget.ImageView","depth":6,"hasBackground":true,"id":"16908332","isViewGroup":false,"rect":{"bottom":206,"left":33,"right":121,"top":118},"textOverDrawTimes":0,"textSize":0.0},{"className":"android.widget.LinearLayout","depth":3,"hasBackground":true,"id":"-1","isViewGroup":true,"rect":{"bottom":2340,"left":0,"right":1080,"top":228},"textOverDrawTimes":0,"textSize":0.0},{"className":"android.view.View","depth":1,"hasBackground":true,"id":"16908335","isViewGroup":false,"rect":{"bottom":96,"left":0,"right":1080,"top":0},"textOverDrawTimes":0,"textSize":0.0},{"className":"com.android.internal.widget.ActionBarContainer","depth":2,"hasBackground":true,"id":"16908685","isViewGroup":true,"rect":{"bottom":228,"left":0,"right":1080,"top":96},"textOverDrawTimes":0,"textSize":0.0}]});
         this.recvFun("leakInfo", {
             referenceKey: "referenceKey",

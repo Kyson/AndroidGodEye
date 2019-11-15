@@ -23,6 +23,7 @@ import Thread from "./thread/thread";
 import MemoryLeak from "./memoryleak/memoryLeak";
 import RefreshStatus from "./refreshstatus/refreshStatus";
 import MethodCanary from "./methodcanary/methodcanary";
+import ImageCanary from "./imagecanary/imagecanary";
 import Mock from "./MockData";
 
 class App extends Component {
@@ -43,7 +44,7 @@ class App extends Component {
         };
         globalWs.registerCallback(this.onWsOpenCallback);
         globalWs.start();
-//         this.mock.start(this._onReceiveMessage);
+//        this.mock.start(this._onReceiveMessage);
     }
 
     componentWillUnmount() {
@@ -69,7 +70,8 @@ class App extends Component {
             "leakInfo": this.refs.leakInfo,
             "methodCanary": this.refs.methodCanary,
             "appSizeInfo": this.refs.appSizeInfo,
-            "viewIssueInfo": this.refs.viewIssueInfo
+            "viewIssueInfo": this.refs.viewIssueInfo,
+            "imageIssue": this.refs.imageIssue
         };
         return moduleMap[moduleName];
     }
@@ -153,8 +155,9 @@ class App extends Component {
                         <Col lg={24} xl={12}><Block ref="blockInfo" globalWs={globalWs}/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col lg={24} xl={12}><Pageload ref="pageLifecycle"/></Col>
-                        <Col lg={24} xl={12}><ViewCanary globalWs={globalWs} ref="viewIssueInfo"/></Col>
+                        <Col lg={24} xl={8}><Pageload ref="pageLifecycle"/></Col>
+                        <Col lg={24} xl={8}><ViewCanary globalWs={globalWs} ref="viewIssueInfo"/></Col>
+                        <Col lg={24} xl={8}><ImageCanary ref="imageIssue"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Thread ref="threadInfo"/></Col>

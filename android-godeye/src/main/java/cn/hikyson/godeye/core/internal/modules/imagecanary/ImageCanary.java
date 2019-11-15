@@ -47,7 +47,7 @@ public class ImageCanary {
                     @Override
                     public void onDraw() {
                         handler.removeCallbacksAndMessages(null);
-                        handler.postDelayed(inspectInner(new WeakReference<>(parent), imageCanaryEngine, viewSet), 100);
+                        handler.postDelayed(inspectInner(activity.getClass().getName(), new WeakReference<>(parent), imageCanaryEngine, viewSet), 100);
                     }
                 });
             }
@@ -63,12 +63,12 @@ public class ImageCanary {
         callbacks = null;
     }
 
-    private static Runnable inspectInner(WeakReference<ViewGroup> parent, ImageCanaryEngine imageCanaryEngine, Set<Integer> viewSet) {
+    private static Runnable inspectInner(String activityClass, WeakReference<ViewGroup> parent, ImageCanaryEngine imageCanaryEngine, Set<Integer> viewSet) {
         return new Runnable() {
             @Override
             public void run() {
                 try {
-                    recursiveLoopChildren(parent, imageCanaryEngine, viewSet);
+                    recursiveLoopChildren(activityClass, parent, imageCanaryEngine, viewSet);
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
@@ -77,11 +77,11 @@ public class ImageCanary {
     }
 
 
-    private static void recursiveLoopChildren(WeakReference<ViewGroup> parent, ImageCanaryEngine imageCanaryEngine, Set<Integer> viewSet) {
+    private static void recursiveLoopChildren(String activityClass, WeakReference<ViewGroup> parent, ImageCanaryEngine imageCanaryEngine, Set<Integer> viewSet) {
         for (int i = 0; i < parent.get().getChildCount(); i++) {
             final View child = parent.get().getChildAt(i);
             if (child instanceof ViewGroup) {
-                recursiveLoopChildren((new WeakReference<>((ViewGroup) child)), imageCanaryEngine, viewSet);
+                recursiveLoopChildren(activityClass, (new WeakReference<>((ViewGroup) child)), imageCanaryEngine, viewSet);
             } else {
                 if (child instanceof ImageView && child.getVisibility() == View.VISIBLE) {
                     if (viewSet.contains(child.getId())){
@@ -102,6 +102,8 @@ public class ImageCanary {
                         imageIssue.imageViewId = child.getId();
                         imageIssue.imageViewWidth = child.getWidth();
                         imageIssue.imageViewHeight = child.getHeight();
+                        imageIssue.activityClassName = activityClass;
+                        imageIssue.timestamp = System.currentTimeMillis();
                         if (imageCanaryEngine.config().getImageCanaryConfigProvider().isBitmapQualityTooHigh(bitmapInfo.bitmapWidth, bitmapInfo.bitmapHeight, child.getWidth(), child.getHeight())) {
                             imageIssue.issueType = ImageIssue.IssueType.BITMAP_QUALITY_TOO_HIGH;
                             imageCanaryEngine.produce(imageIssue);
