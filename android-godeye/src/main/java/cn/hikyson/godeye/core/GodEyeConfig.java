@@ -12,6 +12,7 @@ import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -20,6 +21,10 @@ import cn.hikyson.godeye.core.internal.modules.battery.BatteryContext;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashContext;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
+import cn.hikyson.godeye.core.internal.modules.imagecanary.BitmapInfoAnalyzer;
+import cn.hikyson.godeye.core.internal.modules.imagecanary.DefaultImageCanaryConfigProvider;
+import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanaryConfigProvider;
+import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanaryContext;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapContext;
@@ -63,6 +68,7 @@ public class GodEyeConfig implements Serializable {
         builder.withMethodCanaryConfig(new MethodCanaryConfig());
         builder.withAppSizeConfig(new AppSizeConfig());
         builder.withViewCanaryConfig(new ViewCanaryConfig());
+        builder.withImageCanaryConfig(new ImageCanaryConfig());
         return builder;
     }
 
@@ -267,6 +273,18 @@ public class GodEyeConfig implements Serializable {
                     viewCanaryConfig.maxDepth = Integer.parseInt(maxDepth);
                 }
                 builder.withViewCanaryConfig(viewCanaryConfig);
+            }
+            // image canary
+            element = getFirstElementByTagInRoot(root, "imageCanary");
+            if (element != null) {
+                final String imageCanaryConfigProvider = element.getAttribute("imageCanaryConfigProvider");
+                ImageCanaryConfig imageCanaryConfig = new ImageCanaryConfig();
+                try {
+                    imageCanaryConfig.provider = (DefaultImageCanaryConfigProvider) Class.forName(imageCanaryConfigProvider).newInstance();
+                } catch (Throwable e) {
+                    L.e("Image canary work warning, can not find imageCanaryConfigProvider class, use DefaultImageCanaryConfigProvider:" + e);
+                }
+                builder.withImageCanaryConfig(imageCanaryConfig);
             }
         } catch (Exception e) {
             L.e(e);
@@ -775,6 +793,26 @@ public class GodEyeConfig implements Serializable {
     }
 
     @Keep
+    public static class ImageCanaryConfig implements ImageCanaryContext, Serializable {
+
+        public ImageCanaryConfigProvider provider;
+
+        public ImageCanaryConfig() {
+             provider = new DefaultImageCanaryConfigProvider();
+        }
+
+        @Override
+        public Application getApplication() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public ImageCanaryConfigProvider getImageCanaryConfigProvider() {
+            return provider;
+        }
+    }
+
+    @Keep
     public static class AppSizeConfig implements AppSizeContext, Serializable {
         public long delayMillis;
 
@@ -853,6 +891,7 @@ public class GodEyeConfig implements Serializable {
     private MethodCanaryConfig mMethodCanaryConfig;
     private AppSizeConfig mAppSizeConfig;
     private ViewCanaryConfig mViewCanaryConfig;
+    private ImageCanaryConfig mImageCanaryConfig;
 
     private GodEyeConfig() {
     }
@@ -986,12 +1025,20 @@ public class GodEyeConfig implements Serializable {
         return mViewCanaryConfig;
     }
 
+    public ImageCanaryConfig getImageCanaryConfig() {
+        return mImageCanaryConfig;
+    }
+
     public void setViewCanaryConfig(ViewCanaryConfig viewCanaryConfig) {
         mViewCanaryConfig = viewCanaryConfig;
     }
 
     public void setMethodCanaryConfig(MethodCanaryConfig methodCanaryConfig) {
         mMethodCanaryConfig = methodCanaryConfig;
+    }
+
+    public void setImageCanaryConfig(ImageCanaryConfig imageCanaryConfig) {
+        this.mImageCanaryConfig = imageCanaryConfig;
     }
 
     @Override
@@ -1013,6 +1060,8 @@ public class GodEyeConfig implements Serializable {
                 ", mPageloadConfig=" + mPageloadConfig +
                 ", mMethodCanaryConfig=" + mMethodCanaryConfig +
                 ", mAppSizeConfig=" + mAppSizeConfig +
+                ", mViewCanaryConfig=" + mViewCanaryConfig +
+                ", mImageCanaryConfig=" + mImageCanaryConfig +
                 '}';
     }
 
@@ -1034,6 +1083,7 @@ public class GodEyeConfig implements Serializable {
         private MethodCanaryConfig mMethodCanaryConfig;
         private AppSizeConfig mAppSizeConfig;
         private ViewCanaryConfig mViewCanaryConfig;
+        private ImageCanaryConfig mImageCanaryConfig;
 
         public static GodEyeConfigBuilder godEyeConfig() {
             return new GodEyeConfigBuilder();
@@ -1124,6 +1174,11 @@ public class GodEyeConfig implements Serializable {
             return this;
         }
 
+        public GodEyeConfigBuilder withImageCanaryConfig(ImageCanaryConfig imageCanaryConfig) {
+            this.mImageCanaryConfig = imageCanaryConfig;
+            return this;
+        }
+
         public GodEyeConfig build() {
             GodEyeConfig godEyeConfig = new GodEyeConfig();
             godEyeConfig.mStartupConfig = this.mStartupConfig;
@@ -1143,6 +1198,7 @@ public class GodEyeConfig implements Serializable {
             godEyeConfig.mCpuConfig = this.mCpuConfig;
             godEyeConfig.mAppSizeConfig = this.mAppSizeConfig;
             godEyeConfig.mViewCanaryConfig = this.mViewCanaryConfig;
+            godEyeConfig.mImageCanaryConfig = this.mImageCanaryConfig;
             return godEyeConfig;
         }
     }
