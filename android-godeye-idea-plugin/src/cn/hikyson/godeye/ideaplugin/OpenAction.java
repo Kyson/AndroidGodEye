@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.ideaplugin;
 
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -23,42 +24,52 @@ import java.util.Properties;
 public class OpenAction extends AnAction {
     private Logger mLogger = Logger.getInstance(OpenAction.class);
     private static final String PORT = "5390";
+    private static final String KEY_PORT = "KEY_PORT";
 
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {
         try {
-            String path = parseAndroidSDKPath(Objects.requireNonNull(anActionEvent.getProject()));
+            Project project = anActionEvent.getProject();
+            String path = parseAndroidSDKPath(Objects.requireNonNull(project));
             if (TextUtils.isEmpty(path)) {
                 Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Failed", "Can not parse sdk.dir, Please add 'sdk.dir' to 'local.properties'.", NotificationType.ERROR));
                 return;
             }
-            String finalPort = PORT;
-            String inputPort = askForPort(anActionEvent.getProject());
-            if (inputPort != null && inputPort.length() > 0) {
-                finalPort = inputPort;
+            String inputPort = askForPort(project, getDefaultPort(project));
+            if (inputPort == null) {
+                return;
             }
-            final String commandTcpProxy = String.format("%s/platform-tools/adb forward tcp:%s tcp:%s", path, finalPort, finalPort);
+            saveDefaultPort(project, inputPort);
+            final String commandTcpProxy = String.format("%s/platform-tools/adb forward tcp:%s tcp:%s", path, inputPort, inputPort);
             mLogger.info("Exec [" + commandTcpProxy + "].");
             Runtime.getRuntime().exec(commandTcpProxy);
             mLogger.info("Current os name is " + SystemUtils.OS_NAME);
             String commandOpenUrl;
             if (SystemUtils.IS_OS_WINDOWS) {
-                commandOpenUrl = String.format("cmd /c start http://localhost:%s/index.html", finalPort);
+                commandOpenUrl = String.format("cmd /c start http://localhost:%s/index.html", inputPort);
             } else {
-                commandOpenUrl = String.format("open http://localhost:%s/index.html", finalPort);
+                commandOpenUrl = String.format("open http://localhost:%s/index.html", inputPort);
             }
             mLogger.info("Exec [" + commandOpenUrl + "].");
             Runtime.getRuntime().exec(commandOpenUrl);
-            Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Success", String.format("http://localhost:%s/index.html", finalPort), NotificationType.INFORMATION));
+            Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Success", String.format("http://localhost:%s/index.html", inputPort), NotificationType.INFORMATION));
         } catch (Throwable e) {
             Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Failed", e.getLocalizedMessage(), NotificationType.ERROR));
         }
     }
 
-    private String askForPort(Project project) {
+    private String getDefaultPort(Project project) {
+        return PropertiesComponent.getInstance(project).getValue(KEY_PORT, PORT);
+    }
+
+    private void saveDefaultPort(Project project, String port) {
+        PropertiesComponent.getInstance(project).setValue(KEY_PORT, port);
+    }
+
+    private String askForPort(Project project, String defaultValue) {
         return Messages.showInputDialog(project,
-                "Input Dashboard Port, Default is " + PORT, "AndroidGodEye",
-                Messages.getQuestionIcon(), PORT, new InputValidator() {
+                "Input AndroidGodEye Debug Monitor Port, Default is " + PORT, "AndroidGodEye",
+                Messages.getQuestionIcon(), defaultValue, new InputValidator() {
 
                     private boolean isValid(String s) {
                         if (s == null || s.length() == 0) {
@@ -66,7 +77,7 @@ public class OpenAction extends AnAction {
                         }
                         try {
                             int port = Integer.parseInt(s);
-                            return true;
+                            return port >= 1 && port <= 65535;
                         } catch (Throwable e) {
                             return false;
                         }
