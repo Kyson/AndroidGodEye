@@ -1,6 +1,7 @@
 package cn.hikyson.godeye.core;
 
 import android.app.Activity;
+
 import androidx.fragment.app.Fragment;
 
 import cn.hikyson.godeye.core.exceptions.UnexpectException;
@@ -80,6 +81,6 @@ public class GodEyeHelper {
      */
     public static void onNetworkEnd(NetworkInfo networkInfo) throws UninstallException {
         GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK).produce(networkInfo);
-        L.d("GodEyeHelper onNetworkEnd: " + networkInfo);
+        L.d("GodEyeHelper onNetworkEnd: %s", networkInfo == null ? "null" : networkInfo.toSummaryString());
     }
 }
