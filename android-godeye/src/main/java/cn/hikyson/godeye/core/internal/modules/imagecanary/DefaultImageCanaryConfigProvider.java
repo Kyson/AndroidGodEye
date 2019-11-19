@@ -1,7 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.imagecanary;
 
+import androidx.annotation.Keep;
+
+import java.util.Collections;
 import java.util.List;
 
+@Keep
 public class DefaultImageCanaryConfigProvider implements ImageCanaryConfigProvider {
 
     @Override
@@ -16,6 +20,6 @@ public class DefaultImageCanaryConfigProvider implements ImageCanaryConfigProvid
 
     @Override
     public List<BitmapInfoAnalyzer> getExtraBitmapInfoAnalyzers() {
-        return null;
+        return Collections.singletonList(new DefaultBitmapInfoAnalyzer());
     }
 }

@@ -5,6 +5,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class DefaultBitmapInfoAnalyzer implements BitmapInfoAnalyzer {
     @Override
     public BitmapInfo analyze(ImageView imageView) {

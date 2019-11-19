@@ -1,6 +1,11 @@
 package cn.hikyson.godeye.core.internal.modules.imagecanary;
 
-public class BitmapInfo {
+import androidx.annotation.Keep;
+
+import java.io.Serializable;
+
+@Keep
+public class BitmapInfo implements Serializable {
     public int bitmapWidth;
     public int bitmapHeight;
 

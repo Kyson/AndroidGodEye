@@ -1,119 +1,55 @@
 package cn.hikyson.godeye.core.internal.modules.imagecanary;
 
-import android.app.Activity;
-import android.app.Application;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
+import cn.hikyson.godeye.core.internal.Install;
+import cn.hikyson.godeye.core.internal.ProduceableSubject;
+import cn.hikyson.godeye.core.utils.L;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+public class ImageCanary extends ProduceableSubject<ImageIssue> implements Install<ImageCanaryContext> {
 
-import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
-public class ImageCanary {
+    private boolean mInstalled = false;
+    private ImageCanaryContext mConfig;
+    private ImageCanaryInternal mImageCanaryInternal;
 
-    private static List<BitmapInfoAnalyzer> analyzerList = new ArrayList<>();
-
-    static {
-        analyzerList.add(new DefaultBitmapInfoAnalyzer());
-    }
-
-    static void addAnalyzers(List<BitmapInfoAnalyzer> analyzers) {
-        if (analyzers != null) {
-            analyzerList.addAll(analyzers);
-        }
-    }
-
-    private static SimpleActivityLifecycleCallbacks callbacks;
-
-    public static void start(Application application, ImageCanaryEngine imageCanaryEngine) {
-        callbacks = new SimpleActivityLifecycleCallbacks() {
-
-            private Set<Integer> viewSet = new HashSet<>();
-
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                super.onActivityCreated(activity, savedInstanceState);
-                viewSet.clear();
-                ViewGroup parent = (ViewGroup) activity.getWindow().getDecorView();
-                parent.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
-                    private Handler handler = new Handler();
-                    @Override
-                    public void onDraw() {
-                        handler.removeCallbacksAndMessages(null);
-                        handler.postDelayed(inspectInner(activity.getClass().getName(), new WeakReference<>(parent), imageCanaryEngine, viewSet), 100);
-                    }
-                });
-            }
-        };
-        application.registerActivityLifecycleCallbacks(callbacks);
-    }
-
-    public static void stop(Application application) {
-        if (callbacks == null) {
+    @Override
+    public synchronized void install(ImageCanaryContext config) {
+        if (mInstalled) {
+            L.d("ImageCanary already installed, ignore.");
             return;
         }
-        application.unregisterActivityLifecycleCallbacks(callbacks);
-        callbacks = null;
-    }
-
-    private static Runnable inspectInner(String activityClass, WeakReference<ViewGroup> parent, ImageCanaryEngine imageCanaryEngine, Set<Integer> viewSet) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    recursiveLoopChildren(activityClass, parent, imageCanaryEngine, viewSet);
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-    }
-
-
-    private static void recursiveLoopChildren(String activityClass, WeakReference<ViewGroup> parent, ImageCanaryEngine imageCanaryEngine, Set<Integer> viewSet) {
-        for (int i = 0; i < parent.get().getChildCount(); i++) {
-            final View child = parent.get().getChildAt(i);
-            if (child instanceof ViewGroup) {
-                recursiveLoopChildren(activityClass, (new WeakReference<>((ViewGroup) child)), imageCanaryEngine, viewSet);
-            } else {
-                if (child instanceof ImageView && child.getVisibility() == View.VISIBLE) {
-                    if (viewSet.contains(child.getId())){
-                        return;
-                    }
-                    viewSet.add(child.getId());
-                    BitmapInfo bitmapInfo = new BitmapInfo();
-                    for (BitmapInfoAnalyzer analyzer : analyzerList) {
-                        bitmapInfo = analyzer.analyze((ImageView) child);
-                        if (bitmapInfo.isValid()) {
-                            break;
-                        }
-                    }
-                    if (bitmapInfo.isValid() && child.getWidth() > 0 && child.getHeight() > 0) {
-                        ImageIssue imageIssue = new ImageIssue();
-                        imageIssue.bitmapHeight = bitmapInfo.bitmapHeight;
-                        imageIssue.bitmapWidth = bitmapInfo.bitmapWidth;
-                        imageIssue.imageViewId = child.getId();
-                        imageIssue.imageViewWidth = child.getWidth();
-                        imageIssue.imageViewHeight = child.getHeight();
-                        imageIssue.activityClassName = activityClass;
-                        imageIssue.timestamp = System.currentTimeMillis();
-                        if (imageCanaryEngine.config().getImageCanaryConfigProvider().isBitmapQualityTooHigh(bitmapInfo.bitmapWidth, bitmapInfo.bitmapHeight, child.getWidth(), child.getHeight())) {
-                            imageIssue.issueType = ImageIssue.IssueType.BITMAP_QUALITY_TOO_HIGH;
-                            imageCanaryEngine.produce(imageIssue);
-                        } else if (imageCanaryEngine.config().getImageCanaryConfigProvider().isBitmapQualityTooLow(bitmapInfo.bitmapWidth, bitmapInfo.bitmapHeight, child.getWidth(), child.getHeight())) {
-                            imageIssue.issueType = ImageIssue.IssueType.BITMAP_QUALITY_TOO_LOW;
-                            imageCanaryEngine.produce(imageIssue);
-                        }
-                    }
-                }
-            }
+        mConfig = config;
+        ImageCanaryConfigProvider imageCanaryConfigProvider = new DefaultImageCanaryConfigProvider();
+        try {
+            imageCanaryConfigProvider = (ImageCanaryConfigProvider) Class.forName(mConfig.getImageCanaryConfigProvider()).newInstance();
+        } catch (Throwable e) {
+            L.e("ImageCanary install warning, can not find imageCanaryConfigProvider class. use DefaultImageCanaryConfigProvider:" + e);
         }
+        mImageCanaryInternal = new ImageCanaryInternal(imageCanaryConfigProvider);
+        mImageCanaryInternal.start(mConfig.getApplication(), this);
+        mInstalled = true;
+        L.d("ImageCanary installed.");
+    }
+
+    @Override
+    public synchronized void uninstall() {
+        if (!mInstalled) {
+            L.d("ImageCanary already uninstalled, ignore.");
+            return;
+        }
+        if (mImageCanaryInternal != null) {
+            mImageCanaryInternal.stop(config().getApplication());
+            mImageCanaryInternal = null;
+        }
+        mInstalled = false;
+        L.d("ImageCanary uninstalled.");
+    }
+
+    @Override
+    public boolean isInstalled() {
+        return mInstalled;
+    }
+
+    @Override
+    public ImageCanaryContext config() {
+        return mConfig;
     }
 }

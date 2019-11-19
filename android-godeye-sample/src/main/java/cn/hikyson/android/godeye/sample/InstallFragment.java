@@ -3,7 +3,9 @@ package cn.hikyson.android.godeye.sample;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +67,8 @@ public class InstallFragment extends Fragment {
             mListener.onInstallModuleChanged();
         });
         view.findViewById(R.id.fragment_install_local_stream).setOnClickListener(v -> {
-            GodEye.instance().install(GodEyeConfig.fromAssets("//assets/android-godeye-config/install.config"));
+            GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+            mListener.onInstallModuleChanged();
         });
         view.findViewById(R.id.fragment_install_remote_stream).setOnClickListener(v -> {
             ((TextView) v).setText("Loading...");

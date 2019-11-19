@@ -4,5 +4,6 @@ import android.app.Application;
 
 public interface ImageCanaryContext {
     Application getApplication();
-    ImageCanaryConfigProvider getImageCanaryConfigProvider();
+    // ImageCanaryConfigProvider
+    String getImageCanaryConfigProvider();
 }

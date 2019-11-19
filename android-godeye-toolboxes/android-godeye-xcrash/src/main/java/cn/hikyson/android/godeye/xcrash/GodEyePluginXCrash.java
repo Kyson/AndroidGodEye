@@ -21,6 +21,7 @@ import io.reactivex.schedulers.Schedulers;
 import xcrash.ICrashCallback;
 import xcrash.TombstoneManager;
 import xcrash.TombstoneParser;
+import xcrash.XCrash;
 
 @Keep
 public class GodEyePluginXCrash {
@@ -39,7 +40,7 @@ public class GodEyePluginXCrash {
                 L.e(e);
             }
         };
-        xcrash.XCrash.init(crashContext.context(), new xcrash.XCrash.InitParameters()
+        XCrash.init(crashContext.context(), new XCrash.InitParameters()
                 .setAppVersion(getAppVersion(crashContext.context()))
                 .setJavaRethrow(true)
                 .setJavaLogCountMax(10)

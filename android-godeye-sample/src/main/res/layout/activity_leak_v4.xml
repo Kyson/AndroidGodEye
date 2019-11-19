@@ -12,39 +12,4 @@
         android:layout_height="wrap_content"
         android:text="Leak will happen now..." />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:src="@drawable/ic_launcher_background"
-            android:layout_marginLeft="5dip"
-            android:layout_marginRight="5dip"
-            android:layout_marginTop="10dip"
-            android:tint="#55ff0000" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/androidgodeye_ic_remove_red_eye"
-            android:layout_marginLeft="5dip"
-            android:layout_marginRight="5dip"
-            android:layout_marginTop="10dip"
-            android:tint="#55ff0000" />
-
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:scaleType="center"
-            android:src="@drawable/free_google_icon_download_22"/>
-
-    </LinearLayout>
-
 </LinearLayout>

@@ -2,17 +2,17 @@ package cn.hikyson.godeye.core;
 
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
+
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -21,9 +21,7 @@ import cn.hikyson.godeye.core.internal.modules.battery.BatteryContext;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuContext;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashContext;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsContext;
-import cn.hikyson.godeye.core.internal.modules.imagecanary.BitmapInfoAnalyzer;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.DefaultImageCanaryConfigProvider;
-import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanaryConfigProvider;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanaryContext;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakContext;
@@ -48,6 +46,15 @@ import cn.hikyson.godeye.core.utils.L;
  */
 @Keep
 public class GodEyeConfig implements Serializable {
+
+    public static GodEyeConfigBuilder noneConfigBuilder() {
+        GodEyeConfigBuilder builder = GodEyeConfigBuilder.godEyeConfig();
+        return builder;
+    }
+
+    public static GodEyeConfig noneConfig() {
+        return noneConfigBuilder().build();
+    }
 
     public static GodEyeConfigBuilder defaultConfigBuilder() {
         GodEyeConfigBuilder builder = GodEyeConfigBuilder.godEyeConfig();
@@ -279,10 +286,8 @@ public class GodEyeConfig implements Serializable {
             if (element != null) {
                 final String imageCanaryConfigProvider = element.getAttribute("imageCanaryConfigProvider");
                 ImageCanaryConfig imageCanaryConfig = new ImageCanaryConfig();
-                try {
-                    imageCanaryConfig.provider = (DefaultImageCanaryConfigProvider) Class.forName(imageCanaryConfigProvider).newInstance();
-                } catch (Throwable e) {
-                    L.e("Image canary work warning, can not find imageCanaryConfigProvider class, use DefaultImageCanaryConfigProvider:" + e);
+                if (!TextUtils.isEmpty(imageCanaryConfigProvider)) {
+                    imageCanaryConfig.imageCanaryConfigProvider = imageCanaryConfigProvider;
                 }
                 builder.withImageCanaryConfig(imageCanaryConfig);
             }
@@ -308,7 +313,7 @@ public class GodEyeConfig implements Serializable {
             return fromInputStream(is);
         } catch (Exception e) {
             L.e(e);
-            return defaultConfig();
+            return GodEyeConfig.noneConfig();
         } finally {
             IoUtil.closeSilently(is);
         }
@@ -769,50 +774,6 @@ public class GodEyeConfig implements Serializable {
     }
 
     @Keep
-    public static class ViewCanaryConfig implements ViewCanaryContext, Serializable {
-
-        public int maxDepth;
-
-        public ViewCanaryConfig() {
-            this.maxDepth = 10;
-        }
-
-        public ViewCanaryConfig(int maxDepth) {
-            this.maxDepth = maxDepth;
-        }
-
-        @Override
-        public Application application() {
-            return GodEye.instance().getApplication();
-        }
-
-        @Override
-        public int maxDepth() {
-            return maxDepth;
-        }
-    }
-
-    @Keep
-    public static class ImageCanaryConfig implements ImageCanaryContext, Serializable {
-
-        public ImageCanaryConfigProvider provider;
-
-        public ImageCanaryConfig() {
-             provider = new DefaultImageCanaryConfigProvider();
-        }
-
-        @Override
-        public Application getApplication() {
-            return GodEye.instance().getApplication();
-        }
-
-        @Override
-        public ImageCanaryConfigProvider getImageCanaryConfigProvider() {
-            return provider;
-        }
-    }
-
-    @Keep
     public static class AppSizeConfig implements AppSizeContext, Serializable {
         public long delayMillis;
 
@@ -871,6 +832,55 @@ public class GodEyeConfig implements Serializable {
                     "maxMethodCountSingleThreadByCost=" + maxMethodCountSingleThreadByCost +
                     ", lowCostMethodThresholdMillis=" + lowCostMethodThresholdMillis +
                     '}';
+        }
+    }
+
+    @Keep
+    public static class ViewCanaryConfig implements ViewCanaryContext, Serializable {
+
+        public int maxDepth;
+
+        public ViewCanaryConfig() {
+            this.maxDepth = 10;
+        }
+
+        public ViewCanaryConfig(int maxDepth) {
+            this.maxDepth = maxDepth;
+        }
+
+        @Override
+        public Application application() {
+            return GodEye.instance().getApplication();
+        }
+
+        @Override
+        public int maxDepth() {
+            return maxDepth;
+        }
+    }
+
+    @Keep
+    public static class ImageCanaryConfig implements ImageCanaryContext, Serializable {
+
+        public String imageCanaryConfigProvider;
+
+        public ImageCanaryConfig() {
+            this.imageCanaryConfigProvider = DefaultImageCanaryConfigProvider.class.getName();
+        }
+
+        public ImageCanaryConfig(String imageCanaryConfigProvider) {
+            this.imageCanaryConfigProvider = imageCanaryConfigProvider;
+        }
+
+        @Override
+        public Application getApplication() {
+            return GodEye.instance().getApplication();
+        }
+
+        // ImageCanaryConfigProvider
+        @Override
+        public String getImageCanaryConfigProvider() {
+            return imageCanaryConfigProvider;
         }
     }
 

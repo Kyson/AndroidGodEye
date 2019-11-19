@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core;
 
 
 import android.app.Application;
+
 import androidx.annotation.StringDef;
 
 import java.lang.annotation.Retention;
@@ -19,7 +20,7 @@ import cn.hikyson.godeye.core.internal.modules.battery.Battery;
 import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
-import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanaryEngine;
+import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanary;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.memory.Heap;
 import cn.hikyson.godeye.core.internal.modules.memory.Pss;
@@ -240,15 +241,15 @@ public class GodEye {
                 moduleObj = new ViewCanary();
                 mModules.put(ModuleName.VIEW_CANARY, moduleObj);
             }
-            ((ViewCanary) mModules.get(ModuleName.VIEW_CANARY)).install(godEyeConfig.getViewCanaryConfig());
+            ((ViewCanary) moduleObj).install(godEyeConfig.getViewCanaryConfig());
         }
         if (godEyeConfig.getImageCanaryConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.IMAGE_CANARY);
             if (moduleObj == null) {
-                moduleObj = new ImageCanaryEngine();
+                moduleObj = new ImageCanary();
                 mModules.put(ModuleName.IMAGE_CANARY, moduleObj);
             }
-            ((ImageCanaryEngine) mModules.get(ModuleName.IMAGE_CANARY)).install(godEyeConfig.getImageCanaryConfig());
+            ((ImageCanary) moduleObj).install(godEyeConfig.getImageCanaryConfig());
         }
         L.d("GodEye install, godEyeConfig: %s, cost %s ms", godEyeConfig, (System.currentTimeMillis() - startTime));
         return this;

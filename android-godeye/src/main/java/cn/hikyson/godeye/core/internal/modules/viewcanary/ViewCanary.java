@@ -28,21 +28,22 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
     @Override
     public synchronized void install(ViewCanaryContext config) {
         if (mInstalled) {
-            L.d("View canary already installed, ignore.");
+            L.d("ViewCanary already installed, ignore.");
             return;
         }
-        L.d("View canary size installed.");
         this.config = config;
         mInstalled = true;
+        L.d("ViewCanary installed.");
     }
 
     @Override
     public synchronized void uninstall() {
         if (!mInstalled) {
-            L.d("View canary already uninstalled, ignore.");
+            L.d("ViewCanary already uninstalled, ignore.");
             return;
         }
         mInstalled = false;
+        L.d("ViewCanary uninstalled.");
     }
 
     @Override
@@ -95,7 +96,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
             if (object instanceof View) {
                 overdrawTimes += ViewBgUtil.getLayer((View) object);
             } else {
-                overdrawTimes ++;
+                overdrawTimes++;
             }
         }
         return overdrawTimes;
@@ -103,9 +104,9 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
 
     private Map<Rect, Set<Object>> checkOverDraw(List<View> allViews) {
         Map<Rect, Set<Object>> map = new HashMap<>();
-        for(int i = 0; i < allViews.size(); i ++) {
+        for (int i = 0; i < allViews.size(); i++) {
             View view = allViews.get(i);
-            for (int j = i + 1; j < allViews.size(); j ++) {
+            for (int j = i + 1; j < allViews.size(); j++) {
                 View other = allViews.get(j);
                 int viewLayer = ViewBgUtil.getLayer(view);
                 int otherLayer = ViewBgUtil.getLayer(other);
@@ -210,7 +211,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
                 continue;
             }
             allViews.add(child);
-            Integer integer = map.get((View)child.getParent());
+            Integer integer = map.get((View) child.getParent());
             if (integer == null) {
                 // 最外层view
                 map.put(child, 1);

@@ -21,6 +21,7 @@ import cn.hikyson.godeye.core.GodEyeHelper;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ReflectUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -67,7 +68,8 @@ public class ToolsFragment extends Fragment {
             throw new IllegalStateException("This is a crash made by AndroidGodEye " + index + ".");
         });
         view.findViewById(R.id.fragment_tools_native_crash_bt).setOnClickListener(v -> {
-//            XCrash.testNativeCrash(false);
+            ReflectUtil.invokeStaticMethod("xcrash.XCrash", "testNativeCrash",
+                    new Class<?>[]{Boolean.class}, new Object[]{false});
         });
         view.findViewById(R.id.fragment_tools_pageload_bt).setOnClickListener(v -> {
             Intent intent = new Intent(ToolsFragment.this.getActivity(), SecondActivity.class);
@@ -79,6 +81,10 @@ public class ToolsFragment extends Fragment {
             } catch (UninstallException e) {
                 e.printStackTrace();
             }
+        });
+        view.findViewById(R.id.fragment_tools_image_bt).setOnClickListener(v -> {
+            Intent intent = new Intent(ToolsFragment.this.getActivity(), ImageActivity.class);
+            startActivity(intent);
         });
         return view;
     }

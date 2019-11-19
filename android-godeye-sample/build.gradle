@@ -51,4 +51,3 @@ dependencies {
 }
 
 apply plugin: 'cn.hikyson.methodcanary.plugin'
-

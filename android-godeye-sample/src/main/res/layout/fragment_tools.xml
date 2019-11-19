@@ -90,6 +90,12 @@
                 android:layout_weight="1"
                 android:text="Test Startup" />
 
+            <Button
+                android:id="@+id/fragment_tools_image_bt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Test Image" />
         </LinearLayout>
 
         <LinearLayout
