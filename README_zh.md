@@ -34,6 +34,29 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android性能数据指�
 
 AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存泄漏等等，并且提供了Debug阶段的Monitor看板实时展示这些数据。而且提供了api供开发者在release阶段进行数据上报。
 
+## 支持功能
+
+```java
+public static final String CPU = "CPU";                         // 手机和App Cpu检测
+public static final String BATTERY = "BATTERY";                 // 电池检测
+public static final String FPS = "FPS";                         // 帧率检测
+public static final String LEAK = "LEAK";                       // 内存泄漏检测
+public static final String HEAP = "HEAP";                       // 运行堆内存占用检测
+public static final String PSS = "PSS";                         // 实际物理共享内存占用检测
+public static final String RAM = "RAM";                         // 手机内存
+public static final String NETWORK = "NETWORK";                 // 网络请求检测
+public static final String SM = "SM";                           // 卡顿检测
+public static final String STARTUP = "STARTUP";                 // 启动检测
+public static final String TRAFFIC = "TRAFFIC";                 // 手机和App流量检测
+public static final String CRASH = "CRASH";                     // Java、Native崩溃/ANR
+public static final String THREAD = "THREAD";                   // App线程即堆栈Dump检测
+public static final String PAGELOAD = "PAGELOAD";               // 页面加载和生命周期检测
+public static final String METHOD_CANARY = "METHOD_CANARY";     // 方法耗时检测
+public static final String APP_SIZE = "APP_SIZE";               // App大小，包括apk、存储和缓存
+public static final String VIEW_CANARY = "VIEW_CANARY";         // 视图层级、过度绘制检测
+public static final String IMAGE_CANARY = "IMAGE_CANARY";       // 图片不合理内存占用检测
+```
+
 ## 快速开始
 
 [Demo APK](https://fir.im/5k67)，可以先看看效果 :-)
@@ -219,26 +242,6 @@ Done!
 ### Thread
 
 ![android_god_eye_dashboard7](ART/android_god_eye_dashboard7.png)
-
-## 模块详情
-
-|模块名|数据生产时机|配置|备注|
-|-----|-------|---------|---|----|
-|network|外部输入时输出|无|-|
-|startup|外部输入时输出|无|-|
-|battery|电池变化时输出|无|-|
-|cpu|定时输出|intervalMillis-每隔x毫秒输出数据，sampleMillis-采样间隔|系统版本大于8.0失效|
-|crash|安装后，输出上次崩溃|crashProvider-实现CrashProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider即可|-|
-|fps|定时输出|intervalMillis-输出间隔|-|
-|heap|定时输出|intervalMillis-输出间隔|-|
-|leakDetector(leakMemory)|页面销毁且泄漏时|debug-是否需要解析gc引用链，debugNotification泄漏时是否需要通知，leakRefInfoProvider-实现LeakRefInfoProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider|-|
-|pageload|页面create/draw/destory/load/hide/show等输出|pageInfoProvider-根据页面实例提供页面信息|fragment的显示隐藏需要手动调用show hide api,页面加载手动调用load api|
-|pss|定时输出|intervalMillis-输出间隔|-|
-|ram|定时输出|intervalMillis-输出间隔|-|
-|sm|卡顿时输出|debugNotify-卡顿是否需要通知，dumpIntervalMillis-dump堆栈间隔，longBlockThresholdMillis-长卡顿阈值，shortBlockThresholdMillis-短卡顿阈值|-|
-|thread|定时|intervalMillis-输出间隔，threadFilter-过滤器，实现ThreadFilter类path，一般用内置cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter即可|-|
-|traffic|定时输出|intervalMillis-输出间隔，sampleMillis-采样间隔|-|
-|methodCanary|停止后输出|maxMethodCountSingleThreadByCost-每个线程最多记录的方法数，lowCostMethodThresholdMillis-方法耗时阈值|-|
 
 ## 框架
 

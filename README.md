@@ -34,6 +34,29 @@ It is divided into 3 parts:
 
 AndroidGodEye prodive several modules, such as cpu, heap, block, leak memory and so on.
 
+## Features
+
+```java
+public static final String CPU = "CPU";                         // cpu info of device and app
+public static final String BATTERY = "BATTERY";                 // battery info
+public static final String FPS = "FPS";                         // fps info
+public static final String LEAK = "LEAK";                       // detect memory leak
+public static final String HEAP = "HEAP";                       // heap memory
+public static final String PSS = "PSS";                         // pss
+public static final String RAM = "RAM";                         // ram
+public static final String NETWORK = "NETWORK";                 // network info
+public static final String SM = "SM";                           // detect jam
+public static final String STARTUP = "STARTUP";                 // startup metric
+public static final String TRAFFIC = "TRAFFIC";                 // traffic of device and app
+public static final String CRASH = "CRASH";                     // detect java、native crash and ANR
+public static final String THREAD = "THREAD";                   // thread dump of app
+public static final String PAGELOAD = "PAGELOAD";               // page(Activity and Fragment) lifecycle and load time metric
+public static final String METHOD_CANARY = "METHOD_CANARY";     // methods time cost metric
+public static final String APP_SIZE = "APP_SIZE";               // App size of apk code、storage and cache
+public static final String VIEW_CANARY = "VIEW_CANARY";         // detect complex layout hierarchy and overdraw
+public static final String IMAGE_CANARY = "IMAGE_CANARY";       // detect unreasonable memory use of image
+```
+
 ## Quickstart
 
 [Demo APK](https://fir.im/5k67)
@@ -219,26 +242,6 @@ Now enjoy it!
 ### Thread
 
 ![android_god_eye_dashboard7](ART/android_god_eye_dashboard7.png)
-
-## Modules
-
-|模块名|需要安装|数据生产时机|配置|备注|
-|-----|-------|---------|---|----|
-|network|否|外部输入时输出|无|-|
-|startup|否|外部输入时输出|无|-|
-|battery|是|电池变化时输出|无|-|
-|cpu|是|定时输出|intervalMillis-每隔x毫秒输出数据，sampleMillis-采样间隔|系统版本大于8.0失效|
-|crash|是|安装后，输出上次崩溃|crashProvider-实现CrashProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.crash.CrashFileProvider即可|-|
-|fps|是|定时输出|intervalMillis-输出间隔|-|
-|heap|是|定时输出|intervalMillis-输出间隔|-|
-|leakDetector(leakMemory)|是|页面销毁且泄漏时|debug-是否需要解析gc引用链，debugNotification泄漏时是否需要通知，leakRefInfoProvider-实现LeakRefInfoProvider的类path，一般用内置cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider|-|
-|pageload|是|页面create/draw/destory/load/hide/show等输出|pageInfoProvider-根据页面实例提供页面信息|fragment的显示隐藏需要手动调用show hide api,页面加载手动调用load api|
-|pss|是|定时输出|intervalMillis-输出间隔|-|
-|ram|是|定时输出|intervalMillis-输出间隔|-|
-|sm|是|卡顿时输出|debugNotify-卡顿是否需要通知，dumpIntervalMillis-dump堆栈间隔，longBlockThresholdMillis-长卡顿阈值，shortBlockThresholdMillis-短卡顿阈值|-|
-|thread|是|定时|intervalMillis-输出间隔，threadFilter-过滤器，实现ThreadFilter类path，一般用内置cn.hikyson.godeye.core.internal.modules.thread.SimpleThreadFilter即可|-|
-|traffic|是|定时输出|intervalMillis-输出间隔，sampleMillis-采样间隔|-|
-|methodCanary|是|停止后输出|maxMethodCountSingleThreadByCost-每个线程最多记录的方法数，lowCostMethodThresholdMillis-方法耗时阈值|-|
 
 ## Framework
 
