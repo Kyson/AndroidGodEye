@@ -19,6 +19,8 @@ import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.ActivityStackUtil;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Install<ViewCanaryContext> {
 
@@ -54,6 +56,11 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
     @Override
     public ViewCanaryContext config() {
         return config;
+    }
+
+    @Override
+    protected Subject<ViewIssueInfo> createSubject() {
+        return ReplaySubject.create();
     }
 
     public void inspect() {

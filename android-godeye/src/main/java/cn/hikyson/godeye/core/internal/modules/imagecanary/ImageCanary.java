@@ -3,6 +3,8 @@ package cn.hikyson.godeye.core.internal.modules.imagecanary;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.subjects.Subject;
 
 public class ImageCanary extends ProduceableSubject<ImageIssue> implements Install<ImageCanaryContext> {
 
@@ -51,5 +53,10 @@ public class ImageCanary extends ProduceableSubject<ImageIssue> implements Insta
     @Override
     public ImageCanaryContext config() {
         return mConfig;
+    }
+
+    @Override
+    protected Subject<ImageIssue> createSubject() {
+        return ReplaySubject.create();
     }
 }
