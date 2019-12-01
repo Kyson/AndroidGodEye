@@ -49,6 +49,10 @@ public class L {
         if (o instanceof String) {
             return (String) o;
         }
+        if (o instanceof Throwable) {
+            Throwable throwable = (Throwable) o;
+            return throwable.getLocalizedMessage() + "\n" + StacktraceUtil.stackToString(throwable.getStackTrace());
+        }
 //        if (o instanceof GodEyeConfig) {
 //            return JsonUtil.toJson(o);
 //        }

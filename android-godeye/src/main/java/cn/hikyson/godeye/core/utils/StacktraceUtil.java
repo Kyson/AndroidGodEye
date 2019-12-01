@@ -51,4 +51,12 @@ public class StacktraceUtil {
         }
         return stackList;
     }
+
+    public static String stackToString(StackTraceElement... stackTraceElements) {
+        StringBuilder sb = new StringBuilder();
+        for (StackTraceElement traceElement : stackTraceElements) {
+            sb.append(String.valueOf(traceElement)).append("\n");
+        }
+        return sb.toString();
+    }
 }

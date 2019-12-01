@@ -1,6 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.viewcanary;
 
 import android.graphics.Rect;
+
 import androidx.annotation.Keep;
 
 import java.io.Serializable;
@@ -14,7 +15,9 @@ public class ViewIssueInfo implements Serializable {
     public int maxDepth;
     public int screenWidth;
     public int screenHeight;
+    // all view infos
     public List<ViewInfo> views = new ArrayList<>();
+    // overdraw areas
     public List<OverDrawArea> overDrawAreas = new ArrayList<>();
 
     @Keep

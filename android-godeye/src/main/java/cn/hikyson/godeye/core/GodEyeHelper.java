@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment;
 
 import cn.hikyson.godeye.core.exceptions.UnexpectException;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanary;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
@@ -83,4 +85,48 @@ public class GodEyeHelper {
         GodEye.instance().<Network>getModule(GodEye.ModuleName.NETWORK).produce(networkInfo);
         L.d("GodEyeHelper onNetworkEnd: %s", networkInfo == null ? "null" : networkInfo.toSummaryString());
     }
+
+    /**
+     * inspect view of top activity
+     * @throws UninstallException
+     */
+    public static void inspectView() throws UninstallException {
+        final ViewCanary viewCanary = GodEye.instance().getModule(GodEye.ModuleName.VIEW_CANARY);
+        viewCanary.inspect();
+    }
+
+    /**
+     * method canary start recording
+     *
+     * @param tag
+     * @throws UninstallException
+     */
+    public static void startMethodCanaryRecording(String tag) throws UninstallException {
+        final MethodCanary methodCanary = GodEye.instance().getModule(GodEye.ModuleName.METHOD_CANARY);
+        methodCanary.startMonitor(tag);
+    }
+
+    /**
+     * method canary stop recording
+     *
+     * @param tag
+     * @throws UninstallException
+     */
+    public static void stopMethodCanaryRecording(String tag) throws UninstallException {
+        final MethodCanary methodCanary = GodEye.instance().getModule(GodEye.ModuleName.METHOD_CANARY);
+        methodCanary.startMonitor(tag);
+    }
+
+    /**
+     * method canary is recording
+     *
+     * @param tag
+     * @return
+     * @throws UninstallException
+     */
+    public static boolean isMethodCanaryRecording(String tag) throws UninstallException {
+        final MethodCanary methodCanary = GodEye.instance().getModule(GodEye.ModuleName.METHOD_CANARY);
+        return methodCanary.isRunning(tag);
+    }
+
 }

@@ -86,7 +86,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
             if (entry.getKey() instanceof ViewGroup) {
                 continue;
             }
-            info.views.add(getViewInfo(entry.getKey(), entry.getValue(), overDrawMap));
+            info.views.add(getViewInfo(entry.getKey(), entry.getValue()));
         }
         for (Map.Entry<Rect, Set<Object>> entry : overDrawMap.entrySet()) {
             ViewIssueInfo.OverDrawArea overDrawArea = new ViewIssueInfo.OverDrawArea();
@@ -176,7 +176,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
         return overDrawArea;
     }
 
-    private ViewIssueInfo.ViewInfo getViewInfo(View view, int depth, Map<Rect, Set<Object>> overDrawMap) {
+    private ViewIssueInfo.ViewInfo getViewInfo(View view, int depth) {
         ViewIssueInfo.ViewInfo viewInfo = new ViewIssueInfo.ViewInfo();
         viewInfo.className = view.getClass().getName();
         viewInfo.id = getId(view);
@@ -217,6 +217,9 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
             if (child == null || child.getVisibility() != View.VISIBLE) {
                 continue;
             }
+
+
+
             allViews.add(child);
             Integer integer = map.get((View) child.getParent());
             if (integer == null) {

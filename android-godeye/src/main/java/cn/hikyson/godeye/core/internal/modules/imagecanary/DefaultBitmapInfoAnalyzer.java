@@ -9,6 +9,7 @@ import androidx.annotation.Keep;
 
 @Keep
 public class DefaultBitmapInfoAnalyzer implements BitmapInfoAnalyzer {
+
     @Override
     public BitmapInfo analyze(ImageView imageView) {
         BitmapInfo bitmapInfo = new BitmapInfo();

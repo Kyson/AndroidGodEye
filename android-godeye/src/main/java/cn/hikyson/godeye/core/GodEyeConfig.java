@@ -862,6 +862,7 @@ public class GodEyeConfig implements Serializable {
     @Keep
     public static class ImageCanaryConfig implements ImageCanaryContext, Serializable {
 
+        // ImageCanaryConfigProvider
         public String imageCanaryConfigProvider;
 
         public ImageCanaryConfig() {
