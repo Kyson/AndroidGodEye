@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import '../App.css';
 
-import {Card, Badge, Button, Tag, Input, Popover} from 'antd'
+import {Card, Badge, Button, Input} from 'antd'
 import Util from "../libs/util";
 
 /**
@@ -39,7 +39,6 @@ class ImageCanary extends Component {
         this.renderExtra = this.renderExtra.bind(this);
         this.renderTimelines = this.renderTimelines.bind(this);
         this.handleClear = this.handleClear.bind(this);
-        this.renderItem = this.renderItem.bind(this);
         this.refresh = this.refresh.bind(this);
         this.state = {
             searchText: null,
@@ -62,18 +61,20 @@ class ImageCanary extends Component {
         });
     }
 
-    renderItem(issues, key) {
+    static renderItem(issues, key) {
         return (
             <Card style={{margin: 4}} size="small" key={key}>
                 <Badge
                     color={Util.getGreen()}/><span>{`${new Date(issues.timestamp).toLocaleString()}.${issues.timestamp % 1000}`}</span>
                 <br/>
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;<strong>{`${issues.activityClassName}`}</strong></span>
-                <div style= {{ marginLeft: 10, marginTop: 5}}>
-                    <div>{`Image Issue Type: ${issues.issueType}`}</div>
-                    <div>{`Image Id: ${issues.imageViewId}`}</div>
-                    <div>{`Bitmap size: ${issues.bitmapWidth} * ${issues.bitmapHeight}`}</div>
-                    <div>{`Image size: ${issues.imageViewWidth} * ${issues.imageViewHeight}`}</div>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong>{`${issues.activityClassName}`}</strong>{`@${issues.activityHashCode}`}
+                    </span>
+                <div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;{`Image Issue Type: ${issues.issueType}`}</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;{`Image Id: ${issues.imageViewHashCode}`}</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;{`Bitmap size: ${issues.bitmapWidth} * ${issues.bitmapHeight}`}</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;{`Image size: ${issues.imageViewWidth} * ${issues.imageViewHeight}`}</div>
                 </div>
                 <br/>
             </Card>
@@ -86,7 +87,7 @@ class ImageCanary extends Component {
             let items = [];
             for (let i = 0; i < processedInfo.length; i++) {
                 const issues = processedInfo[i];
-                items.push(this.renderItem(issues, i))
+                items.push(ImageCanary.renderItem(issues, i))
             }
             return items;
         }

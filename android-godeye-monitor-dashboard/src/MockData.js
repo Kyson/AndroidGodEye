@@ -391,13 +391,14 @@ class Mock {
             codeSize: 114
         });
         this.recvFun("imageIssue", {
-            imageViewId: 16,
+            imageViewHashCode: 312,
             bitmapWidth: 238,
             bitmapHeight: 114,
             imageViewWidth: 238,
             imageViewHeight: 114,
             timestamp: 1572861420958,
             activityClassName: "cn.hikyson.android.godeye.sample.LeakActivity",
+            activityHashCode: 123,
             issueType: "BITMAP_QUALITY_TOO_HIGH"
         });
         this.recvFun("viewIssueInfo", {

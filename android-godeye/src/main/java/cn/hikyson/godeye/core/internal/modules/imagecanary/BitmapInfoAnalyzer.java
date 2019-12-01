@@ -1,13 +1,15 @@
 package cn.hikyson.godeye.core.internal.modules.imagecanary;
 
-import android.widget.ImageView;
+import android.view.View;
 
 import androidx.annotation.Keep;
+
+import java.util.List;
 
 import io.reactivex.annotations.NonNull;
 
 @Keep
 public interface BitmapInfoAnalyzer {
     @NonNull
-    BitmapInfo analyze(ImageView imageView);
+    List<BitmapInfo> analyze(View view);
 }
