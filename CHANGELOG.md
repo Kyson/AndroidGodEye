@@ -2,6 +2,12 @@
 
 Base on [keepachangelog](https://keepachangelog.com/en/1.0.0/)
 
+## 3.1.6
+
+### Changed
+
+- Keep imageIssue class impl serializable 
+
 ## 3.1.5
 
 ### Added
