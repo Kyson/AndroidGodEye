@@ -48,8 +48,7 @@ import cn.hikyson.godeye.core.utils.L;
 public class GodEyeConfig implements Serializable {
 
     public static GodEyeConfigBuilder noneConfigBuilder() {
-        GodEyeConfigBuilder builder = GodEyeConfigBuilder.godEyeConfig();
-        return builder;
+        return GodEyeConfigBuilder.godEyeConfig();
     }
 
     public static GodEyeConfig noneConfig() {
@@ -346,9 +345,6 @@ public class GodEyeConfig implements Serializable {
 
     @Keep
     public static class BatteryConfig implements BatteryContext, Serializable {
-
-        public BatteryConfig() {
-        }
 
         @Override
         public Context context() {
@@ -794,6 +790,13 @@ public class GodEyeConfig implements Serializable {
         public long delayMillis() {
             return delayMillis;
         }
+
+        @Override
+        public String toString() {
+            return "AppSizeConfig{" +
+                    "delayMillis=" + delayMillis +
+                    '}';
+        }
     }
 
     @Keep
@@ -857,6 +860,13 @@ public class GodEyeConfig implements Serializable {
         public int maxDepth() {
             return maxDepth;
         }
+
+        @Override
+        public String toString() {
+            return "ViewCanaryConfig{" +
+                    "maxDepth=" + maxDepth +
+                    '}';
+        }
     }
 
     @Keep
@@ -882,6 +892,13 @@ public class GodEyeConfig implements Serializable {
         @Override
         public String getImageCanaryConfigProvider() {
             return imageCanaryConfigProvider;
+        }
+
+        @Override
+        public String toString() {
+            return "ImageCanaryConfig{" +
+                    "imageCanaryConfigProvider='" + imageCanaryConfigProvider + '\'' +
+                    '}';
         }
     }
 
@@ -1015,41 +1032,40 @@ public class GodEyeConfig implements Serializable {
         return mPageloadConfig;
     }
 
-
     public void setPageloadConfig(PageloadConfig pageloadConfig) {
         mPageloadConfig = pageloadConfig;
-    }
-
-    public void setAppSizeConfig(AppSizeConfig appSizeConfig) {
-        mAppSizeConfig = appSizeConfig;
-    }
-
-    public AppSizeConfig getAppSizeConfig() {
-        return mAppSizeConfig;
     }
 
     public MethodCanaryConfig getMethodCanaryConfig() {
         return mMethodCanaryConfig;
     }
 
-    public ViewCanaryConfig getViewCanaryConfig() {
-        return mViewCanaryConfig;
+    public void setMethodCanaryConfig(MethodCanaryConfig methodCanaryConfig) {
+        mMethodCanaryConfig = methodCanaryConfig;
     }
 
-    public ImageCanaryConfig getImageCanaryConfig() {
-        return mImageCanaryConfig;
+    public AppSizeConfig getAppSizeConfig() {
+        return mAppSizeConfig;
+    }
+
+    public void setAppSizeConfig(AppSizeConfig appSizeConfig) {
+        mAppSizeConfig = appSizeConfig;
+    }
+
+    public ViewCanaryConfig getViewCanaryConfig() {
+        return mViewCanaryConfig;
     }
 
     public void setViewCanaryConfig(ViewCanaryConfig viewCanaryConfig) {
         mViewCanaryConfig = viewCanaryConfig;
     }
 
-    public void setMethodCanaryConfig(MethodCanaryConfig methodCanaryConfig) {
-        mMethodCanaryConfig = methodCanaryConfig;
+    public ImageCanaryConfig getImageCanaryConfig() {
+        return mImageCanaryConfig;
     }
 
     public void setImageCanaryConfig(ImageCanaryConfig imageCanaryConfig) {
-        this.mImageCanaryConfig = imageCanaryConfig;
+        mImageCanaryConfig = imageCanaryConfig;
     }
 
     @Override

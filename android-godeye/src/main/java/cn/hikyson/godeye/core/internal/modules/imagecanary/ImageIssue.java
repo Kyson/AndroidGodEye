@@ -1,13 +1,18 @@
 package cn.hikyson.godeye.core.internal.modules.imagecanary;
 
-public class ImageIssue {
+import androidx.annotation.Keep;
 
-    public long timestamp;
+import java.io.Serializable;
 
-    public enum IssueType {
+@Keep
+public class ImageIssue implements Serializable {
+
+    @Keep
+    public enum IssueType implements Serializable {
         BITMAP_QUALITY_TOO_HIGH, BITMAP_QUALITY_TOO_LOW
     }
 
+    public long timestamp;
     public String activityClassName;
     public int activityHashCode;
     public int imageViewHashCode;
