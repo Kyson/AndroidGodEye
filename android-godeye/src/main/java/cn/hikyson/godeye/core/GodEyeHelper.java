@@ -114,7 +114,7 @@ public class GodEyeHelper {
      */
     public static void stopMethodCanaryRecording(String tag) throws UninstallException {
         final MethodCanary methodCanary = GodEye.instance().getModule(GodEye.ModuleName.METHOD_CANARY);
-        methodCanary.startMonitor(tag);
+        methodCanary.stopMonitor(tag);
     }
 
     /**
