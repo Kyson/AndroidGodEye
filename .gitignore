@@ -93,3 +93,8 @@ android-godeye-toolbox/.project
 android-godeye-toolbox/.settings/org.eclipse.buildship.core.prefs
 android-godeye/.settings/org.eclipse.buildship.core.prefs
 uiDesigner.xml
+android-godeye-toolboxes/.settings
+android-godeye-toolboxes/android-godeye-okhttp/.settings
+android-godeye-toolboxes/android-godeye-xcrash/.settings
+android-godeye-toolboxes/android-godeye-okhttp/.classpath
+android-godeye-toolboxes/android-godeye-xcrash/.classpath

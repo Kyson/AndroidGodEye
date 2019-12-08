@@ -7,7 +7,7 @@
 
 ## jcenter，不需要手动调用
 
-bintrayKey:https://bintray.com/profile/edit API Key
+bintrayKey: [https://bintray.com/profile/edit](https://bintray.com/profile/edit) API Key
 
 ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=BINTRAY_KEY -PdryRun=false
 
