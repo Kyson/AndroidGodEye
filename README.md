@@ -59,11 +59,11 @@ public static final String IMAGE_CANARY = "IMAGE_CANARY";       // detect unreas
 
 ## Quickstart
 
+**[Quickstart Wiki](https://github.com/Kyson/AndroidGodEye/wiki/0x00-QuickStart_en)**
+
 [Demo APK](https://fir.im/5k67)
 
 [Demo Project:https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
-
-[Quickstart](wiki/0x00-QuickStart_zh)
 
 ## License
 

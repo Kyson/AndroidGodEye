@@ -59,11 +59,11 @@ public static final String IMAGE_CANARY = "IMAGE_CANARY";       // 图片不合�
 
 ## 快速开始
 
+**[快速开始Wiki](https://github.com/Kyson/AndroidGodEye/wiki/0x00-QuickStart_zh)**
+
 [Demo APK](https://fir.im/5k67)，可以先看看效果 :-)
 
 [Demo Project:https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
-
-[快速开始](wiki/0x00-QuickStart_zh)
 
 ## 许可协议
 
