@@ -11,6 +11,16 @@ Fixed for any bug fixes.
 Security in case of vulnerabilities.
 ```
 
+## 3.1.8
+
+### Fixed
+
+- Crash when ImageCanary install in not main thread 
+
+### Changed
+
+- Refactor thread util
+
 ## 3.1.7
 
 ### Fixed
