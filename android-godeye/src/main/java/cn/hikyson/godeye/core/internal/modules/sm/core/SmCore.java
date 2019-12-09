@@ -45,7 +45,7 @@ public final class SmCore {
 
             @Override
             public void onBlockEvent(final long blockTimeMillis, final long threadBlockTimeMillis, final boolean longBlock, final long eventStartTimeMilliis, final long eventEndTimeMillis, long longBlockThresholdMillis, long shortBlockThresholdMillis) {
-                HandlerThreadFactory.getObtainDumpThreadHandler().post(() -> {
+                ThreadUtil.sComputationScheduler.scheduleDirect(() -> {
                     if (AndroidDebug.isDebugging()) {// if debugging, then ignore
                         return;
                     }
@@ -105,12 +105,14 @@ public final class SmCore {
     }
 
     public void install() {
+        ThreadUtil.createIfNotExistHandler(AbstractSampler.SM_DO_DUMP);
         Looper.getMainLooper().setMessageLogging(mMonitor);
     }
 
     public void uninstall() {
         Looper.getMainLooper().setMessageLogging(null);
         stopDump();
+        ThreadUtil.destoryHandler(AbstractSampler.SM_DO_DUMP);
     }
 
     /**

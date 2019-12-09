@@ -1,8 +1,5 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
@@ -12,6 +9,7 @@ import io.reactivex.subjects.Subject;
 
 public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> implements Install<LeakContext> {
 
+    public static final String LEAK_HANDLER = "godeye-leak";
     private LeakEngine mLeakEngine;
     private boolean mInstalled;
     private LeakContext mConfig;
@@ -27,8 +25,6 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
         return LeakDetector.InstanceHolder.sINSTANCE;
     }
 
-    private ExecutorService sSingleForLeakExecutor;
-
     @Override
     public synchronized void install(LeakContext config) {
         if (mInstalled) {
@@ -36,7 +32,7 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
             return;
         }
         mConfig = config;
-        sSingleForLeakExecutor = Executors.newSingleThreadExecutor(new ThreadUtil.NamedThreadFactory("godeye-leak-"));
+        ThreadUtil.createIfNotExistHandler(LEAK_HANDLER);
         mLeakEngine = new LeakEngine(config);
         mLeakEngine.work();
         mInstalled = true;
@@ -52,10 +48,7 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
         if (mLeakEngine != null) {
             mLeakEngine.shutdown();
         }
-        if (sSingleForLeakExecutor != null) {
-            sSingleForLeakExecutor.shutdown();
-            sSingleForLeakExecutor = null;
-        }
+        ThreadUtil.destoryHandler(LEAK_HANDLER);
         mConfig = null;
         mInstalled = false;
         L.d("LeakDetector uninstalled.");
@@ -69,10 +62,6 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
     @Override
     public LeakContext config() {
         return mConfig;
-    }
-
-    public ExecutorService getsSingleForLeakExecutor() {
-        return sSingleForLeakExecutor;
     }
 
     @Override

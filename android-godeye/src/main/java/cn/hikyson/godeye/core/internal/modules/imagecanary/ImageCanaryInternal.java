@@ -16,6 +16,7 @@ import java.util.Set;
 
 import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.core.utils.ViewUtil;
 
 class ImageCanaryInternal {
@@ -31,12 +32,13 @@ class ImageCanaryInternal {
     }
 
     private SimpleActivityLifecycleCallbacks callbacks;
+    private static final String IMAGE_CANARY_HANDLER = "godeye-imagecanary";
 
     void start(Application application, ImageCanary imageCanaryEngine) {
+        Handler handler = ThreadUtil.createIfNotExistHandler(IMAGE_CANARY_HANDLER);
         callbacks = new SimpleActivityLifecycleCallbacks() {
 
             private Map<Activity, ViewTreeObserver.OnDrawListener> mOnDrawListenerMap = new HashMap<>();
-            private Handler mHandler = new Handler();
             private Set<ImageIssue> mImageIssues = new HashSet<>();
 
             @Override
@@ -45,8 +47,10 @@ class ImageCanaryInternal {
                 ViewGroup parent = (ViewGroup) activity.getWindow().getDecorView();
                 Runnable callback = inspectInner(new WeakReference<>(activity), imageCanaryEngine, mImageIssues);
                 ViewTreeObserver.OnDrawListener onDrawListener = () -> {
-                    mHandler.removeCallbacks(callback);
-                    mHandler.postDelayed(callback, 300);
+                    if (handler != null) {
+                        handler.removeCallbacks(callback);
+                        handler.postDelayed(callback, 300);
+                    }
                 };
                 mOnDrawListenerMap.put(activity, onDrawListener);
                 parent.getViewTreeObserver().addOnDrawListener(onDrawListener);
@@ -71,6 +75,7 @@ class ImageCanaryInternal {
         }
         application.unregisterActivityLifecycleCallbacks(callbacks);
         callbacks = null;
+        ThreadUtil.destoryHandler(IMAGE_CANARY_HANDLER);
     }
 
     private Runnable inspectInner(WeakReference<Activity> activity, ImageCanary imageCanaryEngine, Set<ImageIssue> imageIssues) {

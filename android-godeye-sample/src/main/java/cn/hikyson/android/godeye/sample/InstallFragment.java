@@ -3,13 +3,12 @@ package cn.hikyson.android.godeye.sample;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -63,12 +62,22 @@ public class InstallFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_install, container, false);
         view.findViewById(R.id.fragment_install_default).setOnClickListener(v -> {
-            GodEye.instance().install(GodEyeConfig.defaultConfig());
-            mListener.onInstallModuleChanged();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    GodEye.instance().install(GodEyeConfig.defaultConfig());
+                    mListener.onInstallModuleChanged();
+                }
+            }).start();
         });
         view.findViewById(R.id.fragment_install_local_stream).setOnClickListener(v -> {
-            GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
-            mListener.onInstallModuleChanged();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+                    mListener.onInstallModuleChanged();
+                }
+            }).start();
         });
         view.findViewById(R.id.fragment_install_remote_stream).setOnClickListener(v -> {
             ((TextView) v).setText("Loading...");

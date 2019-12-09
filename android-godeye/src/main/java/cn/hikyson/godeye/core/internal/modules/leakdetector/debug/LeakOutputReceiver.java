@@ -3,25 +3,26 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector.debug;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import androidx.collection.ArrayMap;
+import android.os.Handler;
 
+import androidx.collection.ArrayMap;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 
 public class LeakOutputReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, final Intent intent) {
-        Executor executor = LeakDetector.instance().getsSingleForLeakExecutor();
-        if (executor != null) {
-            executor.execute(new Runnable() {
+        Handler handler = ThreadUtil.obtainHandler(LeakDetector.LEAK_HANDLER);
+        if (handler != null) {
+            handler.post(new Runnable() {
                 @Override
                 public void run() {
                     if (DebugHeapAnalyzerService.OUTPUT_BOARDCAST_ACTION_START.equals(intent.getAction())) {

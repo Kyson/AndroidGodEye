@@ -2,13 +2,13 @@ package cn.hikyson.godeye.core.internal.modules.pageload;
 
 import android.app.Activity;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Process;
+
 import androidx.fragment.app.Fragment;
 
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
 
@@ -18,10 +18,10 @@ import io.reactivex.subjects.Subject;
  * Created by kysonchao on 2018/1/25.
  */
 public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> implements Install<PageloadContext> {
+    private static final String PAGELOAD_HANDLER = "godeye-pageload";
     private ActivityLifecycleCallbacks mActivityLifecycleCallbacks;
     private PageloadContext mConfig;
     private boolean mInstalled = false;
-    private Handler mHandler;
 
     @Override
     public synchronized void install(PageloadContext config) {
@@ -30,9 +30,6 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
             return;
         }
         this.mConfig = config;
-        HandlerThread handlerThread = new HandlerThread("godeye-pageload-main", Process.THREAD_PRIORITY_BACKGROUND);
-        handlerThread.start();
-        this.mHandler = new Handler(handlerThread.getLooper());
         PageLifecycleRecords pageLifecycleRecords = new PageLifecycleRecords();
         PageInfoProvider pageInfoProvider = new DefaultPageInfoProvider();
         try {
@@ -40,7 +37,8 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         } catch (Throwable e) {
             L.e("Pageload install warning, can not find pageload provider class. use DefaultPageInfoProvider:" + e);
         }
-        this.mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks(pageLifecycleRecords, pageInfoProvider, this, mHandler);
+        Handler handler = ThreadUtil.createIfNotExistHandler(PAGELOAD_HANDLER);
+        this.mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks(pageLifecycleRecords, pageInfoProvider, this, handler);
         this.mConfig.application().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         this.mInstalled = true;
         L.d("Pageload installed.");
@@ -59,8 +57,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         }
         this.mConfig.application().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         mActivityLifecycleCallbacks = null;
-        this.mHandler.getLooper().quit();
-        this.mHandler = null;
+        ThreadUtil.destoryHandler(PAGELOAD_HANDLER);
         this.mInstalled = false;
         L.d("Pageload uninstalled.");
     }

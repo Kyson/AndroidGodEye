@@ -1,17 +1,20 @@
 package cn.hikyson.android.godeye.sample;
 
 import android.os.Bundle;
-import com.google.android.material.tabs.TabLayout;
+import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 import java.util.Objects;
 
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class Main2Activity extends AppCompatActivity implements InstallFragment.OnInstallModuleChangeListener {
 
@@ -89,7 +92,12 @@ public class Main2Activity extends AppCompatActivity implements InstallFragment.
 
     @Override
     public void onInstallModuleChanged() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        ((ConsumeFragment) Objects.requireNonNull(fragmentManager.findFragmentByTag(ConsumeFragment.class.getSimpleName()))).onInstallModuleChanged();
+        AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
+            @Override
+            public void run() {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                ((ConsumeFragment) Objects.requireNonNull(fragmentManager.findFragmentByTag(ConsumeFragment.class.getSimpleName()))).onInstallModuleChanged();
+            }
+        });
     }
 }

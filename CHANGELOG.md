@@ -2,6 +2,15 @@
 
 Base on [keepachangelog](https://keepachangelog.com/en/1.0.0/)
 
+```text
+Added for new features.
+Changed for changes in existing functionality.
+Deprecated for soon-to-be removed features.
+Removed for now removed features.
+Fixed for any bug fixes.
+Security in case of vulnerabilities.
+```
+
 ## 3.1.7
 
 ### Fixed

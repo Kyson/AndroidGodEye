@@ -1,8 +1,12 @@
 package cn.hikyson.godeye.core.utils;
 
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Process;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -75,4 +79,36 @@ public class ThreadUtil {
 
     }
 
+    private static final Object sLockForHandlerManager = new Object();
+
+    private static Map<String, Handler> sHandlerMap = new HashMap<>();
+
+    public static Handler createIfNotExistHandler(String tag) {
+        synchronized (sLockForHandlerManager) {
+            Handler tmp = sHandlerMap.get(tag);
+            if (tmp != null) {
+                return tmp;
+            }
+            HandlerThread handlerThread = new HandlerThread(tag, Process.THREAD_PRIORITY_BACKGROUND);
+            handlerThread.start();
+            Handler handler = new Handler(handlerThread.getLooper());
+            sHandlerMap.put(tag, handler);
+            return handler;
+        }
+    }
+
+    public static Handler obtainHandler(String tag) {
+        synchronized (sLockForHandlerManager) {
+            return sHandlerMap.get(tag);
+        }
+    }
+
+    public static void destoryHandler(String tag) {
+        synchronized (sLockForHandlerManager) {
+            Handler handler = sHandlerMap.remove(tag);
+            if (handler != null) {
+                handler.getLooper().quit();
+            }
+        }
+    }
 }
