@@ -1,9 +1,9 @@
 /* eslint-disable react/no-string-refs */
 /* eslint-disable react/prop-types */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../App.css';
 
-import {Card, Button, Row, Col} from 'antd'
+import { Card, Button, Row, Col, Alert } from 'antd'
 import xrange from 'highcharts/modules/xrange';
 import MethodCanaryThread from "./methodcanary_thread";
 import Util from "../libs/util";
@@ -165,11 +165,12 @@ class MethodCanary extends Component {
             }>
                 <Row>
                     <Col span={24}>
-                        <div id="chartForSummary"/>
+                        <Alert message="Black color is &apos;Main Thread&apos;" type="info" showIcon />
+                        <div id="chartForSummary" />
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={24} style={{marginTop: 16}}>
+                    <Col span={24} style={{ marginTop: 16 }}>
                         <MethodCanaryThread
                             ref="chartForThread"
                         />
@@ -178,6 +179,5 @@ class MethodCanary extends Component {
             </Card>);
     }
 }
-
 
 export default MethodCanary;

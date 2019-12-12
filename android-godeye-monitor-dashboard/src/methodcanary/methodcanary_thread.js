@@ -1,10 +1,10 @@
 /* eslint-disable react/no-string-refs */
 /* eslint-disable react/prop-types */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../App.css';
 import Util from "../libs/util";
 
-import {Collapse, Input} from 'antd'
+import { Collapse, Input } from 'antd'
 
 import xrange from 'highcharts/modules/xrange';
 import Highcharts from 'highcharts/highstock';
@@ -95,11 +95,7 @@ class MethodCanaryThread extends Component {
         });
         const min = record.start;
         const max = record.end;
-        this.setState({start: min, end: max});
-        this.methodInfos = methodInfos;
-        if (this.refs.methodCanaryThreadTree) {
-            this.refs.methodCanaryThreadTree.refresh(min, max, methodInfos);
-        }
+        this.setState({ start: min, end: max });
         const datas = [];
         let maxStack = 0;
         for (let i = 0; i < methodInfos.length; i++) {
@@ -121,6 +117,12 @@ class MethodCanaryThread extends Component {
                 maxStack = methodInfos[i].stack
             }
         }
+
+        this.methodInfos = methodInfos;
+        if (this.refs.methodCanaryThreadTree) {
+            this.refs.methodCanaryThreadTree.refresh(min, max, methodInfos);
+        }
+
         const categories = [];
         for (let i = 0; i < (maxStack + 1); i++) {
             categories.push("");
@@ -270,7 +272,7 @@ class MethodCanaryThread extends Component {
     renderDetail() {
         return <Collapse bordered={true} defaultActiveKey={['1']}>
             <Collapse.Panel header={this.renderTimeRange()} key="1">
-                <MethodCanaryThreadTree ref="methodCanaryThreadTree"/>
+                <MethodCanaryThreadTree ref="methodCanaryThreadTree" />
             </Collapse.Panel>
         </Collapse>
     }
@@ -279,7 +281,7 @@ class MethodCanaryThread extends Component {
         if (this.state.end !== 0 || this.state.start !== 0) {
             return <span>Selected duration:&nbsp;
                 <strong>{Util.getFormatDuration(this.state.end - this.state.start)}</strong>
-                ,&nbsp;From&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.start)}</strong>
+                ,&nbsp;Range from&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.start)}</strong>
                 &nbsp;to&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.end)}</strong></span>
         } else {
             return <span>Empty...</span>
@@ -289,9 +291,9 @@ class MethodCanaryThread extends Component {
     renderExtra() {
         if (this.state.end !== 0 || this.state.start !== 0) {
             return (
-                <div style={{textAlign: 'right'}}>
+                <div style={{ textAlign: 'right' }}>
                     <Input.Search
-                        style={{width: 200}}
+                        style={{ width: 200 }}
                         placeholder="Input search text"
                         onSearch={value => {
                             this.searchText = value;
@@ -300,7 +302,7 @@ class MethodCanaryThread extends Component {
                         }}
                     /></div>)
         } else {
-            return <div/>
+            return <div />
         }
     }
 
@@ -308,7 +310,7 @@ class MethodCanaryThread extends Component {
         return (
             <div>
                 {this.renderExtra()}
-                <div id="chart"/>
+                <div id="chart" />
                 {this.renderDetail()}
             </div>
         );
