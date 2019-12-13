@@ -11,6 +11,16 @@ Fixed for any bug fixes.
 Security in case of vulnerabilities.
 ```
 
+## 3.1.9
+
+### Fixed
+
+- MethodCanary method tree show wrong
+
+### Changed
+
+- ImageCanary support preview
+
 ## 3.1.8
 
 ### Fixed
