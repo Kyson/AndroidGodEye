@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.Keep;
 
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +26,7 @@ public class DefaultBitmapInfoAnalyzer implements BitmapInfoAnalyzer {
                 ivBitMapInfo = new BitmapInfo();
                 ivBitMapInfo.bitmapWidth = bitmap.getWidth();
                 ivBitMapInfo.bitmapHeight = bitmap.getHeight();
+                ivBitMapInfo.bitmap = new WeakReference<>(bitmap);
             }
         }
         BitmapInfo vBitMapInfo;
@@ -34,6 +36,7 @@ public class DefaultBitmapInfoAnalyzer implements BitmapInfoAnalyzer {
             vBitMapInfo = new BitmapInfo();
             vBitMapInfo.bitmapWidth = bitmap.getWidth();
             vBitMapInfo.bitmapHeight = bitmap.getHeight();
+            vBitMapInfo.bitmap = new WeakReference<>(bitmap);
             if (ivBitMapInfo != null) {
                 return Arrays.asList(ivBitMapInfo, vBitMapInfo);
             }

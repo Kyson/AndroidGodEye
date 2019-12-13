@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
+import cn.hikyson.godeye.core.utils.ImageUtil;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.core.utils.ViewUtil;
@@ -109,12 +110,14 @@ class ImageCanaryInternal {
                     if (mImageCanaryConfigProvider.isBitmapQualityTooHigh(bitmapInfo.bitmapWidth, bitmapInfo.bitmapHeight, view.getWidth(), view.getHeight())) {
                         imageIssue.issueType = ImageIssue.IssueType.BITMAP_QUALITY_TOO_HIGH;
                         if (!imageIssues.contains(imageIssue)) {
+                            imageIssue.imageSrcBase64 = ImageUtil.convertToBase64(bitmapInfo.bitmap.get(), 200, 200);
                             imageIssues.add(imageIssue);
                             imageCanaryEngine.produce(imageIssue);
                         }
                     } else if (mImageCanaryConfigProvider.isBitmapQualityTooLow(bitmapInfo.bitmapWidth, bitmapInfo.bitmapHeight, view.getWidth(), view.getHeight())) {
                         imageIssue.issueType = ImageIssue.IssueType.BITMAP_QUALITY_TOO_LOW;
                         if (!imageIssues.contains(imageIssue)) {
+                            imageIssue.imageSrcBase64 = ImageUtil.convertToBase64(bitmapInfo.bitmap.get(), 200, 200);
                             imageIssues.add(imageIssue);
                             imageCanaryEngine.produce(imageIssue);
                         }

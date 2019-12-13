@@ -20,6 +20,7 @@ public class ImageIssue implements Serializable {
     public int bitmapHeight;
     public int imageViewWidth;
     public int imageViewHeight;
+    public String imageSrcBase64;
     public IssueType issueType;
 
     @Override

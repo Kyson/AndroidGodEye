@@ -11,15 +11,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/activity_image_iv1"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginLeft="5dip"
-            android:layout_marginTop="10dip"
-            android:layout_marginRight="5dip"
-            android:src="@drawable/ic_launcher_background"
-            android:tint="#55ff0000" />
+        <Button
+            android:id="@+id/activity_image_change_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change Layout" />
 
         <ImageView
             android:id="@+id/activity_image_iv2"
@@ -32,27 +28,25 @@
             android:tint="#55ff0000" />
 
         <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
             android:scaleType="center"
-            android:src="@drawable/free_google_icon_download_22" />
+            android:src="@drawable/image_test1" />
 
         <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="25dp"
+            android:layout_height="50dp"
             android:scaleType="center"
-            android:src="@drawable/free_google_icon_download_22" />
+            android:src="@drawable/image_test2" />
 
         <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:scaleType="center"
-            android:src="@drawable/free_google_icon_download_22" />
-
-        <Button
-            android:id="@+id/activity_image_change_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Change Layout" />
+            android:id="@+id/activity_image_iv1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginLeft="5dip"
+            android:layout_marginTop="10dip"
+            android:layout_marginRight="5dip"
+            android:src="@drawable/ic_launcher_background"
+            android:tint="#55ff0000" />
     </LinearLayout>
 </ScrollView>

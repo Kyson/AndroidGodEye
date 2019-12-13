@@ -15,7 +15,7 @@ public class ImageActivity extends AppCompatActivity {
         findViewById(R.id.activity_image_change_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ImageView) findViewById(R.id.activity_image_iv2)).setImageResource(R.drawable.free_google_icon_download_22);
+                ((ImageView) findViewById(R.id.activity_image_iv2)).setImageResource(R.drawable.image_test1);
             }
         });
     }

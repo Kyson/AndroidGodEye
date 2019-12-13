@@ -8,8 +8,6 @@ import Util from "../libs/util";
  * ViewCanary
  */
 class ViewCanary extends Component {
-    static BAD_DRAW_TIME = 800;
-    static BAD_LOAD_TIME = 2000;
 
     static isIssueInSearch(viewIssueInfo, searchText) {
         searchText = searchText.toLowerCase();
@@ -158,7 +156,6 @@ class ViewCanary extends Component {
                       <Button style={{marginLeft: 10, fontSize: 10, height: 22}} >Check View Depth</Button>
                     </Popover>
                     </div>
-                <br/>
             </Card>
         );
     }
