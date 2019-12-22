@@ -190,7 +190,7 @@ class MethodCanaryThread extends Component {
                     const e = this.point;
                     if (e.methodEvent) {
                         s += "cost " + Util.getFormatDuration(e.methodEvent.end - e.methodEvent.start) + '<br/>';
-                        s += e.methodEvent.className + "#" + e.methodEvent.methodName + '<br/>';
+                        s += e.methodEvent.className + "." + e.methodEvent.methodName + '<br/>';
                         s += 'From ' + Util.getFormatMAndSAndMS(e.methodEvent.start) + " to " + Util.getFormatMAndSAndMS(e.methodEvent.end);
                     }
                     return s;
@@ -253,7 +253,7 @@ class MethodCanaryThread extends Component {
                             if (this.point.methodEvent) {
                                 const index = this.point.methodEvent.className.lastIndexOf("/");
                                 const className = this.point.methodEvent.className.substring(index + 1, this.point.methodEvent.className.length);
-                                return className + "#" + this.point.methodEvent.methodName
+                                return className + "." + this.point.methodEvent.methodName
                             }
                             return null
                         }

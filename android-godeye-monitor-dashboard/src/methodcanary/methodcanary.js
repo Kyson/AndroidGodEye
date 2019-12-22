@@ -71,7 +71,7 @@ class MethodCanary extends Component {
             for (let i = 0; i < this.record.methodInfoOfThreadInfos.length; i++) {
                 const methodEventCount = this.record.methodInfoOfThreadInfos[i].methodInfos.length;
                 const threadInfo = this.record.methodInfoOfThreadInfos[i].threadInfo;
-                if (threadInfo.id === 2 && threadInfo.name === 'main') {
+                if (threadInfo.name === 'main') {
                     threadSeries.push({
                         name: MethodCanary.getThreadNameByThreadInfo(threadInfo),
                         data: [methodEventCount],

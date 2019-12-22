@@ -43,7 +43,7 @@ class Mock {
                             stack: 0,
                             start: 400,
                             end: 600,
-                            className: "classA",
+                            className: "fasd/fsdfsd/fsdf/classA",
                             methodName: "methodA",
                             methodDesc: "descA",
                             methodAccessFlag: 1
@@ -59,7 +59,7 @@ class Mock {
                             stack: 2,
                             start: 0,
                             end: 300,
-                            className: "0-300",
+                            className: "/eee/aaa/bbb/0-300",
                             methodName: "methodB",
                             methodDesc: "descB",
                             methodAccessFlag: 1

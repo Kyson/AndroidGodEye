@@ -62,7 +62,7 @@ class ImageCanary extends Component {
 
     static renderImg(img_base64) {
         if (img_base64) {
-            return (<Row type="flex" justify="center" align="middle" style={{ padding: 8, backgroundImage: `url("${white_grey_bg}")` }}><img src={`data:image/png;base64,${img_base64}`} /></Row>)
+            return (<Row type="flex" justify="center" align="middle" style={{ padding: 8, backgroundImage: `url("${white_grey_bg}")` }}><img src={`data:image/png;base64,${img_base64}`} alt="" /></Row>)
         } else {
             return (<Row type="flex" justify="center" align="middle" style={{ padding: 8, backgroundImage: `url("${white_grey_bg}")` }}><span style={{ color: Util.getGreen(), backgroundColor: "#fff", padding: 4 }}>No preview image</span></Row>)
         }

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import '../App.css';
 import Util from "../libs/util";
 
-import { Tree } from 'antd'
+import { Tree, Popover } from 'antd'
 
 class MethodCanaryThreadTree extends Component {
 
@@ -57,6 +57,7 @@ class MethodCanaryThreadTree extends Component {
         super(props);
         this.renderTreeNodes = this.renderTreeNodes.bind(this);
         this.getRenderNodeText = this.getRenderNodeText.bind(this);
+        this.getNodeDetailContent = this.getNodeDetailContent.bind(this);
         this.clear = this.clear.bind(this);
         this.refresh = this.refresh.bind(this);
         this.state = {
@@ -95,22 +96,27 @@ class MethodCanaryThreadTree extends Component {
         this.setState({ treeData, start, end })
     }
 
+    getNodeDetailContent(item) {
+        return (<span>
+            Real cost {Util.getFormatDuration(item.end - item.start)}<br />
+            {item.className + "." + item.methodName}<br />
+            From {Util.getFormatMAndSAndMS(item.start)} to {Util.getFormatMAndSAndMS(item.end)}
+        </span>)
+    }
+
     getRenderNodeText(item) {
-        return <span>
-            [Cost and weight in range]&nbsp;
+        const content = this.getNodeDetailContent(item)
+        return <Popover content={content}>
+            <span>
+                [Cost and weight]&nbsp;
             <strong>{Util.getFormatDuration((this.getMethodEndInRange(item.end) - this.getMethodStartInRange(item.start)))}</strong>
-            &nbsp;
+                &nbsp;
             <strong>{((this.getMethodEndInRange(item.end) - this.getMethodStartInRange(item.start)) * 100 / (this.state.end - this.state.start)).toFixed(1) + "%"}</strong>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            [Cost for real]&nbsp;
-            <strong>{Util.getFormatDuration(item.end - item.start)}</strong>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            [Method]&nbsp;
-            <strong>{item.className + "#" + item.methodName}</strong>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            [Duraion]&nbsp;From&nbsp;<strong>{Util.getFormatMAndSAndMS(item.start)}</strong>&nbsp;to&nbsp;
-            <strong>{Util.getFormatMAndSAndMS(item.end)}</strong>
-        </span>
+                &nbsp;&nbsp;
+                [Method]&nbsp;
+                <strong>{item.className.substring(item.className.lastIndexOf("/") + 1) + "." + item.methodName}</strong>
+            </span>
+        </Popover>
     }
 
     renderTreeNodes = data => data.map((item) => {
