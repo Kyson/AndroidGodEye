@@ -57,9 +57,11 @@ public static final String VIEW_CANARY = "VIEW_CANARY";         // detect comple
 public static final String IMAGE_CANARY = "IMAGE_CANARY";       // detect unreasonable memory use of image
 ```
 
-## Quickstart
+## Usage
 
-**[Quickstart Wiki](https://github.com/Kyson/AndroidGodEye/wiki/0x00-QuickStart_en)**
+[Quickstart Wiki](https://github.com/Kyson/AndroidGodEye/wiki/0x00-QuickStart_en)
+
+[More detail Wiki](https://github.com/Kyson/AndroidGodEye/wiki#english)
 
 [Demo APK](https://fir.im/5k67)
 

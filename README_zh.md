@@ -57,9 +57,11 @@ public static final String VIEW_CANARY = "VIEW_CANARY";         // 视图层级�
 public static final String IMAGE_CANARY = "IMAGE_CANARY";       // 图片不合理内存占用检测
 ```
 
-## 快速开始
+## 使用
 
-**[快速开始Wiki](https://github.com/Kyson/AndroidGodEye/wiki/0x00-QuickStart_zh)**
+[快速开始Wiki](https://github.com/Kyson/AndroidGodEye/wiki/0x00-QuickStart_zh)
+
+[更多信息Wiki](https://github.com/Kyson/AndroidGodEye/wiki#%E4%B8%AD%E6%96%87)
 
 [Demo APK](https://fir.im/5k67)，可以先看看效果 :-)
 
