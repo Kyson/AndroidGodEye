@@ -3,6 +3,7 @@ package cn.hikyson.godeye.monitor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import com.koushikdutta.async.http.WebSocket;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
@@ -29,6 +30,7 @@ import cn.hikyson.godeye.monitor.server.WebSocketBizProcessor;
 public class GodEyeMonitor {
     private static boolean sIsWorking = false;
     private static final int DEFAULT_PORT = 5390;
+    private static final String MONITOR_LOGCAT = "AndroidGodEye monitor is running at port <%s>";
     private static GodEyeMonitorServer sGodEyeMonitorServer;
     @SuppressLint("StaticFieldLeak")
     private static Context sContext;
@@ -115,8 +117,8 @@ public class GodEyeMonitor {
             }
         });
         sGodEyeMonitorServer.start();
+        Log.d(L.DEFAULT_TAG, String.format(MONITOR_LOGCAT, port));
         L.d(getAddressLog(context, port));
-        L.d("GodEye monitor is working...");
     }
 
     /**
