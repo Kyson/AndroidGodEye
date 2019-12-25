@@ -1,6 +1,6 @@
 #! /bin/sh
 
-port_running=`adb logcat -d | grep 'AndroidGodEye monitor is running at port' | tail -1 | cut -d '<' -f2|cut -d '>' -f1`
+port_running=`adb logcat -d | grep 'AndroidGodEye monitor is running at port' | tail -1 | cut -d '[' -f2|cut -d ']' -f1`
 
 if  [[ ! -n "$port_running" ]] ;then
     echo "Can not find which port AndroidGodEye monitor is running at."

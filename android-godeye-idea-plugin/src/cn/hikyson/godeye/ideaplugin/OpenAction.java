@@ -84,7 +84,7 @@ public class OpenAction extends AnAction {
 
     private static String parsePortByLogcatShell() {
         try {
-            String[] cmd = {"/bin/sh", "-c", "adb logcat -d | grep 'AndroidGodEye monitor is running at port' | tail -1 | cut -d '<' -f2|cut -d '>' -f1"};
+            String[] cmd = {"/bin/sh", "-c", "adb logcat -d | grep 'AndroidGodEye monitor is running at port' | tail -1 | cut -d '[' -f2|cut -d ']' -f1"};
             Process p = Runtime.getRuntime().exec(cmd);
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;

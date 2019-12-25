@@ -30,7 +30,7 @@ import cn.hikyson.godeye.monitor.server.WebSocketBizProcessor;
 public class GodEyeMonitor {
     private static boolean sIsWorking = false;
     private static final int DEFAULT_PORT = 5390;
-    private static final String MONITOR_LOGCAT = "AndroidGodEye monitor is running at port <%s>";
+    private static final String MONITOR_LOGCAT = "AndroidGodEye monitor is running at port [%s]";
     private static GodEyeMonitorServer sGodEyeMonitorServer;
     @SuppressLint("StaticFieldLeak")
     private static Context sContext;
