@@ -53,7 +53,7 @@ public final class SmCore {
                         ThreadUtil.sMain.execute(() -> Notifier.notice(GodEye.instance().getApplication()
                                 , new Notifier.Config("AndroidGodEye", "Block!", "Install Android Studio plugin 'AndroidGodEye' to find the detail.")));
                     }
-                    if (longBlock) {//短卡顿
+                    if (longBlock) {
                         //如果是长卡顿，那么需要记录很多信息
                         final boolean cpuBusy = cpuSampler.isCpuBusy(eventStartTimeMilliis, eventEndTimeMillis);
                         //这里短卡顿基本是dump不到数据的，因为dump延时一般都会比短卡顿时间久
