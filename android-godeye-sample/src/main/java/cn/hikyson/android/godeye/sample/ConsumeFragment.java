@@ -41,8 +41,7 @@ public class ConsumeFragment extends Fragment {
         view.findViewById(R.id.fragment_consume_start_debug_monitor).setOnClickListener(v -> {
             GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl());
             GodEyeMonitor.setClassPrefixOfAppProcess(Collections.singletonList("cn.hikyson.android.godeye.sample"));
-            // TODO KYSON IMPL 修改为默认的
-            GodEyeMonitor.work(ConsumeFragment.this.getActivity(), 5377);
+            GodEyeMonitor.work(ConsumeFragment.this.getActivity(), 5390);
         });
         view.findViewById(R.id.fragment_consume_stop_debug_monitor).setOnClickListener(v -> {
             GodEyeMonitor.shutDown();
