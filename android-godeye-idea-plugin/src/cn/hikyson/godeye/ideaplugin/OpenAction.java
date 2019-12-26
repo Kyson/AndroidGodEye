@@ -19,8 +19,12 @@ import org.apache.http.util.TextUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by xiangxing on 2018/10/26.
@@ -41,9 +45,12 @@ public class OpenAction extends AnAction {
             }
             mLogger.info("Current os name is " + SystemUtils.OS_NAME);
             String adbPath = String.format("%s/platform-tools/adb", path);
-            String portRunning = parsePortByLogcat();
+            mLogger.info("ADB path is " + adbPath);
+            String portRunning = parsePortByLogcat(adbPath);
+            mLogger.info("Parse AndroidGodEye port is running at " + portRunning);
             String inputPort = askForPort(project, portRunning, getSavedPort(project));
             if (inputPort == null) {
+                mLogger.warn("inputPort == null");
                 return;
             }
             saveDefaultPort(project, inputPort);
@@ -72,18 +79,10 @@ public class OpenAction extends AnAction {
         PropertiesComponent.getInstance(project).setValue(KEY_PORT, port);
     }
 
-    private static String parsePortByLogcat() {
-        if (SystemUtils.IS_OS_WINDOWS) {
-            // TODO KYSON IMPL
-            return "";
-        } else {
-            return parsePortByLogcatShell();
-        }
-    }
-
-    private static String parsePortByLogcatShell() {
+    private String parsePortByLogcat(String adbPath) {
         try {
-            String[] cmd = {"/bin/sh", "-c", "adb logcat -d | grep 'AndroidGodEye monitor is running at port' | tail -1 | cut -d '[' -f2|cut -d ']' -f1"};
+            String cmd = String.format("%s logcat -d -s AndroidGodEye", adbPath);
+            mLogger.info("parsePortByLogcatShell exec: " + cmd);
             Process p = Runtime.getRuntime().exec(cmd);
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
@@ -91,16 +90,26 @@ public class OpenAction extends AnAction {
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append("\n");
             }
-            String result = String.valueOf(sb);
-            if (result != null && !result.equals("")) {
-                result = result.substring(0, result.lastIndexOf("\n"));
+            String logcat = String.valueOf(sb);
+            mLogger.info("parsePortByLogcatShell find logcat of tag AndroidGodEye: " + logcat);
+            if (logcat != null && !logcat.equals("")) {
+                List<String> list = new ArrayList<>();
+                Pattern pattern = Pattern.compile("AndroidGodEye monitor is running at port \\[(.*)]");
+                Matcher m = pattern.matcher(logcat);
+                while (m.find()) {
+                    list.add(m.group(1));
+                }
+                if (!list.isEmpty()) {
+                    mLogger.info("parsePortByLogcatShell find port list: " + String.valueOf(list));
+                    return list.get(list.size() - 1);
+                }
             }
             p.waitFor();
             reader.close();
             p.destroy();
-            return result;
+            return "";
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            mLogger.warn("parsePortByLogcatShell error: " + String.valueOf(e));
             return "";
         }
     }
