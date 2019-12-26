@@ -2,13 +2,14 @@ package cn.hikyson.android.godeye.sample;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.fragment.app.Fragment;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -40,7 +41,8 @@ public class ConsumeFragment extends Fragment {
         view.findViewById(R.id.fragment_consume_start_debug_monitor).setOnClickListener(v -> {
             GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl());
             GodEyeMonitor.setClassPrefixOfAppProcess(Collections.singletonList("cn.hikyson.android.godeye.sample"));
-            GodEyeMonitor.work(ConsumeFragment.this.getActivity(), 5390);
+            // TODO KYSON IMPL 修改为默认的
+            GodEyeMonitor.work(ConsumeFragment.this.getActivity(), 5377);
         });
         view.findViewById(R.id.fragment_consume_stop_debug_monitor).setOnClickListener(v -> {
             GodEyeMonitor.shutDown();

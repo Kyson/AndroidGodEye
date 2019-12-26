@@ -29,7 +29,6 @@ public class OpenAction extends AnAction {
     private Logger mLogger = Logger.getInstance(OpenAction.class);
     private static final String PORT = "5390";
     private static final String KEY_PORT = "KEY_PORT";
-    private static final String MONITOR_LOGCAT = "AndroidGodEye monitor is running at port";
 
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {

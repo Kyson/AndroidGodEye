@@ -1,5 +1,7 @@
 #! /bin/sh
 
+echo "Make sure you have connected device with usb, you can exec <adb devices> to do it."
+
 port_running=`adb logcat -d | grep 'AndroidGodEye monitor is running at port' | tail -1 | cut -d '[' -f2|cut -d ']' -f1`
 
 if  [[ ! -n "$port_running" ]] ;then
