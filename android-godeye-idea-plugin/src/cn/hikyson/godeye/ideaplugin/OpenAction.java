@@ -7,12 +7,13 @@ import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ui.UIUtil;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.http.util.TextUtils;
 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +35,7 @@ public class OpenAction extends AnAction {
     private Logger mLogger = Logger.getInstance(OpenAction.class);
     private static final String PORT = "5390";
     private static final String KEY_PORT = "KEY_PORT";
+    private ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
 
     @Override
     public void actionPerformed(AnActionEvent anActionEvent) {
@@ -46,9 +49,9 @@ public class OpenAction extends AnAction {
             mLogger.info("Current os name is " + SystemUtils.OS_NAME);
             String adbPath = String.format("%s/platform-tools/adb", path);
             mLogger.info("ADB path is " + adbPath);
-            String portRunning = parsePortByLogcat(adbPath);
-            mLogger.info("Parse AndroidGodEye port is running at " + portRunning);
-            String inputPort = askForPort(project, portRunning, getSavedPort(project));
+            String parsedPort = parsePortByLogcatWithTimeout(project, adbPath);
+            mLogger.info("Parse AndroidGodEye port is running at " + parsedPort);
+            String inputPort = askForPort(project, parsedPort, getSavedPort(project));
             if (inputPort == null) {
                 mLogger.warn("inputPort == null");
                 return;
@@ -67,7 +70,8 @@ public class OpenAction extends AnAction {
             Runtime.getRuntime().exec(commandOpenUrl);
             Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Success", String.format("http://localhost:%s/index.html", inputPort), NotificationType.INFORMATION));
         } catch (Throwable e) {
-            Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Failed", e.getLocalizedMessage(), NotificationType.ERROR));
+            mLogger.warn(e);
+            Notifications.Bus.notify(new Notification("AndroidGodEye", "Open AndroidGodEye Failed", String.valueOf(e), NotificationType.ERROR));
         }
     }
 
@@ -79,11 +83,42 @@ public class OpenAction extends AnAction {
         PropertiesComponent.getInstance(project).setValue(KEY_PORT, port);
     }
 
-    private String parsePortByLogcat(String adbPath) {
+    private String parsePortByLogcatWithTimeout(Project project, String adbPath) {
+        final String[] parsedPort = new String[1];
+        ProgressManager.getInstance().
+                runProcessWithProgressSynchronously(new Runnable() {
+                    public void run() {
+                        ProgressIndicator progressIndicator = ProgressManager.getInstance().getProgressIndicator();
+                        progressIndicator.setIndeterminate(false);
+                        progressIndicator.setFraction(0.3);
+                        mLogger.info("parsePortByLogcatWithTimeout start parsing");
+                        Future<String> result = mExecutorService.submit(new Callable<String>() {
+                            @Override
+                            public String call() throws Exception {
+                                return parsePortByLogcat(adbPath, progressIndicator);
+                            }
+                        });
+                        mLogger.info("parsePortByLogcatWithTimeout wait parsing");
+                        try {
+                            parsedPort[0] = result.get(5, TimeUnit.SECONDS);
+                            mLogger.info("parsePortByLogcatWithTimeout wait end,get parsed port:" + parsedPort[0]);
+                        } catch (Throwable e) {
+                            e.printStackTrace();
+                            mLogger.info("parsePortByLogcatWithTimeout wait end, timeout.");
+                        }
+                        progressIndicator.setFraction(1.0);
+                    }
+                }, "Parsing Port, Wait For 5 Seconds...", true, project);
+        mLogger.info("parsePortByLogcatWithTimeout return");
+        return parsedPort[0];
+    }
+
+    private String parsePortByLogcat(String adbPath, ProgressIndicator progressIndicator) {
         try {
             String cmd = String.format("%s logcat -d -s AndroidGodEye", adbPath);
-            mLogger.info("parsePortByLogcatShell exec: " + cmd);
+            mLogger.info("parsePortByLogcat exec: " + cmd);
             Process p = Runtime.getRuntime().exec(cmd);
+            progressIndicator.setFraction(0.6);
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             StringBuilder sb = new StringBuilder();
@@ -91,7 +126,8 @@ public class OpenAction extends AnAction {
                 sb.append(line).append("\n");
             }
             String logcat = String.valueOf(sb);
-            mLogger.info("parsePortByLogcatShell find logcat of tag AndroidGodEye: " + logcat);
+            mLogger.info("parsePortByLogcat find logcat of tag AndroidGodEye: " + logcat);
+            progressIndicator.setFraction(0.8);
             if (logcat != null && !logcat.equals("")) {
                 List<String> list = new ArrayList<>();
                 Pattern pattern = Pattern.compile("AndroidGodEye monitor is running at port \\[(.*)]");
@@ -100,7 +136,8 @@ public class OpenAction extends AnAction {
                     list.add(m.group(1));
                 }
                 if (!list.isEmpty()) {
-                    mLogger.info("parsePortByLogcatShell find port list: " + String.valueOf(list));
+                    mLogger.info("parsePortByLogcat find port list: " + String.valueOf(list));
+                    progressIndicator.setFraction(0.9);
                     return list.get(list.size() - 1);
                 }
             }
@@ -109,7 +146,8 @@ public class OpenAction extends AnAction {
             p.destroy();
             return "";
         } catch (IOException | InterruptedException e) {
-            mLogger.warn("parsePortByLogcatShell error: " + String.valueOf(e));
+            mLogger.warn("parsePortByLogcat error: " + String.valueOf(e));
+            progressIndicator.setFraction(0.9);
             return "";
         }
     }
