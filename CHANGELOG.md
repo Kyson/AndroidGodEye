@@ -11,6 +11,17 @@ Fixed for any bug fixes.
 Security in case of vulnerabilities.
 ```
 
+## 3.1.10
+
+### Changed
+
+- Android Studio plugin and shell/bat script of AndroidGodEye updated and can auto identify ports
+
+### Fixed
+
+- Long text of MethodCanary's method tree display not complete
+- Main thread color of MethodCanary should be black
+
 ## 3.1.9
 
 ### Fixed
