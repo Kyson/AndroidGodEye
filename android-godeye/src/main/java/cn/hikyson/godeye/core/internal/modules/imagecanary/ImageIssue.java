@@ -9,7 +9,7 @@ public class ImageIssue implements Serializable {
 
     @Keep
     public enum IssueType implements Serializable {
-        BITMAP_QUALITY_TOO_HIGH, BITMAP_QUALITY_TOO_LOW
+        BITMAP_QUALITY_TOO_HIGH, BITMAP_QUALITY_TOO_LOW, INVISIBLE_BUT_MEMORY_OCCUPIED, NONE
     }
 
     public long timestamp;
@@ -22,6 +22,22 @@ public class ImageIssue implements Serializable {
     public int imageViewHeight;
     public String imageSrcBase64;
     public IssueType issueType;
+
+    public ImageIssue() {
+    }
+
+    public ImageIssue(ImageIssue imageIssue) {
+        this.timestamp = imageIssue.timestamp;
+        this.activityClassName = imageIssue.activityClassName;
+        this.activityHashCode = imageIssue.activityHashCode;
+        this.imageViewHashCode = imageIssue.imageViewHashCode;
+        this.bitmapWidth = imageIssue.bitmapWidth;
+        this.bitmapHeight = imageIssue.bitmapHeight;
+        this.imageViewWidth = imageIssue.imageViewWidth;
+        this.imageViewHeight = imageIssue.imageViewHeight;
+        this.imageSrcBase64 = imageIssue.imageSrcBase64;
+        this.issueType = imageIssue.issueType;
+    }
 
     @Override
     public String toString() {
@@ -49,22 +65,15 @@ public class ImageIssue implements Serializable {
         if (imageViewHashCode != that.imageViewHashCode) return false;
         if (bitmapWidth != that.bitmapWidth) return false;
         if (bitmapHeight != that.bitmapHeight) return false;
-        if (imageViewWidth != that.imageViewWidth) return false;
-        if (imageViewHeight != that.imageViewHeight) return false;
-        if (activityClassName != null ? !activityClassName.equals(that.activityClassName) : that.activityClassName != null)
-            return false;
         return issueType == that.issueType;
     }
 
     @Override
     public int hashCode() {
-        int result = activityClassName != null ? activityClassName.hashCode() : 0;
-        result = 31 * result + activityHashCode;
+        int result = activityHashCode;
         result = 31 * result + imageViewHashCode;
         result = 31 * result + bitmapWidth;
         result = 31 * result + bitmapHeight;
-        result = 31 * result + imageViewWidth;
-        result = 31 * result + imageViewHeight;
         result = 31 * result + (issueType != null ? issueType.hashCode() : 0);
         return result;
     }

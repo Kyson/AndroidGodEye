@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
@@ -21,13 +22,10 @@ import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.core.utils.ViewUtil;
 
 class ImageCanaryInternal {
-
-    //    private final List<BitmapInfoAnalyzer> mAnalyzerList;
     private final BitmapInfoAnalyzer mBitmapInfoAnalyzer;
     private final ImageCanaryConfigProvider mImageCanaryConfigProvider;
 
     ImageCanaryInternal(ImageCanaryConfigProvider imageCanaryConfigProvider) {
-//        this.mAnalyzerList = imageCanaryConfigProvider.getExtraBitmapInfoAnalyzers();
         this.mBitmapInfoAnalyzer = new DefaultBitmapInfoAnalyzer();
         this.mImageCanaryConfigProvider = imageCanaryConfigProvider;
     }
@@ -107,20 +105,19 @@ class ImageCanaryInternal {
                     imageIssue.activityClassName = activity.getClass().getName();
                     imageIssue.activityHashCode = activity.hashCode();
                     imageIssue.timestamp = System.currentTimeMillis();
-                    if (mImageCanaryConfigProvider.isBitmapQualityTooHigh(bitmapInfo.bitmapWidth, bitmapInfo.bitmapHeight, view.getWidth(), view.getHeight())) {
+                    if (view.getVisibility() != View.VISIBLE) {
+                        imageIssue.issueType = ImageIssue.IssueType.INVISIBLE_BUT_MEMORY_OCCUPIED;
+                    } else if (mImageCanaryConfigProvider.isBitmapQualityTooHigh(bitmapInfo.bitmapWidth, bitmapInfo.bitmapHeight, view.getWidth(), view.getHeight())) {
                         imageIssue.issueType = ImageIssue.IssueType.BITMAP_QUALITY_TOO_HIGH;
-                        if (!imageIssues.contains(imageIssue)) {
-                            imageIssue.imageSrcBase64 = ImageUtil.convertToBase64(bitmapInfo.bitmap.get(), 200, 200);
-                            imageIssues.add(imageIssue);
-                            imageCanaryEngine.produce(imageIssue);
-                        }
                     } else if (mImageCanaryConfigProvider.isBitmapQualityTooLow(bitmapInfo.bitmapWidth, bitmapInfo.bitmapHeight, view.getWidth(), view.getHeight())) {
                         imageIssue.issueType = ImageIssue.IssueType.BITMAP_QUALITY_TOO_LOW;
-                        if (!imageIssues.contains(imageIssue)) {
-                            imageIssue.imageSrcBase64 = ImageUtil.convertToBase64(bitmapInfo.bitmap.get(), 200, 200);
-                            imageIssues.add(imageIssue);
-                            imageCanaryEngine.produce(imageIssue);
-                        }
+                    } else {
+                        imageIssue.issueType = ImageIssue.IssueType.NONE;
+                    }
+                    if (imageIssue.issueType != ImageIssue.IssueType.NONE && !imageIssues.contains(imageIssue)) {
+                        imageIssues.add(new ImageIssue(imageIssue));
+                        imageIssue.imageSrcBase64 = ImageUtil.convertToBase64(bitmapInfo.bitmap.get(), 200, 200);
+                        imageCanaryEngine.produce(imageIssue);
                     }
                 }
             }

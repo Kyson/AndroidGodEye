@@ -17,6 +17,12 @@
             android:layout_height="wrap_content"
             android:text="Change Layout" />
 
+        <Button
+            android:id="@+id/activity_image_change_visibility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Change Visibility" />
+
         <ImageView
             android:id="@+id/activity_image_iv2"
             android:layout_width="30dp"
@@ -28,9 +34,11 @@
             android:tint="#55ff0000" />
 
         <ImageView
+            android:id="@+id/activity_image_iv3"
             android:layout_width="50dp"
             android:layout_height="25dp"
             android:scaleType="center"
+            android:visibility="gone"
             android:src="@drawable/image_test1" />
 
         <ImageView
