@@ -11,6 +11,12 @@ Fixed for any bug fixes.
 Security in case of vulnerabilities.
 ```
 
+## 3.1.11
+
+### Changed
+
+- ImageCanary support "ImageView is visible or not"
+
 ## 3.1.10
 
 ### Changed
