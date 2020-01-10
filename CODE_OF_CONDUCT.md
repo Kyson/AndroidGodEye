@@ -14,7 +14,8 @@ Model数据类，包含Config类型
 1. update CHANGELOG.md
 2. 修改gradle.properties文件中的版本号
 3. 改动合并到master，并打版本号命名的tag
-4. PUSH即可，查看编译状态：[AndroidGodEye-travis-ci](https://travis-ci.org/Kyson/AndroidGodEye/builds)
+4. PUSH，查看编译状态：[AndroidGodEye-travis-ci](https://travis-ci.org/Kyson/AndroidGodEye/builds)
+5. 修改README.md和[wiki](https://github.com/Kyson/AndroidGodEye/wiki)
 
 ## Ignore
 
