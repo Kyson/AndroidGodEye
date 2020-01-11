@@ -35,26 +35,26 @@ AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存�
 
 ## 支持功能
 
-```java
-public static final String CPU = "CPU";                         // 手机和App Cpu检测
-public static final String BATTERY = "BATTERY";                 // 电池检测
-public static final String FPS = "FPS";                         // 帧率检测
-public static final String LEAK = "LEAK";                       // 内存泄漏检测
-public static final String HEAP = "HEAP";                       // 运行堆内存占用检测
-public static final String PSS = "PSS";                         // 实际物理共享内存占用检测
-public static final String RAM = "RAM";                         // 手机内存
-public static final String NETWORK = "NETWORK";                 // 网络请求检测
-public static final String SM = "SM";                           // 卡顿检测
-public static final String STARTUP = "STARTUP";                 // 启动检测
-public static final String TRAFFIC = "TRAFFIC";                 // 手机和App流量检测
-public static final String CRASH = "CRASH";                     // Java、Native崩溃/ANR
-public static final String THREAD = "THREAD";                   // App线程即堆栈Dump检测
-public static final String PAGELOAD = "PAGELOAD";               // 页面加载和生命周期检测
-public static final String METHOD_CANARY = "METHOD_CANARY";     // 方法耗时检测
-public static final String APP_SIZE = "APP_SIZE";               // App大小，包括apk、存储和缓存
-public static final String VIEW_CANARY = "VIEW_CANARY";         // 视图层级、过度绘制检测
-public static final String IMAGE_CANARY = "IMAGE_CANARY";       // 图片不合理内存占用检测
-```
+|模块|描述|
+|---|----|
+|CPU|手机和App Cpu检测|
+|BATTERY|电池检测|
+|FPS|帧率检测|
+|LEAK|内存泄漏检测|
+|HEAP|运行堆内存占用检测|
+|PSS|实际物理共享内存占用检测|
+|RAM|手机内存|
+|NETWORK|网络请求检测|
+|SM|卡顿检测|
+|STARTUP|启动检测|
+|TRAFFIC|手机和App流量检测|
+|CRASH|Java、Native崩溃/ANR|
+|THREAD|App线程即堆栈Dump检测|
+|PAGELOAD|页面加载和生命周期检测|
+|METHOD_CANARY|方法耗时检测|
+|APP_SIZE|App大小，包括apk、存储和缓存|
+|VIEW_CANARY|视图层级、过度绘制检测|
+|IMAGE_CANARY|图片不合理内存占用检测|
 
 ## 使用
 
