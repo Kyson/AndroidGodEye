@@ -56,7 +56,7 @@ AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存�
 |VIEW_CANARY|视图层级、过度绘制检测|
 |IMAGE_CANARY|图片不合理内存占用检测|
 
-## 使用
+## 开始使用
 
 [快速开始Wiki](https://github.com/Kyson/AndroidGodEye/wiki/0x00-QuickStart_zh)
 
