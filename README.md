@@ -36,24 +36,24 @@ AndroidGodEye prodive several modules, such as cpu, heap, block, leak memory and
 ## Features
 
 ```java
-public static final String CPU = "CPU";                         // cpu info of device and app
-public static final String BATTERY = "BATTERY";                 // battery info
-public static final String FPS = "FPS";                         // fps info
-public static final String LEAK = "LEAK";                       // detect memory leak
-public static final String HEAP = "HEAP";                       // heap memory
-public static final String PSS = "PSS";                         // pss
-public static final String RAM = "RAM";                         // ram
-public static final String NETWORK = "NETWORK";                 // network info
-public static final String SM = "SM";                           // detect jam
-public static final String STARTUP = "STARTUP";                 // startup metric
-public static final String TRAFFIC = "TRAFFIC";                 // traffic of device and app
-public static final String CRASH = "CRASH";                     // detect java、native crash and ANR
-public static final String THREAD = "THREAD";                   // thread dump of app
-public static final String PAGELOAD = "PAGELOAD";               // page(Activity and Fragment) lifecycle and load time metric
-public static final String METHOD_CANARY = "METHOD_CANARY";     // methods time cost metric
-public static final String APP_SIZE = "APP_SIZE";               // App size of apk code、storage and cache
-public static final String VIEW_CANARY = "VIEW_CANARY";         // detect complex layout hierarchy and overdraw
-public static final String IMAGE_CANARY = "IMAGE_CANARY";       // detect unreasonable memory use of image
+CPU				    // cpu info of device and app
+BATTERY				// battery info
+FPS				    // fps info
+LEAK				  // detect memory leak
+HEAP				  // heap memory
+PSS				    // pss
+RAM				    // ram
+NETWORK				// network info
+SM				    // detect jam
+STARTUP				// startup metric
+TRAFFIC				// traffic of device and app
+CRASH				  // detect java、native crash and ANR
+THREAD				// thread dump of app
+PAGELOAD			// page(Activity and Fragment) lifecycle and load time metric
+METHOD_CANARY	// methods time cost metric
+APP_SIZE			// App size of apk code、storage and cache
+VIEW_CANARY		// detect complex layout hierarchy and overdraw
+IMAGE_CANARY	// detect unreasonable memory use of image
 ```
 
 ## Usage
