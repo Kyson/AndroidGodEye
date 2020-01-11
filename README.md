@@ -35,26 +35,26 @@ AndroidGodEye prodive several modules, such as cpu, heap, block, leak memory and
 
 ## Features
 
-```java
-CPU				    // cpu info of device and app
-BATTERY				// battery info
-FPS				    // fps info
-LEAK				  // detect memory leak
-HEAP				  // heap memory
-PSS				    // pss
-RAM				    // ram
-NETWORK				// network info
-SM				    // detect jam
-STARTUP				// startup metric
-TRAFFIC				// traffic of device and app
-CRASH				  // detect java、native crash and ANR
-THREAD				// thread dump of app
-PAGELOAD			// page(Activity and Fragment) lifecycle and load time metric
-METHOD_CANARY	// methods time cost metric
-APP_SIZE			// App size of apk code、storage and cache
-VIEW_CANARY		// detect complex layout hierarchy and overdraw
-IMAGE_CANARY	// detect unreasonable memory use of image
-```
+|Module|Desc|
+|-|-|
+|CPU|cpu info of device and app|
+|BATTERY|battery info|
+|FPS|fps info|
+|LEAK|detect memory leak|
+|HEAP|heap memory|
+|PSS|pss|
+|RAM|ram|
+|NETWORK|network info|
+|SM|detect jam|
+|STARTUP|startup metric|
+|TRAFFIC|traffic of device and app|
+|CRASH|detect java、native crash and ANR|
+|THREAD|thread dump of app|
+|PAGELOAD|page(Activity and Fragment) lifecycle and load time metric|
+|METHOD_CANARY|methods time cost metric|
+|APP_SIZE|App size of apk code、storage and cache|
+|VIEW_CANARY|detect complex layout hierarchy and overdraw|
+|IMAGE_CANARY|detect unreasonable memory use of image|
 
 ## Usage
 
