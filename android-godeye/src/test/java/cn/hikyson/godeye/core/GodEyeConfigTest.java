@@ -72,7 +72,7 @@ public class GodEyeConfigTest {
     public void fromInputStream() {
         InputStream is = null;
         try {
-            is = getClass().getResourceAsStream("testFile.txt");
+            is = getClass().getClassLoader().getResourceAsStream("install.config");
             GodEyeConfig config = GodEyeConfig.fromInputStream(is);
             assertEquals(0, config.getAppSizeConfig().delayMillis());
             assertEquals(JsonUtil.toJson(new GodEyeConfig.BatteryConfig()), JsonUtil.toJson(config.getBatteryConfig()));
@@ -98,7 +98,7 @@ public class GodEyeConfigTest {
             assertEquals(3000, config.getThreadConfig().intervalMillis());
             assertEquals("cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter", config.getThreadConfig().threadFilter());
             assertEquals(2000, config.getTrafficConfig().intervalMillis());
-            assertEquals(2000, config.getTrafficConfig().sampleMillis());
+            assertEquals(1000, config.getTrafficConfig().sampleMillis());
             assertEquals(10, config.getViewCanaryConfig().maxDepth());
         } finally {
             IoUtil.closeSilently(is);
@@ -107,5 +107,7 @@ public class GodEyeConfigTest {
 
     @Test
     public void fromAssets() {
+        when(model.nativeMethod()).thenReturn(true);
+        GodEyeConfig config = GodEyeConfig.fromAssets("");
     }
 }
