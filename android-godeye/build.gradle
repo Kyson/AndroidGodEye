@@ -22,10 +22,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     testOptions {
         unitTests {
             includeAndroidResources = true
+            all {
+                systemProperty 'robolectric.dependency.repo.url', 'http://maven.aliyun.com/nexus/content/groups/public/'
+                systemProperty 'robolectric.dependency.repo.id', 'alimaven'
+            }
         }
     }
 }
@@ -33,7 +36,12 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation 'org.mockito:mockito-core:2.8.9'
+    testImplementation 'org.robolectric:robolectric:4.3'
+    androidTestImplementation 'androidx.test:core:1.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'com.google.code.gson:gson:2.8.5'

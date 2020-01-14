@@ -29,6 +29,7 @@ install:
 
 script:
     - ./gradlew clean build
+    - ./gradlew test
 
 notifications:
     email:

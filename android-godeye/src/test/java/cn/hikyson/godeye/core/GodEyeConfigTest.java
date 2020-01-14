@@ -1,9 +1,22 @@
 package cn.hikyson.godeye.core;
 
+import android.app.Application;
+import android.content.res.AssetManager;
+import android.os.Build;
+
+import androidx.test.core.app.ApplicationProvider;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import cn.hikyson.godeye.core.utils.IoUtil;
@@ -11,7 +24,10 @@ import cn.hikyson.godeye.core.utils.JsonUtil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP, application = RoboTestApplication.class)
 public class GodEyeConfigTest {
 
     @Before
@@ -74,32 +90,7 @@ public class GodEyeConfigTest {
         try {
             is = getClass().getClassLoader().getResourceAsStream("install.config");
             GodEyeConfig config = GodEyeConfig.fromInputStream(is);
-            assertEquals(0, config.getAppSizeConfig().delayMillis());
-            assertEquals(JsonUtil.toJson(new GodEyeConfig.BatteryConfig()), JsonUtil.toJson(config.getBatteryConfig()));
-            assertEquals(2000, config.getCpuConfig().intervalMillis());
-            assertEquals(false, config.getCrashConfig().immediate());
-            assertEquals(2000, config.getFpsConfig().intervalMillis());
-            assertEquals(2000, config.getHeapConfig().intervalMillis());
-            assertEquals("cn.hikyson.godeye.core.internal.modules.imagecanary.DefaultImageCanaryConfigProvider", config.getImageCanaryConfig().getImageCanaryConfigProvider());
-            assertEquals(true, config.getLeakConfig().debug());
-            assertEquals(true, config.getLeakConfig().debugNotification());
-            assertEquals("cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider", config.getLeakConfig().leakRefInfoProvider());
-            assertEquals(10, config.getMethodCanaryConfig().lowCostMethodThresholdMillis());
-            assertEquals(300, config.getMethodCanaryConfig().maxMethodCountSingleThreadByCost());
-            assertEquals(JsonUtil.toJson(new GodEyeConfig.NetworkConfig()), JsonUtil.toJson(config.getNetworkConfig()));
-            assertEquals("cn.hikyson.godeye.core.internal.modules.pageload.DefaultPageInfoProvider", config.getPageloadConfig().pageInfoProvider());
-            assertEquals(2000, config.getPssConfig().intervalMillis());
-            assertEquals(2000, config.getRamConfig().intervalMillis());
-            assertEquals(1000, config.getSmConfig().dumpInterval());
-            assertEquals(500, config.getSmConfig().longBlockThreshold());
-            assertEquals(500, config.getSmConfig().shortBlockThreshold());
-            assertEquals(true, config.getSmConfig().debugNotification());
-            assertEquals(JsonUtil.toJson(new GodEyeConfig.StartupConfig()), JsonUtil.toJson(config.getStartupConfig()));
-            assertEquals(3000, config.getThreadConfig().intervalMillis());
-            assertEquals("cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter", config.getThreadConfig().threadFilter());
-            assertEquals(2000, config.getTrafficConfig().intervalMillis());
-            assertEquals(1000, config.getTrafficConfig().sampleMillis());
-            assertEquals(10, config.getViewCanaryConfig().maxDepth());
+            assertConfig(config);
         } finally {
             IoUtil.closeSilently(is);
         }
@@ -107,7 +98,53 @@ public class GodEyeConfigTest {
 
     @Test
     public void fromAssets() {
-        when(model.nativeMethod()).thenReturn(true);
-        GodEyeConfig config = GodEyeConfig.fromAssets("");
+        Application originApplication = ApplicationProvider.getApplicationContext();
+        Application application = Mockito.spy(originApplication);
+        GodEye.instance().init(application);
+        AssetManager assetManager = Mockito.spy(application.getAssets());
+        Mockito.doReturn(assetManager).when(application).getAssets();
+        try {
+            Mockito.doAnswer(new Answer() {
+                @Override
+                public Object answer(InvocationOnMock invocation) throws Throwable {
+                    Object[] args = invocation.getArguments();
+                    Object object = this.getClass().getClassLoader().getResourceAsStream(String.valueOf(args[0]));
+                    return object;
+                }
+            }).when(assetManager).open(Mockito.anyString());
+        } catch (IOException e) {
+            fail();
+        }
+        GodEyeConfig config = GodEyeConfig.fromAssets("install.config");
+        assertConfig(config);
+    }
+
+    private void assertConfig(GodEyeConfig config) {
+        assertEquals(0, config.getAppSizeConfig().delayMillis());
+        assertEquals(JsonUtil.toJson(new GodEyeConfig.BatteryConfig()), JsonUtil.toJson(config.getBatteryConfig()));
+        assertEquals(2000, config.getCpuConfig().intervalMillis());
+        assertEquals(false, config.getCrashConfig().immediate());
+        assertEquals(2000, config.getFpsConfig().intervalMillis());
+        assertEquals(2000, config.getHeapConfig().intervalMillis());
+        assertEquals("cn.hikyson.godeye.core.internal.modules.imagecanary.DefaultImageCanaryConfigProvider", config.getImageCanaryConfig().getImageCanaryConfigProvider());
+        assertEquals(true, config.getLeakConfig().debug());
+        assertEquals(true, config.getLeakConfig().debugNotification());
+        assertEquals("cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider", config.getLeakConfig().leakRefInfoProvider());
+        assertEquals(10, config.getMethodCanaryConfig().lowCostMethodThresholdMillis());
+        assertEquals(300, config.getMethodCanaryConfig().maxMethodCountSingleThreadByCost());
+        assertEquals(JsonUtil.toJson(new GodEyeConfig.NetworkConfig()), JsonUtil.toJson(config.getNetworkConfig()));
+        assertEquals("cn.hikyson.godeye.core.internal.modules.pageload.DefaultPageInfoProvider", config.getPageloadConfig().pageInfoProvider());
+        assertEquals(2000, config.getPssConfig().intervalMillis());
+        assertEquals(2000, config.getRamConfig().intervalMillis());
+        assertEquals(1000, config.getSmConfig().dumpInterval());
+        assertEquals(500, config.getSmConfig().longBlockThreshold());
+        assertEquals(500, config.getSmConfig().shortBlockThreshold());
+        assertEquals(true, config.getSmConfig().debugNotification());
+        assertEquals(JsonUtil.toJson(new GodEyeConfig.StartupConfig()), JsonUtil.toJson(config.getStartupConfig()));
+        assertEquals(3000, config.getThreadConfig().intervalMillis());
+        assertEquals("cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter", config.getThreadConfig().threadFilter());
+        assertEquals(2000, config.getTrafficConfig().intervalMillis());
+        assertEquals(1000, config.getTrafficConfig().sampleMillis());
+        assertEquals(10, config.getViewCanaryConfig().maxDepth());
     }
 }
