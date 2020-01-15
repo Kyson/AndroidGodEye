@@ -1,10 +1,19 @@
 apply plugin: 'com.novoda.bintray-release'
 
+String upload_version_name = VERSION_NAME
+String TAG = System.getenv("TRAVIS_TAG")
+if (TAG != null && "" != TAG) {
+    upload_version_name = TAG
+    println "[JCENTER_UPLOAD] Version name of project " + project.getName() + " is [" + upload_version_name + "] by git tag."
+} else {
+    println "[JCENTER_UPLOAD] Version name of project " + project.getName() + " is [" + upload_version_name + "] by gradle.properties."
+}
+
 publish {
     userOrg = POM_DEVELOPER_ID
     groupId = GROUP
     artifactId = POM_ARTIFACT_ID
-    publishVersion = VERSION_NAME
+    publishVersion = upload_version_name
     desc = POM_DESCRIPTION
     website = POM_URL
 }
