@@ -25,10 +25,7 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
-            all {
-                systemProperty 'robolectric.dependency.repo.url', 'http://maven.aliyun.com/nexus/content/groups/public/'
-                systemProperty 'robolectric.dependency.repo.id', 'alimaven'
-            }
+            returnDefaultValues = true
         }
     }
 }
