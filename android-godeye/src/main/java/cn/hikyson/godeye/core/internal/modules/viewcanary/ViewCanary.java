@@ -217,9 +217,6 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
             if (child == null || child.getVisibility() != View.VISIBLE) {
                 continue;
             }
-
-
-
             allViews.add(child);
             Integer integer = map.get((View) child.getParent());
             if (integer == null) {

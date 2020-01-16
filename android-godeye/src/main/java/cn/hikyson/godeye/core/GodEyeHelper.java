@@ -88,6 +88,7 @@ public class GodEyeHelper {
 
     /**
      * inspect view of top activity
+     *
      * @throws UninstallException
      */
     public static void inspectView() throws UninstallException {
@@ -116,6 +117,7 @@ public class GodEyeHelper {
         final MethodCanary methodCanary = GodEye.instance().getModule(GodEye.ModuleName.METHOD_CANARY);
         methodCanary.stopMonitor(tag);
     }
+
 
     /**
      * method canary is recording
