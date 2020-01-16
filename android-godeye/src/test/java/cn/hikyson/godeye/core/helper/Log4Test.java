@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.core;
+package cn.hikyson.godeye.core.helper;
 
 public class Log4Test {
     public static void d(String log) {

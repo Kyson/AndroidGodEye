@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cn.hikyson.android.godeye.core">
+
+    <application
+        android:name="cn.hikyson.godeye.core.helper.RoboTestApplication"
+        android:allowBackup="true"
+        android:label="test"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat">
+        <activity
+            android:name="cn.hikyson.godeye.core.helper.Test1Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

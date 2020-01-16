@@ -19,6 +19,7 @@ import org.robolectric.annotation.Config;
 import java.io.IOException;
 import java.io.InputStream;
 
+import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import cn.hikyson.godeye.core.utils.IoUtil;
 import cn.hikyson.godeye.core.utils.JsonUtil;
 
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE, sdk = Build.VERSION_CODES.LOLLIPOP, application = RoboTestApplication.class)
+@Config(sdk = Build.VERSION_CODES.LOLLIPOP, application = RoboTestApplication.class)
 public class GodEyeConfigTest {
 
     @Before
