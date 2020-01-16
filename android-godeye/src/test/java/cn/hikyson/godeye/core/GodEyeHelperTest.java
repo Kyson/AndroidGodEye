@@ -16,12 +16,18 @@ import org.robolectric.Shadows;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import cn.hikyson.godeye.core.helper.Test1Activity;
+import cn.hikyson.godeye.core.helper.Test1Fragment;
+import cn.hikyson.godeye.core.helper.Test2Activity;
+import cn.hikyson.godeye.core.helper.TestPageEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.ActivityLifecycleEvent;
+import cn.hikyson.godeye.core.internal.modules.pageload.FragmentLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageLifecycleEventInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
@@ -113,99 +119,114 @@ public class GodEyeHelperTest {
     }
 
     @Test
-    public void onPageLoadedSuccess() {
+    public void onPageLoadedSuccessForActivity() {
         try {
             GodEye.instance().uninstall();
             GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new GodEyeConfig.PageloadConfig()).build());
             ActivityController<Test1Activity> activityController = Robolectric.buildActivity(Test1Activity.class).create().start().resume();
+            Test1Activity activity = activityController.get();
             TestObserver testObserver = GodEye.instance().<Pageload, PageLifecycleEventInfo>moduleObservable(GodEye.ModuleName.PAGELOAD).test();
-            GodEyeHelper.onPageLoaded(activityController.get());
+            GodEyeHelper.onPageLoaded(activity);
             activityController.pause().stop().destroy();
             Shadows.shadowOf(ThreadUtil.obtainHandler("godeye-pageload").getLooper()).getScheduler().advanceToNextPostedRunnable();
-            testObserver.assertValueAt(0, new Predicate<PageLifecycleEventInfo>() {
-                @Override
-                public boolean test(PageLifecycleEventInfo o) throws Exception {
-                    return activityController.get().hashCode() == o.pageInfo.pageHashCode
-                            && o.allEvents.size() == 1
-                            && activityController.get().hashCode() == o.currentEvent.pageInfo.pageHashCode
-                            && o.currentEvent.lifecycleEvent.equals(ActivityLifecycleEvent.ON_CREATE);
-                }
-            });
-            testObserver.assertValueAt(1, new Predicate<PageLifecycleEventInfo>() {
-                @Override
-                public boolean test(PageLifecycleEventInfo o) throws Exception {
-                    return activityController.get().hashCode() == o.pageInfo.pageHashCode
-                            && o.allEvents.size() == 2
-                            && activityController.get().hashCode() == o.currentEvent.pageInfo.pageHashCode
-                            && o.currentEvent.lifecycleEvent.equals(ActivityLifecycleEvent.ON_START);
-                }
-            });
-            testObserver.assertValueAt(2, new Predicate<PageLifecycleEventInfo>() {
-                @Override
-                public boolean test(PageLifecycleEventInfo o) throws Exception {
-                    return activityController.get().hashCode() == o.pageInfo.pageHashCode
-                            && o.allEvents.size() == 3
-                            && activityController.get().hashCode() == o.currentEvent.pageInfo.pageHashCode
-                            && o.currentEvent.lifecycleEvent.equals(ActivityLifecycleEvent.ON_DRAW);
-                }
-            });
-            testObserver.assertValueAt(3, new Predicate<PageLifecycleEventInfo>() {
-                @Override
-                public boolean test(PageLifecycleEventInfo o) throws Exception {
-                    return activityController.get().hashCode() == o.pageInfo.pageHashCode
-                            && o.allEvents.size() == 4
-                            && activityController.get().hashCode() == o.currentEvent.pageInfo.pageHashCode
-                            && o.currentEvent.lifecycleEvent.equals(ActivityLifecycleEvent.ON_RESUME);
-                }
-            });
 
-            testObserver.assertValueAt(4, new Predicate<PageLifecycleEventInfo>() {
-                @Override
-                public boolean test(PageLifecycleEventInfo o) throws Exception {
-                    return activityController.get().hashCode() == o.pageInfo.pageHashCode
-                            && o.allEvents.size() == 5
-                            && activityController.get().hashCode() == o.currentEvent.pageInfo.pageHashCode
-                            && o.currentEvent.lifecycleEvent.equals(ActivityLifecycleEvent.ON_LOAD);
-                }
-            });
-
-
-            testObserver.assertValueAt(5, new Predicate<PageLifecycleEventInfo>() {
-                @Override
-                public boolean test(PageLifecycleEventInfo o) throws Exception {
-                    return activityController.get().hashCode() == o.pageInfo.pageHashCode
-                            && o.allEvents.size() == 6
-                            && activityController.get().hashCode() == o.currentEvent.pageInfo.pageHashCode
-                            && o.currentEvent.lifecycleEvent.equals(ActivityLifecycleEvent.ON_PAUSE);
-                }
-            });
-            testObserver.assertValueAt(6, new Predicate<PageLifecycleEventInfo>() {
-                @Override
-                public boolean test(PageLifecycleEventInfo o) throws Exception {
-                    return activityController.get().hashCode() == o.pageInfo.pageHashCode
-                            && o.allEvents.size() == 7
-                            && activityController.get().hashCode() == o.currentEvent.pageInfo.pageHashCode
-                            && o.currentEvent.lifecycleEvent.equals(ActivityLifecycleEvent.ON_STOP);
-                }
-            });
-            testObserver.assertValueAt(7, new Predicate<PageLifecycleEventInfo>() {
-                @Override
-                public boolean test(PageLifecycleEventInfo o) throws Exception {
-                    return activityController.get().hashCode() == o.pageInfo.pageHashCode
-                            && o.allEvents.size() == 8
-                            && activityController.get().hashCode() == o.currentEvent.pageInfo.pageHashCode
-                            && o.currentEvent.lifecycleEvent.equals(ActivityLifecycleEvent.ON_DESTROY);
-                }
-            });
+            List<TestPageEvent> testPageEvents = new ArrayList<>();
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_CREATE, 1));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_START, 2));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_DRAW, 3));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_RESUME, 4));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_LOAD, 5));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_PAUSE, 6));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_STOP, 7));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_DESTROY, 8));
+            testObserver.assertValueCount(8);
+            for (int i = 0; i < 8; i++) {
+                int finalI = i;
+                testObserver.assertValueAt(i, new Predicate<PageLifecycleEventInfo>() {
+                    @Override
+                    public boolean test(PageLifecycleEventInfo o) throws Exception {
+                        return testPageEvents.get(finalI).pageHashCode == o.pageInfo.pageHashCode
+                                && testPageEvents.get(finalI).allEventSize == o.allEvents.size()
+                                && testPageEvents.get(finalI).lifecycleEvent.equals(o.currentEvent.lifecycleEvent);
+                    }
+                });
+            }
         } catch (UninstallException e) {
             fail();
         }
     }
 
+    /**
+     * ACTIVITYTest2Activity, pageHashCode=638030090,ON_CREATE
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_ATTACH
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_CREATE
+     * ACTIVITYTest2Activity, pageHashCode=638030090,ON_START
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_VIEW_CREATE
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_START
+     * ACTIVITYTest2Activity, pageHashCode=638030090,ON_DRAW
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_DRAW
+     * ACTIVITYTest2Activity, pageHashCode=638030090,ON_RESUME
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_RESUME
+     * ACTIVITYTest2Activity, pageHashCode=638030090,ON_LOAD
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_LOAD
+     * ACTIVITYTest2Activity, pageHashCode=638030090,ON_PAUSE
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_PAUSE
+     * ACTIVITYTest2Activity, pageHashCode=638030090,ON_STOP
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_STOP
+     * ACTIVITYTest2Activity, pageHashCode=638030090,ON_DESTROY
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_VIEW_DESTROY
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_DESTROY
+     * FRAGMENTTest1Fragment, pageHashCode=436993154,ON_DETACH
+     */
     @Test
-    public void onFragmentPageVisibilityChange() {
-        GodEye.instance().uninstall();
-        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new GodEyeConfig.PageloadConfig()).build());
+    public void onPageLoadedSuccessWithFragment() {
+        try {
+            GodEye.instance().uninstall();
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new GodEyeConfig.PageloadConfig()).build());
+            ActivityController<Test2Activity> activityController = Robolectric.buildActivity(Test2Activity.class).create().start().resume();
+            Test2Activity activity = activityController.get();
+            GodEyeHelper.onPageLoaded(activity);
+            TestObserver testObserver = GodEye.instance().<Pageload, PageLifecycleEventInfo>moduleObservable(GodEye.ModuleName.PAGELOAD).test();
+            Test1Fragment fragment = activity.getTest1Fragment();
+            GodEyeHelper.onPageLoaded(fragment);
+            activityController.pause().stop().destroy();
+            Shadows.shadowOf(ThreadUtil.obtainHandler("godeye-pageload").getLooper()).getScheduler().advanceToNextPostedRunnable();
+            List<TestPageEvent> testPageEvents = new ArrayList<>();
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_CREATE, 1));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_ATTACH, 1));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_CREATE, 2));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_START, 2));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_VIEW_CREATE, 3));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_START, 4));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_DRAW, 3));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_DRAW, 5));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_RESUME, 4));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_RESUME, 6));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_LOAD, 5));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_LOAD, 7));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_PAUSE, 6));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_PAUSE, 8));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_STOP, 7));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_STOP, 9));
+            testPageEvents.add(new TestPageEvent(activity.hashCode(), ActivityLifecycleEvent.ON_DESTROY, 8));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_VIEW_DESTROY, 10));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_DESTROY, 11));
+            testPageEvents.add(new TestPageEvent(fragment.hashCode(), FragmentLifecycleEvent.ON_DETACH, 12));
+            testObserver.assertValueCount(20);
+            for (int i = 0; i < 20; i++) {
+                int finalI = i;
+                testObserver.assertValueAt(i, new Predicate<PageLifecycleEventInfo>() {
+                    @Override
+                    public boolean test(PageLifecycleEventInfo o) throws Exception {
+                        return testPageEvents.get(finalI).pageHashCode == o.pageInfo.pageHashCode
+                                && testPageEvents.get(finalI).allEventSize == o.allEvents.size()
+                                && testPageEvents.get(finalI).lifecycleEvent.equals(o.currentEvent.lifecycleEvent);
+                    }
+                });
+            }
+        } catch (UninstallException e) {
+            fail();
+        }
     }
 
     @Test
