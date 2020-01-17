@@ -82,6 +82,7 @@ public class GodEyeHelperTest {
     @Test
     public void onPageLoadedCannotBeNull() {
         try {
+            GodEye.instance().uninstall();
             GodEyeHelper.onPageLoaded(null);
             fail();
         } catch (RuntimeException ignore) {
@@ -318,6 +319,7 @@ public class GodEyeHelperTest {
     @Test
     public void onFragmentPageVisibilityChangeWhenIllegal() {
         try {
+            GodEye.instance().uninstall();
             GodEyeHelper.onFragmentPageVisibilityChange(null, true);
             fail();
         } catch (RuntimeException ignore) {// success
@@ -329,6 +331,7 @@ public class GodEyeHelperTest {
     @Test
     public void onAppStartEndWhenNotInstalled() {
         try {
+            GodEye.instance().uninstall();
             GodEyeHelper.onAppStartEnd(null);
             fail();
         } catch (UninstallException ignore) {
@@ -338,6 +341,7 @@ public class GodEyeHelperTest {
     @Test
     public void onAppStartEndWhenNull() {
         try {
+            GodEye.instance().uninstall();
             GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new GodEyeConfig.StartupConfig()).build());
             GodEyeHelper.onAppStartEnd(null);
         } catch (NullPointerException ignore) {
@@ -350,6 +354,7 @@ public class GodEyeHelperTest {
     @Test
     public void onAppStartEndSuccess() {
         try {
+            GodEye.instance().uninstall();
             GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new GodEyeConfig.StartupConfig()).build());
             StartupInfo startupInfo = new StartupInfo(StartupInfo.StartUpType.COLD, 3000);
             GodEyeHelper.onAppStartEnd(startupInfo);
@@ -369,6 +374,7 @@ public class GodEyeHelperTest {
     @Test
     public void onNetworkEndWhenNotInstalled() {
         try {
+            GodEye.instance().uninstall();
             GodEyeHelper.onNetworkEnd(null);
             fail();
         } catch (UninstallException ignore) {
@@ -378,6 +384,7 @@ public class GodEyeHelperTest {
     @Test
     public void onNetworkEndWhenNull() {
         try {
+            GodEye.instance().uninstall();
             GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withNetworkConfig(new GodEyeConfig.NetworkConfig()).build());
             GodEyeHelper.onNetworkEnd(null);
         } catch (NullPointerException ignore) {
@@ -390,6 +397,7 @@ public class GodEyeHelperTest {
     @Test
     public void onNetworkEndSuccess() {
         try {
+            GodEye.instance().uninstall();
             GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withNetworkConfig(new GodEyeConfig.NetworkConfig()).build());
             NetworkInfo<NetworkContent> networkInfo = new NetworkInfo<>();
             networkInfo.isSuccessful = true;
@@ -410,6 +418,7 @@ public class GodEyeHelperTest {
     @Test
     public void inspectViewWhenNotInstalled() {
         try {
+            GodEye.instance().uninstall();
             GodEyeHelper.inspectView();
             fail();
         } catch (UninstallException ignore) {
@@ -419,6 +428,7 @@ public class GodEyeHelperTest {
     @Test
     public void inspectViewSuccess() {
         try {
+            GodEye.instance().uninstall();
             GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withViewCanaryConfig(new GodEyeConfig.ViewCanaryConfig()).build());
             GodEyeHelper.inspectView();
         } catch (UninstallException e) {
@@ -429,6 +439,7 @@ public class GodEyeHelperTest {
     @Test
     public void startMethodCanaryRecordingWhenNotInstalled() {
         try {
+            GodEye.instance().uninstall();
             GodEyeHelper.startMethodCanaryRecording("tag");
             fail();
         } catch (UninstallException ignore) {
@@ -438,6 +449,7 @@ public class GodEyeHelperTest {
     @Test
     public void startMethodCanaryRecordingSuccess() {
         try {
+            GodEye.instance().uninstall();
             GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withMethodCanaryConfig(new GodEyeConfig.MethodCanaryConfig()).build());
             GodEyeHelper.startMethodCanaryRecording("tag");
         } catch (UninstallException ignore) {
@@ -448,6 +460,7 @@ public class GodEyeHelperTest {
     @Test
     public void stopMethodCanaryRecordingWhenNotInstalled() {
         try {
+            GodEye.instance().uninstall();
             GodEyeHelper.stopMethodCanaryRecording("tag");
             fail();
         } catch (UninstallException ignore) {
@@ -457,6 +470,7 @@ public class GodEyeHelperTest {
     @Test
     public void stopMethodCanaryRecordingSuccess() {
         try {
+            GodEye.instance().uninstall();
             GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withMethodCanaryConfig(new GodEyeConfig.MethodCanaryConfig()).build());
             GodEyeHelper.stopMethodCanaryRecording("tag");
         } catch (UninstallException ignore) {
@@ -467,6 +481,7 @@ public class GodEyeHelperTest {
     @Test
     public void isMethodCanaryRecordingWhenNotInstalled() {
         try {
+            GodEye.instance().uninstall();
             GodEyeHelper.isMethodCanaryRecording("tag");
             fail();
         } catch (UninstallException ignore) {
@@ -476,6 +491,7 @@ public class GodEyeHelperTest {
     @Test
     public void isMethodCanaryRecordingSuccess() {
         try {
+            GodEye.instance().uninstall();
             GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withMethodCanaryConfig(new GodEyeConfig.MethodCanaryConfig()).build());
             GodEyeHelper.startMethodCanaryRecording("tag");
             assertTrue(GodEyeHelper.isMethodCanaryRecording("tag"));

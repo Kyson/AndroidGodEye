@@ -25,13 +25,15 @@
 
 AndroidGodEye is a performance monitor tool for Android(not limited to performance data) , you can easily monitor the performance of your app in real time in pc browser.
 
+You can also use it in production environment to monitor the online performance of your app([Apply AndroidGodEye for production](https://github.com/Kyson/AndroidGodEye/wiki/0x02b-Apply-AndroidGodEye-for-Release_zh)).
+
+> AndroidGodEye has been applied to several mature apps at present
+
 It is divided into 3 parts:
 
 1. Core provide all performance modules and produce performance datas.
 2. Debug Monitor provide a dashboard to show these performance datas.
 3. Toolbox make developers easy to use this library.
-
-AndroidGodEye prodive several modules, such as cpu, heap, block, leak memory and so on.
 
 ## Features
 

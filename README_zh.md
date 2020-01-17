@@ -25,13 +25,15 @@
 
 AndroidGodEye是一个可以在PC浏览器中实时监控Android性能数据指标的工具，你可以通过wifi/usb连接手机和pc，通过pc浏览器实时监控手机性能。
 
+你也可以将它在生产环境用于监控App的线上性能（[生产环境使用AndroidGodEye](https://github.com/Kyson/AndroidGodEye/wiki/0x02b-Apply-AndroidGodEye-for-Release_zh)）。
+
+> 目前AndroidGodEye已经应用在若干成熟的App上
+
 系统分为三部分：
 
 1. Core 核心部分，提供所有模块
 2. Debug Monitor部分，提供Debug阶段开发者面板
 3. Toolbox 快速接入工具集，给开发者提供各种便捷接入的工具
-
-AndroidGodEye提供了多种监控模块，比如cpu、内存、卡顿、内存泄漏等等，并且提供了Debug阶段的Monitor看板实时展示这些数据。而且提供了api供开发者在release阶段进行数据上报。
 
 ## 支持功能
 
