@@ -25,7 +25,7 @@
 
 AndroidGodEye is a performance monitor tool for Android(not limited to performance data) , you can easily monitor the performance of your app in real time in pc browser.
 
-You can also use it in production environment to monitor the online performance of your app([Apply AndroidGodEye for production](https://github.com/Kyson/AndroidGodEye/wiki/0x02b-Apply-AndroidGodEye-for-Release_zh)).
+You can also use it in production environment to monitor the online performance of your app([Apply AndroidGodEye for production](https://github.com/Kyson/AndroidGodEye/wiki/0x02b-Apply-AndroidGodEye-for-Release_en)).
 
 > AndroidGodEye has been applied to several mature apps at present
 
