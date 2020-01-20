@@ -17,10 +17,9 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.io.IOException;
-import java.io.InputStream;
 
+import cn.hikyson.godeye.core.helper.GodEyeConfigHelper;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
-import cn.hikyson.godeye.core.utils.IoUtil;
 import cn.hikyson.godeye.core.utils.JsonUtil;
 
 import static org.junit.Assert.assertEquals;
@@ -87,14 +86,8 @@ public class GodEyeConfigTest {
 
     @Test
     public void fromInputStream() {
-        InputStream is = null;
-        try {
-            is = getClass().getClassLoader().getResourceAsStream("install.config");
-            GodEyeConfig config = GodEyeConfig.fromInputStream(is);
-            assertConfig(config);
-        } finally {
-            IoUtil.closeSilently(is);
-        }
+        GodEyeConfig config = GodEyeConfigHelper.createFromResource();
+        assertConfig(config);
     }
 
     @Test

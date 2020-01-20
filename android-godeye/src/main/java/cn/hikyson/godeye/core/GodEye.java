@@ -8,6 +8,7 @@ import androidx.annotation.StringDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,6 +72,29 @@ public class GodEye {
         public static final String APP_SIZE = "APP_SIZE";
         public static final String VIEW_CANARY = "VIEW_CANARY";
         public static final String IMAGE_CANARY = "IMAGE_CANARY";
+    }
+
+    public static final Set<String> ALL_MODULE_NAMES = new HashSet<>();
+
+    static {
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.CPU);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.BATTERY);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.FPS);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.LEAK);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.HEAP);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.PSS);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.RAM);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.NETWORK);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.SM);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.STARTUP);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.TRAFFIC);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.CRASH);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.THREAD);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.PAGELOAD);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.METHOD_CANARY);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.APP_SIZE);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.VIEW_CANARY);
+        ALL_MODULE_NAMES.add(GodEye.ModuleName.IMAGE_CANARY);
     }
 
     private Application mApplication;

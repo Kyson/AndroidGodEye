@@ -1,7 +1,10 @@
 package cn.hikyson.godeye.core.internal.modules.fps;
 
-import androidx.annotation.UiThread;
 import android.view.Choreographer;
+
+import androidx.annotation.UiThread;
+
+import cn.hikyson.godeye.core.helper.ChoreographerInjecor;
 
 public class FpsMonitor implements Choreographer.FrameCallback {
     private Choreographer mChoreographer;
@@ -11,7 +14,7 @@ public class FpsMonitor implements Choreographer.FrameCallback {
 
     @UiThread
     public void start() {
-        mChoreographer = Choreographer.getInstance();
+        mChoreographer = ChoreographerInjecor.getChoreographerProvider().getChoreographer();
         mCurrentFrameCount = 0;
         mCurrentFrameTimeNanos = mStartFrameTimeNanos;
         mChoreographer.postFrameCallback(this);

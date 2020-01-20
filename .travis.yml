@@ -28,8 +28,7 @@ install:
     - sdkmanager --list || true
 
 script:
-    - ./gradlew clean build
-    - ./gradlew clean test
+    - ./gradlew clean build test
 
 notifications:
     email:

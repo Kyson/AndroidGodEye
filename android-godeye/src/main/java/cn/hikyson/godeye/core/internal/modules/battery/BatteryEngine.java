@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
+import cn.hikyson.godeye.core.utils.L;
 
 /**
  * Created by kysonchao on 2017/11/23.
@@ -40,8 +41,14 @@ public class BatteryEngine implements Engine {
      */
     @Override
     public void shutdown() {
-        mContext.unregisterReceiver(mBatteryChangeReceiver);
-        mBatteryChangeReceiver = null;
+        if (mBatteryChangeReceiver != null) {
+            try {
+                mContext.unregisterReceiver(mBatteryChangeReceiver);
+            } catch (Throwable e) {
+                L.d("Battery shutdown warning: " + e);
+            }
+            mBatteryChangeReceiver = null;
+        }
     }
 
     private static final class BatteryIntentFilterHolder {

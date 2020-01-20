@@ -1,12 +1,13 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
-import androidx.annotation.NonNull;
-import android.view.Choreographer;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import androidx.annotation.NonNull;
+
 import java.lang.reflect.Method;
 
+import cn.hikyson.godeye.core.helper.ChoreographerInjecor;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ViewUtil;
 
@@ -27,7 +28,7 @@ public class PageDrawMonitor {
 
     private PageDrawMonitor(View view, ViewUtil.OnDrawCallback onDrawCallback) {
         try {
-            choreographerMethod = Choreographer.getInstance().getClass().getMethod("postCallback", int.class, Runnable.class, Object.class);
+            choreographerMethod = ChoreographerInjecor.getChoreographerProvider().getChoreographer().getClass().getMethod("postCallback", int.class, Runnable.class, Object.class);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -61,7 +62,7 @@ public class PageDrawMonitor {
             return;
         }
         try {
-            choreographerMethod.invoke(Choreographer.getInstance(), CALLBACK_COMMIT, (Runnable) () -> {
+            choreographerMethod.invoke(ChoreographerInjecor.getChoreographerProvider().getChoreographer(), CALLBACK_COMMIT, (Runnable) () -> {
                 if (onTraversalFinishListener != null) {
                     onTraversalFinishListener.onFinish();
                 }
