@@ -37,7 +37,7 @@ It is divided into 3 parts:
 
 ## Features
 
-|Module|Desc|
+|Module Name|Desc|
 |-|-|
 |CPU|cpu info of device and app|
 |BATTERY|battery info|
@@ -64,7 +64,9 @@ It is divided into 3 parts:
 
 [More detail Wiki](https://github.com/Kyson/AndroidGodEye/wiki#english)
 
-[Demo APK](https://fir.im/5k67)
+[Sample APK](https://github.com/Kyson/AndroidGodEye/releases)
+
+[Simple Demo APK](https://fir.im/5k67)
 
 [Demo Project:https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
 

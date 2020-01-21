@@ -37,7 +37,7 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android性能数据指�
 
 ## 支持功能
 
-|模块|描述|
+|模块名称|描述|
 |---|----|
 |CPU|手机和App Cpu检测|
 |BATTERY|电池检测|
@@ -64,7 +64,9 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android性能数据指�
 
 [更多信息Wiki](https://github.com/Kyson/AndroidGodEye/wiki#%E4%B8%AD%E6%96%87)
 
-[Demo APK](https://fir.im/5k67)，可以先看看效果 :-)
+[Sample APK](https://github.com/Kyson/AndroidGodEye/releases)
+
+[Simple Demo APK](https://fir.im/5k67)，可以先看看效果 :-)
 
 [Demo Project:https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
 
