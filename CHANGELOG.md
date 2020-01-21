@@ -10,6 +10,16 @@ Removed for now removed features.
 Fixed for any bug fixes.
 Security in case of vulnerabilities.
 ```
+## 3.1.12
+
+### Added
+
+- Add ALL_MODULES field to GodEye class
+- Add ChoreographerInjecor for unit test
+
+### Fixed
+
+- Error when Battery is shutting down if receiver is not registered
 
 ## 3.1.11
 
