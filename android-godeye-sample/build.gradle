@@ -59,6 +59,3 @@ dependencies {
 }
 
 apply plugin: 'cn.hikyson.methodcanary.plugin'
-
-// TODO KYSON IMPL
-apply from: rootProject.file('gradle/gradle_firim_upload.gradle')

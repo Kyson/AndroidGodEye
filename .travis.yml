@@ -30,7 +30,6 @@ install:
 script:
     - ./gradlew clean build test
     - ./gradlew assembleRelease
-    - chmod +x ./gradle/gradle_pgyer_upload.sh && ./gradle/gradle_pgyer_upload.sh ./android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk $PGY_TOKEN && echo https://www.pgyer.com/qAxX
 
 notifications:
     email:
@@ -39,6 +38,13 @@ notifications:
 deploy:
     provider: script
     script: echo deploying to jcenter... && ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false && echo deployed to jcenter.
+    on:
+      tags: true
+      branch: master
+    provider: releases
+    api_key: $GITHUB_TOKEN
+    file: "./android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk"
+    skip_cleanup: true
     on:
       tags: true
       branch: master
