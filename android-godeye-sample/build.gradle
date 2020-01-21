@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
-//ext {
-//    EXT_ANDROID_GODEYE_MONITOR_PORT = project.getProperties().containsKey("ANDROID_GODEYE_MONITOR_PORT") ? project.ANDROID_GODEYE_MONITOR_PORT : "5390"
-//}
+String[] version_part = String.valueOf(VERSION_NAME).split('\\.')
+
+int VERSION_CODE = Integer.valueOf(version_part[0]) * 1000000 + Integer.valueOf(version_part[1]) * 1000 + Integer.valueOf(version_part[2])
 
 android {
     compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
@@ -12,23 +12,31 @@ android {
         applicationId 'cn.hikyson.android.godeye.sample'
         minSdkVersion Integer.parseInt(MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(TARGET_SDK_VERSION)
-        versionCode 1
-        versionName "1.0"
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
         targetCompatibility = "8"
         sourceCompatibility = "8"
     }
+    signingConfigs {
+        release {
+            storeFile file('./AndroidGodEye.keystore')
+            storePassword 'androidgodeye'
+            keyAlias = 'androidgodeye'
+            keyPassword 'androidgodeye'
+        }
+    }
     buildTypes {
         release {
-//            resValue("integer", "CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT", project.ext.EXT_ANDROID_GODEYE_MONITOR_PORT)
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
-//            resValue("integer", "CN_HIKYSON_ANDROID_GODEYE_MONITOR_PORT", project.ext.EXT_ANDROID_GODEYE_MONITOR_PORT)
+            signingConfig signingConfigs.debug
         }
     }
 }

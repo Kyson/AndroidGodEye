@@ -12,7 +12,7 @@ android:
     - extra-android-support
 
 jdk:
-  - oraclejdk8
+    - oraclejdk8
 
 before_install:
     - mkdir "$ANDROID_HOME/licenses" || true
@@ -29,6 +29,8 @@ install:
 
 script:
     - ./gradlew clean build test
+    - ./gradlew assembleRelease
+    - chmod +x ./gradle/gradle_pgyer_upload.sh && ./gradle/gradle_pgyer_upload.sh ./android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk $PGY_TOKEN && echo https://www.pgyer.com/qAxX
 
 notifications:
     email:
