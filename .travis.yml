@@ -36,18 +36,18 @@ notifications:
         - tech@hikyson.cn
 
 deploy:
-    provider: script
-    script: echo deploying to jcenter... && ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false && echo deployed to jcenter.
-    on:
-      tags: true
-      branch: master
-    provider: releases
-    api_key: $GITHUB_TOKEN
-    file: "./android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk"
-    skip_cleanup: true
-    on:
-      tags: true
-      branch: master
+    - provider: script
+      script: echo deploying to jcenter... && ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false && echo deployed to jcenter.
+      on:
+        tags: true
+        branch: master
+    - provider: releases
+      api_key: $GITHUB_TOKEN
+      file: "./android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk"
+      skip_cleanup: true
+      on:
+        tags: true
+        branch: master
 
 after_success:
     - echo I am done.
