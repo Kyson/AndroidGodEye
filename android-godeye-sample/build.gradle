@@ -1,9 +1,5 @@
 apply plugin: 'com.android.application'
 
-String[] version_part = String.valueOf(VERSION_NAME).split('\\.')
-
-int VERSION_CODE = Integer.valueOf(version_part[0]) * 1000000 + Integer.valueOf(version_part[1]) * 1000 + Integer.valueOf(version_part[2])
-
 android {
     compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -12,8 +8,8 @@ android {
         applicationId 'cn.hikyson.android.godeye.sample'
         minSdkVersion Integer.parseInt(MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(TARGET_SDK_VERSION)
-        versionCode VERSION_CODE
-        versionName VERSION_NAME
+        versionCode rootProject.ext.REAL_VERSION_CODE
+        versionName rootProject.ext.REAL_VERSION_NAME
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
