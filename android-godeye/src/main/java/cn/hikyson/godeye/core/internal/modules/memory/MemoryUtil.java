@@ -34,6 +34,19 @@ public class MemoryUtil {
         return heapInfo;
     }
 
+    /**
+     * get native heap
+     *
+     * @return
+     */
+    public static NativeHeapInfo getAppNativeHeap() {
+        NativeHeapInfo nativeHeapInfo = new NativeHeapInfo();
+
+        nativeHeapInfo.heapSizeKb = Debug.getNativeHeapSize() / 1024;
+        nativeHeapInfo.heapAllocatedKb = Debug.getNativeHeapAllocatedSize() / 1024;
+        nativeHeapInfo.heapFreeSizeKb = Debug.getNativeHeapFreeSize() / 1024;
+        return nativeHeapInfo;
+    }
 
     /**
      * 获取应用实际占用RAM

@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core;
 
 
 import android.app.Application;
+import android.os.Debug;
 
 import androidx.annotation.StringDef;
 
@@ -24,6 +25,8 @@ import cn.hikyson.godeye.core.internal.modules.fps.Fps;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanary;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.memory.Heap;
+import cn.hikyson.godeye.core.internal.modules.memory.MemoryUtil;
+import cn.hikyson.godeye.core.internal.modules.memory.NativeHeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;
@@ -120,6 +123,25 @@ public class GodEye {
     public void init(Application application) {
         mApplication = application;
         ActivityStackUtil.register(application);
+
+//        new Thread(new Runnable() {// TODO KYSON DEL
+//            @Override
+//            public void run() {
+//                while (true) {
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    NativeHeapInfo nativeHeapInfo = MemoryUtil.getAppNativeHeap();
+//                    L.d("native:" + nativeHeapInfo);
+//                    L.d("pss:" + Debug.getPss());
+//                    L.d("pss2:" + MemoryUtil.getAppPssInfo(GodEye.instance().getApplication()));
+//                }
+//            }
+//        }).start();
+
+
         L.d("GodEye init.");
     }
 

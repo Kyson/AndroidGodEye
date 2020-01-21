@@ -1,0 +1,83 @@
+static post_json(String url, Map<String, String> payload) {
+    URL urlReal = new URL(url)
+    HttpURLConnection connection = (HttpURLConnection) urlReal.openConnection()
+    connection.setRequestMethod("POST");
+    connection.setRequestProperty("Content-type", "application/json")
+    connection.setConnectTimeout(30)
+    connection.setDoOutput(true)
+//    connection.setDoInput(true)
+    OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+    writer.write(groovy.json.JsonOutput.toJson(payload));
+    writer.close();
+    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    StringBuffer jsonString = new StringBuffer();
+    String line;
+    while ((line = br.readLine()) != null) {
+        jsonString.append(line);
+    }
+    br.close();
+    connection.disconnect();
+    def slurper = new groovy.json.JsonSlurper()
+    def resultString = jsonString.toString()
+    return slurper.parseText(resultString)
+}
+
+static post_form(String url, Map<String, String> payload){
+    URL urlReal = new URL(url)
+    HttpURLConnection connection = (HttpURLConnection) urlReal.openConnection()
+    connection.setRequestMethod("POST");
+    connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded")
+    connection.setConnectTimeout(30)
+//    connection.
+    connection.setDoOutput(true)
+//    connection.setDoInput(true)
+    OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+    writer.write(groovy.json.JsonOutput.toJson(payload));
+    writer.close();
+    BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    StringBuffer jsonString = new StringBuffer();
+    String line;
+    while ((line = br.readLine()) != null) {
+        jsonString.append(line);
+    }
+    br.close();
+    connection.disconnect();
+    def slurper = new groovy.json.JsonSlurper()
+    def resultString = jsonString.toString()
+    return slurper.parseText(resultString)
+
+}
+
+static getAndroidGodEyeUploadResources() {
+    println "getAndroidGodEyeUploadResources"
+    Map<String, String> payload = new HashMap<>();
+    payload.put("type", "android")
+    payload.put("bundle_id", "5a327e1dca87a837250000b3")
+    // TODO KYSON DEL
+    payload.put("api_token", "5ee93b8085be4b860736ab4d1c159efb")
+    def result = post_json("http://api.fir.im/apps", payload)
+    println groovy.json.JsonOutput.toJson(result)
+    return result
+}
+
+
+static uploadByResources(result) {
+//    curl   -F "key=xxxxxx"              \
+//       -F "token=xxxxx"             \
+//       -F "file=@aa.apk"            \
+//       -F "x:name=aaaa"             \
+//       -F "x:version=a.b.c"         \
+//       -F "x:build=1"               \
+//       -F "x:release_type=Adhoc"   \  #type=ios 使用
+//    -F "x:changelog=first"       \
+//       https://up.qbox.me
+    println "uploadByResources"
+    Map<String, String> payload = new HashMap<>();
+    payload.put("key", result.cert.binary.key)
+    payload.put("token", result.cert.binary.token)
+    payload.put("file", "android-godeye-sample-release.apk")
+    def uploadResult = post_json(result.cert.binary.upload_url, payload)
+    println uploadResult
+}
+
+uploadByResources(getAndroidGodEyeUploadResources())
