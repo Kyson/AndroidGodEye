@@ -2,7 +2,6 @@ package cn.hikyson.godeye.core;
 
 
 import android.app.Application;
-import android.os.Debug;
 
 import androidx.annotation.StringDef;
 
@@ -25,8 +24,6 @@ import cn.hikyson.godeye.core.internal.modules.fps.Fps;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanary;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
 import cn.hikyson.godeye.core.internal.modules.memory.Heap;
-import cn.hikyson.godeye.core.internal.modules.memory.MemoryUtil;
-import cn.hikyson.godeye.core.internal.modules.memory.NativeHeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanary;

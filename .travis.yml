@@ -50,4 +50,4 @@ deploy:
         branch: master
 
 after_success:
-    - echo I am done.
+    - echo I am done, release url:https://github.com/Kyson/AndroidGodEye/releases
