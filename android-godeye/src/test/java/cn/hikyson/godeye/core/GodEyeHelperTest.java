@@ -416,27 +416,6 @@ public class GodEyeHelperTest {
     }
 
     @Test
-    public void inspectViewWhenNotInstalled() {
-        try {
-            GodEye.instance().uninstall();
-            GodEyeHelper.inspectView();
-            fail();
-        } catch (UninstallException ignore) {
-        }
-    }
-
-    @Test
-    public void inspectViewSuccess() {
-        try {
-            GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withViewCanaryConfig(new GodEyeConfig.ViewCanaryConfig()).build());
-            GodEyeHelper.inspectView();
-        } catch (UninstallException e) {
-            fail();
-        }
-    }
-
-    @Test
     public void startMethodCanaryRecordingWhenNotInstalled() {
         try {
             GodEye.instance().uninstall();
