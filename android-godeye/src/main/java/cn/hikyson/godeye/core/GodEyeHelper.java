@@ -12,7 +12,6 @@ import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
-import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanary;
 import cn.hikyson.godeye.core.utils.L;
 
 /**
@@ -90,10 +89,12 @@ public class GodEyeHelper {
      * inspect view of top activity
      *
      * @throws UninstallException
+     * @deprecated you do not need to call this function,viewCanary will auto detect view issues
      */
+    @Deprecated
     public static void inspectView() throws UninstallException {
-        final ViewCanary viewCanary = GodEye.instance().getModule(GodEye.ModuleName.VIEW_CANARY);
-        viewCanary.inspect();
+//        final ViewCanary viewCanary = GodEye.instance().getModule(GodEye.ModuleName.VIEW_CANARY);
+//        viewCanary.inspect();
     }
 
     /**
@@ -117,7 +118,6 @@ public class GodEyeHelper {
         final MethodCanary methodCanary = GodEye.instance().getModule(GodEye.ModuleName.METHOD_CANARY);
         methodCanary.stopMonitor(tag);
     }
-
 
     /**
      * method canary is recording

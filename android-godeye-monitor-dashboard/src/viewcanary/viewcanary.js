@@ -40,7 +40,6 @@ class ViewCanary extends Component {
         this.renderItem = this.renderItem.bind(this);
         this.refresh = this.refresh.bind(this);
         this.getBgColor = this.getBgColor.bind(this);
-        this.inspectCurrentActivity = this.inspectCurrentActivity.bind(this);
         this.state = {
             searchText: null,
             show: false,
@@ -77,10 +76,6 @@ class ViewCanary extends Component {
         } else {
             return 'transparent'
         }
-    }
-
-    inspectCurrentActivity() {
-        this.props.globalWs.sendMessage('{"moduleName": "viewCanary","payload":"inspect"}');
     }
 
     renderItem(issues, key) {
@@ -180,9 +175,7 @@ class ViewCanary extends Component {
               onSearch={value => this.setState({searchText: value})}
           />
             &nbsp;&nbsp;
-            <Button style={{marginRight: 8}} onClick={this.inspectCurrentActivity}>Inspect</Button>
             <Button onClick={this.handleClear}>Clear</Button>
-
         </span>)
     }
 

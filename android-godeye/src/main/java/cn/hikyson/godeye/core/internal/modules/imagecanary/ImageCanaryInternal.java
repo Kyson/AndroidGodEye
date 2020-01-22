@@ -2,7 +2,6 @@ package cn.hikyson.godeye.core.internal.modules.imagecanary;
 
 import android.app.Activity;
 import android.app.Application;
-import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +40,8 @@ class ImageCanaryInternal {
             private Set<ImageIssue> mImageIssues = new HashSet<>();
 
             @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                super.onActivityCreated(activity, savedInstanceState);
+            public void onActivityResumed(Activity activity) {
+                super.onActivityResumed(activity);
                 ViewGroup parent = (ViewGroup) activity.getWindow().getDecorView();
                 Runnable callback = inspectInner(new WeakReference<>(activity), imageCanaryEngine, mImageIssues);
                 ViewTreeObserver.OnDrawListener onDrawListener = () -> {
@@ -56,8 +55,8 @@ class ImageCanaryInternal {
             }
 
             @Override
-            public void onActivityDestroyed(Activity activity) {
-                super.onActivityDestroyed(activity);
+            public void onActivityPaused(Activity activity) {
+                super.onActivityPaused(activity);
                 ViewTreeObserver.OnDrawListener onDrawListener = mOnDrawListenerMap.remove(activity);
                 ViewGroup parent = (ViewGroup) activity.getWindow().getDecorView();
                 if (onDrawListener != null) {

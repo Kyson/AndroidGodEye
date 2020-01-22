@@ -11,6 +11,9 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:text="Loading..."/>
 
     <Button
@@ -20,7 +23,26 @@
         android:layout_marginTop="28dp"
         android:onClick="JumpToThirdActivity"
         android:text="JumpToThirdActivity"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"/>
+
+    <TextView
+        android:id="@+id/activity_second_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="#ff0000"
+        android:text="Don't operate button below, just for test view issue layout change..."/>
+
+    <FrameLayout
+        android:id="@+id/activity_second_container"
+        app:layout_constraintTop_toBottomOf="@+id/activity_second_note"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

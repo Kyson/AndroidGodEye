@@ -1,7 +1,8 @@
 package cn.hikyson.godeye.monitor.server;
 
-import androidx.collection.ArrayMap;
 import android.text.TextUtils;
+
+import androidx.collection.ArrayMap;
 
 import com.koushikdutta.async.http.WebSocket;
 
@@ -17,9 +18,6 @@ public class WebSocketBizRouter implements WebSocketProcessor {
         mRouterMap.put("clientOnline", new WebSocketClientOnlineProcessor());
         mRouterMap.put("appInfo", new WebSocketAppinfoProcessor());
         mRouterMap.put("methodCanary", new WebSocketMethodCanaryProcessor());
-
-        mRouterMap.put("viewCanary", new WebSocketViewCanaryInspectProcessor());
-//        mRouterMap.put("MethodCanaryStatus", new WebSocketMethodCanaryStatusProcessor());
         mRouterMap.put("reinstallBlock", new WebSocketChangeBlockConfigProcessor());
     }
 
