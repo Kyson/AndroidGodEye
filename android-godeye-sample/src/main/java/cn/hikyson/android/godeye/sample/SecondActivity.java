@@ -41,6 +41,10 @@ public class SecondActivity extends AppCompatActivity implements InstallFragment
 
         new Handler().postDelayed(() -> {
             fragmentManager.beginTransaction().replace(R.id.activity_second_container, new ConsumeFragment(), ConsumeFragment.class.getSimpleName()).commit();
+        }, 1000);
+
+        new Handler().postDelayed(() -> {
+            fragmentManager.beginTransaction().replace(R.id.activity_second_container, new AnimationFragmentV4(), AnimationFragmentV4.class.getSimpleName()).commit();
         }, 2000);
     }
 

@@ -21,7 +21,10 @@ import java.util.Map;
 import java.util.Set;
 
 import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
-import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.NormalizedLevenshtein;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.ViewWithSizeInsDelInterface;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.ViewWithSizeSubstitutionInterface;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.ViewIdWithSize;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.WeightedLevenshtein;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 
@@ -34,7 +37,7 @@ class ViewCanaryInternal {
         callbacks = new SimpleActivityLifecycleCallbacks() {
 
             private Map<Activity, ViewTreeObserver.OnGlobalLayoutListener> mOnGlobalLayoutListenerMap = new HashMap<>();
-            private Map<Activity, List<int[]>> mRecentLayoutListRecords = new HashMap<>();
+            private Map<Activity, List<List<ViewIdWithSize>>> mRecentLayoutListRecords = new HashMap<>();
 
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -85,7 +88,7 @@ class ViewCanaryInternal {
         ThreadUtil.destoryHandler(VIEW_CANARY_HANDLER);
     }
 
-    private Runnable inspectInner(WeakReference<Activity> activity, ViewCanary viewCanary, ViewCanaryContext config, Map<Activity, List<int[]>> recentLayoutListRecords) {
+    private Runnable inspectInner(WeakReference<Activity> activity, ViewCanary viewCanary, ViewCanaryContext config, Map<Activity, List<List<ViewIdWithSize>>> recentLayoutListRecords) {
         return () -> {
             try {
                 Activity p = activity.get();
@@ -99,7 +102,7 @@ class ViewCanaryInternal {
         };
     }
 
-    private void inspect(Activity activity, ViewGroup root, ViewCanary viewCanary, ViewCanaryContext config, Map<Activity, List<int[]>> recentLayoutListRecords) {
+    private void inspect(Activity activity, ViewGroup root, ViewCanary viewCanary, ViewCanaryContext config, Map<Activity, List<List<ViewIdWithSize>>> recentLayoutListRecords) {
         long startTime = System.currentTimeMillis();
         Map<View, Integer> depthMap = new HashMap<>();
         List<View> allViews = new ArrayList<>();
@@ -107,11 +110,11 @@ class ViewCanaryInternal {
         allViews.add(root);
         recursiveLoopChildren(root, depthMap, allViews);
         // check layout is changed a lot
-        List<int[]> records = recentLayoutListRecords.get(activity);
+        List<List<ViewIdWithSize>> records = recentLayoutListRecords.get(activity);
         if (records == null) {// activity has been destroyed if null
             return;
         }
-        int[] layoutEigenvalue = getLayoutEigenvalue(allViews);
+        List<ViewIdWithSize> layoutEigenvalue = getLayoutEigenvalue(root, allViews);
         boolean allNotSimilar = allNotSimilarByMeasureDistanceLayoutEigenvalueWithRecords(records, layoutEigenvalue);
         if (!allNotSimilar) {// layout is similar to before, only produce view issue when layout changed a lot and not similar to recent
             return;
@@ -142,21 +145,44 @@ class ViewCanaryInternal {
         L.d("ViewCanary inspect cost %sms.", (System.currentTimeMillis() - startTime));
     }
 
-    private static int[] getLayoutEigenvalue(List<View> allViews) {
-        int[] layoutEigenvalue = new int[allViews.size()];
+    private static List<ViewIdWithSize> getLayoutEigenvalue(ViewGroup root, List<View> allViews) {
+        int parentSize = root.getWidth() * root.getHeight();
+        List<ViewIdWithSize> layoutEigenvalue = new ArrayList<>(allViews.size());
         for (int i = 0; i < allViews.size(); i++) {
-            layoutEigenvalue[i] = allViews.get(i).hashCode();
+            View view = allViews.get(i);
+            int viewSize = view.getWidth() * view.getHeight();
+            layoutEigenvalue.add(new ViewIdWithSize(view.hashCode(), viewSize * 1.0 / parentSize));
         }
         return layoutEigenvalue;
     }
 
-    private static boolean allNotSimilarByMeasureDistanceLayoutEigenvalueWithRecords(List<int[]> records, int[] layoutEigenvalue) {
-        NormalizedLevenshtein l1 = new NormalizedLevenshtein();
+    private static boolean allNotSimilarByMeasureDistanceLayoutEigenvalueWithRecords(List<List<ViewIdWithSize>> records, List<ViewIdWithSize> layoutEigenvalue) {
         if (records == null || records.isEmpty()) {
             return true;
         }
-        for (int[] record : records) {
-            if (l1.distance(layoutEigenvalue, record) < 0.4) {// similar
+        WeightedLevenshtein l1 = new WeightedLevenshtein(new ViewWithSizeSubstitutionInterface() {
+            @Override
+            public double cost(ViewIdWithSize c1, ViewIdWithSize c2) {
+                if (c1.id != c2.id) {
+                    return c1.sizeInScreenPercent + c2.sizeInScreenPercent;
+                } else {
+                    return Math.abs(c1.sizeInScreenPercent - c2.sizeInScreenPercent);
+                }
+            }
+        }, new ViewWithSizeInsDelInterface() {
+            @Override
+            public double deletionCost(ViewIdWithSize c) {
+                return c.sizeInScreenPercent;
+            }
+
+            @Override
+            public double insertionCost(ViewIdWithSize c) {
+                return c.sizeInScreenPercent;
+            }
+        });
+        for (List<ViewIdWithSize> record : records) {
+            double changePercent = l1.distance(layoutEigenvalue, record);
+            if (changePercent < 0.5) {// similar
                 return false;
             }
         }
