@@ -66,9 +66,9 @@ It is divided into 3 parts:
 
 [Sample APK](https://github.com/Kyson/AndroidGodEye/releases)
 
-[Simple Demo APK](https://fir.im/5k67)
-
 [Demo Project:https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
+
+[Simple Demo APK](https://github.com/Kyson/AndroidGodEyeDemo/releases)
 
 ## License
 
