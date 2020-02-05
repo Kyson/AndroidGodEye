@@ -66,9 +66,9 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android性能数据指�
 
 [Sample APK](https://github.com/Kyson/AndroidGodEye/releases)
 
-[Simple Demo APK](https://fir.im/5k67)，可以先看看效果 :-)
-
 [Demo Project:https://github.com/Kyson/AndroidGodEyeDemo](https://github.com/Kyson/AndroidGodEyeDemo)
+
+[Simple Demo APK](https://github.com/Kyson/AndroidGodEyeDemo/releases)
 
 ## 许可协议
 
