@@ -10,12 +10,12 @@ import cn.hikyson.godeye.core.utils.L;
  * 发射数据在子线程
  * Created by kysonchao on 2017/11/22.
  */
-public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapContext> {
+public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapConfig> {
     private HeapEngine mHeapEngine;
-    private HeapContext mConfig;
+    private HeapConfig mConfig;
 
     @Override
-    public synchronized void install(HeapContext heapContext) {
+    public synchronized void install(HeapConfig heapContext) {
         if (mHeapEngine != null) {
             L.d("Heap already installed, ignore.");
             return;
@@ -44,7 +44,7 @@ public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapCo
     }
 
     @Override
-    public HeapContext config() {
+    public HeapConfig config() {
         return mConfig;
     }
 }

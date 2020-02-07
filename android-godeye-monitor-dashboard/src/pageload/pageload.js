@@ -120,7 +120,7 @@ class Pageload extends Component {
     render() {
         return (
             <Card title="Page Lifecycle(页面生命周期)" extra={this.renderExtra()}>
-                <div style={{height: 690, overflow: 'auto'}}>
+                <div style={{height: 600, overflow: 'auto'}}>
                     {this.renderTimelines()}
                 </div>
             </Card>);

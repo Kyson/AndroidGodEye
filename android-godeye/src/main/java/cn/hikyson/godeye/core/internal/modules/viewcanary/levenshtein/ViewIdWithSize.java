@@ -3,7 +3,6 @@ package cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein;
 import androidx.annotation.Keep;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 @Keep
 public class ViewIdWithSize implements Serializable {
@@ -27,14 +26,20 @@ public class ViewIdWithSize implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ViewIdWithSize that = (ViewIdWithSize) o;
-        return id == that.id &&
-                Double.compare(that.sizeInScreenPercent, sizeInScreenPercent) == 0;
+
+        if (id != that.id) return false;
+        return Double.compare(that.sizeInScreenPercent, sizeInScreenPercent) == 0;
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, sizeInScreenPercent);
+        int result;
+        long temp;
+        result = id;
+        temp = Double.doubleToLongBits(sizeInScreenPercent);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }

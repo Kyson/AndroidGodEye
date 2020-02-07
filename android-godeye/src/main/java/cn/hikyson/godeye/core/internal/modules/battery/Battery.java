@@ -11,9 +11,9 @@ import io.reactivex.subjects.Subject;
  * 安装卸载可以任意线程
  * 发射数据子线程和主线程都有可能
  */
-public class Battery extends ProduceableSubject<BatteryInfo> implements Install<BatteryContext> {
+public class Battery extends ProduceableSubject<BatteryInfo> implements Install<BatteryConfig> {
     private BatteryEngine mBatteryEngine;
-    private BatteryContext mConfig;
+    private BatteryConfig mConfig;
 
     /**
      * 安装电池模块，任意线程
@@ -21,7 +21,7 @@ public class Battery extends ProduceableSubject<BatteryInfo> implements Install<
      * @param config
      */
     @Override
-    public synchronized void install(BatteryContext config) {
+    public synchronized void install(BatteryConfig config) {
         if (mBatteryEngine != null) {
             L.d("Battery already installed, ignore.");
             return;
@@ -53,7 +53,7 @@ public class Battery extends ProduceableSubject<BatteryInfo> implements Install<
     }
 
     @Override
-    public BatteryContext config() {
+    public BatteryConfig config() {
         return mConfig;
     }
 

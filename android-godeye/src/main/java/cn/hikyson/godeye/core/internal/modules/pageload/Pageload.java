@@ -17,14 +17,14 @@ import io.reactivex.subjects.Subject;
  * 安装卸载可以任意线程
  * Created by kysonchao on 2018/1/25.
  */
-public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> implements Install<PageloadContext> {
+public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> implements Install<PageloadConfig> {
     private static final String PAGELOAD_HANDLER = "godeye-pageload";
     private ActivityLifecycleCallbacks mActivityLifecycleCallbacks;
-    private PageloadContext mConfig;
+    private PageloadConfig mConfig;
     private boolean mInstalled = false;
 
     @Override
-    public synchronized void install(PageloadContext config) {
+    public synchronized void install(PageloadConfig config) {
         if (mInstalled) {
             L.d("Pageload already installed, ignore.");
             return;
@@ -68,7 +68,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
     }
 
     @Override
-    public PageloadContext config() {
+    public PageloadConfig config() {
         return mConfig;
     }
 

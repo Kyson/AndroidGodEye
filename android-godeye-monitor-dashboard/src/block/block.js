@@ -20,6 +20,7 @@ class Block extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.changeLongBlockThreshold = this.changeLongBlockThreshold.bind(this);
         this.changeShortBlockThreshold = this.changeShortBlockThreshold.bind(this);
+        this.resetBlockConfig = this.resetBlockConfig.bind(this);
         this.options = {
             credits: {
                 enabled: false
@@ -130,9 +131,13 @@ class Block extends Component {
         this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"shortBlockThreshold":${time}}}`);
     }
 
+    resetBlockConfig(){
+        this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"type":"reset"}}`);
+    }
+
     renderTitlebar() {
         return (<div>
-                Block(Jank) Threshold&nbsp;&nbsp;
+                Block(Jank) Threshold&nbsp;
                 <Popover
                     content={
                         <div>
@@ -144,7 +149,7 @@ class Block extends Component {
                 >
                     <Button>Long:{this.state.blockConfig ? this.state.blockConfig.longBlockThresholdMillis : "**"}ms</Button>
                 </Popover>
-                &nbsp;&nbsp;
+                &nbsp;
                 <Popover
                     content={
                         <div>
@@ -156,6 +161,8 @@ class Block extends Component {
                 >
                     <Button>Short:{this.state.blockConfig ? this.state.blockConfig.shortBlockThresholdMillis : "**"}ms</Button>
                 </Popover>
+                &nbsp;
+                <Button onClick={this.resetBlockConfig}>Reset(重置)</Button>
             </div>
         );
     }

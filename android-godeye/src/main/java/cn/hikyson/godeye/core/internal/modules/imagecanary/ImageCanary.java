@@ -6,14 +6,14 @@ import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
 
-public class ImageCanary extends ProduceableSubject<ImageIssue> implements Install<ImageCanaryContext> {
+public class ImageCanary extends ProduceableSubject<ImageIssue> implements Install<ImageCanaryConfig> {
 
     private boolean mInstalled = false;
-    private ImageCanaryContext mConfig;
+    private ImageCanaryConfig mConfig;
     private ImageCanaryInternal mImageCanaryInternal;
 
     @Override
-    public synchronized void install(ImageCanaryContext config) {
+    public synchronized void install(ImageCanaryConfig config) {
         if (mInstalled) {
             L.d("ImageCanary already installed, ignore.");
             return;
@@ -51,7 +51,7 @@ public class ImageCanary extends ProduceableSubject<ImageIssue> implements Insta
     }
 
     @Override
-    public ImageCanaryContext config() {
+    public ImageCanaryConfig config() {
         return mConfig;
     }
 

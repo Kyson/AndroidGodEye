@@ -12,12 +12,12 @@ import cn.hikyson.godeye.core.utils.L;
  * 发射数据在子线程
  * Created by kysonchao on 2018/1/14.
  */
-public class ThreadDump extends ProduceableSubject<List<Thread>> implements Install<ThreadContext> {
+public class ThreadDump extends ProduceableSubject<List<Thread>> implements Install<ThreadConfig> {
     private ThreadEngine mThreadEngine;
-    private ThreadContext mConfig;
+    private ThreadConfig mConfig;
 
     @Override
-    public synchronized void install(ThreadContext config) {
+    public synchronized void install(ThreadConfig config) {
         if (mThreadEngine != null) {
             L.d("ThreadDump already installed, ignore.");
             return;
@@ -52,7 +52,7 @@ public class ThreadDump extends ProduceableSubject<List<Thread>> implements Inst
     }
 
     @Override
-    public ThreadContext config() {
+    public ThreadConfig config() {
         return mConfig;
     }
 }

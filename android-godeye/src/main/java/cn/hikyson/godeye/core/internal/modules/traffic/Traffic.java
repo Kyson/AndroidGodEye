@@ -10,12 +10,12 @@ import cn.hikyson.godeye.core.utils.L;
  * <p>
  * Created by kysonchao on 2017/5/22.
  */
-public class Traffic extends ProduceableSubject<TrafficInfo> implements Install<TrafficContext> {
+public class Traffic extends ProduceableSubject<TrafficInfo> implements Install<TrafficConfig> {
     private TrafficEngine mTrafficEngine;
-    private TrafficContext mConfig;
+    private TrafficConfig mConfig;
 
     @Override
-    public synchronized void install(TrafficContext config) {
+    public synchronized void install(TrafficConfig config) {
         if (mTrafficEngine != null) {
             L.d("Traffic already installed, ignore.");
             return;
@@ -44,7 +44,7 @@ public class Traffic extends ProduceableSubject<TrafficInfo> implements Install<
     }
 
     @Override
-    public TrafficContext config() {
+    public TrafficConfig config() {
         return mConfig;
     }
 }

@@ -6,14 +6,14 @@ import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
 
-public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Install<ViewCanaryContext> {
+public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Install<ViewCanaryConfig> {
 
-    private ViewCanaryContext config;
+    private ViewCanaryConfig config;
     private boolean mInstalled = false;
     private ViewCanaryInternal mViewCanaryInternal;
 
     @Override
-    public synchronized void install(ViewCanaryContext config) {
+    public synchronized void install(ViewCanaryConfig config) {
         if (mInstalled) {
             L.d("ViewCanary already installed, ignore.");
             return;
@@ -45,7 +45,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
     }
 
     @Override
-    public ViewCanaryContext config() {
+    public ViewCanaryConfig config() {
         return config;
     }
 

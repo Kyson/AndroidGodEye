@@ -182,7 +182,7 @@ class ViewCanary extends Component {
     render() {
         return (
             <Card title="View Canary(问题视图)" extra={this.renderExtra()}>
-                <div style={{height: 690, overflow: 'auto'}}>
+                <div style={{height: 600, overflow: 'auto'}}>
                     {this.renderTimelines()}
                 </div>
             </Card>);

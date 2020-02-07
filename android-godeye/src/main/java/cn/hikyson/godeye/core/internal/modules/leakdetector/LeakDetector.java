@@ -7,12 +7,12 @@ import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
 
-public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> implements Install<LeakContext> {
+public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> implements Install<LeakConfig> {
 
     public static final String LEAK_HANDLER = "godeye-leak";
     private LeakEngine mLeakEngine;
     private boolean mInstalled;
-    private LeakContext mConfig;
+    private LeakConfig mConfig;
 
     private LeakDetector() {
     }
@@ -26,7 +26,7 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
     }
 
     @Override
-    public synchronized void install(LeakContext config) {
+    public synchronized void install(LeakConfig config) {
         if (mInstalled) {
             L.d("LeakDetector already installed, ignore.");
             return;
@@ -60,7 +60,7 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
     }
 
     @Override
-    public LeakContext config() {
+    public LeakConfig config() {
         return mConfig;
     }
 

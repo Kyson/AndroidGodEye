@@ -26,14 +26,18 @@ import cn.hikyson.godeye.core.helper.Test1Activity;
 import cn.hikyson.godeye.core.helper.Test1Fragment;
 import cn.hikyson.godeye.core.helper.Test2Activity;
 import cn.hikyson.godeye.core.helper.TestPageEvent;
+import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryConfig;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
+import cn.hikyson.godeye.core.internal.modules.network.NetworkConfig;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkContent;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.ActivityLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.FragmentLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageLifecycleEventInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageloadConfig;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
+import cn.hikyson.godeye.core.internal.modules.startup.StartupConfig;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.Scheduler;
@@ -111,7 +115,7 @@ public class GodEyeHelperTest {
     @Test
     public void onPageLoadedNoResultWhenNotCreated() {
         GodEye.instance().uninstall();
-        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new GodEyeConfig.PageloadConfig()).build());
+        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new PageloadConfig()).build());
         try {
             TestObserver testObserver = GodEye.instance().<Pageload, PageLifecycleEventInfo>moduleObservable(GodEye.ModuleName.PAGELOAD).test();
             GodEyeHelper.onPageLoaded(new Activity());
@@ -130,7 +134,7 @@ public class GodEyeHelperTest {
     public void onPageLoadedSuccessForActivity() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new GodEyeConfig.PageloadConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new PageloadConfig()).build());
             ActivityController<Test1Activity> activityController = Robolectric.buildActivity(Test1Activity.class).create().start().resume();
             Test1Activity activity = activityController.get();
             TestObserver testObserver = GodEye.instance().<Pageload, PageLifecycleEventInfo>moduleObservable(GodEye.ModuleName.PAGELOAD).test();
@@ -190,7 +194,7 @@ public class GodEyeHelperTest {
     public void onPageLoadedSuccessWithFragment() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new GodEyeConfig.PageloadConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new PageloadConfig()).build());
             ActivityController<Test2Activity> activityController = Robolectric.buildActivity(Test2Activity.class).create().start().resume();
             Test2Activity activity = activityController.get();
             GodEyeHelper.onPageLoaded(activity);
@@ -263,7 +267,7 @@ public class GodEyeHelperTest {
     public void onFragmentPageVisibilityChangeSuccess() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new GodEyeConfig.PageloadConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withPageloadConfig(new PageloadConfig()).build());
             ActivityController<Test2Activity> activityController = Robolectric.buildActivity(Test2Activity.class).create().start().resume();
             Test2Activity activity = activityController.get();
             TestObserver testObserver = GodEye.instance().<Pageload, PageLifecycleEventInfo>moduleObservable(GodEye.ModuleName.PAGELOAD).test();
@@ -342,7 +346,7 @@ public class GodEyeHelperTest {
     public void onAppStartEndWhenNull() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new GodEyeConfig.StartupConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new StartupConfig()).build());
             GodEyeHelper.onAppStartEnd(null);
         } catch (NullPointerException ignore) {
             // success
@@ -355,7 +359,7 @@ public class GodEyeHelperTest {
     public void onAppStartEndSuccess() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new GodEyeConfig.StartupConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new StartupConfig()).build());
             StartupInfo startupInfo = new StartupInfo(StartupInfo.StartUpType.COLD, 3000);
             GodEyeHelper.onAppStartEnd(startupInfo);
             TestObserver testObserver = GodEye.instance().<Startup, StartupInfo>moduleObservable(GodEye.ModuleName.STARTUP).test();
@@ -385,7 +389,7 @@ public class GodEyeHelperTest {
     public void onNetworkEndWhenNull() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withNetworkConfig(new GodEyeConfig.NetworkConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withNetworkConfig(new NetworkConfig()).build());
             GodEyeHelper.onNetworkEnd(null);
         } catch (NullPointerException ignore) {
             // success
@@ -398,7 +402,7 @@ public class GodEyeHelperTest {
     public void onNetworkEndSuccess() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withNetworkConfig(new GodEyeConfig.NetworkConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withNetworkConfig(new NetworkConfig()).build());
             NetworkInfo<NetworkContent> networkInfo = new NetworkInfo<>();
             networkInfo.isSuccessful = true;
             networkInfo.message = "message";
@@ -429,7 +433,7 @@ public class GodEyeHelperTest {
     public void startMethodCanaryRecordingSuccess() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withMethodCanaryConfig(new GodEyeConfig.MethodCanaryConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withMethodCanaryConfig(new MethodCanaryConfig()).build());
             GodEyeHelper.startMethodCanaryRecording("tag");
         } catch (UninstallException ignore) {
             fail();
@@ -450,7 +454,7 @@ public class GodEyeHelperTest {
     public void stopMethodCanaryRecordingSuccess() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withMethodCanaryConfig(new GodEyeConfig.MethodCanaryConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withMethodCanaryConfig(new MethodCanaryConfig()).build());
             GodEyeHelper.stopMethodCanaryRecording("tag");
         } catch (UninstallException ignore) {
             fail();
@@ -471,7 +475,7 @@ public class GodEyeHelperTest {
     public void isMethodCanaryRecordingSuccess() {
         try {
             GodEye.instance().uninstall();
-            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withMethodCanaryConfig(new GodEyeConfig.MethodCanaryConfig()).build());
+            GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withMethodCanaryConfig(new MethodCanaryConfig()).build());
             GodEyeHelper.startMethodCanaryRecording("tag");
             assertTrue(GodEyeHelper.isMethodCanaryRecording("tag"));
             GodEyeHelper.stopMethodCanaryRecording("tag");

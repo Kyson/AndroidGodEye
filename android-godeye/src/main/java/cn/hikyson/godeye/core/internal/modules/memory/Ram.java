@@ -11,12 +11,12 @@ import cn.hikyson.godeye.core.utils.L;
  * 发射数据在子线程
  * Created by kysonchao on 2017/11/22.
  */
-public class Ram extends ProduceableSubject<RamInfo> implements Install<RamContext> {
+public class Ram extends ProduceableSubject<RamInfo> implements Install<RamConfig> {
     private RamEngine mRamEngine;
-    private RamContext mConfig;
+    private RamConfig mConfig;
 
     @Override
-    public synchronized void install(RamContext config) {
+    public synchronized void install(RamConfig config) {
         if (mRamEngine != null) {
             L.d("Ram already installed, ignore.");
             return;
@@ -46,7 +46,7 @@ public class Ram extends ProduceableSubject<RamInfo> implements Install<RamConte
     }
 
     @Override
-    public RamContext config() {
+    public RamConfig config() {
         return mConfig;
     }
 }

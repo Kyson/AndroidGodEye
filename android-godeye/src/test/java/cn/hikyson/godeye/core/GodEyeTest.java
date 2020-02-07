@@ -21,6 +21,7 @@ import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.ChoreographerInjecor;
 import cn.hikyson.godeye.core.helper.GodEyeConfigHelper;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
+import cn.hikyson.godeye.core.internal.modules.startup.StartupConfig;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import io.reactivex.functions.Consumer;
 
@@ -110,7 +111,7 @@ public class GodEyeTest {
             fail();
         } catch (UninstallException ignore) {
         }
-        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new GodEyeConfig.StartupConfig()).build());
+        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new StartupConfig()).build());
         try {
             GodEye.instance().getModule(GodEye.ModuleName.STARTUP);
         } catch (UninstallException e) {
@@ -137,7 +138,7 @@ public class GodEyeTest {
             fail();
         } catch (UninstallException ignore) {
         }
-        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new GodEyeConfig.StartupConfig()).build());
+        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new StartupConfig()).build());
         try {
             GodEye.instance().moduleObservable(GodEye.ModuleName.STARTUP).test().assertNoValues();
         } catch (UninstallException e) {
@@ -165,7 +166,7 @@ public class GodEyeTest {
         } catch (UninstallException ignore) {
         }
 
-        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new GodEyeConfig.StartupConfig()).build());
+        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withStartupConfig(new StartupConfig()).build());
         try {
             GodEye.instance().observeModule(GodEye.ModuleName.STARTUP, null);
             fail();

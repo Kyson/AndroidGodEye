@@ -155,9 +155,11 @@ class App extends Component {
                         <Col lg={24} xl={12}><Block ref="blockInfo" globalWs={globalWs}/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
-                        <Col lg={24} xl={8}><Pageload ref="pageLifecycle"/></Col>
-                        <Col lg={24} xl={8}><ViewCanary globalWs={globalWs} ref="viewIssueInfo"/></Col>
-                        <Col lg={24} xl={8}><ImageCanary ref="imageIssue"/></Col>
+                        <Col lg={24} xl={12}><ViewCanary globalWs={globalWs} ref="viewIssueInfo"/></Col>
+                        <Col lg={24} xl={12}><ImageCanary ref="imageIssue"/></Col>
+                    </Row>
+                    <Row gutter={16} align="top" style={{marginTop: 16}}>
+                        <Col span={24}><Pageload ref="pageLifecycle"/></Col>
                     </Row>
                     <Row gutter={16} align="top" style={{marginTop: 16}}>
                         <Col span={24}><Thread ref="threadInfo"/></Col>

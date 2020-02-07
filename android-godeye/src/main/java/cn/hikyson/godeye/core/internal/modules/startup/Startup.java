@@ -11,12 +11,12 @@ import io.reactivex.subjects.Subject;
  * 发射数据线程未知
  * Created by kysonchao on 2017/11/23.
  */
-public class Startup extends ProduceableSubject<StartupInfo> implements Install<StartupContext> {
+public class Startup extends ProduceableSubject<StartupInfo> implements Install<StartupConfig> {
 
-    private StartupContext mConfig;
+    private StartupConfig mConfig;
 
     @Override
-    public synchronized void install(StartupContext config) {
+    public synchronized void install(StartupConfig config) {
         if (config == null) {
             throw new IllegalArgumentException("Startup module install fail because config is null.");
         }
@@ -44,7 +44,7 @@ public class Startup extends ProduceableSubject<StartupInfo> implements Install<
     }
 
     @Override
-    public StartupContext config() {
+    public StartupConfig config() {
         return mConfig;
     }
 

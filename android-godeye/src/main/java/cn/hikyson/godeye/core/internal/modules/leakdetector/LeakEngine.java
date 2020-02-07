@@ -27,10 +27,10 @@ import static android.os.Build.VERSION_CODES.O;
 
 public class LeakEngine implements Engine {
 
-    private LeakContext mConfig;
+    private LeakConfig mConfig;
     private Application.ActivityLifecycleCallbacks lifecycleCallbacks;
 
-    LeakEngine(LeakContext config) {
+    LeakEngine(LeakConfig config) {
         mConfig = config;
     }
 

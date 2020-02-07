@@ -49,7 +49,7 @@ class MethodCanaryConverter {
         return methodsRecordInfo;
     }
 
-    static void filter(MethodsRecordInfo methodsRecordInfo, MethodCanaryContext methodCanaryContext) {
+    static void filter(MethodsRecordInfo methodsRecordInfo, MethodCanaryConfig methodCanaryContext) {
         int maxMethodCountSingleThreadByCost = methodCanaryContext.maxMethodCountSingleThreadByCost();
         Comparator<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfoCostComparator = methodInfoCostComparator(methodsRecordInfo.start, methodsRecordInfo.end);
         List<MethodsRecordInfo.MethodInfoOfThreadInfo> methodInfoOfThreadInfos = methodsRecordInfo.methodInfoOfThreadInfos;

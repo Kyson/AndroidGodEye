@@ -31,8 +31,10 @@ import cn.hikyson.godeye.core.utils.ThreadUtil;
 class ViewCanaryInternal {
     private SimpleActivityLifecycleCallbacks callbacks;
     private static final String VIEW_CANARY_HANDLER = "godeye-viewcanary";
+    private static final double THRESHOLD_LAYOUT_CHANGE = 0.5;
+    private static final long INSPECT_DELAY_TIME_MILLIS = 800;
 
-    void start(ViewCanary viewCanary, ViewCanaryContext config) {
+    void start(ViewCanary viewCanary, ViewCanaryConfig config) {
         Handler handler = ThreadUtil.createIfNotExistHandler(VIEW_CANARY_HANDLER);
         callbacks = new SimpleActivityLifecycleCallbacks() {
 
@@ -59,7 +61,7 @@ class ViewCanaryInternal {
                 ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = () -> {
                     if (handler != null) {
                         handler.removeCallbacks(callback);
-                        handler.postDelayed(callback, 500);
+                        handler.postDelayed(callback, INSPECT_DELAY_TIME_MILLIS);
                     }
                 };
                 mOnGlobalLayoutListenerMap.put(activity, onGlobalLayoutListener);
@@ -88,7 +90,7 @@ class ViewCanaryInternal {
         ThreadUtil.destoryHandler(VIEW_CANARY_HANDLER);
     }
 
-    private Runnable inspectInner(WeakReference<Activity> activity, ViewCanary viewCanary, ViewCanaryContext config, Map<Activity, List<List<ViewIdWithSize>>> recentLayoutListRecords) {
+    private Runnable inspectInner(WeakReference<Activity> activity, ViewCanary viewCanary, ViewCanaryConfig config, Map<Activity, List<List<ViewIdWithSize>>> recentLayoutListRecords) {
         return () -> {
             try {
                 Activity p = activity.get();
@@ -102,21 +104,23 @@ class ViewCanaryInternal {
         };
     }
 
-    private void inspect(Activity activity, ViewGroup root, ViewCanary viewCanary, ViewCanaryContext config, Map<Activity, List<List<ViewIdWithSize>>> recentLayoutListRecords) {
+    private void inspect(Activity activity, ViewGroup root, ViewCanary viewCanary, ViewCanaryConfig config, Map<Activity, List<List<ViewIdWithSize>>> recentLayoutListRecords) {
         long startTime = System.currentTimeMillis();
+        // check whether layout is changed or not
+        List<List<ViewIdWithSize>> records = recentLayoutListRecords.get(activity);
+        if (records == null) {// activity has been destroyed if null
+            return;
+        }
+        // find all views
         Map<View, Integer> depthMap = new HashMap<>();
         List<View> allViews = new ArrayList<>();
         // allViews should include decor view for inspecting overdraw. However, there is no need for depth inspection to include decor view
         allViews.add(root);
         recursiveLoopChildren(root, depthMap, allViews);
-        // check layout is changed a lot
-        List<List<ViewIdWithSize>> records = recentLayoutListRecords.get(activity);
-        if (records == null) {// activity has been destroyed if null
-            return;
-        }
         List<ViewIdWithSize> layoutEigenvalue = getLayoutEigenvalue(root, allViews);
         boolean allNotSimilar = allNotSimilarByMeasureDistanceLayoutEigenvalueWithRecords(records, layoutEigenvalue);
         if (!allNotSimilar) {// layout is similar to before, only produce view issue when layout changed a lot and not similar to recent
+            L.d("ViewCanary interrupt because %s's layout is similar to someone in records, cost %sms.", activity.getClass().getSimpleName(), (System.currentTimeMillis() - startTime));
             return;
         }
         // layout is changed, then check view issues
@@ -142,7 +146,7 @@ class ViewCanaryInternal {
         }
         records.add(layoutEigenvalue);
         viewCanary.produce(info);
-        L.d("ViewCanary inspect cost %sms.", (System.currentTimeMillis() - startTime));
+        L.d("ViewCanary inspect %s complete, cost %sms.", activity.getClass().getSimpleName(), (System.currentTimeMillis() - startTime));
     }
 
     private static List<ViewIdWithSize> getLayoutEigenvalue(ViewGroup root, List<View> allViews) {
@@ -182,7 +186,7 @@ class ViewCanaryInternal {
         });
         for (List<ViewIdWithSize> record : records) {
             double changePercent = l1.distance(layoutEigenvalue, record);
-            if (changePercent < 0.5) {// similar
+            if (changePercent < THRESHOLD_LAYOUT_CHANGE) {// similar
                 return false;
             }
         }

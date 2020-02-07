@@ -10,14 +10,13 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 
-public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<AppSizeContext> {
-
+public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<AppSizeConfig> {
     private Disposable disposable;
     private boolean mInstalled = false;
-    private AppSizeContext mConfig;
+    private AppSizeConfig mConfig;
 
     @Override
-    public synchronized void install(AppSizeContext config) {
+    public synchronized void install(AppSizeConfig config) {
         if (mInstalled) {
             L.d("AppSize already installed, ignore.");
             return;
@@ -61,7 +60,7 @@ public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<
     }
 
     @Override
-    public AppSizeContext config() {
+    public AppSizeConfig config() {
         return mConfig;
     }
 

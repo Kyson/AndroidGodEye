@@ -115,7 +115,7 @@ class ImageCanary extends Component {
     render() {
         return (
             <Card title="Image Canary(问题图片)" extra={this.renderExtra()}>
-                <div style={{ height: 690, overflow: 'auto' }}>
+                <div style={{ height: 600, overflow: 'auto' }}>
                     {this.renderTimelines()}
                 </div>
             </Card>);

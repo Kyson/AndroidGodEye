@@ -12,12 +12,12 @@ import cn.hikyson.godeye.core.utils.ThreadUtil;
  * 发射数据在子线程
  * Created by kysonchao on 2017/11/22.
  */
-public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsContext> {
+public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConfig> {
     private FpsEngine mFpsEngine;
-    private FpsContext mConfig;
+    private FpsConfig mConfig;
 
     @Override
-    public void install(final FpsContext config) {
+    public void install(final FpsConfig config) {
         if (ThreadUtil.isMainThread()) {
             installInMain(config);
         } else {
@@ -30,7 +30,7 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConte
         }
     }
 
-    private synchronized void installInMain(FpsContext config) {
+    private synchronized void installInMain(FpsConfig config) {
         if (mFpsEngine != null) {
             L.d("Fps already installed, ignore.");
             return;
@@ -47,7 +47,7 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConte
     }
 
     @Override
-    public FpsContext config() {
+    public FpsConfig config() {
         return mConfig;
     }
 

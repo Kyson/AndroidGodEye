@@ -10,12 +10,12 @@ import cn.hikyson.godeye.core.utils.L;
  * 发射数据在子线程
  * Created by kysonchao on 2017/11/22.
  */
-public class Pss extends ProduceableSubject<PssInfo> implements Install<PssContext> {
+public class Pss extends ProduceableSubject<PssInfo> implements Install<PssConfig> {
     private PssEngine mPssEngine;
-    private PssContext mConfig;
+    private PssConfig mConfig;
 
     @Override
-    public synchronized void install(PssContext config) {
+    public synchronized void install(PssConfig config) {
         if (mPssEngine != null) {
             L.d("Pss already installed, ignore.");
             return;
@@ -44,7 +44,7 @@ public class Pss extends ProduceableSubject<PssInfo> implements Install<PssConte
     }
 
     @Override
-    public PssContext config() {
+    public PssConfig config() {
         return mConfig;
     }
 }

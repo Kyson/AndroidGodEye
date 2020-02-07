@@ -11,12 +11,12 @@ import cn.hikyson.godeye.core.utils.L;
  * 发射数据在子线程
  * Created by kysonchao on 2017/5/19.
  */
-public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuContext> {
+public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConfig> {
     private CpuEngine mCpuEngine;
-    private CpuContext mConfig;
+    private CpuConfig mConfig;
 
     @Override
-    public synchronized void install(CpuContext config) {
+    public synchronized void install(CpuConfig config) {
         if (mCpuEngine != null) {
             L.d("Cpu already installed, ignore.");
             return;
@@ -45,7 +45,7 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConte
     }
 
     @Override
-    public CpuContext config() {
+    public CpuConfig config() {
         return mConfig;
     }
 }

@@ -11,11 +11,11 @@ import io.reactivex.subjects.Subject;
  * 发射数据未知线程
  * Created by kysonchao on 2017/11/22.
  */
-public class Network extends ProduceableSubject<NetworkInfo> implements Install<NetworkContext> {
-    private NetworkContext mConfig;
+public class Network extends ProduceableSubject<NetworkInfo> implements Install<NetworkConfig> {
+    private NetworkConfig mConfig;
 
     @Override
-    public synchronized void install(NetworkContext config) {
+    public synchronized void install(NetworkConfig config) {
         if (config == null) {
             throw new IllegalArgumentException("Network module install fail because config is null.");
         }
@@ -43,7 +43,7 @@ public class Network extends ProduceableSubject<NetworkInfo> implements Install<
     }
 
     @Override
-    public NetworkContext config() {
+    public NetworkConfig config() {
         return mConfig;
     }
 

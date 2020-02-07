@@ -20,6 +20,24 @@ import java.io.IOException;
 
 import cn.hikyson.godeye.core.helper.GodEyeConfigHelper;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
+import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeConfig;
+import cn.hikyson.godeye.core.internal.modules.battery.BatteryConfig;
+import cn.hikyson.godeye.core.internal.modules.cpu.CpuConfig;
+import cn.hikyson.godeye.core.internal.modules.crash.CrashConfig;
+import cn.hikyson.godeye.core.internal.modules.fps.FpsConfig;
+import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanaryConfig;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakConfig;
+import cn.hikyson.godeye.core.internal.modules.memory.HeapConfig;
+import cn.hikyson.godeye.core.internal.modules.memory.PssConfig;
+import cn.hikyson.godeye.core.internal.modules.memory.RamConfig;
+import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryConfig;
+import cn.hikyson.godeye.core.internal.modules.network.NetworkConfig;
+import cn.hikyson.godeye.core.internal.modules.pageload.PageloadConfig;
+import cn.hikyson.godeye.core.internal.modules.sm.SmConfig;
+import cn.hikyson.godeye.core.internal.modules.startup.StartupConfig;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadConfig;
+import cn.hikyson.godeye.core.internal.modules.traffic.TrafficConfig;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanaryConfig;
 import cn.hikyson.godeye.core.utils.JsonUtil;
 
 import static org.junit.Assert.assertEquals;
@@ -64,24 +82,24 @@ public class GodEyeConfigTest {
     @Test
     public void defaultConfig() {
         GodEyeConfig config = GodEyeConfig.defaultConfigBuilder().build();
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.AppSizeConfig()), JsonUtil.toJson(config.getAppSizeConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.BatteryConfig()), JsonUtil.toJson(config.getBatteryConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.CpuConfig()), JsonUtil.toJson(config.getCpuConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.CrashConfig()), JsonUtil.toJson(config.getCrashConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.FpsConfig()), JsonUtil.toJson(config.getFpsConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.HeapConfig()), JsonUtil.toJson(config.getHeapConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.ImageCanaryConfig()), JsonUtil.toJson(config.getImageCanaryConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.LeakConfig()), JsonUtil.toJson(config.getLeakConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.MethodCanaryConfig()), JsonUtil.toJson(config.getMethodCanaryConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.NetworkConfig()), JsonUtil.toJson(config.getNetworkConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.PageloadConfig()), JsonUtil.toJson(config.getPageloadConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.PssConfig()), JsonUtil.toJson(config.getPssConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.RamConfig()), JsonUtil.toJson(config.getRamConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.SmConfig()), JsonUtil.toJson(config.getSmConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.StartupConfig()), JsonUtil.toJson(config.getStartupConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.ThreadConfig()), JsonUtil.toJson(config.getThreadConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.TrafficConfig()), JsonUtil.toJson(config.getTrafficConfig()));
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.ViewCanaryConfig()), JsonUtil.toJson(config.getViewCanaryConfig()));
+        assertEquals(JsonUtil.toJson(new AppSizeConfig()), JsonUtil.toJson(config.getAppSizeConfig()));
+        assertEquals(JsonUtil.toJson(new BatteryConfig()), JsonUtil.toJson(config.getBatteryConfig()));
+        assertEquals(JsonUtil.toJson(new CpuConfig()), JsonUtil.toJson(config.getCpuConfig()));
+        assertEquals(JsonUtil.toJson(new CrashConfig()), JsonUtil.toJson(config.getCrashConfig()));
+        assertEquals(JsonUtil.toJson(new FpsConfig()), JsonUtil.toJson(config.getFpsConfig()));
+        assertEquals(JsonUtil.toJson(new HeapConfig()), JsonUtil.toJson(config.getHeapConfig()));
+        assertEquals(JsonUtil.toJson(new ImageCanaryConfig()), JsonUtil.toJson(config.getImageCanaryConfig()));
+        assertEquals(JsonUtil.toJson(new LeakConfig()), JsonUtil.toJson(config.getLeakConfig()));
+        assertEquals(JsonUtil.toJson(new MethodCanaryConfig()), JsonUtil.toJson(config.getMethodCanaryConfig()));
+        assertEquals(JsonUtil.toJson(new NetworkConfig()), JsonUtil.toJson(config.getNetworkConfig()));
+        assertEquals(JsonUtil.toJson(new PageloadConfig()), JsonUtil.toJson(config.getPageloadConfig()));
+        assertEquals(JsonUtil.toJson(new PssConfig()), JsonUtil.toJson(config.getPssConfig()));
+        assertEquals(JsonUtil.toJson(new RamConfig()), JsonUtil.toJson(config.getRamConfig()));
+        assertEquals(JsonUtil.toJson(new SmConfig()), JsonUtil.toJson(config.getSmConfig()));
+        assertEquals(JsonUtil.toJson(new StartupConfig()), JsonUtil.toJson(config.getStartupConfig()));
+        assertEquals(JsonUtil.toJson(new ThreadConfig()), JsonUtil.toJson(config.getThreadConfig()));
+        assertEquals(JsonUtil.toJson(new TrafficConfig()), JsonUtil.toJson(config.getTrafficConfig()));
+        assertEquals(JsonUtil.toJson(new ViewCanaryConfig()), JsonUtil.toJson(config.getViewCanaryConfig()));
     }
 
     @Test
@@ -115,7 +133,7 @@ public class GodEyeConfigTest {
 
     private void assertConfig(GodEyeConfig config) {
         assertEquals(0, config.getAppSizeConfig().delayMillis());
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.BatteryConfig()), JsonUtil.toJson(config.getBatteryConfig()));
+        assertEquals(JsonUtil.toJson(new BatteryConfig()), JsonUtil.toJson(config.getBatteryConfig()));
         assertEquals(2000, config.getCpuConfig().intervalMillis());
         assertEquals(false, config.getCrashConfig().immediate());
         assertEquals(2000, config.getFpsConfig().intervalMillis());
@@ -126,7 +144,7 @@ public class GodEyeConfigTest {
         assertEquals("cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider", config.getLeakConfig().leakRefInfoProvider());
         assertEquals(10, config.getMethodCanaryConfig().lowCostMethodThresholdMillis());
         assertEquals(300, config.getMethodCanaryConfig().maxMethodCountSingleThreadByCost());
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.NetworkConfig()), JsonUtil.toJson(config.getNetworkConfig()));
+        assertEquals(JsonUtil.toJson(new NetworkConfig()), JsonUtil.toJson(config.getNetworkConfig()));
         assertEquals("cn.hikyson.godeye.core.internal.modules.pageload.DefaultPageInfoProvider", config.getPageloadConfig().pageInfoProvider());
         assertEquals(2000, config.getPssConfig().intervalMillis());
         assertEquals(2000, config.getRamConfig().intervalMillis());
@@ -134,7 +152,7 @@ public class GodEyeConfigTest {
         assertEquals(500, config.getSmConfig().longBlockThreshold());
         assertEquals(500, config.getSmConfig().shortBlockThreshold());
         assertEquals(true, config.getSmConfig().debugNotification());
-        assertEquals(JsonUtil.toJson(new GodEyeConfig.StartupConfig()), JsonUtil.toJson(config.getStartupConfig()));
+        assertEquals(JsonUtil.toJson(new StartupConfig()), JsonUtil.toJson(config.getStartupConfig()));
         assertEquals(3000, config.getThreadConfig().intervalMillis());
         assertEquals("cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter", config.getThreadConfig().threadFilter());
         assertEquals(2000, config.getTrafficConfig().intervalMillis());
