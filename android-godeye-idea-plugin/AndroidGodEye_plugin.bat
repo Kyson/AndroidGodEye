@@ -17,4 +17,6 @@ echo "Use port %MONITOR_PORT%"
 
 adb forward tcp:%MONITOR_PORT% tcp:%MONITOR_PORT% && cmd /c start http://localhost:%MONITOR_PORT%/index.html
 
+echo "If it is always loading, try close and open the browser tab again."
+
 pause

@@ -158,10 +158,11 @@ public class OpenAction extends AnAction {
         String initPort = portSaved;
         if (portRunning != null && !portRunning.equals("")) {
             initPort = portRunning;
-            sb.append("AndroidGodEye monitor is running at ").append(initPort);
+            sb.append("AndroidGodEye monitor is running at ").append(initPort).append("\n");
         } else {
-            sb.append("Can not find which port AndroidGodEye monitor is running at, initialize with default ").append(initPort);
+            sb.append("Can not find which port AndroidGodEye monitor is running at, initialize with default ").append(initPort).append("\n");
         }
+        sb.append("[Attention] If it is always loading, try close and open the browser tab again.");
         return Messages.showInputDialog(project,
                 String.valueOf(sb), "AndroidGodEye", IconLoader.getIcon("/icons/android_god_eye_logo_2.png"), initPort, new InputValidator() {
 

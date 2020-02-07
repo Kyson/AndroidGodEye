@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>cn.hikyson.godeye.ideaplugin</id>
     <name>AndroidGodEye</name>
-    <version>1.7</version>
+    <version>1.8</version>
     <vendor email="qian_xx@ctrip.com" url="https://github.com/Xiangxingqian">qian_xx</vendor>
 
     <description><![CDATA[
@@ -12,7 +12,7 @@
     </description>
 
     <change-notes><![CDATA[
-       Indicate how to find port.<br>
+       Add note text.<br>
     ]]>
     </change-notes>
 
