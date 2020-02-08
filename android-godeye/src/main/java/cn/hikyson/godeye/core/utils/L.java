@@ -51,11 +51,8 @@ public class L {
         }
         if (o instanceof Throwable) {
             Throwable throwable = (Throwable) o;
-            return throwable.getLocalizedMessage() + "\n" + StacktraceUtil.stackToString(throwable.getStackTrace());
+            return StacktraceUtil.getStringOfThrowable(throwable);
         }
-//        if (o instanceof GodEyeConfig) {
-//            return JsonUtil.toJson(o);
-//        }
         return String.valueOf(o);
     }
 }

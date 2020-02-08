@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,7 +78,8 @@ class ImageCanaryInternal {
         ThreadUtil.destoryHandler(IMAGE_CANARY_HANDLER);
     }
 
-    private Runnable inspectInner(WeakReference<Activity> activity, ImageCanary imageCanaryEngine, Set<ImageIssue> imageIssues) {
+    @VisibleForTesting
+    Runnable inspectInner(WeakReference<Activity> activity, ImageCanary imageCanaryEngine, Set<ImageIssue> imageIssues) {
         return () -> {
             try {
                 Activity p = activity.get();

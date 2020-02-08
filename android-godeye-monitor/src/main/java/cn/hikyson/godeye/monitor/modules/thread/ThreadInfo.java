@@ -41,7 +41,7 @@ public class ThreadInfo implements Serializable {
         this.priority = thread.getPriority();
         this.isAlive = thread.isAlive();
         this.isInterrupted = thread.isInterrupted();
-        this.stackTraceElements = StacktraceUtil.getStack(thread.getStackTrace());
+        this.stackTraceElements = StacktraceUtil.getStackTraceOfThread(thread);
         if (threadRunningProcessClassifier != null) {
             this.threadRunningProcess = threadRunningProcessClassifier.classify(this);
         } else {

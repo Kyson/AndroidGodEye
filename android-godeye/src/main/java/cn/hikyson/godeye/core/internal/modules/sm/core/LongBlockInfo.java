@@ -3,8 +3,11 @@ package cn.hikyson.godeye.core.internal.modules.sm.core;
 import androidx.annotation.Keep;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
@@ -48,7 +51,32 @@ public class LongBlockInfo implements Serializable {
         this.cpuBusy = cpuBusy;
         this.cpuRateInfos = cpuRateInfos;
         this.mThreadStackEntries = threadStackEntries;
-        this.threadStackEntriesForExport = StacktraceUtil.convertToStackString(threadStackEntries);
+        this.threadStackEntriesForExport = convertToStackString(threadStackEntries);
+    }
+
+    private static final SimpleDateFormat TIME_FORMATTER = new SimpleDateFormat("MM-dd HH:mm:ss.SSS", Locale.US);
+
+    /**
+     * 原始的堆栈信息转换为字符串类型的堆栈信息
+     *
+     * @param ts
+     * @return
+     */
+    private static Map<String, List<String>> convertToStackString(Map<Long, List<StackTraceElement>> ts) {
+        // 筛选之后的堆栈
+        Map<Long, List<StackTraceElement>> filterMap = new LinkedHashMap<>();
+        for (Long key : ts.keySet()) {
+            List<StackTraceElement> value = ts.get(key);
+            if (!filterMap.containsValue(value)) {// 筛选一下是否存在堆栈信息相同的
+                filterMap.put(key, value);
+            }
+        }
+        // 转换为字符串
+        Map<String, List<String>> result = new LinkedHashMap<>();
+        for (Map.Entry<Long, List<StackTraceElement>> entry : filterMap.entrySet()) {
+            result.put(TIME_FORMATTER.format(entry.getKey()), StacktraceUtil.stackTraceToStringArray(entry.getValue()));
+        }
+        return result;
     }
 
     @Override

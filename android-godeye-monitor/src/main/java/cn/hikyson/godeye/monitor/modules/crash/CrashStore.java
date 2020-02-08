@@ -25,7 +25,6 @@ import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.GsonSerializer;
 import cn.hikyson.godeye.core.helper.Serializer;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
-import cn.hikyson.godeye.core.utils.FileUtil;
 import cn.hikyson.godeye.core.utils.IoUtil;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
@@ -74,8 +73,8 @@ public class CrashStore {
             });
             for (int i = 0; i < (crashFiles.size() + 1 - sMaxStoreCount); i++) {
                 try {
-                    FileUtil.deleteIfExists(crashFiles.get(crashFiles.size() - i - 1));
-                } catch (FileUtil.FileException e) {
+                    deleteIfExists(crashFiles.get(crashFiles.size() - i - 1));
+                } catch (Exception e) {
                     L.e(e);
                 }
             }
@@ -101,6 +100,12 @@ public class CrashStore {
             }
         }
         L.d("CrashStore storeCrash count:%s", crashInfos.size());
+    }
+
+    private static void deleteIfExists(File file) throws Exception {
+        if (file.exists() && !file.delete()) {
+            throw new Exception("deleteIfExists failed");
+        }
     }
 
     private static synchronized List<CrashInfo> restoreCrash(Context context) {
