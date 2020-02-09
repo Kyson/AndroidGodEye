@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.viewcanary;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
@@ -32,7 +33,7 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
             return;
         }
         if (mViewCanaryInternal != null) {
-            mViewCanaryInternal.stop(config().application());
+            mViewCanaryInternal.stop(GodEye.instance().getApplication());
             mViewCanaryInternal = null;
         }
         mInstalled = false;

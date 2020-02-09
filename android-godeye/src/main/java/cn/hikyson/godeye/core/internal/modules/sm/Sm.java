@@ -7,9 +7,10 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
-import cn.hikyson.godeye.core.internal.modules.sm.core.BlockInterceptor;
+import cn.hikyson.godeye.core.internal.modules.sm.core.BlockListener;
 import cn.hikyson.godeye.core.internal.modules.sm.core.LongBlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.core.ShortBlockInfo;
 import cn.hikyson.godeye.core.internal.modules.sm.core.SmCore;
@@ -39,9 +40,9 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
         this.mInstalled = true;
         this.mSmConfig = config;
         this.mSmRealConfig = wrapRealConfig(config);
-        this.mBlockCore = new SmCore(this.mSmRealConfig.context(), this.mSmRealConfig.debugNotification(),
+        this.mBlockCore = new SmCore(GodEye.instance().getApplication(), this.mSmRealConfig.debugNotification(),
                 this.mSmRealConfig.longBlockThreshold(), this.mSmRealConfig.shortBlockThreshold(), this.mSmRealConfig.dumpInterval());
-        this.mBlockCore.addBlockInterceptor(new BlockInterceptor() {
+        this.mBlockCore.setBlockListener(new BlockListener() {
             @Override
             public void onStart(Context context) {
             }
@@ -69,7 +70,7 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
     }
 
     private SmConfig wrapRealConfig(SmConfig installSmConfig) {
-        SmConfig cacheSmConfig = getValidSmContextCache(installSmConfig.context());
+        SmConfig cacheSmConfig = getValidSmConfigCache();
         SmConfig realSmConfig = new SmConfig();
         realSmConfig.debugNotification = installSmConfig.debugNotification();
         realSmConfig.dumpIntervalMillis = installSmConfig.dumpInterval();
@@ -114,22 +115,22 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
         return mBlockCore;
     }
 
-    public void setSmContextCache(Context context, SmConfig smConfigCache) {
+    public void setSmConfigCache(SmConfig smConfigCache) {
         if (smConfigCache == null || !smConfigCache.isValid()) {
             return;
         }
-        SharedPreferences sharedPreferences = context.getSharedPreferences("AndroidGodEye", 0);
+        SharedPreferences sharedPreferences = GodEye.instance().getApplication().getSharedPreferences("AndroidGodEye", 0);
         sharedPreferences.edit().putString("SmConfig", JsonUtil.toJson(smConfigCache)).apply();
     }
 
-    public void clearSmContextCache(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("AndroidGodEye", 0);
+    public void clearSmConfigCache() {
+        SharedPreferences sharedPreferences = GodEye.instance().getApplication().getSharedPreferences("AndroidGodEye", 0);
         sharedPreferences.edit().remove("SmConfig").apply();
     }
 
     public @Nullable
-    SmConfig getValidSmContextCache(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("AndroidGodEye", 0);
+    SmConfig getValidSmConfigCache() {
+        SharedPreferences sharedPreferences = GodEye.instance().getApplication().getSharedPreferences("AndroidGodEye", 0);
         String cachedSmContextStr = sharedPreferences.getString("SmConfig", null);
         if (TextUtils.isEmpty(cachedSmContextStr)) {
             return null;

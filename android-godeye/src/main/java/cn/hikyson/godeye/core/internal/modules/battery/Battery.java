@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.battery;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
@@ -27,7 +28,7 @@ public class Battery extends ProduceableSubject<BatteryInfo> implements Install<
             return;
         }
         mConfig = config;
-        mBatteryEngine = new BatteryEngine(config.context(), this);
+        mBatteryEngine = new BatteryEngine(GodEye.instance().getApplication(), this);
         mBatteryEngine.work();
         L.d("Battery installed.");
     }

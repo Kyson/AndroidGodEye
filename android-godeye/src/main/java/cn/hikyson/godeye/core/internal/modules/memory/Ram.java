@@ -1,6 +1,7 @@
 package cn.hikyson.godeye.core.internal.modules.memory;
 
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
@@ -22,7 +23,7 @@ public class Ram extends ProduceableSubject<RamInfo> implements Install<RamConfi
             return;
         }
         mConfig = config;
-        mRamEngine = new RamEngine(config.context(), this, config.intervalMillis());
+        mRamEngine = new RamEngine(GodEye.instance().getApplication(), this, config.intervalMillis());
         mRamEngine.work();
         L.d("Ram installed.");
     }

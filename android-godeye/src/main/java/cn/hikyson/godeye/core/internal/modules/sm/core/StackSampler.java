@@ -34,7 +34,7 @@ public class StackSampler extends AbstractSampler {
      * @param endTime
      * @return
      */
-    public Map<Long, List<StackTraceElement>> getThreadStackEntries(long startTime, long endTime) {
+    Map<Long, List<StackTraceElement>> getThreadStackEntries(long startTime, long endTime) {
         Map<Long, List<StackTraceElement>> result = new LinkedHashMap<>();
         synchronized (sStackMap) {
             for (Long entryTime : sStackMap.keySet()) {

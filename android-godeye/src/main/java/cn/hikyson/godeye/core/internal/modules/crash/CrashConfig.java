@@ -1,13 +1,9 @@
 package cn.hikyson.godeye.core.internal.modules.crash;
 
 
-import android.content.Context;
-
 import androidx.annotation.Keep;
 
 import java.io.Serializable;
-
-import cn.hikyson.godeye.core.GodEye;
 
 @Keep
 public class CrashConfig implements Serializable {
@@ -18,10 +14,6 @@ public class CrashConfig implements Serializable {
 
     public CrashConfig(boolean immediate) {
         this.immediate = immediate;
-    }
-
-    public Context context() {
-        return GodEye.instance().getApplication();
     }
 
     public boolean immediate() {

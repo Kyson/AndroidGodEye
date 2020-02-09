@@ -3,7 +3,6 @@ package cn.hikyson.godeye.core.internal.modules.sm.core;
 import android.content.Context;
 import android.os.Looper;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ public final class SmCore {
     private StackSampler stackSampler;
     private CpuSampler cpuSampler;
 
-    private List<BlockInterceptor> mInterceptorChain = new LinkedList<>();
+    private BlockListener mBlockListener;
 
     private long mLongBlockThresholdMillis;
 
@@ -62,19 +61,15 @@ public final class SmCore {
                         final MemoryInfo memoryInfo = new MemoryInfo(MemoryUtil.getAppHeapInfo(), MemoryUtil.getAppPssInfo(mContext), MemoryUtil.getRamInfo(mContext));
                         LongBlockInfo blockBaseinfo = new LongBlockInfo(eventStartTimeMilliis, eventEndTimeMillis, threadBlockTimeMillis,
                                 blockTimeMillis, cpuBusy, cpuInfos, threadStackEntries, memoryInfo);
-                        if (!mInterceptorChain.isEmpty()) {
-                            for (BlockInterceptor interceptor : mInterceptorChain) {
-                                interceptor.onLongBlock(context, blockBaseinfo);
-                            }
+                        if (mBlockListener != null) {
+                            mBlockListener.onLongBlock(context, blockBaseinfo);
                         }
                     } else {
                         final MemoryInfo memoryInfo = new MemoryInfo(MemoryUtil.getAppHeapInfo(), MemoryUtil.getAppPssInfo(mContext), MemoryUtil.getRamInfo(mContext));
                         ShortBlockInfo shortBlockInfo = new ShortBlockInfo(eventStartTimeMilliis, eventEndTimeMillis, threadBlockTimeMillis,
                                 blockTimeMillis, memoryInfo);
-                        if (!mInterceptorChain.isEmpty()) {
-                            for (BlockInterceptor interceptor : mInterceptorChain) {
-                                interceptor.onShortBlock(context, shortBlockInfo);
-                            }
+                        if (mBlockListener != null) {
+                            mBlockListener.onShortBlock(context, shortBlockInfo);
                         }
                     }
                 });
@@ -100,8 +95,8 @@ public final class SmCore {
         }
     }
 
-    public void addBlockInterceptor(BlockInterceptor blockInterceptor) {
-        mInterceptorChain.add(blockInterceptor);
+    public void setBlockListener(BlockListener blockListener) {
+        mBlockListener = blockListener;
     }
 
     public void install() {

@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.imagecanary;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
@@ -26,7 +27,7 @@ public class ImageCanary extends ProduceableSubject<ImageIssue> implements Insta
             L.e("ImageCanary install warning, can not find imageCanaryConfigProvider class. use DefaultImageCanaryConfigProvider:" + e);
         }
         mImageCanaryInternal = new ImageCanaryInternal(imageCanaryConfigProvider);
-        mImageCanaryInternal.start(mConfig.getApplication(), this);
+        mImageCanaryInternal.start(GodEye.instance().getApplication(), this);
         mInstalled = true;
         L.d("ImageCanary installed.");
     }
@@ -38,7 +39,7 @@ public class ImageCanary extends ProduceableSubject<ImageIssue> implements Insta
             return;
         }
         if (mImageCanaryInternal != null) {
-            mImageCanaryInternal.stop(config().getApplication());
+            mImageCanaryInternal.stop(GodEye.instance().getApplication());
             mImageCanaryInternal = null;
         }
         mInstalled = false;

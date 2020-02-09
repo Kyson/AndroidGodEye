@@ -21,7 +21,7 @@ public class WebSocketChangeBlockConfigProcessor implements WebSocketProcessor {
             }
             String type = payloadJSONObject.optString("type");
             if ("reset".equalsIgnoreCase(type)) {
-                sm.clearSmContextCache(GodEye.instance().getApplication());
+                sm.clearSmConfigCache();
             } else {
                 long longBlockThreshold = payloadJSONObject.optLong("longBlockThreshold");
                 long shortBlockThreshold = payloadJSONObject.optLong("shortBlockThreshold");
@@ -32,7 +32,7 @@ public class WebSocketChangeBlockConfigProcessor implements WebSocketProcessor {
                 if (shortBlockThreshold > 0) {
                     newSmContext.shortBlockThresholdMillis = shortBlockThreshold;
                 }
-                sm.setSmContextCache(GodEye.instance().getApplication(), newSmContext);
+                sm.setSmConfigCache(newSmContext);
             }
             SmConfig installConfig = sm.installConfig();
             sm.uninstall();

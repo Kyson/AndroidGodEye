@@ -1,14 +1,10 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
 
-import android.app.Application;
-
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
-
-import cn.hikyson.godeye.core.GodEye;
 
 @Keep
 public class LeakConfig implements Serializable {
@@ -28,11 +24,6 @@ public class LeakConfig implements Serializable {
         this.debug = true;
         this.debugNotification = true;
         this.leakRefInfoProvider = DefaultLeakRefInfoProvider.class.getName();
-    }
-
-    @NonNull
-    public Application application() {
-        return GodEye.instance().getApplication();
     }
 
     public boolean debug() {

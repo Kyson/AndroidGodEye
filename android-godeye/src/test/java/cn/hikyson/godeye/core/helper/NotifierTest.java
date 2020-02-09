@@ -24,6 +24,9 @@ public class NotifierTest {
     public void tearDown() throws Exception {
     }
 
+    /**
+     * Note: use jacoco if java.lang.VerifyError: Bad return type
+     */
     @Config(sdk = Build.VERSION_CODES.O)
     @Test
     public void noticeHigherThanO() {
@@ -46,5 +49,4 @@ public class NotifierTest {
         ThreadUtil.sleep(10);
         Notifier.cancelNotice(ApplicationProvider.getApplicationContext(), id2);
     }
-
 }

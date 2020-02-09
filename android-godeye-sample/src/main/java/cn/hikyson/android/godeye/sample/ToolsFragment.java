@@ -69,7 +69,7 @@ public class ToolsFragment extends Fragment {
         });
         view.findViewById(R.id.fragment_tools_native_crash_bt).setOnClickListener(v -> {
             ReflectUtil.invokeStaticMethod("xcrash.XCrash", "testNativeCrash",
-                    new Class<?>[]{Boolean.class}, new Object[]{false});
+                    new Class<?>[]{boolean.class}, new Object[]{false});
         });
         view.findViewById(R.id.fragment_tools_pageload_bt).setOnClickListener(v -> {
             Intent intent = new Intent(ToolsFragment.this.getActivity(), SecondActivity.class);

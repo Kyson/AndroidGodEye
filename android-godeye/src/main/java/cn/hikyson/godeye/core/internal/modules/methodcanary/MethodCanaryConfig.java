@@ -1,12 +1,8 @@
 package cn.hikyson.godeye.core.internal.modules.methodcanary;
 
-import android.app.Application;
-
 import androidx.annotation.Keep;
 
 import java.io.Serializable;
-
-import cn.hikyson.godeye.core.GodEye;
 
 @Keep
 public class MethodCanaryConfig implements Serializable {
@@ -29,10 +25,6 @@ public class MethodCanaryConfig implements Serializable {
 
     public int maxMethodCountSingleThreadByCost() {
         return maxMethodCountSingleThreadByCost;
-    }
-
-    public Application app() {
-        return GodEye.instance().getApplication();
     }
 
     @Override

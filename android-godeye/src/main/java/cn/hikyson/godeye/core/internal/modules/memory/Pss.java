@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.memory;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
@@ -21,7 +22,7 @@ public class Pss extends ProduceableSubject<PssInfo> implements Install<PssConfi
             return;
         }
         mConfig = config;
-        mPssEngine = new PssEngine(config.context(), this, config.intervalMillis());
+        mPssEngine = new PssEngine(GodEye.instance().getApplication(), this, config.intervalMillis());
         mPssEngine.work();
         L.d("Pss installed.");
     }

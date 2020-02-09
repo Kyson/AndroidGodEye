@@ -1,13 +1,9 @@
 package cn.hikyson.godeye.core.internal.modules.imagecanary;
 
 
-import android.app.Application;
-
 import androidx.annotation.Keep;
 
 import java.io.Serializable;
-
-import cn.hikyson.godeye.core.GodEye;
 
 @Keep
 public class ImageCanaryConfig implements Serializable {
@@ -21,10 +17,6 @@ public class ImageCanaryConfig implements Serializable {
 
     public ImageCanaryConfig(String imageCanaryConfigProvider) {
         this.imageCanaryConfigProvider = imageCanaryConfigProvider;
-    }
-
-    public Application getApplication() {
-        return GodEye.instance().getApplication();
     }
 
     // ImageCanaryConfigProvider

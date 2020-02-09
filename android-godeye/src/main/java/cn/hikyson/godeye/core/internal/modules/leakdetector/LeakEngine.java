@@ -3,6 +3,7 @@ package cn.hikyson.godeye.core.internal.modules.leakdetector;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+
 import androidx.annotation.RequiresApi;
 
 import com.squareup.leakcanary.AndroidExcludedRefs;
@@ -11,6 +12,7 @@ import com.squareup.leakcanary.RefWatcher;
 import com.squareup.leakcanary.internal.FragmentRefWatcher;
 import com.squareup.leakcanary.internal.LeakCanaryInternals;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
 import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.debug.DebugHeapDumpListener;
@@ -35,18 +37,18 @@ public class LeakEngine implements Engine {
     }
 
     private RefWatcher createDebugRefWatcher() {
-        return LeakCanary.refWatcher(mConfig.application()).listenerServiceClass(GodEyeDisplayLeakService.class)
-                .heapDumper(new DebugHeapDumper(LeakCanaryInternals.getLeakDirectoryProvider(mConfig.application())))
-                .heapDumpListener(new DebugHeapDumpListener(mConfig.application(), mConfig.debugNotification()))
+        return LeakCanary.refWatcher(GodEye.instance().getApplication()).listenerServiceClass(GodEyeDisplayLeakService.class)
+                .heapDumper(new DebugHeapDumper(LeakCanaryInternals.getLeakDirectoryProvider(GodEye.instance().getApplication())))
+                .heapDumpListener(new DebugHeapDumpListener(GodEye.instance().getApplication(), mConfig.debugNotification()))
                 .excludedRefs(AndroidExcludedRefs.createAppDefaults().build())
                 .build();
     }
 
     private RefWatcher createReleaseRefWatcher() {
-        return LeakCanary.refWatcher(mConfig.application()).listenerServiceClass(GodEyeDisplayLeakService.class)
+        return LeakCanary.refWatcher(GodEye.instance().getApplication()).listenerServiceClass(GodEyeDisplayLeakService.class)
                 .debuggerControl(() -> false)
                 .gcTrigger(new ReleaseGcTrigger())
-                .heapDumper(new ReleaseHeapDumper(mConfig.application()))
+                .heapDumper(new ReleaseHeapDumper(GodEye.instance().getApplication()))
                 .heapDumpListener(new ReleaseHeapDumpListener())
                 .excludedRefs(AndroidExcludedRefs.createAppDefaults().build()).build();
     }
@@ -85,13 +87,13 @@ public class LeakEngine implements Engine {
                 }
             }
         };
-        mConfig.application().registerActivityLifecycleCallbacks(lifecycleCallbacks);
+        GodEye.instance().getApplication().registerActivityLifecycleCallbacks(lifecycleCallbacks);
     }
 
     @Override
     public void shutdown() {
         if (lifecycleCallbacks != null) {
-            mConfig.application().unregisterActivityLifecycleCallbacks(lifecycleCallbacks);
+            GodEye.instance().getApplication().unregisterActivityLifecycleCallbacks(lifecycleCallbacks);
         }
     }
 }

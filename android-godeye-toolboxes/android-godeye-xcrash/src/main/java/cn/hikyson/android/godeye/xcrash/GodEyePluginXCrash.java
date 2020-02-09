@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashConfig;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.utils.L;
@@ -40,8 +41,8 @@ public class GodEyePluginXCrash {
                 L.e(e);
             }
         };
-        XCrash.init(crashContext.context(), new XCrash.InitParameters()
-                .setAppVersion(getAppVersion(crashContext.context()))
+        XCrash.init(GodEye.instance().getApplication(), new XCrash.InitParameters()
+                .setAppVersion(getAppVersion(GodEye.instance().getApplication()))
                 .setJavaRethrow(true)
                 .setJavaLogCountMax(10)
                 .setJavaDumpAllThreadsWhiteList(new String[]{"^main$", "^Binder:.*", ".*Finalizer.*"})

@@ -1,13 +1,9 @@
 package cn.hikyson.godeye.core.internal.modules.sm;
 
 
-import android.content.Context;
-
 import androidx.annotation.Keep;
 
 import java.io.Serializable;
-
-import cn.hikyson.godeye.core.GodEye;
 
 @Keep
 public class SmConfig implements Serializable {
@@ -35,10 +31,6 @@ public class SmConfig implements Serializable {
         this.longBlockThresholdMillis = smConfig.longBlockThresholdMillis;
         this.shortBlockThresholdMillis = smConfig.shortBlockThresholdMillis;
         this.dumpIntervalMillis = smConfig.dumpIntervalMillis;
-    }
-
-    public Context context() {
-        return GodEye.instance().getApplication();
     }
 
     public boolean debugNotification() {

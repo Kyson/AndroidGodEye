@@ -4,7 +4,7 @@ import android.content.Context;
 import androidx.annotation.WorkerThread;
 
 
-public interface BlockInterceptor {
+public interface BlockListener {
     void onStart(Context context);
 
     void onStop(Context context);

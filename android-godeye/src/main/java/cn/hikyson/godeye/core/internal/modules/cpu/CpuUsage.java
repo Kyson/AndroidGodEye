@@ -2,6 +2,8 @@ package cn.hikyson.godeye.core.internal.modules.cpu;
 
 import android.text.TextUtils;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -106,7 +108,8 @@ public class CpuUsage {
         }
     }
 
-    private static CpuSnapshot parse(String cpuRate, String pidCpuRate) {
+    @VisibleForTesting
+    static CpuSnapshot parse(String cpuRate, String pidCpuRate) {
         String[] cpuInfoArray = cpuRate.split("\\s+");
         if (cpuInfoArray.length < 9) {
             throw new IllegalStateException("cpu info array size must great than 9");
@@ -204,7 +207,8 @@ public class CpuUsage {
         return cpuInfo;
     }
 
-    private static int parseCPUIndex(String line) {
+    @VisibleForTesting
+    static int parseCPUIndex(String line) {
         if (line.contains("CPU")) {
             String[] titles = line.split("\\s+");
             for (int i = 0; i < titles.length; i++) {
@@ -216,7 +220,8 @@ public class CpuUsage {
         return -1;
     }
 
-    private static Map<String, Float> parseCpuRateOfDeviceAndTotalByShell(String line) {
+    @VisibleForTesting
+    static Map<String, Float> parseCpuRateOfDeviceAndTotalByShell(String line) {
         if (line.matches("^\\d+%\\w+.+\\d+%\\w+")) {
             String lineLowerCase = line.toLowerCase(Locale.US);
             String[] cpuList = lineLowerCase.split("\\s+");
@@ -237,7 +242,8 @@ public class CpuUsage {
         return null;
     }
 
-    private static float parseCpuRateOfAppByShell(String line, int cpuIndex, Float cpuTotal) {
+    @VisibleForTesting
+    static float parseCpuRateOfAppByShell(String line, int cpuIndex, Float cpuTotal) {
         if (line.startsWith(String.valueOf(android.os.Process.myPid()))) {
             if (cpuIndex == -1) {
                 throw new IllegalStateException("parseCpuRateOfAppByShell but cpuIndex == -1:" + line);

@@ -20,10 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.helper.SimpleActivityLifecycleCallbacks;
+import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.ViewIdWithSize;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.ViewWithSizeInsDelInterface;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.ViewWithSizeSubstitutionInterface;
-import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.ViewIdWithSize;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.levenshtein.WeightedLevenshtein;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
@@ -78,7 +79,7 @@ class ViewCanaryInternal {
                 }
             }
         };
-        config.application().registerActivityLifecycleCallbacks(callbacks);
+        GodEye.instance().getApplication().registerActivityLifecycleCallbacks(callbacks);
     }
 
     void stop(Application application) {

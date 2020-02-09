@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import androidx.fragment.app.Fragment;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
@@ -39,7 +40,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         }
         Handler handler = ThreadUtil.createIfNotExistHandler(PAGELOAD_HANDLER);
         this.mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks(pageLifecycleRecords, pageInfoProvider, this, handler);
-        this.mConfig.application().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
+        GodEye.instance().getApplication().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         this.mInstalled = true;
         L.d("Pageload installed.");
     }
@@ -55,7 +56,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
             L.d("Pageload already uninstalled, ignore.");
             return;
         }
-        this.mConfig.application().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
+        GodEye.instance().getApplication().unregisterActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         mActivityLifecycleCallbacks = null;
         ThreadUtil.destoryHandler(PAGELOAD_HANDLER);
         this.mInstalled = false;

@@ -1,5 +1,6 @@
 package cn.hikyson.godeye.core.internal.modules.fps;
 
+import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
@@ -36,7 +37,7 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConfi
             return;
         }
         mConfig = config;
-        mFpsEngine = new FpsEngine(config.context(), this, config.intervalMillis());
+        mFpsEngine = new FpsEngine(GodEye.instance().getApplication(), this, config.intervalMillis());
         mFpsEngine.work();
         L.d("Fps installed.");
     }
