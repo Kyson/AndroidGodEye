@@ -76,15 +76,18 @@ public class Notifier {
                 .build();
     }
 
-    public static int notice(Context context, Config config) {
-        int id = createNoticeId();
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(id, create(context, config));
-        return id;
-    }
-
     public static int createNoticeId() {
         return (int) SystemClock.uptimeMillis();
+    }
+
+    public static int notice(Context context, Config config) {
+        return notice(context, createNoticeId(), create(context, config));
+    }
+
+    public static int notice(Context context, int id, Notification notification) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(id, notification);
+        return id;
     }
 
     public static void cancelNotice(Context context, int id) {

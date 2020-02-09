@@ -10,7 +10,7 @@ import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import java.io.IOException;
 import java.io.InputStream;
 
-import cn.hikyson.godeye.monitor.utils.IoUtil;
+import cn.hikyson.godeye.core.utils.IoUtil;
 
 /**
  * 静态资源模块
@@ -43,7 +43,7 @@ public class HttpStaticProcessor {
             input = assetManager.open(fileName);
             return IoUtil.inputStreamToString(input);
         } finally {
-            IoUtil.closeSilent(input);
+            IoUtil.closeSilently(input);
         }
     }
 

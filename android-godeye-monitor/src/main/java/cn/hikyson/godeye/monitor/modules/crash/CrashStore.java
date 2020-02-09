@@ -22,10 +22,9 @@ import java.util.Objects;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
-import cn.hikyson.godeye.core.helper.GsonSerializer;
-import cn.hikyson.godeye.core.helper.Serializer;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.utils.IoUtil;
+import cn.hikyson.godeye.core.utils.JsonUtil;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
 
@@ -51,7 +50,6 @@ public class CrashStore {
 
     private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_SSS_Z", Locale.US);
     private static final SimpleDateFormat FORMATTER_2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
-    private static final Serializer sSerializer = new GsonSerializer();
     private static final int sMaxStoreCount = 10;
     private static final String SUFFIX = ".crash";
     private static final FilenameFilter mCrashFilenameFilter = (dir, filename) -> filename.endsWith(SUFFIX);
@@ -92,7 +90,7 @@ public class CrashStore {
             FileWriter fileWriter = null;
             try {
                 fileWriter = new FileWriter(file);
-                fileWriter.write(sSerializer.serialize(crashInfo));
+                fileWriter.write(JsonUtil.toJson(crashInfo));
             } catch (IOException e) {
                 L.e(e);
             } finally {
@@ -123,7 +121,7 @@ public class CrashStore {
             FileReader reader = null;
             try {
                 reader = new FileReader(crashFile);
-                crashInfos.add(sSerializer.deserialize(reader, CrashInfo.class));
+                crashInfos.add(JsonUtil.sGson.fromJson(reader, CrashInfo.class));
             } catch (Throwable e) {
                 L.e(e);
             } finally {

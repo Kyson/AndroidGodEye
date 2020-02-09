@@ -4,7 +4,7 @@ import androidx.annotation.Keep;
 
 import java.io.Serializable;
 
-import cn.hikyson.godeye.monitor.utils.GsonUtil;
+import cn.hikyson.godeye.core.utils.JsonUtil;
 
 /**
  * 服务端发出的消息体
@@ -59,7 +59,7 @@ public class ServerMessage implements Serializable {
 
     @Override
     public String toString() {
-        return GsonUtil.toJson(this);
+        return JsonUtil.toJson(this);
     }
 
 }
