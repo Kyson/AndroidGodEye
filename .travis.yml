@@ -28,7 +28,7 @@ install:
     - sdkmanager --list || true
 
 script:
-    - ./gradlew clean build test
+    - ./gradlew clean build jacocoTestReport
     - ./gradlew assembleRelease
 
 notifications:
@@ -50,4 +50,4 @@ deploy:
         branch: master
 
 after_success:
-    - echo I am done, release url:https://github.com/Kyson/AndroidGodEye/releases
+    - bash <(curl -s https://codecov.io/bash) && echo I am done, Release url:https://github.com/Kyson/AndroidGodEye/releases and CodeCov:https://codecov.io/gh/Kyson/AndroidGodEye

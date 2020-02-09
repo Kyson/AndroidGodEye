@@ -1,3 +1,3 @@
 #! /bin/sh
 
-./gradlew clean build test && ./gradlew assembleRelease
+./gradlew clean build jacocoTestReport && ./gradlew assembleRelease

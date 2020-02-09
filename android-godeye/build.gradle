@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 
+apply from: rootProject.file('gradle/gradle-jacoco-support.gradle')
+
 android {
     compileSdkVersion Integer.parseInt(COMPILE_SDK_VERSION)
     buildToolsVersion BUILD_TOOLS_VERSION
