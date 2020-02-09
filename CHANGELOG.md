@@ -11,6 +11,31 @@ Fixed for any bug fixes.
 Security in case of vulnerabilities.
 ```
 
+## 3.2.0
+
+### Added
+
+- Block module config can be cached when change in debug monitor dashboard
+- Add some unitTests
+- Add unit test coverage
+
+### Deprecated
+
+- GodEyeHelper.inspectView, you do not need to call this function
+
+### Changed
+
+- ViewCanary: auto detect view issue, overdraw and depth
+- ImageCanary: change detect time
+- Modules config class path changed, eg. GodEyeConfig.AppSizeConfig -> cn.hikyson.godeye.core.internal.modules.appsize.AppSizeConfig
+- Debug monitor dashboard's layout has been slightly adjusted, pageload has its own row
+- Add attention note text to Android Studio plugin
+
+### Removed
+
+- Module config classes named xxxContext have been removed, just use xxxConfig, eg. AppSizeContext has been removed and just use AppSizeConfig instead
+- Remove some unused util class:DeviceUtils\FileUtil\NumberUtil\Preconditions\ShellUtil etc.
+
 ## 3.1.12
 
 ### Added
