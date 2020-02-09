@@ -120,25 +120,6 @@ public class GodEye {
     public void init(Application application) {
         mApplication = application;
         ActivityStackUtil.register(application);
-
-//        new Thread(new Runnable() {// TODO KYSON DEL
-//            @Override
-//            public void run() {
-//                while (true) {
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                    NativeHeapInfo nativeHeapInfo = MemoryUtil.getAppNativeHeap();
-//                    L.d("native:" + nativeHeapInfo);
-//                    L.d("pss:" + Debug.getPss());
-//                    L.d("pss2:" + MemoryUtil.getAppPssInfo(GodEye.instance().getApplication()));
-//                }
-//            }
-//        }).start();
-
-
         L.d("GodEye init.");
     }
 
