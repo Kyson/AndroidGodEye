@@ -15,16 +15,17 @@ public class Network extends ProduceableSubject<NetworkInfo> implements Install<
     private NetworkConfig mConfig;
 
     @Override
-    public synchronized void install(NetworkConfig config) {
+    public synchronized boolean install(NetworkConfig config) {
         if (config == null) {
             throw new IllegalArgumentException("Network module install fail because config is null.");
         }
         if (mConfig != null) {
             L.d("Network already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         L.d("Network installed.");
+        return true;
     }
 
     @Override

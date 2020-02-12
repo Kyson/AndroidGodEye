@@ -17,15 +17,16 @@ public class Ram extends ProduceableSubject<RamInfo> implements Install<RamConfi
     private RamConfig mConfig;
 
     @Override
-    public synchronized void install(RamConfig config) {
+    public synchronized boolean install(RamConfig config) {
         if (mRamEngine != null) {
             L.d("Ram already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         mRamEngine = new RamEngine(GodEye.instance().getApplication(), this, config.intervalMillis());
         mRamEngine.work();
         L.d("Ram installed.");
+        return true;
     }
 
     @Override

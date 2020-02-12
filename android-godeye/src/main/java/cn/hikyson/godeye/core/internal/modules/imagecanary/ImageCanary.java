@@ -14,10 +14,10 @@ public class ImageCanary extends ProduceableSubject<ImageIssue> implements Insta
     private ImageCanaryInternal mImageCanaryInternal;
 
     @Override
-    public synchronized void install(ImageCanaryConfig config) {
+    public synchronized boolean install(ImageCanaryConfig config) {
         if (mInstalled) {
             L.d("ImageCanary already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         ImageCanaryConfigProvider imageCanaryConfigProvider = new DefaultImageCanaryConfigProvider();
@@ -30,6 +30,7 @@ public class ImageCanary extends ProduceableSubject<ImageIssue> implements Insta
         mImageCanaryInternal.start(GodEye.instance().getApplication(), this);
         mInstalled = true;
         L.d("ImageCanary installed.");
+        return true;
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.os.Build;
 import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +15,6 @@ import org.robolectric.annotation.Config;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
-import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import cn.hikyson.godeye.core.helper.Test4ImageActivity;
 import cn.hikyson.godeye.core.helper.ThreadUtil;
@@ -36,14 +34,14 @@ public class ImageCanaryTest {
         GodEye.instance().uninstall();
     }
 
-    @Test
-    public void isInstalled() {
-        try {
-            Assert.assertTrue(GodEye.instance().<ImageCanary>getModule(GodEye.ModuleName.IMAGE_CANARY).isInstalled());
-        } catch (UninstallException e) {
-            Assert.fail();
-        }
-    }
+//    @Test
+//    public void isInstalled() {
+//        try {
+//            Assert.assertTrue(GodEye.instance().<ImageCanary>getModule(GodEye.ModuleName.IMAGE_CANARY).isInstalled());
+//        } catch (UninstallException e) {
+//            Assert.fail();
+//        }
+//    }
 
     @Test
     public void work() {

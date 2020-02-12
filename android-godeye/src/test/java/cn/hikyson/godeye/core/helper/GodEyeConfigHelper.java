@@ -15,4 +15,14 @@ public class GodEyeConfigHelper {
             IoUtil.closeSilently(is);
         }
     }
+
+    public static GodEyeConfig createFromResource2() {
+        InputStream is = null;
+        try {
+            is = GodEyeConfigHelper.class.getClassLoader().getResourceAsStream("install2.config");
+            return GodEyeConfig.fromInputStream(is);
+        } finally {
+            IoUtil.closeSilently(is);
+        }
+    }
 }

@@ -16,15 +16,16 @@ public class Pss extends ProduceableSubject<PssInfo> implements Install<PssConfi
     private PssConfig mConfig;
 
     @Override
-    public synchronized void install(PssConfig config) {
+    public synchronized boolean install(PssConfig config) {
         if (mPssEngine != null) {
             L.d("Pss already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         mPssEngine = new PssEngine(GodEye.instance().getApplication(), this, config.intervalMillis());
         mPssEngine.work();
         L.d("Pss installed.");
+        return true;
     }
 
     @Override

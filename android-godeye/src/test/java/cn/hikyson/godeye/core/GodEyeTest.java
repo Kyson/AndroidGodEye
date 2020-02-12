@@ -6,6 +6,7 @@ import android.view.Choreographer;
 import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -20,15 +22,19 @@ import java.util.concurrent.TimeUnit;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.ChoreographerInjecor;
 import cn.hikyson.godeye.core.helper.GodEyeConfigHelper;
+import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
+import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupConfig;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import io.reactivex.functions.Consumer;
 
+import static android.os.Looper.getMainLooper;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.LOLLIPOP, application = RoboTestApplication.class)
@@ -69,9 +75,13 @@ public class GodEyeTest {
         GodEye.instance().init(ApplicationProvider.getApplicationContext());
         GodEye.instance().uninstall();
         GodEye.instance().install(GodEyeConfigHelper.createFromResource());
+        // install twice
+        GodEye.instance().install(GodEyeConfigHelper.createFromResource2());
         Set<String> installedModules = GodEye.instance().getInstalledModuleNames();
         assertTrue(installedModules.containsAll(GodEye.ALL_MODULE_NAMES));
         assertTrue(GodEye.ALL_MODULE_NAMES.containsAll(installedModules));
+        GodEye.instance().uninstall();
+        // uninstall twice
         GodEye.instance().uninstall();
         assertTrue(installedModules.isEmpty());
         CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -90,6 +100,19 @@ public class GodEyeTest {
         installedModules = GodEye.instance().getInstalledModuleNames();
         assertTrue(installedModules.containsAll(GodEye.ALL_MODULE_NAMES));
         assertTrue(GodEye.ALL_MODULE_NAMES.containsAll(installedModules));
+        Iterator<String> stringIterator = installedModules.iterator();
+        shadowOf(getMainLooper()).idle();
+        while (stringIterator.hasNext()) {
+            String moduleName = stringIterator.next();
+            try {
+                Install install = GodEye.instance().getModule(moduleName);
+                Log4Test.d("Test module:" + moduleName);
+                Assert.assertTrue(install.isInstalled());
+                assertNotNull(install.config());
+            } catch (UninstallException e) {
+                Assert.fail();
+            }
+        }
     }
 
     @Test

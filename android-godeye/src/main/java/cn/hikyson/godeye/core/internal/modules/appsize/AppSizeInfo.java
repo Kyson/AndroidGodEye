@@ -10,9 +10,21 @@ import java.io.Serializable;
 @Keep
 public class AppSizeInfo implements Serializable {
     public static AppSizeInfo INVALID = new AppSizeInfo();
+    // byte
     public long cacheSize;
+    // byte
     public long dataSize;
+    // byte
     public long codeSize;
+
+    public AppSizeInfo(long cacheSize, long dataSize, long codeSize) {
+        this.cacheSize = cacheSize;
+        this.dataSize = dataSize;
+        this.codeSize = codeSize;
+    }
+
+    public AppSizeInfo() {
+    }
 
     @Override
     public String toString() {

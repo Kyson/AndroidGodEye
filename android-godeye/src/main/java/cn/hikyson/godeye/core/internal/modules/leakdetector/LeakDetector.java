@@ -26,10 +26,10 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
     }
 
     @Override
-    public synchronized void install(LeakConfig config) {
+    public synchronized boolean install(LeakConfig config) {
         if (mInstalled) {
             L.d("LeakDetector already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         ThreadUtil.createIfNotExistHandler(LEAK_HANDLER);
@@ -37,6 +37,7 @@ public class LeakDetector extends ProduceableSubject<LeakQueue.LeakMemoryInfo> i
         mLeakEngine.work();
         mInstalled = true;
         L.d("LeakDetector installed.");
+        return true;
     }
 
     @Override

@@ -22,10 +22,10 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
     private CrashConfig mConfig;
 
     @Override
-    public synchronized void install(final CrashConfig crashContext) {
+    public synchronized boolean install(final CrashConfig crashContext) {
         if (mInstalled) {
             L.d("Crash already installed, ignore.");
-            return;
+            return true;
         }
         Consumer<List<CrashInfo>> consumer = this::produce;
         // auto detect crash collector provider
@@ -34,11 +34,12 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
                     new Class<?>[]{CrashConfig.class, Consumer.class}, new Object[]{crashContext, consumer});
         } catch (Exception e) {
             L.d("Crash install fail:", e);
-            return;
+            return false;
         }
         mConfig = crashContext;
         mInstalled = true;
         L.d("Crash installed.");
+        return true;
     }
 
     @Override

@@ -15,15 +15,16 @@ public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapCo
     private HeapConfig mConfig;
 
     @Override
-    public synchronized void install(HeapConfig heapContext) {
+    public synchronized boolean install(HeapConfig heapContext) {
         if (mHeapEngine != null) {
             L.d("Heap already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = heapContext;
         mHeapEngine = new HeapEngine(this, heapContext.intervalMillis());
         mHeapEngine.work();
         L.d("Heap installed.");
+        return true;
     }
 
     @Override

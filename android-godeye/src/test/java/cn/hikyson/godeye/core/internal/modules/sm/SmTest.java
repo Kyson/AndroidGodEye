@@ -31,16 +31,16 @@ public class SmTest {
     public void tearDown() throws Exception {
     }
 
-    @Test
-    public void isInstalled() {
-        GodEye.instance().uninstall();
-        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withSmConfig(new SmConfig()).build());
-        try {
-            Assert.assertTrue(GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).isInstalled());
-        } catch (UninstallException e) {
-            Assert.fail();
-        }
-    }
+//    @Test
+//    public void isInstalled() {
+//        GodEye.instance().uninstall();
+//        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withSmConfig(new SmConfig()).build());
+//        try {
+//            Assert.assertTrue(GodEye.instance().<Sm>getModule(GodEye.ModuleName.SM).isInstalled());
+//        } catch (UninstallException e) {
+//            Assert.fail();
+//        }
+//    }
 
     @Test
     public void configAndInstallConfig() {

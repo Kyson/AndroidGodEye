@@ -9,14 +9,15 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
     private MethodCanaryConfig mMethodCanaryContext;
 
     @Override
-    public synchronized void install(final MethodCanaryConfig methodCanaryContext) {
+    public synchronized boolean install(final MethodCanaryConfig methodCanaryContext) {
         if (this.mInstalled) {
             L.d("MethodCanary already installed, ignore.");
-            return;
+            return true;
         }
         this.mMethodCanaryContext = methodCanaryContext;
         this.mInstalled = true;
         L.d("MethodCanary installed.");
+        return true;
     }
 
     @Override

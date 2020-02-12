@@ -16,15 +16,16 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConfi
     private CpuConfig mConfig;
 
     @Override
-    public synchronized void install(CpuConfig config) {
+    public synchronized boolean install(CpuConfig config) {
         if (mCpuEngine != null) {
             L.d("Cpu already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         mCpuEngine = new CpuEngine(this, config.intervalMillis());
         mCpuEngine.work();
         L.d("Cpu installed");
+        return true;
     }
 
     @Override

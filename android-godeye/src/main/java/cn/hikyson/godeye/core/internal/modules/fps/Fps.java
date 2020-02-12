@@ -18,7 +18,7 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConfi
     private FpsConfig mConfig;
 
     @Override
-    public void install(final FpsConfig config) {
+    public boolean install(final FpsConfig config) {
         if (ThreadUtil.isMainThread()) {
             installInMain(config);
         } else {
@@ -29,6 +29,7 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConfi
                 }
             });
         }
+        return true;
     }
 
     private synchronized void installInMain(FpsConfig config) {

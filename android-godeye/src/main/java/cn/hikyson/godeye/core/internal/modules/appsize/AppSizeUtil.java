@@ -9,6 +9,7 @@ import android.content.pm.PackageStats;
 import android.os.Build;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
@@ -109,25 +110,23 @@ class AppSizeUtil {
 
     public interface OnGetSizeListener {
         void onGetSize(AppSizeInfo ctAppSizeInfo);
+
         void onError(Throwable t);
     }
 
     static String formatSize(long size) {
-        try {
-            if (size / (1024 * 1024 * 1024) > 0) {
-                float tmpSize = (float) (size) / (float) (1024 * 1024 * 1024);
-                DecimalFormat df = new DecimalFormat("#.##");
-                return "" + df.format(tmpSize) + "GB";
-            } else if (size / (1024 * 1024) > 0) {
-                float tmpSize = (float) (size) / (float) (1024 * 1024);
-                DecimalFormat df = new DecimalFormat("#.##");
-                return "" + df.format(tmpSize) + "MB";
-            } else if (size / 1024 > 0) {
-                return "" + (size / (1024)) + "KB";
-            } else
-                return "" + size + "B";
-        } catch (Exception e) {
-            return "";
+        if (size / (1024 * 1024 * 1024) > 0) {
+            float tmpSize = (float) (size) / (float) (1024 * 1024 * 1024);
+            DecimalFormat df = new DecimalFormat("#.##");
+            return df.format(tmpSize) + "GB";
+        } else if (size / (1024 * 1024) > 0) {
+            float tmpSize = (float) (size) / (float) (1024 * 1024);
+            DecimalFormat df = new DecimalFormat("#.##");
+            return df.format(tmpSize) + "MB";
+        } else if (size / 1024 > 0) {
+            return (size / (1024)) + "KB";
+        } else {
+            return size + "B";
         }
     }
 }

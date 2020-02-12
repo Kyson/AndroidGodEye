@@ -32,10 +32,10 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
     private boolean mInstalled = false;
 
     @Override
-    public synchronized void install(SmConfig config) {
+    public synchronized boolean install(SmConfig config) {
         if (mInstalled) {
             L.d("Sm already installed, ignore.");
-            return;
+            return true;
         }
         this.mInstalled = true;
         this.mSmConfig = config;
@@ -67,6 +67,7 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
         });
         mBlockCore.install();
         L.d("Sm installed");
+        return true;
     }
 
     private SmConfig wrapRealConfig(SmConfig installSmConfig) {

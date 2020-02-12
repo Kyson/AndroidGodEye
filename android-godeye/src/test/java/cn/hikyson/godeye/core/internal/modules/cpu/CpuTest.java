@@ -16,6 +16,8 @@ import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
+import io.reactivex.functions.Predicate;
+import io.reactivex.observers.TestObserver;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = Build.VERSION_CODES.LOLLIPOP, application = RoboTestApplication.class)
@@ -32,9 +34,24 @@ public class CpuTest {
     }
 
     @Test
-    public void isInstalled() {
+    public void work() {
         try {
-            Assert.assertTrue(GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).isInstalled());
+            GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).produce(new CpuInfo(0.6, 0.1, 0.1, 0.1, 0.1));
+            GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).produce(new CpuInfo(0.7, 0.1, 0.1, 0.1, 0.1));
+            TestObserver<CpuInfo> testObserver = GodEye.instance().<Cpu, CpuInfo>moduleObservable(GodEye.ModuleName.CPU).test();
+            GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).produce(new CpuInfo(0.8, 0.1, 0.1, 0.1, 0.1));
+            GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).produce(new CpuInfo(0.9, 0.1, 0.1, 0.1, 0.1));
+            testObserver.assertValueCount(2).assertValueAt(0, new Predicate<CpuInfo>() {
+                @Override
+                public boolean test(CpuInfo cpuInfo) throws Exception {
+                    return cpuInfo.totalUseRatio == 0.8;
+                }
+            }).assertValueAt(1, new Predicate<CpuInfo>() {
+                @Override
+                public boolean test(CpuInfo cpuInfo) throws Exception {
+                    return cpuInfo.totalUseRatio == 0.9;
+                }
+            });
         } catch (UninstallException e) {
             Assert.fail();
         }

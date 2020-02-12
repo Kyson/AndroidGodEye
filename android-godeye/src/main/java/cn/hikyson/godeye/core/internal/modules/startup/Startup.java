@@ -16,16 +16,17 @@ public class Startup extends ProduceableSubject<StartupInfo> implements Install<
     private StartupConfig mConfig;
 
     @Override
-    public synchronized void install(StartupConfig config) {
+    public synchronized boolean install(StartupConfig config) {
         if (config == null) {
             throw new IllegalArgumentException("Startup module install fail because config is null.");
         }
         if (mConfig != null) {
             L.d("Startup already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         L.d("Startup installed.");
+        return true;
     }
 
     @Override

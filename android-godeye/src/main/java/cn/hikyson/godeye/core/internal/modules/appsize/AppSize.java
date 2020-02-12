@@ -17,10 +17,10 @@ public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<
     private AppSizeConfig mConfig;
 
     @Override
-    public synchronized void install(AppSizeConfig config) {
+    public synchronized boolean install(AppSizeConfig config) {
         if (mInstalled) {
             L.d("AppSize already installed, ignore.");
-            return;
+            return true;
         }
         mInstalled = true;
         mConfig = config;
@@ -39,6 +39,7 @@ public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<
             }
         }), config.delayMillis(), TimeUnit.MILLISECONDS);
         L.d("AppSize installed.");
+        return true;
     }
 
     @Override

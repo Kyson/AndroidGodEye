@@ -25,10 +25,10 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
     private boolean mInstalled = false;
 
     @Override
-    public synchronized void install(PageloadConfig config) {
+    public synchronized boolean install(PageloadConfig config) {
         if (mInstalled) {
             L.d("Pageload already installed, ignore.");
-            return;
+            return true;
         }
         this.mConfig = config;
         PageLifecycleRecords pageLifecycleRecords = new PageLifecycleRecords();
@@ -43,6 +43,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
         GodEye.instance().getApplication().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         this.mInstalled = true;
         L.d("Pageload installed.");
+        return true;
     }
 
     @Override

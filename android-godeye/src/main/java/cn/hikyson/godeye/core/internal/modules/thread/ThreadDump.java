@@ -17,10 +17,10 @@ public class ThreadDump extends ProduceableSubject<List<Thread>> implements Inst
     private ThreadConfig mConfig;
 
     @Override
-    public synchronized void install(ThreadConfig config) {
+    public synchronized boolean install(ThreadConfig config) {
         if (mThreadEngine != null) {
             L.d("ThreadDump already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         ThreadFilter threadFilter = new ExcludeSystemThreadFilter();
@@ -32,6 +32,7 @@ public class ThreadDump extends ProduceableSubject<List<Thread>> implements Inst
         mThreadEngine = new ThreadEngine(this, config.intervalMillis(), threadFilter);
         mThreadEngine.work();
         L.d("ThreadDump installed.");
+        return true;
     }
 
     @Override

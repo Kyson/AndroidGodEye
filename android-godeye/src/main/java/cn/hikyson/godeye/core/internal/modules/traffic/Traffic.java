@@ -15,15 +15,16 @@ public class Traffic extends ProduceableSubject<TrafficInfo> implements Install<
     private TrafficConfig mConfig;
 
     @Override
-    public synchronized void install(TrafficConfig config) {
+    public synchronized boolean install(TrafficConfig config) {
         if (mTrafficEngine != null) {
             L.d("Traffic already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         mTrafficEngine = new TrafficEngine(this, config.intervalMillis(), config.sampleMillis());
         mTrafficEngine.work();
         L.d("Traffic installed.");
+        return true;
     }
 
     @Override

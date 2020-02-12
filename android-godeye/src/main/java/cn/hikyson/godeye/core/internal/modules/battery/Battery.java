@@ -22,15 +22,16 @@ public class Battery extends ProduceableSubject<BatteryInfo> implements Install<
      * @param config
      */
     @Override
-    public synchronized void install(BatteryConfig config) {
+    public synchronized boolean install(BatteryConfig config) {
         if (mBatteryEngine != null) {
             L.d("Battery already installed, ignore.");
-            return;
+            return true;
         }
         mConfig = config;
         mBatteryEngine = new BatteryEngine(GodEye.instance().getApplication(), this);
         mBatteryEngine.work();
         L.d("Battery installed.");
+        return true;
     }
 
     /**

@@ -14,16 +14,17 @@ public class ViewCanary extends ProduceableSubject<ViewIssueInfo> implements Ins
     private ViewCanaryInternal mViewCanaryInternal;
 
     @Override
-    public synchronized void install(ViewCanaryConfig config) {
+    public synchronized boolean install(ViewCanaryConfig config) {
         if (mInstalled) {
             L.d("ViewCanary already installed, ignore.");
-            return;
+            return true;
         }
         this.config = config;
         mViewCanaryInternal = new ViewCanaryInternal();
         mViewCanaryInternal.start(this, config());
         mInstalled = true;
         L.d("ViewCanary installed.");
+        return true;
     }
 
     @Override
