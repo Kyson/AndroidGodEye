@@ -20,7 +20,6 @@ import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
-import cn.hikyson.godeye.core.internal.modules.cpu.CpuConfig;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.TestObserver;
 
@@ -30,7 +29,7 @@ public class CrashTest {
     @Before
     public void setUp() throws Exception {
         GodEye.instance().init(ApplicationProvider.getApplicationContext());
-        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withCpuConfig(new CpuConfig()).build());
+        GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withCrashConfig(new CrashConfig()).build());
     }
 
     @After
