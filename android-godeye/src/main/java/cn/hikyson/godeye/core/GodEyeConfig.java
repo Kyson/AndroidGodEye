@@ -220,12 +220,16 @@ public class GodEyeConfig implements Serializable {
             if (element != null) {
                 final String intervalMillisString = element.getAttribute("intervalMillis");
                 final String threadFilterString = element.getAttribute("threadFilter");
+                final String threadTaggerString = element.getAttribute("threadTagger");
                 ThreadConfig threadConfig = new ThreadConfig();
                 if (!TextUtils.isEmpty(intervalMillisString)) {
                     threadConfig.intervalMillis = Long.parseLong(intervalMillisString);
                 }
                 if (!TextUtils.isEmpty(threadFilterString)) {
                     threadConfig.threadFilter = threadFilterString;
+                }
+                if (!TextUtils.isEmpty(threadTaggerString)) {
+                    threadConfig.threadTagger = threadTaggerString;
                 }
                 builder.withThreadConfig(threadConfig);
             }

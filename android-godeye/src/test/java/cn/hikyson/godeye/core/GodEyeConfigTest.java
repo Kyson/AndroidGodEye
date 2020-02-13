@@ -153,8 +153,9 @@ public class GodEyeConfigTest {
         assertEquals(500, config.getSmConfig().shortBlockThreshold());
         assertEquals(true, config.getSmConfig().debugNotification());
         assertEquals(JsonUtil.toJson(new StartupConfig()), JsonUtil.toJson(config.getStartupConfig()));
-        assertEquals(3000, config.getThreadConfig().intervalMillis());
-        assertEquals("cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter", config.getThreadConfig().threadFilter());
+        assertEquals(3000, config.getThreadConfig().intervalMillis);
+        assertEquals("cn.hikyson.godeye.core.internal.modules.thread.ExcludeSystemThreadFilter", config.getThreadConfig().threadFilter);
+        assertEquals("cn.hikyson.godeye.core.internal.modules.thread.DefaultThreadTagger", config.getThreadConfig().threadTagger);
         assertEquals(2000, config.getTrafficConfig().intervalMillis());
         assertEquals(1000, config.getTrafficConfig().sampleMillis());
         assertEquals(10, config.getViewCanaryConfig().maxDepth());

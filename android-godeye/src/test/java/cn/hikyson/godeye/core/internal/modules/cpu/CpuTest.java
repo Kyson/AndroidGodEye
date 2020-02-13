@@ -42,13 +42,19 @@ public class CpuTest {
             TestObserver<CpuInfo> testObserver = GodEye.instance().<Cpu, CpuInfo>moduleObservable(GodEye.ModuleName.CPU).test();
             GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).produce(new CpuInfo(0.8, 0.1, 0.1, 0.1, 0.1));
             GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).produce(new CpuInfo(0.9, 0.1, 0.1, 0.1, 0.1));
-            testObserver.assertValueCount(2).assertValueAt(0, new Predicate<CpuInfo>() {
+            testObserver.assertValueCount(3).assertValueAt(0, new Predicate<CpuInfo>() {
+                @Override
+                public boolean test(CpuInfo info) throws Exception {
+                    Log4Test.d(info);
+                    return info.totalUseRatio == 0.7;
+                }
+            }).assertValueAt(1, new Predicate<CpuInfo>() {
                 @Override
                 public boolean test(CpuInfo info) throws Exception {
                     Log4Test.d(info);
                     return info.totalUseRatio == 0.8;
                 }
-            }).assertValueAt(1, new Predicate<CpuInfo>() {
+            }).assertValueAt(2, new Predicate<CpuInfo>() {
                 @Override
                 public boolean test(CpuInfo info) throws Exception {
                     Log4Test.d(info);
