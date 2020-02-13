@@ -5,6 +5,8 @@ import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * fps模块
@@ -76,5 +78,10 @@ public class Fps extends ProduceableSubject<FpsInfo> implements Install<FpsConfi
         mFpsEngine.shutdown();
         mFpsEngine = null;
         L.d("Fps uninstalled.");
+    }
+
+    @Override
+    protected Subject<FpsInfo> createSubject() {
+        return BehaviorSubject.create();
     }
 }

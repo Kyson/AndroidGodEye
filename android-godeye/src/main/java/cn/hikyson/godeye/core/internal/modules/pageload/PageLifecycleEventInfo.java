@@ -17,6 +17,9 @@ public class PageLifecycleEventInfo<T> implements Serializable {
         this.allEvents = allEvents;
     }
 
+    public PageLifecycleEventInfo() {
+    }
+
     @Override
     public String toString() {
         return "PageLifecycleEventInfo{" +

@@ -4,6 +4,8 @@ package cn.hikyson.godeye.core.internal.modules.cpu;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * cpu模块
@@ -34,7 +36,7 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConfi
             L.d("Cpu already uninstalled , ignore.");
             return;
         }
-        mConfig= null;
+        mConfig = null;
         mCpuEngine.shutdown();
         mCpuEngine = null;
         L.d("Cpu uninstalled");
@@ -48,5 +50,10 @@ public class Cpu extends ProduceableSubject<CpuInfo> implements Install<CpuConfi
     @Override
     public CpuConfig config() {
         return mConfig;
+    }
+
+    @Override
+    protected Subject<CpuInfo> createSubject() {
+        return BehaviorSubject.create();
     }
 }

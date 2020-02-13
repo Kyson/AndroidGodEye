@@ -3,6 +3,8 @@ package cn.hikyson.godeye.core.internal.modules.methodcanary;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implements Install<MethodCanaryConfig> {
     private boolean mInstalled = false;
@@ -78,5 +80,10 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
 
     public synchronized boolean isRunning(String tag) {
         return cn.hikyson.methodcanary.lib.MethodCanary.get().isRunning(tag);
+    }
+
+    @Override
+    protected Subject<MethodsRecordInfo> createSubject() {
+        return BehaviorSubject.create();
     }
 }

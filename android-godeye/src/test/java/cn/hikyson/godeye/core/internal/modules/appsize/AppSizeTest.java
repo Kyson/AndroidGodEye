@@ -15,6 +15,7 @@ import org.robolectric.annotation.Config;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.TestObserver;
@@ -43,18 +44,21 @@ public class AppSizeTest {
             GodEye.instance().<AppSize>getModule(GodEye.ModuleName.APP_SIZE).produce(new AppSizeInfo(12, 1, 1));
             testObserver.assertValueCount(3).assertValueAt(0, new Predicate<AppSizeInfo>() {
                 @Override
-                public boolean test(AppSizeInfo appSizeInfo) throws Exception {
-                    return appSizeInfo.cacheSize == 10;
+                public boolean test(AppSizeInfo info) throws Exception {
+                    Log4Test.d(info);
+                    return info.cacheSize == 10;
                 }
             }).assertValueAt(1, new Predicate<AppSizeInfo>() {
                 @Override
-                public boolean test(AppSizeInfo appSizeInfo) throws Exception {
-                    return appSizeInfo.cacheSize == 11;
+                public boolean test(AppSizeInfo info) throws Exception {
+                    Log4Test.d(info);
+                    return info.cacheSize == 11;
                 }
             }).assertValueAt(2, new Predicate<AppSizeInfo>() {
                 @Override
-                public boolean test(AppSizeInfo appSizeInfo) throws Exception {
-                    return appSizeInfo.cacheSize == 12;
+                public boolean test(AppSizeInfo info) throws Exception {
+                    Log4Test.d(info);
+                    return info.cacheSize == 12;
                 }
             });
         } catch (UninstallException e) {

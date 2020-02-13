@@ -3,6 +3,8 @@ package cn.hikyson.godeye.core.internal.modules.memory;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * heap模块
@@ -47,5 +49,10 @@ public class Heap extends ProduceableSubject<HeapInfo> implements Install<HeapCo
     @Override
     public HeapConfig config() {
         return mConfig;
+    }
+
+    @Override
+    protected Subject<HeapInfo> createSubject() {
+        return BehaviorSubject.create();
     }
 }

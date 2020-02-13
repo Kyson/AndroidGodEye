@@ -19,6 +19,7 @@ import java.util.List;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.TestObserver;
@@ -56,16 +57,19 @@ public class CrashTest {
             testObserver.assertValueCount(3).assertValueAt(0, new Predicate<List<CrashInfo>>() {
                 @Override
                 public boolean test(List<CrashInfo> info) throws Exception {
+                    Log4Test.d(info);
                     return info.size() == 1 && info.get(0).crashMessage.equals("crashInfo0");
                 }
             }).assertValueAt(1, new Predicate<List<CrashInfo>>() {
                 @Override
                 public boolean test(List<CrashInfo> info) throws Exception {
+                    Log4Test.d(info);
                     return info.size() == 1 && info.get(0).crashMessage.equals("crashInfo1");
                 }
             }).assertValueAt(2, new Predicate<List<CrashInfo>>() {
                 @Override
                 public boolean test(List<CrashInfo> info) throws Exception {
+                    Log4Test.d(info);
                     return info.size() == 2 && info.get(0).crashMessage.equals("crashInfo2") && info.get(1).crashMessage.equals("crashInfo3");
                 }
             });

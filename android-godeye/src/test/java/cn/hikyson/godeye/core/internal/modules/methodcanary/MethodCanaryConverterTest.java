@@ -20,7 +20,15 @@ public class MethodCanaryConverterTest {
 
     @Test
     public void convertToMethodsRecordInfo() {
-        long start = System.nanoTime();
+        Map<ThreadInfo, List<MethodEvent>> methodEventMap = mockMethodEventMap();
+        MethodsRecordInfo methodsRecordInfo = mockMethodsRecordInfo(methodEventMap);
+        Gson gson = new Gson();
+        String c = gson.toJson(methodsRecordInfo);
+        System.out.println("methodsRecordInfo:\n" + c);
+        assertEquals(methodsRecordInfo.methodInfoOfThreadInfos.size(), methodEventMap.size());
+    }
+
+    public static Map<ThreadInfo, List<MethodEvent>> mockMethodEventMap() {
         Map<ThreadInfo, List<MethodEvent>> methodEventMap = new HashMap<>();
         methodEventMap.put(new ThreadInfo(1, "main", 5), new ArrayList<MethodEvent>());
         methodEventMap.put(new ThreadInfo(2, "thread2", 6), new ArrayList<MethodEvent>());
@@ -47,12 +55,12 @@ public class MethodCanaryConverterTest {
         }
         methodEventMap.get(new ThreadInfo(3, "thread3", 8)).add(new MethodEnterEvent("class" + 103, 103, "method" + 103, "methoddesc" + 103, System.nanoTime()));
         methodEventMap.get(new ThreadInfo(3, "thread3", 8)).add(new MethodExitEvent("class" + 104, 104, "method" + 104, "methoddesc" + 104, System.nanoTime()));
+        return methodEventMap;
+    }
 
-        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(start, System.nanoTime(), methodEventMap);
-        Gson gson = new Gson();
-        String c = gson.toJson(methodsRecordInfo);
-        System.out.println("methodsRecordInfo:\n" + c);
-        assertEquals(methodsRecordInfo.methodInfoOfThreadInfos.size(), methodEventMap.size());
+    public static MethodsRecordInfo mockMethodsRecordInfo(Map<ThreadInfo, List<MethodEvent>> methodEventMap) {
+        long start = System.nanoTime();
+        return MethodCanaryConverter.convertToMethodsRecordInfo(start, System.nanoTime(), methodEventMap);
     }
 
 }

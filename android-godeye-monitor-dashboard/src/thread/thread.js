@@ -71,9 +71,9 @@ class Thread extends Component {
                             id: "isInterrupted",
                             accessor: d => d.isInterrupted + ""
                         }, {
-                            Header: "RunningProcess",
-                            id: "threadRunningProcess",
-                            accessor: d => d.threadRunningProcess + ""
+                            Header: "ThreadTag",
+                            id: "threadTag",
+                            accessor: d => d.threadTag + ""
                         }
                     ]}
                     SubComponent={row => {

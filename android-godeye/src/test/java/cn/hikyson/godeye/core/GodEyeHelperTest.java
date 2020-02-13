@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.helper.ChoreographerHelper;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import cn.hikyson.godeye.core.helper.Test1Activity;
 import cn.hikyson.godeye.core.helper.Test1Fragment;
@@ -76,11 +77,13 @@ public class GodEyeHelperTest {
                 return testScheduler;
             }
         });
+        ChoreographerHelper.setup();
         GodEye.instance().init(ApplicationProvider.getApplicationContext());
     }
 
     @After
     public void tearDown() throws Exception {
+        ChoreographerHelper.teardown();
     }
 
     @Test

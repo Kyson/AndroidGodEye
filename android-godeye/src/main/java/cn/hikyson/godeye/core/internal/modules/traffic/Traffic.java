@@ -3,6 +3,8 @@ package cn.hikyson.godeye.core.internal.modules.traffic;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * 流量模块
@@ -47,5 +49,10 @@ public class Traffic extends ProduceableSubject<TrafficInfo> implements Install<
     @Override
     public TrafficConfig config() {
         return mConfig;
+    }
+
+    @Override
+    protected Subject<TrafficInfo> createSubject() {
+        return BehaviorSubject.create();
     }
 }

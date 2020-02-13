@@ -18,6 +18,16 @@ public class RamInfo implements Serializable {
     //是否低内存状态运行
     public boolean isLowMemory;
 
+    public RamInfo(long availMemKb, long totalMemKb, long lowMemThresholdKb, boolean isLowMemory) {
+        this.availMemKb = availMemKb;
+        this.totalMemKb = totalMemKb;
+        this.lowMemThresholdKb = lowMemThresholdKb;
+        this.isLowMemory = isLowMemory;
+    }
+
+    public RamInfo() {
+    }
+
     @Override
     public String toString() {
         return "RamMemoryInfo{" +

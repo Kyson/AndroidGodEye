@@ -4,6 +4,8 @@ import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * pss模块
@@ -48,5 +50,10 @@ public class Pss extends ProduceableSubject<PssInfo> implements Install<PssConfi
     @Override
     public PssConfig config() {
         return mConfig;
+    }
+
+    @Override
+    protected Subject<PssInfo> createSubject() {
+        return BehaviorSubject.create();
     }
 }

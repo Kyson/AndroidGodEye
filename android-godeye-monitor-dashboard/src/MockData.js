@@ -501,7 +501,7 @@ class Mock {
                 deamon: "deamon",
                 isAlive: "isAlive",
                 isInterrupted: "isInterrupted",
-                threadRunningProcess: "UNKNOWN"
+                threadTag: "UNKNOWN"
             },
             {
                 id: 1,
@@ -511,7 +511,7 @@ class Mock {
                 deamon: "deamon",
                 isAlive: "isAlive",
                 isInterrupted: "isInterrupted",
-                threadRunningProcess: "APP"
+                threadTag: "APP"
             }, {
                 id: 1,
                 name: "name",
@@ -520,7 +520,7 @@ class Mock {
                 deamon: "deamon",
                 isAlive: "isAlive",
                 isInterrupted: "isInterrupted",
-                threadRunningProcess: "SYSTEM"
+                threadTag: "SYSTEM"
             }
         ]);
     }

@@ -13,6 +13,16 @@ public class HeapInfo implements Serializable {
     public long maxMemKb;
     public long allocatedKb;
 
+
+    public HeapInfo(long freeMemKb, long maxMemKb, long allocatedKb) {
+        this.freeMemKb = freeMemKb;
+        this.maxMemKb = maxMemKb;
+        this.allocatedKb = allocatedKb;
+    }
+
+    public HeapInfo() {
+    }
+
     @Override
     public String toString() {
         return "HeapInfo{" +

@@ -1,7 +1,6 @@
 package cn.hikyson.godeye.core;
 
 import android.os.Build;
-import android.view.Choreographer;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -10,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -20,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import cn.hikyson.godeye.core.exceptions.UninstallException;
-import cn.hikyson.godeye.core.helper.ChoreographerInjecor;
+import cn.hikyson.godeye.core.helper.ChoreographerHelper;
 import cn.hikyson.godeye.core.helper.GodEyeConfigHelper;
 import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
@@ -42,10 +40,12 @@ public class GodEyeTest {
 
     @Before
     public void setUp() throws Exception {
+        ChoreographerHelper.setup();
     }
 
     @After
     public void tearDown() throws Exception {
+        ChoreographerHelper.teardown();
     }
 
     @Test
@@ -68,10 +68,6 @@ public class GodEyeTest {
 
     @Test
     public void installAndUninstallInAnyThread() {
-        // prepare
-        Choreographer choreographer = Mockito.spy(Choreographer.getInstance());
-        ChoreographerInjecor.setChoreographerProvider(() -> choreographer);
-        Mockito.doAnswer(invocation -> null).when(choreographer).postFrameCallback(Mockito.any());
         GodEye.instance().init(ApplicationProvider.getApplicationContext());
         GodEye.instance().uninstall();
         GodEye.instance().install(GodEyeConfigHelper.createFromResource());

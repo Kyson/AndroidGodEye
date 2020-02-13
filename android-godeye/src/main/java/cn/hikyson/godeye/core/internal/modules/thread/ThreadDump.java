@@ -5,6 +5,8 @@ import java.util.List;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * 线程模块
@@ -12,7 +14,7 @@ import cn.hikyson.godeye.core.utils.L;
  * 发射数据在子线程
  * Created by kysonchao on 2018/1/14.
  */
-public class ThreadDump extends ProduceableSubject<List<Thread>> implements Install<ThreadConfig> {
+public class ThreadDump extends ProduceableSubject<List<ThreadInfo>> implements Install<ThreadConfig> {
     private ThreadEngine mThreadEngine;
     private ThreadConfig mConfig;
 
@@ -23,13 +25,7 @@ public class ThreadDump extends ProduceableSubject<List<Thread>> implements Inst
             return true;
         }
         mConfig = config;
-        ThreadFilter threadFilter = new ExcludeSystemThreadFilter();
-        try {
-            threadFilter = (ThreadFilter) Class.forName(this.mConfig.threadFilter()).newInstance();
-        } catch (Throwable e) {
-            L.e("Thread install warning, can not find ThreadFilter class, use ExcludeSystemThreadFilter:" + e);
-        }
-        mThreadEngine = new ThreadEngine(this, config.intervalMillis(), threadFilter);
+        mThreadEngine = new ThreadEngine(this, config());
         mThreadEngine.work();
         L.d("ThreadDump installed.");
         return true;
@@ -55,5 +51,10 @@ public class ThreadDump extends ProduceableSubject<List<Thread>> implements Inst
     @Override
     public ThreadConfig config() {
         return mConfig;
+    }
+
+    @Override
+    protected Subject<List<ThreadInfo>> createSubject() {
+        return BehaviorSubject.create();
     }
 }

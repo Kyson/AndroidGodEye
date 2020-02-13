@@ -5,4 +5,7 @@ public class Log4Test {
         System.out.println(log);
     }
 
+    public static void d(Object log) {
+        System.out.println(log);
+    }
 }

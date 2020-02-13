@@ -33,7 +33,6 @@ import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
 import cn.hikyson.godeye.monitor.modules.crash.CrashStore;
-import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
@@ -123,7 +122,6 @@ public class ModuleDriver {
                         .map(this.createConvertServerMessageFunction("heapInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 this.<List<Thread>>wrapThreadComputationObservable(GodEye.ModuleName.THREAD)
-                        .map(ThreadInfoConverter.threadMap())
                         .map(this.createConvertServerMessageFunction("threadInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 this.<PageLifecycleEventInfo>wrapThreadComputationObservable(GodEye.ModuleName.PAGELOAD)

@@ -5,6 +5,8 @@ import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * ram模块
@@ -50,5 +52,10 @@ public class Ram extends ProduceableSubject<RamInfo> implements Install<RamConfi
     @Override
     public RamConfig config() {
         return mConfig;
+    }
+
+    @Override
+    protected Subject<RamInfo> createSubject() {
+        return BehaviorSubject.create();
     }
 }

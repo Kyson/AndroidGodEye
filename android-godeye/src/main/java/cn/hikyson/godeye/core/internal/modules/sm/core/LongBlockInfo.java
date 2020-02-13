@@ -63,6 +63,9 @@ public class LongBlockInfo implements Serializable {
      * @return
      */
     private static Map<String, List<String>> convertToStackString(Map<Long, List<StackTraceElement>> ts) {
+        if (ts == null || ts.isEmpty()) {
+            return new LinkedHashMap<>();
+        }
         // 筛选之后的堆栈
         Map<Long, List<StackTraceElement>> filterMap = new LinkedHashMap<>();
         for (Long key : ts.keySet()) {

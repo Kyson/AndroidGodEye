@@ -16,9 +16,7 @@ import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modules.appinfo.AppInfo;
 import cn.hikyson.godeye.monitor.modules.appinfo.AppInfoLabel;
-import cn.hikyson.godeye.monitor.modules.thread.ThreadInfoConverter;
 import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifier;
-import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifierImpl;
 import cn.hikyson.godeye.monitor.server.GodEyeMonitorServer;
 import cn.hikyson.godeye.monitor.server.HttpStaticProcessor;
 import cn.hikyson.godeye.monitor.server.ModuleDriver;
@@ -46,26 +44,6 @@ public class GodEyeMonitor {
      */
     public static void injectAppInfoConext(AppInfoConext appInfoConext) {
         AppInfo.injectAppInfoConext(appInfoConext);
-    }
-
-    /**
-     * set the class path of app process, indicate whether code is running in app process or system process
-     * it will show in thread info list module of AndroidGodEye dashboard
-     *
-     * @param classPathPrefixes
-     */
-    public static void setClassPrefixOfAppProcess(List<String> classPathPrefixes) {
-        ThreadInfoConverter.setThreadRunningProcessClassifier(new ThreadRunningProcessClassifierImpl(classPathPrefixes));
-    }
-
-    /**
-     * set the ThreadRunningProcessClassifier of app process, indicate whether code is running in app process or system process
-     * it will show in thread info list module of AndroidGodEye dashboard
-     *
-     * @param threadRunningProcessClassifier
-     */
-    public static void setThreadRunningProcessClassifier(ThreadRunningProcessClassifier threadRunningProcessClassifier) {
-        ThreadInfoConverter.setThreadRunningProcessClassifier(threadRunningProcessClassifier);
     }
 
     public static synchronized void work(Context context) {
@@ -148,5 +126,27 @@ public class GodEyeMonitor {
 
     public static Context getContext() {
         return sContext;
+    }
+
+    /**
+     * set the class path of app process, indicate whether code is running in app process or system process
+     * it will show in thread info list module of AndroidGodEye dashboard
+     *
+     * @param classPathPrefixes
+     * @deprecated use {@link cn.hikyson.godeye.core.internal.modules.thread.ThreadTagger} to {@link cn.hikyson.godeye.core.internal.modules.thread.ThreadConfig#threadTagger}
+     */
+    @Deprecated
+    public static void setClassPrefixOfAppProcess(List<String> classPathPrefixes) {
+    }
+
+    /**
+     * set the ThreadRunningProcessClassifier of app process, indicate whether code is running in app process or system process
+     * it will show in thread info list module of AndroidGodEye dashboard
+     *
+     * @param threadRunningProcessClassifier
+     * @deprecated use {@link cn.hikyson.godeye.core.internal.modules.thread.ThreadTagger} to {@link cn.hikyson.godeye.core.internal.modules.thread.ThreadConfig#threadTagger}
+     */
+    @Deprecated
+    public static void setThreadRunningProcessClassifier(ThreadRunningProcessClassifier threadRunningProcessClassifier) {
     }
 }

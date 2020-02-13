@@ -32,10 +32,12 @@ public class GodEyeMonitor {
         //no op
     }
 
+    @Deprecated
     public static void setClassPrefixOfAppProcess(List<String> classPathPrefixes) {
         // no op
     }
 
+    @Deprecated
     public static void setThreadRunningProcessClassifier(ThreadRunningProcessClassifier threadRunningProcessClassifier) {
         // no op
     }

@@ -15,6 +15,7 @@ import org.robolectric.annotation.Config;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.TestObserver;
@@ -43,13 +44,15 @@ public class CpuTest {
             GodEye.instance().<Cpu>getModule(GodEye.ModuleName.CPU).produce(new CpuInfo(0.9, 0.1, 0.1, 0.1, 0.1));
             testObserver.assertValueCount(2).assertValueAt(0, new Predicate<CpuInfo>() {
                 @Override
-                public boolean test(CpuInfo cpuInfo) throws Exception {
-                    return cpuInfo.totalUseRatio == 0.8;
+                public boolean test(CpuInfo info) throws Exception {
+                    Log4Test.d(info);
+                    return info.totalUseRatio == 0.8;
                 }
             }).assertValueAt(1, new Predicate<CpuInfo>() {
                 @Override
-                public boolean test(CpuInfo cpuInfo) throws Exception {
-                    return cpuInfo.totalUseRatio == 0.9;
+                public boolean test(CpuInfo info) throws Exception {
+                    Log4Test.d(info);
+                    return info.totalUseRatio == 0.9;
                 }
             });
         } catch (UninstallException e) {

@@ -16,9 +16,9 @@ import org.robolectric.annotation.Config;
 
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
-import java.util.List;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import cn.hikyson.godeye.core.helper.Test4ImageActivity;
 import io.reactivex.functions.Predicate;
@@ -52,10 +52,10 @@ public class ImageCanaryInternalTest {
         imageIssue.issueType = ImageIssue.IssueType.BITMAP_QUALITY_TOO_HIGH;
         hashSet.add(imageIssue);
         imageCanaryInternal.inspectInner(new WeakReference<>(activity), imageCanary, hashSet).run();
-        List<ImageIssue> imageIssues = imageCanary.subject().test().values();
         imageCanary.subject().test().assertValueAt(0, new Predicate<ImageIssue>() {
             @Override
             public boolean test(ImageIssue imageIssue) throws Exception {
+                Log4Test.d(imageIssue);
                 return imageIssue.activityHashCode == activity.hashCode()
                         && imageIssue.bitmapWidth == 200
                         && imageIssue.bitmapHeight == 100
@@ -66,6 +66,7 @@ public class ImageCanaryInternalTest {
         }).assertValueAt(1, new Predicate<ImageIssue>() {
             @Override
             public boolean test(ImageIssue imageIssue) throws Exception {
+                Log4Test.d(imageIssue);
                 return imageIssue.activityHashCode == activity.hashCode()
                         && imageIssue.bitmapWidth == 200
                         && imageIssue.bitmapHeight == 100

@@ -112,10 +112,6 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
         return ReplaySubject.create();
     }
 
-    public SmCore getBlockCore() {
-        return mBlockCore;
-    }
-
     public void setSmConfigCache(SmConfig smConfigCache) {
         if (smConfigCache == null || !smConfigCache.isValid()) {
             return;

@@ -14,6 +14,16 @@ public class PssInfo implements Serializable {
     public int nativePssKb;
     public int otherPssKb;
 
+    public PssInfo(int totalPssKb, int dalvikPssKb, int nativePssKb, int otherPssKb) {
+        this.totalPssKb = totalPssKb;
+        this.dalvikPssKb = dalvikPssKb;
+        this.nativePssKb = nativePssKb;
+        this.otherPssKb = otherPssKb;
+    }
+
+    public PssInfo() {
+    }
+
     @Override
     public String toString() {
         return "PssInfo{" +
