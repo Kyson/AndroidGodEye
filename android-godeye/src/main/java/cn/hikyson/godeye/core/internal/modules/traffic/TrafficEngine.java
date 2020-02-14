@@ -28,8 +28,8 @@ public class TrafficEngine {
 
     public void work() {
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
-                .subscribeOn(ThreadUtil.sComputationScheduler)
-                .observeOn(ThreadUtil.sComputationScheduler)
+                .subscribeOn(ThreadUtil.computationScheduler())
+                .observeOn(ThreadUtil.computationScheduler())
                 .concatMap(new Function<Long, ObservableSource<TrafficInfo>>() {
                     @Override
                     public ObservableSource<TrafficInfo> apply(Long aLong) throws Exception {

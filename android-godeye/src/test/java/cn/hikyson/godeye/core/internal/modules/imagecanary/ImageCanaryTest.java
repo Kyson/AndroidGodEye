@@ -20,7 +20,7 @@ import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import cn.hikyson.godeye.core.helper.Test4ImageActivity;
-import cn.hikyson.godeye.core.helper.ThreadUtil;
+import cn.hikyson.godeye.core.helper.ThreadHelper;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.TestObserver;
 
@@ -39,15 +39,9 @@ public class ImageCanaryTest {
         GodEye.instance().uninstall();
     }
 
-    @Test
-    public void work0() {
-        ActivityController<Test4ImageActivity> activityController = Robolectric.buildActivity(Test4ImageActivity.class).create().start().resume();
-        ThreadUtil.sleep(1000);
-        activityController.pause().stop().destroy();
-    }
 
     @Test
-    public void work1() {
+    public void work() {
         try {
             ImageIssue imageIssue0 = new ImageIssue();
             imageIssue0.imageViewHashCode = 6;
@@ -92,4 +86,12 @@ public class ImageCanaryTest {
             Assert.fail();
         }
     }
+
+    @Test
+    public void work2() {
+        ActivityController<Test4ImageActivity> activityController = Robolectric.buildActivity(Test4ImageActivity.class).create().start().resume();
+        ThreadHelper.sleep(1000);
+        activityController.pause().stop().destroy();
+    }
+
 }

@@ -403,7 +403,7 @@ class Mock {
         });
         this.recvFun("viewIssueInfo", {
             "activityName": "cn.hikyson.android.godeye.sample.LeakActivity",
-            "maxDepth": 10,
+            "maxDepth": 4,
             "overDrawAreas": [{
                 "overDrawTimes": 2,
                 "rect": {"bottom": 508, "left": 0, "right": 963, "top": 332}
@@ -425,17 +425,15 @@ class Mock {
                 "isViewGroup": false,
                 "rect": {"bottom": 332, "left": 0, "right": 1080, "top": 228},
                 "text": "Leak will happen when you finish this activity and wait for a moment.",
-                "textOverDrawTimes": 2,
                 "textSize": 39.0
             }, {
                 "className": "android.widget.Button",
-                "depth": 4,
+                "depth": 3,
                 "hasBackground": true,
                 "id": "2131230819",
                 "isViewGroup": false,
                 "rect": {"bottom": 508, "left": 0, "right": 963, "top": 332},
                 "text": "Leak fragment (Android O and above)",
-                "textOverDrawTimes": 3,
                 "textSize": 50.0
             }, {
                 "className": "android.widget.TextView",
@@ -445,7 +443,6 @@ class Mock {
                 "isViewGroup": false,
                 "rect": {"bottom": 196, "left": 132, "right": 502, "top": 128},
                 "text": "AndroidGodEye",
-                "textOverDrawTimes": 2,
                 "textSize": 50.0
             }, {
                 "className": "android.widget.ImageView",
@@ -454,7 +451,6 @@ class Mock {
                 "id": "16908332",
                 "isViewGroup": false,
                 "rect": {"bottom": 206, "left": 33, "right": 121, "top": 118},
-                "textOverDrawTimes": 0,
                 "textSize": 0.0
             }, {
                 "className": "android.widget.LinearLayout",
@@ -463,7 +459,6 @@ class Mock {
                 "id": "-1",
                 "isViewGroup": true,
                 "rect": {"bottom": 2340, "left": 0, "right": 1080, "top": 228},
-                "textOverDrawTimes": 0,
                 "textSize": 0.0
             }, {
                 "className": "android.view.View",
@@ -472,7 +467,6 @@ class Mock {
                 "id": "16908335",
                 "isViewGroup": false,
                 "rect": {"bottom": 96, "left": 0, "right": 1080, "top": 0},
-                "textOverDrawTimes": 0,
                 "textSize": 0.0
             }, {
                 "className": "com.android.internal.widget.ActionBarContainer",
@@ -481,7 +475,6 @@ class Mock {
                 "id": "16908685",
                 "isViewGroup": true,
                 "rect": {"bottom": 228, "left": 0, "right": 1080, "top": 96},
-                "textOverDrawTimes": 0,
                 "textSize": 0.0
             }]
         });

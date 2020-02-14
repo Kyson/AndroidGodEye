@@ -42,11 +42,11 @@ public class NotifierTest {
     private void notice() {
         Notification notification = Notifier.create(ApplicationProvider.getApplicationContext(), new Notifier.Config("AndroidGodEye-Title", "AndroidGodEye-Message", "AndroidGodEye-Detail"));
         int id = Notifier.notice(ApplicationProvider.getApplicationContext(), Notifier.createNoticeId(), notification);
-        ThreadUtil.sleep(10);
+        ThreadHelper.sleep(10);
         Notifier.cancelNotice(ApplicationProvider.getApplicationContext(), id);
 
         int id2 = Notifier.notice(ApplicationProvider.getApplicationContext(), new Notifier.Config("AndroidGodEye-Title", "AndroidGodEye-Message", "AndroidGodEye-Detail"));
-        ThreadUtil.sleep(10);
+        ThreadHelper.sleep(10);
         Notifier.cancelNotice(ApplicationProvider.getApplicationContext(), id2);
     }
 }

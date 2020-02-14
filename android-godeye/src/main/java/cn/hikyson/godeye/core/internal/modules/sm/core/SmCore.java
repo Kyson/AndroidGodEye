@@ -44,7 +44,7 @@ public final class SmCore {
 
             @Override
             public void onBlockEvent(final long blockTimeMillis, final long threadBlockTimeMillis, final boolean longBlock, final long eventStartTimeMilliis, final long eventEndTimeMillis, long longBlockThresholdMillis, long shortBlockThresholdMillis) {
-                ThreadUtil.sComputationScheduler.scheduleDirect(() -> {
+                ThreadUtil.computationScheduler().scheduleDirect(() -> {
                     if (AndroidDebug.isDebugging()) {// if debugging, then ignore
                         return;
                     }

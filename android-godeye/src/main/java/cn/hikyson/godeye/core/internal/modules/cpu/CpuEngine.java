@@ -28,8 +28,8 @@ public class CpuEngine implements Engine {
     @Override
     public void work() {
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
-                .subscribeOn(ThreadUtil.sComputationScheduler)
-                .observeOn(ThreadUtil.sComputationScheduler)
+                .subscribeOn(ThreadUtil.computationScheduler())
+                .observeOn(ThreadUtil.computationScheduler())
                 .map(new Function<Long, CpuInfo>() {
                     @Override
                     public CpuInfo apply(Long aLong) throws Exception {

@@ -53,8 +53,8 @@ class ThreadEngine implements Engine {
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS).map(aLong -> {
             ThreadUtil.ensureWorkThread("ThreadEngine apply");
             return dump(mThreadFilter, mThreadTagger);
-        }).subscribeOn(ThreadUtil.sComputationScheduler)
-                .observeOn(ThreadUtil.sComputationScheduler)
+        }).subscribeOn(ThreadUtil.computationScheduler())
+                .observeOn(ThreadUtil.computationScheduler())
                 .subscribe(food -> {
                     ThreadUtil.ensureWorkThread("ThreadEngine accept");
                     mProducer.produce(food);

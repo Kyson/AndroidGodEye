@@ -113,7 +113,7 @@ class ViewCanary extends Component {
                 left: e.rect.left / ratio,
                 top: e.rect.top / ratio,
                 borderStyle:'solid',
-                borderWidth: e.hasBackground ? 1 : 0,
+                borderWidth: 1,
                 width: (e.rect.right - e.rect.left) / ratio,
                 height: (e.rect.bottom - e.rect.top) / ratio}}><div style= {{textAlignVertical: 'center',position: 'relative', overflow: 'hidden', color: this.getBgColor(e.textOverDrawTimes, true), fontSize: e.textSize? e.textSize / (ratio) : 10}}>{e.text ? e.text : ''}</div></div>
             )
@@ -126,14 +126,17 @@ class ViewCanary extends Component {
             depthOnPop.push(
                 <div style={{
                 position:'absolute',
-                zIndex: 50,
-                backgroundColor: e.depth > 9 ? '#FF8080' : 'transparent',
+                zIndex: e.depth,
+                backgroundColor: e.depth >= issues.maxDepth ? '#FF8080' : 'transparent',
                 left: e.rect.left / ratio,
                 top: e.rect.top / ratio,
                 borderStyle:'solid',
-                borderWidth: e.hasBackground ? 1 : 0,
+                borderWidth: 1,
                 width: (e.rect.right - e.rect.left) / ratio,
-                height: (e.rect.bottom - e.rect.top) / ratio}}><div style= {{textAlignVertical: 'center',position: 'relative', overflow: 'hidden', fontSize: e.textSize? e.textSize / (ratio) : 10}}>{e.text ? e.text : ''}</div></div>
+                height: (e.rect.bottom - e.rect.top) / ratio}}>
+                <div style= {{zIndex: e.depth+1, textAlignVertical: 'center',position: 'relative', overflow: 'hidden', fontSize: e.textSize? e.textSize / (ratio) : 10}}>{e.text ? e.text : ''}
+                </div>
+                </div>
             )
         })
         return (

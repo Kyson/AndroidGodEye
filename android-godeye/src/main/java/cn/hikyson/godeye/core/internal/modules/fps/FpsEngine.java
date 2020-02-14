@@ -37,8 +37,8 @@ public class FpsEngine implements Engine {
         ThreadUtil.ensureMainThread("FpsEngine work");
         mFpsMonitor.start();
         mCompositeDisposable.add(Observable.interval(mIntervalMillis, TimeUnit.MILLISECONDS)
-                .observeOn(ThreadUtil.sComputationScheduler)
-                .subscribeOn(ThreadUtil.sComputationScheduler)
+                .observeOn(ThreadUtil.computationScheduler())
+                .subscribeOn(ThreadUtil.computationScheduler())
                 .subscribe(aLong -> {
                     ThreadUtil.ensureWorkThread("FpsEngine accept");
                     int fps = -1;

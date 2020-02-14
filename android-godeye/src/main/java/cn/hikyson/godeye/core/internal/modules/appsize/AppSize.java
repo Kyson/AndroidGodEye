@@ -6,8 +6,8 @@ import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.Subject;
 
@@ -24,7 +24,7 @@ public class AppSize extends ProduceableSubject<AppSizeInfo> implements Install<
         }
         mInstalled = true;
         mConfig = config;
-        disposable = Schedulers.single().scheduleDirect(() -> AppSizeUtil.getAppSize(GodEye.instance().getApplication(), new AppSizeUtil.OnGetSizeListener() {
+        disposable = ThreadUtil.computationScheduler().scheduleDirect(() -> AppSizeUtil.getAppSize(GodEye.instance().getApplication(), new AppSizeUtil.OnGetSizeListener() {
             @Override
             public void onGetSize(AppSizeInfo appSizeInfo) {
                 L.d("AppSize onGetSize: cache size: %s, data size: %s, codeSize: %s", AppSizeUtil.formatSize(appSizeInfo.cacheSize),

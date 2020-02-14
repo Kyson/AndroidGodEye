@@ -37,8 +37,8 @@ public class RamEngine implements Engine {
                 return MemoryUtil.getRamInfo(mContext);
             }
         })
-                .subscribeOn(ThreadUtil.sComputationScheduler)
-                .observeOn(ThreadUtil.sComputationScheduler)
+                .subscribeOn(ThreadUtil.computationScheduler())
+                .observeOn(ThreadUtil.computationScheduler())
                 .subscribe(new Consumer<RamInfo>() {
                     @Override
                     public void accept(RamInfo food) throws Exception {

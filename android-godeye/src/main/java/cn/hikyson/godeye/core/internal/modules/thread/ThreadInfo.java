@@ -32,7 +32,8 @@ public class ThreadInfo implements Serializable {
     public List<String> stackTraceElements;
     @Expose
     public String threadTag;
-    //    public String threadRunningProcess;
+    @Expose
+    public ThreadGroup parent;
 
     public ThreadInfo(Thread thread) {
         this.id = thread.getId();
@@ -43,6 +44,7 @@ public class ThreadInfo implements Serializable {
         this.isAlive = thread.isAlive();
         this.isInterrupted = thread.isInterrupted();
         this.stackTraceElements = StacktraceUtil.getStackTraceOfThread(thread);
+        this.parent = new ThreadGroup(thread.getThreadGroup() == null ? "" : thread.getThreadGroup().getName());
     }
 
     @Override
@@ -58,5 +60,15 @@ public class ThreadInfo implements Serializable {
                 ", stackTraceElements=" + stackTraceElements +
                 ", threadTag='" + threadTag + '\'' +
                 '}';
+    }
+
+    @Keep
+    public static class ThreadGroup implements Serializable {
+        @Expose
+        public String name;
+
+        public ThreadGroup(String name) {
+            this.name = name;
+        }
     }
 }

@@ -27,6 +27,7 @@ import cn.hikyson.godeye.core.helper.Test1Activity;
 import cn.hikyson.godeye.core.helper.Test1Fragment;
 import cn.hikyson.godeye.core.helper.Test2Activity;
 import cn.hikyson.godeye.core.helper.TestPageEvent;
+import cn.hikyson.godeye.core.helper.ThreadHelper;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodCanaryConfig;
 import cn.hikyson.godeye.core.internal.modules.network.Network;
 import cn.hikyson.godeye.core.internal.modules.network.NetworkConfig;
@@ -41,12 +42,8 @@ import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupConfig;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
-import io.reactivex.Scheduler;
-import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.TestScheduler;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -58,25 +55,7 @@ public class GodEyeHelperTest {
 
     @Before
     public void setUp() throws Exception {
-        TestScheduler testScheduler = new TestScheduler();
-        RxJavaPlugins.setIoSchedulerHandler(new Function<Scheduler, Scheduler>() {
-            @Override
-            public Scheduler apply(Scheduler scheduler) throws Exception {
-                return testScheduler;
-            }
-        });
-        RxJavaPlugins.setComputationSchedulerHandler(new Function<Scheduler, Scheduler>() {
-            @Override
-            public Scheduler apply(Scheduler scheduler) throws Exception {
-                return testScheduler;
-            }
-        });
-        RxJavaPlugins.setSingleSchedulerHandler(new Function<Scheduler, Scheduler>() {
-            @Override
-            public Scheduler apply(Scheduler scheduler) throws Exception {
-                return testScheduler;
-            }
-        });
+        ThreadHelper.setupRxjava();
         ChoreographerHelper.setup();
         GodEye.instance().init(ApplicationProvider.getApplicationContext());
     }
@@ -84,6 +63,7 @@ public class GodEyeHelperTest {
     @After
     public void tearDown() throws Exception {
         ChoreographerHelper.teardown();
+        ThreadHelper.teardownRxjava();
     }
 
     @Test

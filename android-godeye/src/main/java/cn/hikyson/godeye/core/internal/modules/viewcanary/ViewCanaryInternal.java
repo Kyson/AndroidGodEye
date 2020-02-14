@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,10 +62,8 @@ class ViewCanaryInternal {
                 ViewGroup parent = (ViewGroup) activity.getWindow().getDecorView();
                 Runnable callback = inspectInner(new WeakReference<>(activity), viewCanary, config, mRecentLayoutListRecords);
                 ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = () -> {
-                    if (handler != null) {
-                        handler.removeCallbacks(callback);
-                        handler.postDelayed(callback, INSPECT_DELAY_TIME_MILLIS);
-                    }
+                    handler.removeCallbacks(callback);
+                    handler.postDelayed(callback, INSPECT_DELAY_TIME_MILLIS);
                 };
                 mOnGlobalLayoutListenerMap.put(activity, onGlobalLayoutListener);
                 parent.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
@@ -91,7 +91,8 @@ class ViewCanaryInternal {
         ThreadUtil.destoryHandler(VIEW_CANARY_HANDLER);
     }
 
-    private Runnable inspectInner(WeakReference<Activity> activity, ViewCanary viewCanary, ViewCanaryConfig config, Map<Activity, List<List<ViewIdWithSize>>> recentLayoutListRecords) {
+    @VisibleForTesting
+    Runnable inspectInner(WeakReference<Activity> activity, ViewCanary viewCanary, ViewCanaryConfig config, Map<Activity, List<List<ViewIdWithSize>>> recentLayoutListRecords) {
         return () -> {
             try {
                 Activity p = activity.get();
@@ -134,9 +135,6 @@ class ViewCanaryInternal {
         info.screenWidth = resolution[0];
         info.screenHeight = resolution[1];
         for (Map.Entry<View, Integer> entry : depthMap.entrySet()) {
-            if (entry.getKey() instanceof ViewGroup) {
-                continue;
-            }
             info.views.add(getViewInfo(entry.getKey(), entry.getValue()));
         }
         for (Map.Entry<Rect, Set<Object>> entry : overDrawMap.entrySet()) {

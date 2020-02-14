@@ -15,7 +15,7 @@ public class TestLeak0Activity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ThreadUtil.sMainScheduler.scheduleDirect(new Runnable() {
+        ThreadUtil.mainScheduler().scheduleDirect(new Runnable() {
             @Override
             public void run() {
                 ActionBar actionBar = TestLeak0Activity.this.getActionBar();

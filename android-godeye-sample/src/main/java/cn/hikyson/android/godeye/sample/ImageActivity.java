@@ -25,19 +25,19 @@ public class ImageActivity extends AppCompatActivity {
         findViewById(R.id.activity_image_change_visibility).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ThreadUtil.sMainScheduler.scheduleDirect(new Runnable() {
+                ThreadUtil.mainScheduler().scheduleDirect(new Runnable() {
                     @Override
                     public void run() {
                         findViewById(R.id.activity_image_iv3).setVisibility(View.INVISIBLE);
                     }
                 }, 0, TimeUnit.SECONDS);
-                ThreadUtil.sMainScheduler.scheduleDirect(new Runnable() {
+                ThreadUtil.mainScheduler().scheduleDirect(new Runnable() {
                     @Override
                     public void run() {
                         findViewById(R.id.activity_image_iv3).setVisibility(View.VISIBLE);
                     }
                 }, 3, TimeUnit.SECONDS);
-                ThreadUtil.sMainScheduler.scheduleDirect(new Runnable() {
+                ThreadUtil.mainScheduler().scheduleDirect(new Runnable() {
                     @Override
                     public void run() {
                         findViewById(R.id.activity_image_iv3).setVisibility(View.GONE);

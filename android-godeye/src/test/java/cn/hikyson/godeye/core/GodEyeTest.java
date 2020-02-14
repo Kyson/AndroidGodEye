@@ -22,10 +22,13 @@ import cn.hikyson.godeye.core.helper.ChoreographerHelper;
 import cn.hikyson.godeye.core.helper.GodEyeConfigHelper;
 import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
+import cn.hikyson.godeye.core.helper.ThreadHelper;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupConfig;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
+import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.TestScheduler;
 
 import static android.os.Looper.getMainLooper;
 import static org.junit.Assert.assertNotNull;
@@ -41,10 +44,12 @@ public class GodEyeTest {
     @Before
     public void setUp() throws Exception {
         ChoreographerHelper.setup();
+        ThreadHelper.setupRxjava();
     }
 
     @After
     public void tearDown() throws Exception {
+        ThreadHelper.teardownRxjava();
         ChoreographerHelper.teardown();
     }
 
@@ -93,6 +98,8 @@ public class GodEyeTest {
         } catch (InterruptedException e) {
             fail();
         }
+        // test event send
+        ((TestScheduler) ThreadUtil.computationScheduler()).advanceTimeBy(10, TimeUnit.SECONDS);
         installedModules = GodEye.instance().getInstalledModuleNames();
         assertTrue(installedModules.containsAll(GodEye.ALL_MODULE_NAMES));
         assertTrue(GodEye.ALL_MODULE_NAMES.containsAll(installedModules));
@@ -109,6 +116,7 @@ public class GodEyeTest {
                 Assert.fail();
             }
         }
+        GodEye.instance().uninstall();
     }
 
     @Test

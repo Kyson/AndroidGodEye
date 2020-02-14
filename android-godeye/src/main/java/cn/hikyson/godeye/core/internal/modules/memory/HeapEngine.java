@@ -32,8 +32,8 @@ public class HeapEngine implements Engine {
                 ThreadUtil.ensureWorkThread("HeapEngine apply");
                 return MemoryUtil.getAppHeapInfo();
             }
-        }).subscribeOn(ThreadUtil.sComputationScheduler)
-                .observeOn(ThreadUtil.sComputationScheduler)
+        }).subscribeOn(ThreadUtil.computationScheduler())
+                .observeOn(ThreadUtil.computationScheduler())
                 .subscribe(new Consumer<HeapInfo>() {
                     @Override
                     public void accept(HeapInfo food) throws Exception {

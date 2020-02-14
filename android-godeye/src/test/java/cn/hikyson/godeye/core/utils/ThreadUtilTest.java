@@ -11,6 +11,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
+import cn.hikyson.godeye.core.helper.ThreadHelper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -139,11 +140,11 @@ public class ThreadUtilTest {
             public void run() {
                 for (int i = 0; i < 100; i++) {
                     Handler handler = ThreadUtil.createIfNotExistHandler("AndroidGodEye-HandlerThread" + i);
-                    cn.hikyson.godeye.core.helper.ThreadUtil.sleep(1);
+                    ThreadHelper.sleep(1);
                     Handler handler2 = ThreadUtil.obtainHandler("AndroidGodEye-HandlerThread" + i);
-                    cn.hikyson.godeye.core.helper.ThreadUtil.sleep(1);
+                    ThreadHelper.sleep(1);
                     ThreadUtil.destoryHandler("AndroidGodEye-HandlerThread" + i);
-                    cn.hikyson.godeye.core.helper.ThreadUtil.sleep(1);
+                    ThreadHelper.sleep(1);
                 }
             }
         });
@@ -153,11 +154,11 @@ public class ThreadUtilTest {
             public void run() {
                 for (int i = 0; i < 100; i++) {
                     Handler handler = ThreadUtil.createIfNotExistHandler("AndroidGodEye-HandlerThread" + i);
-                    cn.hikyson.godeye.core.helper.ThreadUtil.sleep(1);
+                    ThreadHelper.sleep(1);
                     Handler handler2 = ThreadUtil.obtainHandler("AndroidGodEye-HandlerThread" + i);
-                    cn.hikyson.godeye.core.helper.ThreadUtil.sleep(1);
+                    ThreadHelper.sleep(1);
                     ThreadUtil.destoryHandler("AndroidGodEye-HandlerThread" + i);
-                    cn.hikyson.godeye.core.helper.ThreadUtil.sleep(1);
+                    ThreadHelper.sleep(1);
                 }
             }
         });

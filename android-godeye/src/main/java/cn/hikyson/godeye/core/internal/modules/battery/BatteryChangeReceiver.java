@@ -18,7 +18,7 @@ public class BatteryChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, final Intent batteryInfoIntent) {
-        ThreadUtil.sComputationScheduler.scheduleDirect(new Runnable() {
+        ThreadUtil.computationScheduler().scheduleDirect(new Runnable() {
             @Override
             public void run() {
                 try {

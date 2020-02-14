@@ -23,7 +23,7 @@ import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import cn.hikyson.godeye.core.helper.TestLeak0Activity;
-import cn.hikyson.godeye.core.helper.ThreadUtil;
+import cn.hikyson.godeye.core.helper.ThreadHelper;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.TestObserver;
 
@@ -48,7 +48,7 @@ public class LeakDetectorTest {
         ActivityController<TestLeak0Activity> activityController = Robolectric.buildActivity(TestLeak0Activity.class).create().start().resume();
         TestLeak0Activity activity = activityController.get();
         activityController.pause().stop().destroy();
-        ThreadUtil.sleep(10000);
+        ThreadHelper.sleep(10000);
         TestObserver<LeakQueue.LeakMemoryInfo> testObserver = null;
         try {
             testObserver = GodEye.instance().<LeakDetector, LeakQueue.LeakMemoryInfo>moduleObservable(GodEye.ModuleName.LEAK).test();
