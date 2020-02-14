@@ -40,24 +40,24 @@ It is divided into 3 parts:
 
 |Module Name|Desc|
 |-|-|
-|CPU|cpu info of device and app|
-|BATTERY|battery info|
-|FPS|fps info|
-|LEAK|detect memory leak|
-|HEAP|heap memory|
-|PSS|pss|
-|RAM|ram|
-|NETWORK|network info|
-|SM|detect jam|
-|STARTUP|startup metric|
-|TRAFFIC|traffic of device and app|
-|CRASH|detect java、native crash and ANR|
-|THREAD|thread dump of app|
-|PAGELOAD|page(Activity and Fragment) lifecycle and load time metric|
-|METHOD_CANARY|methods time cost metric|
+|CPU|Cpu info of device and app|
+|BATTERY|Battery info|
+|FPS|Fps info|
+|LEAK|Detect memory leak|
+|HEAP|Heap memory|
+|PSS|Pss|
+|RAM|Ram|
+|NETWORK|Network info|
+|SM|Detect jam|
+|STARTUP|Startup metric|
+|TRAFFIC|Traffic of device and app|
+|CRASH|Detect java、native crash and ANR|
+|THREAD|Thread dump of app|
+|PAGELOAD|Page(Activity and Fragment) lifecycle and load time metric|
+|METHOD_CANARY|Methods time cost metric|
 |APP_SIZE|App size of apk code、storage and cache|
-|VIEW_CANARY|detect complex layout hierarchy and overdraw|
-|IMAGE_CANARY|detect unreasonable memory use of image|
+|VIEW_CANARY|Detect complex layout hierarchy and overdraw|
+|IMAGE_CANARY|Detect unreasonable memory use of image|
 
 ## Usage
 
