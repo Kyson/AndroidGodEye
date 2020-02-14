@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../App.css';
 import ReactTable from "../../node_modules/react-table";
 import '../../node_modules/react-table/react-table.css'
 import JSONPretty from '../../node_modules/react-json-pretty';
 
-import {Card, Button} from 'antd'
+import { Card, Button } from 'antd'
 
 /**
  * Thread
@@ -24,7 +24,7 @@ class Thread extends Component {
     refresh(threadInfo) {
         this.threadInfoForCache = threadInfo;
         if (this.state.isRefreshing) {
-            this.setState({threadInfo});
+            this.setState({ threadInfo });
         }
     }
 
@@ -39,7 +39,7 @@ class Thread extends Component {
         let dataList = this.state.threadInfo;
         return (
             <Card title="Thread(线程)"
-                  extra={<Button onClick={this.setRefreshStatus}>{this.state.isRefreshing ? "Stop" : "Start"}</Button>}>
+                extra={<Button onClick={this.setRefreshStatus}>{this.state.isRefreshing ? "Stop" : "Start"}</Button>}>
                 <ReactTable
                     sortable={true}
                     resizable={true}
@@ -71,20 +71,24 @@ class Thread extends Component {
                             id: "isInterrupted",
                             accessor: d => d.isInterrupted + ""
                         }, {
+                            Header: "ThreadGroup",
+                            id: "threadGroup",
+                            accessor: d => d.parent ? d.parent.name : ""
+                        }, {
                             Header: "ThreadTag",
                             id: "threadTag",
-                            accessor: d => d.threadTag + ""
+                            accessor: d => d.threadTag
                         }
                     ]}
                     SubComponent={row => {
                         return (
-                            <div style={{padding: "20px"}}>
-                                <JSONPretty id="json-pretty" json={row.original.stackTraceElements}/>
+                            <div style={{ padding: "20px" }}>
+                                <JSONPretty id="json-pretty" json={row.original.stackTraceElements} />
                             </div>
                         );
                     }}
                     defaultPageSize={16}
-                    className="-striped -highlight"/>
+                    className="-striped -highlight" />
             </Card>
         );
     }

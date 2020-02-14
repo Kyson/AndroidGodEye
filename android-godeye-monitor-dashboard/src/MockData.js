@@ -494,7 +494,8 @@ class Mock {
                 deamon: "deamon",
                 isAlive: "isAlive",
                 isInterrupted: "isInterrupted",
-                threadTag: "UNKNOWN"
+                threadTag: "UNKNOWN",
+                parent:{name:"system"}
             },
             {
                 id: 1,
