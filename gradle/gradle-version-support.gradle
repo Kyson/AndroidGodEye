@@ -1,0 +1,18 @@
+def realVersionName = VERSION_NAME
+def TRAVIS_TAG = System.getenv("TRAVIS_TAG")
+if (TRAVIS_TAG != null && "" != TRAVIS_TAG) {
+    realVersionName = TRAVIS_TAG
+    println "[VERSION] Version name is [" + realVersionName + "] by git tag."
+} else {
+    println "[VERSION] Version name is [" + realVersionName + "] by gradle.properties."
+}
+
+String[] versionPart = String.valueOf(realVersionName).split('\\.')
+int realVersionCode = Integer.valueOf(versionPart[0]) * 1000000 + Integer.valueOf(versionPart[1]) * 1000 + Integer.valueOf(versionPart[2])
+
+ext {
+    REAL_VERSION_NAME = realVersionName
+    REAL_VERSION_CODE = realVersionCode
+}
+
+println "[VERSION] Version name is [" + rootProject.ext.REAL_VERSION_NAME + "] and parsed version code is [" + rootProject.ext.REAL_VERSION_CODE + "]."
