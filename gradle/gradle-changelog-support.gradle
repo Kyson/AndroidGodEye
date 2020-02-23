@@ -1,4 +1,320 @@
+/**
+ * Based on [keepachangelog](https://keepachangelog.com/en/1.0.0/)
+ *
+ * ```text
+ * Added for new features.
+ * Changed for changes in existing functionality.
+ * Deprecated for soon-to-be removed features.
+ * Removed for now removed features.
+ * Fixed for any bug fixes.
+ * Security in case of vulnerabilities.
+ * ```
+ */
 
-task generateChangelog(){
 
+/**
+ *
+ */
+task generateChangelog() {
+    doLast {
+        def messages = getMessagesAfterCommit(getLastTagCommitSha())
+        addNewVersionToChangelog(rootProject, "1.2.3", messages)
+    }
+}
+
+generateChangelog.onlyIf { project.hasProperty('version') }
+
+def static getLastTagCommitSha() {
+    def lastTagSha = 'git rev-list --tags --max-count=1'.execute().text.trim()
+    def lastTagName = "git describe --tags ${lastTagSha}".execute().text.trim()
+    println "[CHANGELOG] Get last tag name: " + lastTagName + ", sha: " + lastTagSha
+    return lastTagSha
+}
+
+def static getMessagesAfterCommit(String commitSha) {
+    def messages = "git --no-pager log ${commitSha}.. --pretty=tformat:%B".execute().text.trim()
+    println messages
+    return messages
+}
+
+/**
+ * #Changed#
+ * View canary ui change(always show border)
+ *
+ * #Added#
+ * Unit test
+ *
+ * #Fixed#
+ * Unit test failed
+ * @param gitMessages
+ */
+def static addNewVersionToChangelog(Project rootProject, String version, String gitMessages) {
+    GitMessageOfChangelog gitMessageOfChangelog = new GitMessageOfChangelog(gitMessages)
+    ChangelogMDFile changelogMDFile = new ChangelogMDFile()
+    changelogMDFile.parseFromMD(rootProject.file("CHANGELOG.md"))
+    changelogMDFile.addVersionChangelog(version, gitMessageOfChangelog)
+    changelogMDFile.writeToMD(rootProject.file("CHANGELOG.md"))
+}
+
+class ChangelogMDFile {
+
+    public class ChangelogVersionSectionWithContent {
+        public Version version
+        public List<ChangelogTypeWithContent> contents
+
+        ChangelogVersionSectionWithContent(Version version, List<ChangelogTypeWithContent> contents) {
+            this.version = version
+            this.contents = contents
+        }
+    }
+
+    public class ChangelogTypeWithContent {
+        public ChangelogType changelogType
+        public List<String> changelogContents
+
+        ChangelogTypeWithContent(ChangelogType changelogType, List<String> changelogContents) {
+            this.changelogType = changelogType
+            this.changelogContents = changelogContents
+        }
+    }
+
+    public List<ChangelogVersionSectionWithContent> changelogVersionSectionWithContentList
+
+    public void writeToMD(File file) {
+        File tmp = new File(file.path + "_tmp")
+        file.renameTo(tmp)
+        StringBuilder sb = new StringBuilder()
+        sb.append("# CHANGELOG").append("\n\n")
+        for (ChangelogVersionSectionWithContent changelogVersionSectionWithContent : changelogVersionSectionWithContentList) {
+            sb.append("## ").append(changelogVersionSectionWithContent.version.toString()).append("\n\n")
+            for (ChangelogTypeWithContent changelogTypeWithContent : changelogVersionSectionWithContent.contents) {
+                sb.append("### ").append(changelogTypeWithContent.changelogType.name()).append("\n\n")
+                for (String content : changelogTypeWithContent.changelogContents) {
+                    sb.append("- ").append(content).append("\n")
+                }
+                sb.append("\n")
+            }
+        }
+        file.write(sb.toString(), "utf-8")
+        tmp.delete()
+    }
+
+    public void parseFromMD(File file) {
+        List<String> lines = file.readLines()
+        changelogVersionSectionWithContentList = new LinkedList<>();
+        for (String line : lines) {
+            line = line.trim()
+            ChangelogVersionSectionWithContent currentChangelogVersionSectionWithContent
+            ChangelogTypeWithContent currentChangelogTypeWithContent
+            if (line.startsWith("##") && !line.startsWith("###")) {
+                ChangelogVersionSectionWithContent changelogVersionSectionWithContent = new ChangelogVersionSectionWithContent(new Version(line.substring(2).trim()), new ArrayList<>())
+                changelogVersionSectionWithContentList.add(changelogVersionSectionWithContent)
+                currentChangelogVersionSectionWithContent = changelogVersionSectionWithContent
+            } else if (line.startsWith("###") && !line.startsWith("####")) {
+                if (currentChangelogVersionSectionWithContent != null) {
+                    ChangelogTypeWithContent changelogTypeWithContent = new ChangelogTypeWithContent(ChangelogType.valueOf(line.substring(3).trim()), new ArrayList<>())
+                    currentChangelogVersionSectionWithContent.contents.add(changelogTypeWithContent)
+                    currentChangelogTypeWithContent = changelogTypeWithContent
+                }
+            } else if (line.startsWith("-")) {
+                if (currentChangelogTypeWithContent != null) {
+                    currentChangelogTypeWithContent.changelogContents.add(line.substring(1).trim())
+                }
+            } else {
+                println "[CHANGELOG] parse CHANGELOG MD, ignore line: " + line
+            }
+        }
+        Collections.sort(changelogVersionSectionWithContentList, comparator())
+    }
+
+    private Comparator<ChangelogVersionSectionWithContent> comparator() {
+        return new Comparator<ChangelogVersionSectionWithContent>() {
+            @Override
+            int compare(ChangelogVersionSectionWithContent t, ChangelogVersionSectionWithContent t1) {
+                if (t.version.majorVersion > t1.version.majorVersion) {
+                    return 1
+                } else if (t.version.majorVersion < t1.version.majorVersion) {
+                    return -1
+                } else {
+                    if (t.version.minorVersion > t1.version.minorVersion) {
+                        return 1
+                    } else if (t.version.minorVersion < t1.version.minorVersion) {
+                        return -1
+                    } else {
+                        if (t.version.buildVersion > t1.version.buildVersion) {
+                            return 1
+                        } else if (t.version.buildVersion < t1.version.buildVersion) {
+                            return -1
+                        } else {
+                            return 0
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void addVersionChangelog(String version, GitMessageOfChangelog gitMessageOfChangelog) {
+        List<ChangelogTypeWithContent> changelogTypeWithContentList = new ArrayList<>()
+        changelogTypeWithContentList.add(new ChangelogTypeWithContent(ChangelogType.CHANGED, gitMessageOfChangelog.changed))
+        changelogTypeWithContentList.add(new ChangelogTypeWithContent(ChangelogType.ADDED, gitMessageOfChangelog.added))
+        changelogTypeWithContentList.add(new ChangelogTypeWithContent(ChangelogType.DEPRECATED, gitMessageOfChangelog.deprecated))
+        changelogTypeWithContentList.add(new ChangelogTypeWithContent(ChangelogType.REMOVED, gitMessageOfChangelog.removed))
+        changelogTypeWithContentList.add(new ChangelogTypeWithContent(ChangelogType.FIXED, gitMessageOfChangelog.fixed))
+        changelogTypeWithContentList.add(new ChangelogTypeWithContent(ChangelogType.SECURITY, gitMessageOfChangelog.security))
+        Version addVersion = new Version(version)
+        ChangelogVersionSectionWithContent changelogVersionSectionWithContent = new ChangelogVersionSectionWithContent(addVersion, changelogTypeWithContentList)
+        deleteVersionIfExist(addVersion)
+        changelogVersionSectionWithContentList.add(0, changelogVersionSectionWithContent)
+        Collections.sort(changelogVersionSectionWithContentList, comparator())
+    }
+
+    private void deleteVersionIfExist(Version version) {
+        int index = findVersion(version)
+        if (index >= 0) {
+            changelogVersionSectionWithContentList.remove(index)
+        }
+    }
+
+    private int findVersion(Version version) {
+        for (int i = 0; i < changelogVersionSectionWithContentList.size(); i++) {
+            if (changelogVersionSectionWithContentList.get(i).version.equals(version)) {
+                return i
+            }
+        }
+        return -1
+    }
+
+}
+
+class Version {
+    public int majorVersion
+    public int minorVersion
+    public int buildVersion
+
+    public Version(String version) {
+        String[] versionPart = String.valueOf(version).split('\\.')
+        majorVersion = Integer.parseInt(versionPart[0])
+        minorVersion = Integer.parseInt(versionPart[1])
+        buildVersion = Integer.parseInt(versionPart[2])
+    }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Version version = (Version) o
+
+        if (buildVersion != version.buildVersion) return false
+        if (majorVersion != version.majorVersion) return false
+        if (minorVersion != version.minorVersion) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result
+        result = majorVersion
+        result = 31 * result + minorVersion
+        result = 31 * result + buildVersion
+        return result
+    }
+
+    @Override
+    public String toString() {
+        return majorVersion + "." + minorVersion + "." + buildVersion
+    }
+}
+
+class GitMessageOfChangelog {
+    public static String SHARP = "#"
+
+    public List<String> changed = new ArrayList<>()
+    public List<String> added = new ArrayList<>()
+    public List<String> deprecated = new ArrayList<>()
+    public List<String> removed = new ArrayList<>()
+    public List<String> fixed = new ArrayList<>()
+    public List<String> security = new ArrayList<>()
+
+    GitMessageOfChangelog(String gitMessages) {
+        List<String> lines = gitMessages.readLines()
+        List<String> currentTypeList
+        for (String line : lines) {
+            ChangelogType changelogType = parseChangelogType(line)
+            List<String> tmpList = getListOfType(changelogType)
+            if (tmpList != null) {
+                currentTypeList = tmpList
+            } else {
+                if (currentTypeList != null) {
+                    currentTypeList.add(line)
+                }
+            }
+        }
+    }
+
+    public void writeToChangelogMd() {
+
+    }
+
+    private static ChangelogType parseChangelogType(String line) {
+        def trimLine = line.trim()
+        if (trimLine.startsWith(SHARP) && trimLine.endsWith(SHARP) && trimLine.size() > 2) {
+            def type = trimLine.substring(1, trimLine.size() - 1)
+            try {
+                return ChangelogType.valueOf(type)
+            } catch (Throwable ignore) {
+            }
+        }
+        return null
+    }
+
+    private List<String> getListOfType(ChangelogType changelogType) {
+        if (changelogType == null) {
+            return null
+        }
+        switch (changelogType) {
+            case ChangelogType.CHANGED:
+                return changed
+            case ChangelogType.ADDED:
+                return added
+            case ChangelogType.DEPRECATED:
+                return deprecated
+            case ChangelogType.REMOVED:
+                return removed
+            case ChangelogType.FIXED:
+                return fixed
+            case ChangelogType.SECURITY:
+                return security
+            default:
+                return null
+        }
+    }
+
+}
+
+enum ChangelogType {
+
+    CHANGED("Changed"),
+    ADDED("Added"),
+    DEPRECATED("Deprecated"),
+    REMOVED("Removed"),
+    FIXED("Fixed"),
+    SECURITY("Security"),
+
+    public static List<ChangelogType> CHANGELOG_TYPES = new ArrayList<>()
+
+    static {
+        CHANGELOG_TYPES.add(CHANGED)
+        CHANGELOG_TYPES.add(ADDED)
+        CHANGELOG_TYPES.add(DEPRECATED)
+        CHANGELOG_TYPES.add(REMOVED)
+        CHANGELOG_TYPES.add(FIXED)
+        CHANGELOG_TYPES.add(SECURITY)
+    }
+
+    public String name
+
+    ChangelogType(String name) {
+        this.name = name
+    }
 }

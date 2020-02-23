@@ -39,3 +39,4 @@ task clean(type: Delete) {
 }
 
 apply from: rootProject.file('gradle/gradle-version-support.gradle')
+apply from: rootProject.file('gradle/gradle-changelog-support.gradle')
