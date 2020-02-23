@@ -11,7 +11,7 @@ Model数据类，包含Config类型
 
 ## Deploy
 
-1. update CHANGELOG.md, 添加或删除模块需要更新README.md和[wiki](https://github.com/Kyson/AndroidGodEye/wiki)
+1. Exec `./gradlew generateChangelog -PchangelogVersion=3.1.12` to update CHANGELOG.md, 添加或删除模块需要更新README.md和[wiki](https://github.com/Kyson/AndroidGodEye/wiki)
 2. 改动合并到master，并打版本号命名的tag(本地测试会使用gradle.properties文件中的版本号)
 3. PUSH，查看编译状态：[AndroidGodEye-travis-ci](https://travis-ci.org/Kyson/AndroidGodEye/builds)
 
