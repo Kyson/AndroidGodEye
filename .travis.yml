@@ -36,7 +36,7 @@ notifications:
         - tech@hikyson.cn
 
 before_deploy:
-  -  ./gradlew generateChangelogOfNewVersion && export CHANGELOG_OF_NEW_VERSION=$(cat CHANGELOG_NEW_VERSION.tmp)
+    - ./gradlew generateChangelogOfNewVersion && export CHANGELOG_OF_NEW_VERSION=$(cat CHANGELOG_NEW_VERSION.tmp)
 
 deploy:
     - provider: script

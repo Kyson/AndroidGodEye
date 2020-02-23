@@ -8,6 +8,8 @@ task generateChangelog() {
     }
 }
 
+generateChangelog.onlyIf { project.hasProperty('changelogVersion') }
+
 task generateChangelogOfNewVersion() {
     doLast {
         ChangelogMDFile changelogMDFile = new ChangelogMDFile()
@@ -16,8 +18,6 @@ task generateChangelogOfNewVersion() {
         rootProject.file("CHANGELOG_NEW_VERSION.tmp").write(changelogOfNewVersion, "utf-8")
     }
 }
-
-generateChangelog.onlyIf { project.hasProperty('changelogVersion') }
 
 def static getLastTagCommitSha() {
     def lastTagSha = 'git rev-list --tags --max-count=1'.execute().text.trim()
