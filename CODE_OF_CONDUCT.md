@@ -15,6 +15,19 @@ Model数据类，包含Config类型
 2. 改动合并到master，并打版本号命名的tag(本地测试会使用gradle.properties文件中的版本号)
 3. PUSH，查看编译状态：[AndroidGodEye-travis-ci](https://travis-ci.org/Kyson/AndroidGodEye/builds)
 
+## Changelog
+
+Based on [keepachangelog](https://keepachangelog.com/en/1.0.0/)
+
+```text
+ * Added for new features.
+ * Changed for changes in existing functionality.
+ * Deprecated for soon-to-be removed features.
+ * Removed for now removed features.
+ * Fixed for any bug fixes.
+ * Security in case of vulnerabilities.
+```
+
 ## Ignore
 
 ### Jcenter upload，不需要手动调用

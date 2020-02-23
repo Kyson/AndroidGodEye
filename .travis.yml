@@ -35,6 +35,9 @@ notifications:
     email:
         - tech@hikyson.cn
 
+before_deploy:
+  -  ./gradlew generateChangelogOfNewVersion && export CHANGELOG_OF_NEW_VERSION=$(cat CHANGELOG_NEW_VERSION.tmp)
+
 deploy:
     - provider: script
       script: echo deploying to jcenter... && ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false && echo deployed to jcenter.
@@ -44,6 +47,7 @@ deploy:
     - provider: releases
       api_key: $GITHUB_TOKEN
       file: "./android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk"
+      body: $CHANGELOG_OF_NEW_VERSION
       skip_cleanup: true
       on:
         tags: true

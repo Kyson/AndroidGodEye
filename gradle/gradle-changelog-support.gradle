@@ -1,21 +1,19 @@
 /**
- * Based on [keepachangelog](https://keepachangelog.com/en/1.0.0/)
- *
- * ```text
- * Added for new features.
- * Changed for changes in existing functionality.
- * Deprecated for soon-to-be removed features.
- * Removed for now removed features.
- * Fixed for any bug fixes.
- * Security in case of vulnerabilities.
- * ```
- *
  * Usage: ./gradlew generateChangelog -PchangelogVersion=3.1.12
  */
 task generateChangelog() {
     doLast {
         def messages = getMessagesAfterCommit(getLastTagCommitSha())
         addNewVersionToChangelog(rootProject, changelogVersion, messages)
+    }
+}
+
+task generateChangelogOfNewVersion() {
+    doLast {
+        ChangelogMDFile changelogMDFile = new ChangelogMDFile()
+        changelogMDFile.parseFromMD(rootProject.file("CHANGELOG.md"))
+        String changelogOfNewVersion = changelogMDFile.getChangelogOfNewVersion()
+        rootProject.file("CHANGELOG_NEW_VERSION.tmp").write(changelogOfNewVersion, "utf-8")
     }
 }
 
@@ -126,6 +124,20 @@ class ChangelogMDFile {
         }
         file.write(sb.toString(), "utf-8")
         tmp.delete()
+    }
+
+    public String getChangelogOfNewVersion() {
+        StringBuilder sb = new StringBuilder()
+        for (ChangelogTypeWithContent changelogTypeWithContent : changelogVersionSectionWithContentList.get(0).contents) {
+            if (changelogTypeWithContent.changelogContents != null && !changelogTypeWithContent.changelogContents.isEmpty()) {
+                sb.append("### ").append(changelogTypeWithContent.changelogType.name()).append("\n\n")
+            }
+            for (String content : changelogTypeWithContent.changelogContents) {
+                sb.append("- ").append(content).append("\n")
+            }
+            sb.append("\n")
+        }
+        return sb.toString()
     }
 
     public void parseFromMD(File file) {
