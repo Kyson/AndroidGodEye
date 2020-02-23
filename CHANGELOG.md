@@ -1,5 +1,45 @@
 # CHANGELOG
 
+## 3.2.1
+
+### Changed
+
+- Add release notes to github release
+- Change gradle script and repository url
+- Readme
+- Debug dashboard Thread add thread group
+- View canary ui change(always show border)
+- Thread module output threadInfo instead of Thread
+- Thread module replace threadRunningProcess to threadTag
+- Cpu/Fps/Heap/Pss/Ram/ThreadDump/Traffic will output last info when event send before being observed
+- add return value to module install method, return true if install success.
+- Module config remove application, use GodEye.instance().getApplication()
+- Block module change function name:addBlockInterceptor -> setBlockListener
+
+### Added
+
+- Unit test
+- Thread module add config ThreadTagger to tag for thread
+- Unit test
+- Unit test
+- Add Unit test
+
+### Deprecated
+
+- GodEyeMonitor.setClassPrefixOfAppProcess
+- GodEyeMonitor.setThreadRunningProcessClassifier
+
+### Removed
+
+- remove some function in ReflectUtil class
+- IoUtil\GsonUtil\GsonSerializer
+
+### Fixed
+
+- Unit test failed
+- Crash failed unit test
+
+
 ## 3.2.0
 
 ### Added
@@ -67,7 +107,7 @@
 
 ### Fixed
 
-- Crash when ImageCanary install in not main thread 
+- Crash when ImageCanary install in not main thread
 
 ### Changed
 
@@ -83,7 +123,7 @@
 
 ### Changed
 
-- Keep imageIssue class impl serializable 
+- Keep imageIssue class impl serializable
 
 ## 3.1.5
 
@@ -113,3 +153,4 @@
 - Migrate to androidx
 - Split android-godeye-toolbox to android-godeye-okhttp and android-godeye-xcrash
 - Crash output CrashInfo list instead of Map
+
