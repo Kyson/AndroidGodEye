@@ -16,34 +16,38 @@ public class GodEyeMonitor {
         List<AppInfoLabel> getAppInfo();
     }
 
-    public static void work(Context context) {
-        //no op
-    }
-
-    public static void work(Context context, int port) {
-        //no op
-    }
-
-    public static void shutDown() {
-        //no op
-    }
-
+    /**
+     * set app informations,it will show on the top of dashboard
+     *
+     * @param appInfoConext
+     */
     public static void injectAppInfoConext(AppInfoConext appInfoConext) {
-        //no op
+    }
+
+    public static synchronized void work(Context context) {
+    }
+
+    /**
+     * monitor start work
+     */
+    public static synchronized void work(Context context, int port) {
+    }
+
+    /**
+     * monitor stop work
+     */
+    public static synchronized void shutDown() {
+    }
+
+    public static Context getContext() {
+        return null;
     }
 
     @Deprecated
     public static void setClassPrefixOfAppProcess(List<String> classPathPrefixes) {
-        // no op
     }
 
     @Deprecated
     public static void setThreadRunningProcessClassifier(ThreadRunningProcessClassifier threadRunningProcessClassifier) {
-        // no op
-    }
-
-    public static Context getContext() {
-        // no op
-        return null;
     }
 }
