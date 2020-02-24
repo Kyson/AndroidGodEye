@@ -36,6 +36,7 @@
 
 ### Fixed
 
+- Build error
 - Unit test failed
 - Crash failed unit test
 
