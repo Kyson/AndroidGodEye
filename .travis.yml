@@ -47,7 +47,7 @@ deploy:
     - provider: releases
       api_key: $GITHUB_TOKEN
       file: "./android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk"
-      release_notes_file: "CHANGELOG_NEW_VERSION.tmp"
+      release_notes_file: "./CHANGELOG_NEW_VERSION.tmp"
       skip_cleanup: true
       on:
         tags: true

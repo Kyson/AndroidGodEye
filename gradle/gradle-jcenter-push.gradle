@@ -1,3 +1,5 @@
+//bintrayKey: [https://bintray.com/profile/edit](https://bintray.com/profile/edit) API Key
+
 apply plugin: 'com.novoda.bintray-release'
 
 publish {
