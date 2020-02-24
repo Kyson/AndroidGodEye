@@ -28,6 +28,7 @@ install:
     - sdkmanager --list || true
 
 script:
+    - ./gradlew clean build jacocoTestReport
     - ./gradlew assembleRelease
 
 notifications:
@@ -38,6 +39,11 @@ before_deploy:
     - ./gradlew generateChangelogOfNewVersion
 
 deploy:
+    - provider: script
+      script: echo deploying to jcenter... && ./gradlew clean build bintrayUpload -PbintrayUser=kyson -PbintrayKey=$BINTRAY_KEY -PdryRun=false && echo deployed to jcenter.
+      on:
+        tags: true
+        branch: master
     - provider: releases
       api_key: $GITHUB_TOKEN
       file: "./android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk"
