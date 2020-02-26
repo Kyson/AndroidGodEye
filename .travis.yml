@@ -29,14 +29,13 @@ install:
 
 script:
     - ./gradlew clean build jacocoTestReport
-    - ./gradlew assembleRelease
 
 notifications:
     email:
         - tech@hikyson.cn
 
 before_deploy:
-    - ./gradlew generateChangelogOfNewVersion
+    - ./gradlew prepareForRelease
 
 deploy:
     - provider: script
@@ -46,8 +45,8 @@ deploy:
         branch: master
     - provider: releases
       api_key: $GITHUB_TOKEN
-      file: "./android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk"
-      release_notes_file: "./CHANGELOG_NEW_VERSION.tmp"
+      file_glob: true
+      file: github_release/*
       skip_cleanup: true
       on:
         tags: true

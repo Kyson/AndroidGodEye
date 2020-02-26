@@ -10,12 +10,17 @@ task generateChangelog() {
 
 generateChangelog.onlyIf { project.hasProperty('changelogVersion') }
 
+/**
+ * generate CHANGELOG_3_2_1.md
+ */
 task generateChangelogOfNewVersion() {
     doLast {
         ChangelogMDFile changelogMDFile = new ChangelogMDFile()
         changelogMDFile.parseFromMD(rootProject.file("CHANGELOG.md"))
+        Version newVersionName = changelogMDFile.getNewVersionName()
         String changelogOfNewVersion = changelogMDFile.getChangelogOfNewVersion()
-        rootProject.file("CHANGELOG_NEW_VERSION.tmp").write(changelogOfNewVersion, "utf-8")
+        def changelogFile = rootProject.file("CHANGELOG_" + newVersionName.toStringOfFileName() + ".md")
+        changelogFile.write(changelogOfNewVersion, "utf-8")
     }
 }
 
@@ -103,6 +108,42 @@ class ChangelogMDFile {
 
     public List<ChangelogVersionSectionWithContent> changelogVersionSectionWithContentList
 
+    public void parseFromMD(File file) {
+        List<String> lines = file.readLines()
+        changelogVersionSectionWithContentList = new LinkedList<>()
+        ChangelogVersionSectionWithContent currentChangelogVersionSectionWithContent
+        ChangelogTypeWithContent currentChangelogTypeWithContent
+        for (String line : lines) {
+            line = line.trim()
+            if (line.startsWith("##") && !line.startsWith("###")) {
+                ChangelogVersionSectionWithContent changelogVersionSectionWithContent = new ChangelogVersionSectionWithContent(new Version(line.substring(2).trim()), new ArrayList<>())
+                changelogVersionSectionWithContentList.add(changelogVersionSectionWithContent)
+                currentChangelogVersionSectionWithContent = changelogVersionSectionWithContent
+//                println "[CHANGELOG] parseFromMD get section line: " + line + ",currentChangelogVersionSectionWithContent:" + currentChangelogVersionSectionWithContent
+            } else if (line.startsWith("###") && !line.startsWith("####")) {
+                if (currentChangelogVersionSectionWithContent != null) {
+                    ChangelogTypeWithContent changelogTypeWithContent = new ChangelogTypeWithContent(ChangelogType.valueOf(line.substring(3).trim()), new ArrayList<>())
+                    currentChangelogVersionSectionWithContent.contents.add(changelogTypeWithContent)
+                    currentChangelogTypeWithContent = changelogTypeWithContent
+//                    println "[CHANGELOG] parseFromMD get type line: " + line + ",currentChangelogTypeWithContent:" + currentChangelogTypeWithContent
+                } else {
+//                    println "[CHANGELOG] parseFromMD WARNING! get type line but version is null: " + line
+                }
+            } else if (line.startsWith("-")) {
+                if (currentChangelogTypeWithContent != null) {
+                    currentChangelogTypeWithContent.changelogContents.add(line.substring(1).trim())
+//                    println "[CHANGELOG] parseFromMD get content line: " + line
+                } else {
+//                    println "[CHANGELOG] parseFromMD WARNING! get content line but type is null: " + line
+                }
+            } else {
+//                println "[CHANGELOG] parseFromMD ignore line: " + line
+            }
+        }
+        Collections.sort(changelogVersionSectionWithContentList, comparator())
+    }
+
+
     public void writeToMD(File file) {
         File tmp = new File(file.path + "_tmp")
         file.renameTo(tmp)
@@ -140,39 +181,8 @@ class ChangelogMDFile {
         return sb.toString()
     }
 
-    public void parseFromMD(File file) {
-        List<String> lines = file.readLines()
-        changelogVersionSectionWithContentList = new LinkedList<>()
-        ChangelogVersionSectionWithContent currentChangelogVersionSectionWithContent
-        ChangelogTypeWithContent currentChangelogTypeWithContent
-        for (String line : lines) {
-            line = line.trim()
-            if (line.startsWith("##") && !line.startsWith("###")) {
-                ChangelogVersionSectionWithContent changelogVersionSectionWithContent = new ChangelogVersionSectionWithContent(new Version(line.substring(2).trim()), new ArrayList<>())
-                changelogVersionSectionWithContentList.add(changelogVersionSectionWithContent)
-                currentChangelogVersionSectionWithContent = changelogVersionSectionWithContent
-//                println "[CHANGELOG] parseFromMD get section line: " + line + ",currentChangelogVersionSectionWithContent:" + currentChangelogVersionSectionWithContent
-            } else if (line.startsWith("###") && !line.startsWith("####")) {
-                if (currentChangelogVersionSectionWithContent != null) {
-                    ChangelogTypeWithContent changelogTypeWithContent = new ChangelogTypeWithContent(ChangelogType.valueOf(line.substring(3).trim()), new ArrayList<>())
-                    currentChangelogVersionSectionWithContent.contents.add(changelogTypeWithContent)
-                    currentChangelogTypeWithContent = changelogTypeWithContent
-//                    println "[CHANGELOG] parseFromMD get type line: " + line + ",currentChangelogTypeWithContent:" + currentChangelogTypeWithContent
-                } else {
-//                    println "[CHANGELOG] parseFromMD WARNING! get type line but version is null: " + line
-                }
-            } else if (line.startsWith("-")) {
-                if (currentChangelogTypeWithContent != null) {
-                    currentChangelogTypeWithContent.changelogContents.add(line.substring(1).trim())
-//                    println "[CHANGELOG] parseFromMD get content line: " + line
-                } else {
-//                    println "[CHANGELOG] parseFromMD WARNING! get content line but type is null: " + line
-                }
-            } else {
-//                println "[CHANGELOG] parseFromMD ignore line: " + line
-            }
-        }
-        Collections.sort(changelogVersionSectionWithContentList, comparator())
+    public Version getNewVersionName() {
+        return changelogVersionSectionWithContentList.get(0).version
     }
 
     private Comparator<ChangelogVersionSectionWithContent> comparator() {
@@ -271,6 +281,10 @@ class Version {
     @Override
     public String toString() {
         return majorVersion + "." + minorVersion + "." + buildVersion
+    }
+
+    public String toStringOfFileName() {
+        return majorVersion + "_" + minorVersion + "_" + buildVersion
     }
 }
 

@@ -1,0 +1,22 @@
+task copyForGithubRelease(type: Copy) {
+    from './android-godeye-sample/build/outputs/apk/release/android-godeye-sample-release.apk'
+    from(rootProject.rootDir.absolutePath) {
+        include 'CHANGELOG_*.md'
+    }
+    into "github_release"
+}
+
+/**
+ * ./gradlew prepareForRelease
+ */
+task prepareForRelease() {
+    doLast {
+        println "[Github Release] preparing..."
+        file('github_release').deleteDir()
+        tasks.copyForGithubRelease.execute()
+        println "[Github Release] done."
+    }
+}
+
+prepareForRelease.dependsOn "generateChangelogOfNewVersion"
+prepareForRelease.dependsOn ":android-godeye-sample:assembleRelease"
