@@ -2,15 +2,18 @@
 
 buildscript {
     repositories {
-         google()
-         jcenter()
-         mavenCentral()
-//        // Replacement of google()
-//        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
-//        // Replacement of mavenCentral()
-//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-//        // Replacement of jcenter()
-//        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        if (Boolean.parseBoolean(USE_ALIYUN_REPO)) {
+            // Replacement of google()
+            maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+            // Replacement of mavenCentral()
+            maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+            // Replacement of jcenter()
+            maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        } else {
+            google()
+            jcenter()
+            mavenCentral()
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -22,15 +25,18 @@ buildscript {
 
 allprojects {
     repositories {
-         google()
-         jcenter()
-         mavenCentral()
-//        // Replacement of google()
-//        maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
-//        // Replacement of mavenCentral()
-//        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
-//        // Replacement of jcenter()
-//        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        if (Boolean.parseBoolean(USE_ALIYUN_REPO)) {
+            // Replacement of google()
+            maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
+            // Replacement of mavenCentral()
+            maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+            // Replacement of jcenter()
+            maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        } else {
+            google()
+            jcenter()
+            mavenCentral()
+        }
     }
 }
 

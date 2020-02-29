@@ -24,6 +24,7 @@ class MethodCanaryConverter {
             List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos = new ArrayList<>(methodEvents.size());
             Stack<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodEventsStackOfCurrentThread = new Stack<>();
             for (MethodEvent methodEvent : methodEvents) {
+                // TODO KYSON 修改为type
                 if (methodEvent instanceof MethodEnterEvent) {
                     MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo = new MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo();
                     methodInfo.className = methodEvent.className;
