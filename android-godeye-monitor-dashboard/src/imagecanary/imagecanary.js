@@ -3,7 +3,6 @@ import '../App.css';
 
 import { Card, Badge, Button, Input, Row } from 'antd'
 import Util from "../libs/util";
-import white_grey_bg from '../assets/white_grey_bg.png'
 
 /**
  * ImageCanary
@@ -61,10 +60,33 @@ class ImageCanary extends Component {
     }
 
     static renderImg(img_base64) {
+        const greyWhiteBgUrl = `url('data:image/svg+xml, \
+        <svg \
+            xmlns= "http://www.w3.org/2000/svg" \
+            width= "4" \
+            height= "4" \
+            fill-opacity= ".25"> \
+            \
+            <rect \
+                x= "2" \
+                width= "2" \
+                height= "2" \
+            /> \
+            \
+            <rect  \
+                y= "2" \
+                width= "2" \
+                height= "2" \
+            /> \
+        </svg>')`;
         if (img_base64) {
-            return (<Row type="flex" justify="center" align="middle" style={{ padding: 8, backgroundImage: `url("${white_grey_bg}")` }}><img src={`data:image/png;base64,${img_base64}`} alt="" /></Row>)
+            return (<Row type="flex" justify="center" align="middle" style={{
+                padding: 8, backgroundImage: greyWhiteBgUrl
+            }}><img src={`data:image/png;base64,${img_base64}`} alt="" /></Row>)
         } else {
-            return (<Row type="flex" justify="center" align="middle" style={{ padding: 8, backgroundImage: `url("${white_grey_bg}")` }}><span style={{ color: Util.getGreen(), backgroundColor: "#fff", padding: 4 }}>No preview image</span></Row>)
+            return (<Row type="flex" justify="center" align="middle" style={{
+                padding: 8, backgroundImage: greyWhiteBgUrl
+            }}><span style={{ color: Util.getGreen(), backgroundColor: "#fff", padding: 4 }}>No preview image</span></Row>)
         }
     }
 
