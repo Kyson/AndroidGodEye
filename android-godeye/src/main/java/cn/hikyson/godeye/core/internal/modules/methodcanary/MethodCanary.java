@@ -69,10 +69,10 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
                         long start1 = System.currentTimeMillis();
                         MethodCanaryConverter.filter(methodsRecordInfo, this.mMethodCanaryContext);
                         long end = System.currentTimeMillis();
-                        L.d(String.format("MethodCanary output converter cost %s ms, filter cost %s ms", end - start0, end - start1));
+                        L.d(String.format("MethodCanary output success! cost %s ms, filter cost %s ms", end - start0, end - start1));
                         produce(methodsRecordInfo);
                     });
-            L.d("MethodCanary stop monitor success.");
+            L.d("MethodCanary stopped monitor and output processing...");
         } catch (Exception e) {
             L.d("MethodCanary stop monitor fail:" + e);
         }

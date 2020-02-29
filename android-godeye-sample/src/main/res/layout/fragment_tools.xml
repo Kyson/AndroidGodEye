@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:context=".ToolsFragment">
+        tools:context="cn.hikyson.godeye.sample.ToolsFragment">
 
         <Button
             android:id="@+id/fragment_tools_request_bt"

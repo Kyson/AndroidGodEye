@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import cn.hikyson.android.godeye.sample.R;
 
 public class AnimationFragmentV4 extends Fragment {
 

@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 /**
  * Created by kysonchao on 2017/11/24.

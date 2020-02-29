@@ -37,7 +37,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation project(':android-godeye')
-    api 'com.koushikdutta.async:androidasync:2.2.1'
+    implementation 'com.koushikdutta.async:androidasync:2.2.1'
     implementation "com.github.nisrulz:easydeviceinfo-base:2.4.1"
     implementation 'com.iqiyi.xcrash:xcrash-android-lib:2.4.6'
 }

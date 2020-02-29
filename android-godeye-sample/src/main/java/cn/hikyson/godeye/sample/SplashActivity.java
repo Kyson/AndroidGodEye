@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.Manifest;
 import android.app.Activity;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.core.content.PermissionChecker;
 import android.widget.Toast;
+
+import cn.hikyson.android.godeye.sample.R;
 
 public class SplashActivity extends Activity {
 

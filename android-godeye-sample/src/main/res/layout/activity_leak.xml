@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@android:color/white"
-    tools:context="cn.hikyson.android.godeye.sample.LeakActivity">
+    tools:context="cn.hikyson.android.godeye.sample.cn.hikyson.godeye.sample.LeakActivity">
 
     <TextView
         android:id="@+id/activity_leak_test"

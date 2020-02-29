@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.concurrent.TimeUnit;
 
+import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 
 public class ImageActivity extends AppCompatActivity {

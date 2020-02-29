@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.utils.L;

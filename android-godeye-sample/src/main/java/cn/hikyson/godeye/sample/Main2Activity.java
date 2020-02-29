@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 import java.util.Objects;
 
+import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 

@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import cn.hikyson.methodcanary.lib.MethodEnterEvent;
 import cn.hikyson.methodcanary.lib.MethodEvent;
-import cn.hikyson.methodcanary.lib.MethodExitEvent;
 import cn.hikyson.methodcanary.lib.ThreadInfo;
 
 class MethodCanaryConverter {
@@ -24,8 +22,7 @@ class MethodCanaryConverter {
             List<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodInfos = new ArrayList<>(methodEvents.size());
             Stack<MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo> methodEventsStackOfCurrentThread = new Stack<>();
             for (MethodEvent methodEvent : methodEvents) {
-                // TODO KYSON 修改为type
-                if (methodEvent instanceof MethodEnterEvent) {
+                if (methodEvent.isEnter) {
                     MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo = new MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo();
                     methodInfo.className = methodEvent.className;
                     methodInfo.methodAccessFlag = methodEvent.methodAccessFlag;
@@ -35,19 +32,32 @@ class MethodCanaryConverter {
                     methodInfo.stack = methodEventsStackOfCurrentThread.size();
                     methodInfos.add(methodInfo);
                     methodEventsStackOfCurrentThread.push(methodInfo);
-                } else if (methodEvent instanceof MethodExitEvent) {
+                } else {
                     MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo = null;
                     if (!methodEventsStackOfCurrentThread.empty()) {
                         methodInfo = methodEventsStackOfCurrentThread.pop();
                     }
                     if (methodInfo != null) {
                         methodInfo.end = methodEvent.eventNanoTime;
+                        assertMethodEventPair(methodInfo, methodEvent);
                     }
                 }
             }
             methodsRecordInfo.methodInfoOfThreadInfos.add(new MethodsRecordInfo.MethodInfoOfThreadInfo(entry.getKey(), methodInfos));
         }
         return methodsRecordInfo;
+    }
+
+    private static void assertMethodEventPair(MethodsRecordInfo.MethodInfoOfThreadInfo.MethodInfo methodInfo, MethodEvent methodExitEvent) {
+        if (!methodInfo.className.equals(methodExitEvent.className)
+                || !methodInfo.className.equals(methodExitEvent.pairMethodEvent.className)
+                || !methodInfo.methodName.equals(methodExitEvent.methodName)
+                || !methodInfo.methodName.equals(methodExitEvent.pairMethodEvent.methodName)
+                || !methodInfo.methodDesc.equals(methodExitEvent.methodDesc)
+                || !methodInfo.methodDesc.equals(methodExitEvent.pairMethodEvent.methodDesc)
+        ) {
+            throw new IllegalStateException("Error assertMethodEventPair, methodInfo: " + methodInfo + ", methodExitEvent: " + methodExitEvent);
+        }
     }
 
     static void filter(MethodsRecordInfo methodsRecordInfo, MethodCanaryConfig methodCanaryContext) {

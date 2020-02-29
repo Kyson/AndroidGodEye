@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.app.Activity;
 import android.os.Build;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
+import cn.hikyson.android.godeye.sample.R;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 

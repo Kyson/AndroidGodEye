@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -6,8 +6,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import android.view.View;
 
-import cn.hikyson.android.godeye.sample.fragmentlifecycle.BlankFragment1;
-import cn.hikyson.android.godeye.sample.fragmentlifecycle.BlankFragment2;
+import cn.hikyson.android.godeye.sample.R;
+import cn.hikyson.godeye.sample.fragmentlifecycle.BlankFragment1;
+import cn.hikyson.godeye.sample.fragmentlifecycle.BlankFragment2;
 
 public class ThirdActivity extends FragmentActivity {
 

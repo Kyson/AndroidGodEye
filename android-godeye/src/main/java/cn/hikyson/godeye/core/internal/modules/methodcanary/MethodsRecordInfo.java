@@ -20,6 +20,15 @@ public class MethodsRecordInfo implements Serializable {
         this.methodInfoOfThreadInfos = methodInfoOfThreadInfos;
     }
 
+    @Override
+    public String toString() {
+        return "MethodsRecordInfo{" +
+                "start=" + start +
+                ", end=" + end +
+                ", methodInfoOfThreadInfos=" + methodInfoOfThreadInfos +
+                '}';
+    }
+
     @Keep
     public static class MethodInfoOfThreadInfo implements Serializable {
         public ThreadInfo threadInfo;
@@ -28,6 +37,14 @@ public class MethodsRecordInfo implements Serializable {
         public MethodInfoOfThreadInfo(ThreadInfo threadInfo, List<MethodInfo> methodInfos) {
             this.threadInfo = threadInfo;
             this.methodInfos = methodInfos;
+        }
+
+        @Override
+        public String toString() {
+            return "MethodInfoOfThreadInfo{" +
+                    "threadInfo=" + threadInfo +
+                    ", methodInfos=" + methodInfos +
+                    '}';
         }
 
         @Keep
@@ -39,6 +56,21 @@ public class MethodsRecordInfo implements Serializable {
             public int methodAccessFlag;
             public String methodName;
             public String methodDesc;
+
+            @Override
+            public String toString() {
+                return "MethodInfo{" +
+                        "stack=" + stack +
+                        ", start=" + start +
+                        ", end=" + end +
+                        ", className='" + className + '\'' +
+                        ", methodAccessFlag=" + methodAccessFlag +
+                        ", methodName='" + methodName + '\'' +
+                        ", methodDesc='" + methodDesc + '\'' +
+                        '}';
+            }
         }
+
+
     }
 }

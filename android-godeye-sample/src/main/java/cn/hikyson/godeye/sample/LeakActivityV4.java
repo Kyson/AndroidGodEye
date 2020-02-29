@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.os.Bundle;
 
@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.util.concurrent.TimeUnit;
 
+import cn.hikyson.android.godeye.sample.R;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 

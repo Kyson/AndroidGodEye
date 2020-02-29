@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.content.Context;
 import android.os.Handler;
@@ -7,6 +7,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.util.AttributeSet;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import cn.hikyson.android.godeye.sample.R;
 
 /**
  * 用于展示打印日志的View

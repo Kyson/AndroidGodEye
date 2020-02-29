@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample.fragmentlifecycle;
+package cn.hikyson.godeye.sample.fragmentlifecycle;
 
 import android.content.Context;
 import android.net.Uri;

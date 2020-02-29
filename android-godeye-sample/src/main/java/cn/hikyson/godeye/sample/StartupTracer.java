@@ -1,13 +1,11 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 
-import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeHelper;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
-import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 
 

@@ -1,4 +1,4 @@
-package cn.hikyson.android.godeye.sample;
+package cn.hikyson.godeye.sample;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Random;
 
 import cn.hikyson.android.godeye.okhttp.GodEyePluginOkNetwork;
+import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.GodEyeHelper;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;

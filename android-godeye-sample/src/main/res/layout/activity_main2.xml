@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Main2Activity">
+    tools:context="cn.hikyson.godeye.sample.Main2Activity">
 
-    <cn.hikyson.android.godeye.sample.LogView
+    <cn.hikyson.godeye.sample.LogView
         android:id="@+id/activity_main2_logview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
