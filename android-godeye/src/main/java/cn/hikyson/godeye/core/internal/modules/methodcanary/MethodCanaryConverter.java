@@ -39,7 +39,7 @@ class MethodCanaryConverter {
                     }
                     if (methodInfo != null) {
                         methodInfo.end = methodEvent.eventNanoTime;
-                        assertMethodEventPair(methodInfo, methodEvent);
+//                        assertMethodEventPair(methodInfo, methodEvent);
                     }
                 }
             }

@@ -49,7 +49,7 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
                 L.d("MethodCanary start monitor fail, not installed.");
                 return;
             }
-            cn.hikyson.methodcanary.lib.MethodCanary.get().start(tag);
+            cn.hikyson.methodcanary.lib.MethodCanary.get().startMethodTracing(tag);
             L.d("MethodCanary start monitor success.");
         } catch (Exception e) {
             L.d("MethodCanary start monitor fail:" + e);
@@ -62,7 +62,7 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
                 L.d("MethodCanary stop monitor fail, not installed.");
                 return;
             }
-            cn.hikyson.methodcanary.lib.MethodCanary.get().stop(tag
+            cn.hikyson.methodcanary.lib.MethodCanary.get().stopMethodTracing(tag
                     , new cn.hikyson.methodcanary.lib.MethodCanaryConfig(this.mMethodCanaryContext.lowCostMethodThresholdMillis() * 1000000), (sessionTag, startNanoTime, stopNanoTime, methodEventMap) -> {
                         long start0 = System.currentTimeMillis();
                         MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startNanoTime, stopNanoTime, methodEventMap);
@@ -79,7 +79,7 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
     }
 
     public synchronized boolean isRunning(String tag) {
-        return cn.hikyson.methodcanary.lib.MethodCanary.get().isRunning(tag);
+        return cn.hikyson.methodcanary.lib.MethodCanary.get().isMethodTraceRunning(tag);
     }
 
     @Override

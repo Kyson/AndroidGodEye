@@ -31,7 +31,6 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
             return true;
         }
         this.mConfig = config;
-        PageLifecycleRecords pageLifecycleRecords = new PageLifecycleRecords();
         PageInfoProvider pageInfoProvider = new DefaultPageInfoProvider();
         try {
             pageInfoProvider = (PageInfoProvider) Class.forName(this.mConfig.pageInfoProvider()).newInstance();
@@ -39,7 +38,7 @@ public class Pageload extends ProduceableSubject<PageLifecycleEventInfo> impleme
             L.e("Pageload install warning, can not find pageload provider class. use DefaultPageInfoProvider:" + e);
         }
         Handler handler = ThreadUtil.createIfNotExistHandler(PAGELOAD_HANDLER);
-        this.mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks(pageLifecycleRecords, pageInfoProvider, this, handler);
+        this.mActivityLifecycleCallbacks = new ActivityLifecycleCallbacks(new PageLifecycleRecords(), pageInfoProvider, this, handler);
         GodEye.instance().getApplication().registerActivityLifecycleCallbacks(mActivityLifecycleCallbacks);
         this.mInstalled = true;
         L.d("Pageload installed.");
