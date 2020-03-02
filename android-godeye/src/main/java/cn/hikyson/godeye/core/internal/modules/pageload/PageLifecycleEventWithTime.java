@@ -8,7 +8,8 @@ import java.io.Serializable;
 public class PageLifecycleEventWithTime<T> implements Serializable {
     public PageInfo<T> pageInfo;
     public LifecycleEvent lifecycleEvent;
-    public long eventTimeMillis;
+    public long startTimeMillis;
+    public long endTimeMillis;
 
     public PageLifecycleEventWithTime(PageInfo<T> pageInfo, LifecycleEvent lifecycleEvent, long eventTimeMillis) {
         this.pageInfo = pageInfo;

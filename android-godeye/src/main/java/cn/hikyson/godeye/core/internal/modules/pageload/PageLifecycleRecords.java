@@ -55,6 +55,4 @@ public class PageLifecycleRecords {
         }
         return pageLifecycleEventWithTimes;
     }
-
-
 }

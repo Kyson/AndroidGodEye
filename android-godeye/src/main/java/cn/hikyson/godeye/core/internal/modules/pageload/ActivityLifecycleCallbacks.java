@@ -33,13 +33,6 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mCachePageInfo = new HashMap<>();
         mHandler = handler;
         mStartedActivity = new HashSet<>();
-        // TODO KYSON IMPL 1.列表合适 2.需要卸载
-//        MethodCanary.get().setOnPageLifecycleEventCallback(new OnPageLifecycleEventCallback() {
-//            @Override
-//            public void onLifecycleEvent(MethodEvent methodEvent, Object o) {
-//
-//            }
-//        });
     }
 
     void onActivityLoad(final Activity activity) {
