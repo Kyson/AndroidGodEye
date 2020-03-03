@@ -13,5 +13,5 @@ public enum ActivityLifecycleEvent implements LifecycleEvent, Serializable {
     ON_LOAD,
     ON_PAUSE,
     ON_STOP,
-    ON_DESTROY;
+    ON_DESTROY
 }

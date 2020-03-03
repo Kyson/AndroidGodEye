@@ -9,11 +9,11 @@ public class PageloadUtil {
         for (PageLifecycleEventWithTime pageLifecycleEventWithTime : allEvents) {
             if (pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_CREATE
                     || pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_ATTACH) {
-                startTime = pageLifecycleEventWithTime.eventTimeMillis;
+                startTime = pageLifecycleEventWithTime.startTimeMillis;
             }
             if (pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_DRAW
                     || pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_DRAW) {
-                drawTime = pageLifecycleEventWithTime.eventTimeMillis;
+                drawTime = pageLifecycleEventWithTime.endTimeMillis;
             }
         }
         if (startTime > 0 && drawTime > 0 && drawTime > startTime) {
@@ -28,11 +28,11 @@ public class PageloadUtil {
         for (PageLifecycleEventWithTime pageLifecycleEventWithTime : allEvents) {
             if (pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_CREATE
                     || pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_ATTACH) {
-                startTime = pageLifecycleEventWithTime.eventTimeMillis;
+                startTime = pageLifecycleEventWithTime.startTimeMillis;
             }
             if (pageLifecycleEventWithTime.lifecycleEvent == ActivityLifecycleEvent.ON_LOAD
                     || pageLifecycleEventWithTime.lifecycleEvent == FragmentLifecycleEvent.ON_LOAD) {
-                loadTime = pageLifecycleEventWithTime.eventTimeMillis;
+                loadTime = pageLifecycleEventWithTime.endTimeMillis;
             }
         }
         if (startTime > 0 && loadTime > 0 && loadTime > startTime) {

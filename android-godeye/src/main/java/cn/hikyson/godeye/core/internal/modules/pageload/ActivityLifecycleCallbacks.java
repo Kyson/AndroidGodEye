@@ -9,20 +9,22 @@ import android.os.Handler;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
+import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.internal.Engine;
 import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.ViewUtil;
+import cn.hikyson.methodcanary.lib.MethodCanary;
+import cn.hikyson.methodcanary.lib.MethodEvent;
+import cn.hikyson.methodcanary.lib.OnPageLifecycleEventCallback;
 
-public class ActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+public class ActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks, Engine, OnPageLifecycleEventCallback {
 
     private PageLifecycleRecords mPageLifecycleRecords;
     private PageInfoProvider mPageInfoProvider;
     private Producer<PageLifecycleEventInfo> mProducer;
-    private Map<Object, PageInfo<?>> mCachePageInfo;
     private Handler mHandler;
     private Set<Activity> mStartedActivity;
 
@@ -30,201 +32,73 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         mPageLifecycleRecords = pageLifecycleRecords;
         mPageInfoProvider = pageInfoProvider;
         mProducer = producer;
-        mCachePageInfo = new HashMap<>();
         mHandler = handler;
         mStartedActivity = new HashSet<>();
     }
 
     void onActivityLoad(final Activity activity) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
-            if (pageInfo != null) {
-                boolean isPageLoaded = mPageLifecycleRecords.isExistEvent(pageInfo, ActivityLifecycleEvent.ON_LOAD);
-                if (isPageLoaded) {
-                    return;
-                }
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByActivity(activity);
-                PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_LOAD, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onActivityLifecycleEvent(activity, ActivityLifecycleEvent.ON_LOAD, true);
     }
 
     void onFragmentV4Load(final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                boolean isPageLoaded = mPageLifecycleRecords.isExistEvent(pageInfo, FragmentLifecycleEvent.ON_LOAD);
-                if (isPageLoaded) {
-                    return;
-                }
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_LOAD, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onFragmentV4LifecycleEvent(f, FragmentLifecycleEvent.ON_LOAD, true);
     }
 
     void onFragmentLoad(final android.app.Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<android.app.Fragment> pageInfo = (PageInfo<android.app.Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                boolean isPageLoaded = mPageLifecycleRecords.isExistEvent(pageInfo, FragmentLifecycleEvent.ON_LOAD);
-                if (isPageLoaded) {
-                    return;
-                }
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<android.app.Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_LOAD, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_LOAD, true);
     }
 
     void onFragmentV4Show(final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_SHOW, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onFragmentV4LifecycleEvent(f, FragmentLifecycleEvent.ON_SHOW, false);
     }
 
     void onFragmentV4Hide(final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByV4Fragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_HIDE, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onFragmentV4LifecycleEvent(f, FragmentLifecycleEvent.ON_HIDE, false);
     }
 
     void onFragmentShow(final android.app.Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<android.app.Fragment> pageInfo = (PageInfo<android.app.Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<android.app.Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_SHOW, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_SHOW, false);
     }
 
     void onFragmentHide(final android.app.Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<android.app.Fragment> pageInfo = (PageInfo<android.app.Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<android.app.Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_HIDE, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_HIDE, false);
     }
 
     @Override
     public void onActivityCreated(final Activity activity, Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            activity.getFragmentManager().registerFragmentLifecycleCallbacks(new FragmentLifecycleCallbacks(mPageLifecycleRecords, mPageInfoProvider, mCachePageInfo, mProducer, mHandler), true);
+            activity.getFragmentManager().registerFragmentLifecycleCallbacks(new FragmentLifecycleCallbacks(ActivityLifecycleCallbacks.this), true);
         }
         if (activity instanceof FragmentActivity) {
-            ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentLifecycleCallbacksV4(mPageLifecycleRecords, mPageInfoProvider, mCachePageInfo, mProducer, mHandler), true);
+            ((FragmentActivity) activity).getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentLifecycleCallbacksV4(ActivityLifecycleCallbacks.this), true);
         }
-        final long time0 = System.currentTimeMillis();
-        mHandler.post(() -> {
-            Map<String, String> extraInfo = mPageInfoProvider.getInfoByActivity(activity);
-            PageInfo<Activity> pageInfo = new PageInfo<>(activity, extraInfo);
-            mCachePageInfo.put(activity, pageInfo);
-            PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_CREATE, time0);
-            mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-        });
+        onActivityLifecycleEvent(activity, ActivityLifecycleEvent.ON_CREATE, false);
     }
 
     @Override
     public void onActivityStarted(final Activity activity) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByActivity(activity);
-                PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_START, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onActivityLifecycleEvent(activity, ActivityLifecycleEvent.ON_START, false);
         if (!mStartedActivity.contains(activity)) {
             mStartedActivity.add(activity);
             ViewUtil.measureActivityDidDraw(activity, () -> {
-                final long time1 = System.currentTimeMillis();
-                mHandler.post(() -> {
-                    // noinspection unchecked
-                    PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
-                    if (pageInfo != null) {
-                        pageInfo.extraInfo = mPageInfoProvider.getInfoByActivity(activity);
-                        PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_DRAW, time1);
-                        mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                    }
-                });
+                onActivityLifecycleEvent(activity, ActivityLifecycleEvent.ON_DRAW, false);
             });
         }
     }
 
     @Override
     public void onActivityResumed(final Activity activity) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByActivity(activity);
-                PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_RESUME, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onActivityLifecycleEvent(activity, ActivityLifecycleEvent.ON_RESUME, false);
     }
 
     @Override
     public void onActivityPaused(final Activity activity) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByActivity(activity);
-                PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_PAUSE, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onActivityLifecycleEvent(activity, ActivityLifecycleEvent.ON_PAUSE, false);
     }
 
     @Override
     public void onActivityStopped(final Activity activity) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.get(activity);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByActivity(activity);
-                PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_STOP, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        onActivityLifecycleEvent(activity, ActivityLifecycleEvent.ON_STOP, false);
     }
 
     @Override
@@ -234,16 +108,88 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
 
     @Override
     public void onActivityDestroyed(final Activity activity) {
+        onActivityLifecycleEvent(activity, ActivityLifecycleEvent.ON_DESTROY, false);
+        mStartedActivity.remove(activity);
+    }
+
+    // method canary callback for lifecycle method cost
+    @Override
+    public void onLifecycleEvent(MethodEvent lifecycleMethodEvent, Object page) {
+        LifecycleEvent lifecycleEvent = PageLifecycleMethodEventTypes.convert(lifecycleMethodEvent);
+        if (lifecycleEvent == null) {
+            return;
+        }
+        PageInfo<?> pageInfo = null;
+        if (page instanceof Activity) {
+            pageInfo = new PageInfo<>(page, mPageInfoProvider.getInfoByActivity((Activity) page));
+        } else if (page instanceof Fragment) {
+            pageInfo = new PageInfo<>(page, mPageInfoProvider.getInfoByV4Fragment((Fragment) page));
+        } else if (page instanceof android.app.Fragment) {
+            pageInfo = new PageInfo<>(page, mPageInfoProvider.getInfoByFragment((android.app.Fragment) page));
+        }
+        if (pageInfo == null) {
+            return;
+        }
+        if (lifecycleMethodEvent.isEnter) {
+            // TODO KYSON IMPL eventNanoTime转millis
+            mPageLifecycleRecords.addMethodStartEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventNanoTime);
+        } else {
+            mPageLifecycleRecords.addMethodEndEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventNanoTime);
+        }
+    }
+
+    private void onActivityLifecycleEvent(Activity activity, LifecycleEvent e, boolean canNotRepeat) {
         final long time = System.currentTimeMillis();
         mHandler.post(() -> {
-            // noinspection unchecked
-            PageInfo<Activity> pageInfo = (PageInfo<Activity>) mCachePageInfo.remove(activity);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByActivity(activity);
-                PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, ActivityLifecycleEvent.ON_DESTROY, time);
+            PageInfo<Activity> pageInfo = new PageInfo<>(activity, mPageInfoProvider.getInfoByActivity(activity));
+            if (canNotRepeat && mPageLifecycleRecords.isExistEvent(pageInfo, e)) {
+                return;
+            }
+            PageLifecycleEventWithTime<Activity> lifecycleEvent = mPageLifecycleRecords.addLifecycleEvent(pageInfo, e, time);
+            if (lifecycleEvent != null) {
                 mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
             }
         });
-        mStartedActivity.remove(activity);
+    }
+
+    void onFragmentLifecycleEvent(android.app.Fragment fragment, LifecycleEvent e, boolean canNotRepeat) {
+        final long time = System.currentTimeMillis();
+        mHandler.post(() -> {
+            PageInfo<android.app.Fragment> pageInfo = new PageInfo<>(fragment, mPageInfoProvider.getInfoByFragment(fragment));
+            if (canNotRepeat && mPageLifecycleRecords.isExistEvent(pageInfo, e)) {
+                return;
+            }
+            PageLifecycleEventWithTime<android.app.Fragment> lifecycleEvent = mPageLifecycleRecords.addLifecycleEvent(pageInfo, e, time);
+            if (lifecycleEvent != null) {
+                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+            }
+        });
+    }
+
+    void onFragmentV4LifecycleEvent(Fragment fragment, LifecycleEvent e, boolean canNotRepeat) {
+        final long time = System.currentTimeMillis();
+        mHandler.post(() -> {
+            PageInfo<Fragment> pageInfo = new PageInfo<>(fragment, mPageInfoProvider.getInfoByV4Fragment(fragment));
+            if (canNotRepeat && mPageLifecycleRecords.isExistEvent(pageInfo, e)) {
+                return;
+            }
+            PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addLifecycleEvent(pageInfo, e, time);
+            if (lifecycleEvent != null) {
+                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+            }
+        });
+    }
+
+    @Override
+    public void work() {
+        GodEye.instance().getApplication().registerActivityLifecycleCallbacks(this);
+        MethodCanary.get().addOnPageLifecycleEventCallback(this);
+    }
+
+    @Override
+    public void shutdown() {
+        GodEye.instance().getApplication().unregisterActivityLifecycleCallbacks(this);
+        MethodCanary.get().removeOnPageLifecycleEventCallback(this);
+
     }
 }

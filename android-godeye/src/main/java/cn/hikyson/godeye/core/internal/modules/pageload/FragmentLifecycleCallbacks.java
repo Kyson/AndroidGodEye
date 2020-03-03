@@ -7,178 +7,69 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 
-import java.util.Map;
-
-import cn.hikyson.godeye.core.internal.Producer;
 import cn.hikyson.godeye.core.utils.ViewUtil;
 
 @TargetApi(Build.VERSION_CODES.O)
 public class FragmentLifecycleCallbacks extends FragmentManager.FragmentLifecycleCallbacks {
-    private PageLifecycleRecords mPageLifecycleRecords;
-    private PageInfoProvider mPageInfoProvider;
-    private Map<Object, PageInfo<?>> mCachePageInfo;
-    private Producer<PageLifecycleEventInfo> mProducer;
-    private Handler mHandler;
+    private ActivityLifecycleCallbacks mActivityLifecycleCallbacks;
 
-    FragmentLifecycleCallbacks(PageLifecycleRecords pageLifecycleRecords, PageInfoProvider pageInfoProvider, Map<Object, PageInfo<?>> cachePageInfo, Producer<PageLifecycleEventInfo> producer, Handler handler) {
-        mPageLifecycleRecords = pageLifecycleRecords;
-        mPageInfoProvider = pageInfoProvider;
-        mCachePageInfo = cachePageInfo;
-        mProducer = producer;
-        mHandler = handler;
+    FragmentLifecycleCallbacks(ActivityLifecycleCallbacks activityLifecycleCallbacks) {
+        mActivityLifecycleCallbacks = activityLifecycleCallbacks;
     }
 
     @Override
     public void onFragmentAttached(FragmentManager fm, final Fragment f, Context context) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            Map<String, String> extraInfo = mPageInfoProvider.getInfoByFragment(f);
-            PageInfo<Fragment> pageInfo = new PageInfo<>(f, extraInfo);
-            mCachePageInfo.put(f, pageInfo);
-            PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_ATTACH, time);
-            mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_ATTACH, false);
     }
 
     @Override
     public void onFragmentCreated(FragmentManager fm, final Fragment f, Bundle savedInstanceState) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_CREATE, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_CREATE, false);
     }
 
     @Override
     public void onFragmentViewCreated(FragmentManager fm, final Fragment f, View v, Bundle savedInstanceState) {
-        final long time0 = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_VIEW_CREATE, time0);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_VIEW_CREATE, false);
         ViewUtil.measureFragmentDidDraw(f, () -> {
-            final long time1 = System.currentTimeMillis();
-            mHandler.post(() -> {
-                // noinspection unchecked
-                final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-                if (pageInfo != null) {
-                    pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                    PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_DRAW, time1);
-                    mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-                }
-            });
+            mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_DRAW, false);
         });
     }
 
     @Override
     public void onFragmentStarted(FragmentManager fm, final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_START, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_START, false);
     }
 
     @Override
     public void onFragmentResumed(FragmentManager fm, final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_RESUME, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_RESUME, false);
     }
 
     @Override
     public void onFragmentPaused(FragmentManager fm, final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_PAUSE, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_PAUSE, false);
     }
 
     @Override
     public void onFragmentStopped(FragmentManager fm, final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_STOP, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_STOP, false);
     }
 
     @Override
     public void onFragmentViewDestroyed(FragmentManager fm, final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_VIEW_DESTROY, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_VIEW_DESTROY, false);
     }
 
     @Override
     public void onFragmentDestroyed(FragmentManager fm, final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            final PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.get(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_DESTROY, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_DESTROY, false);
     }
 
     @Override
     public void onFragmentDetached(FragmentManager fm, final Fragment f) {
-        final long time = System.currentTimeMillis();
-        mHandler.post(() -> {
-            // noinspection unchecked
-            PageInfo<Fragment> pageInfo = (PageInfo<Fragment>) mCachePageInfo.remove(f);
-            if (pageInfo != null) {
-                pageInfo.extraInfo = mPageInfoProvider.getInfoByFragment(f);
-                PageLifecycleEventWithTime<Fragment> lifecycleEvent = mPageLifecycleRecords.addEvent(pageInfo, FragmentLifecycleEvent.ON_DETACH, time);
-                mProducer.produce(new PageLifecycleEventInfo<>(pageInfo, lifecycleEvent, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
-            }
-        });
+        mActivityLifecycleCallbacks.onFragmentLifecycleEvent(f, FragmentLifecycleEvent.ON_DETACH, false);
     }
 
 }

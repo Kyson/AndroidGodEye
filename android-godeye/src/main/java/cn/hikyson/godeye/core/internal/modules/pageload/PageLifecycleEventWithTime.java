@@ -11,10 +11,11 @@ public class PageLifecycleEventWithTime<T> implements Serializable {
     public long startTimeMillis;
     public long endTimeMillis;
 
-    public PageLifecycleEventWithTime(PageInfo<T> pageInfo, LifecycleEvent lifecycleEvent, long eventTimeMillis) {
+    public PageLifecycleEventWithTime(PageInfo<T> pageInfo, LifecycleEvent lifecycleEvent, long startTimeMillis, long endTimeMillis) {
         this.pageInfo = pageInfo;
         this.lifecycleEvent = lifecycleEvent;
-        this.eventTimeMillis = eventTimeMillis;
+        this.startTimeMillis = startTimeMillis;
+        this.endTimeMillis = endTimeMillis;
     }
 
     @Override
@@ -22,7 +23,8 @@ public class PageLifecycleEventWithTime<T> implements Serializable {
         return "PageLifecycleEventWithTime{" +
                 "pageInfo=" + pageInfo +
                 ", lifecycleEvent=" + lifecycleEvent +
-                ", eventTimeMillis=" + eventTimeMillis +
+                ", startTimeMillis=" + startTimeMillis +
+                ", endTimeMillis=" + endTimeMillis +
                 '}';
     }
 }
