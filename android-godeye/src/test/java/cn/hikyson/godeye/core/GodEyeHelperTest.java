@@ -106,10 +106,13 @@ public class GodEyeHelperTest {
             Shadows.shadowOf(ThreadUtil.obtainHandler("godeye-pageload").getLooper()).getScheduler().advanceToNextPostedRunnable();
             testObserver.await(1, TimeUnit.SECONDS);
             testObserver.assertNoValues();
+            fail();
         } catch (UninstallException e) {
             fail();
         } catch (InterruptedException e) {
             fail();
+        } catch (IllegalStateException ignore) {
+            // will throw new IllegalStateException(String.format("Page [%s] Lifecycle [%s] must start with ActivityLifecycleEvent.ON_CREATE or FragmentLifecycleEvent.ON_ATTACH", pageInfo, pageLifecycleEventLine.lifecycleEvent));
         }
     }
 

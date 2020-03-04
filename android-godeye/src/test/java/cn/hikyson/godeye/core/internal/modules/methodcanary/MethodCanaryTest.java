@@ -38,13 +38,17 @@ public class MethodCanaryTest {
     public void work() {
         try {
             MethodsRecordInfo methodsRecordInfo0 = MethodCanaryConverterTest.mockMethodsRecordInfo(MethodCanaryConverterTest.mockMethodEventMap());
-            methodsRecordInfo0.start = 6;
+            methodsRecordInfo0.startMillis = 6;
+            methodsRecordInfo0.endMillis = 6;
             MethodsRecordInfo methodsRecordInfo1 = MethodCanaryConverterTest.mockMethodsRecordInfo(MethodCanaryConverterTest.mockMethodEventMap());
-            methodsRecordInfo1.start = 7;
+            methodsRecordInfo1.startMillis = 7;
+            methodsRecordInfo1.endMillis = 7;
             MethodsRecordInfo methodsRecordInfo2 = MethodCanaryConverterTest.mockMethodsRecordInfo(MethodCanaryConverterTest.mockMethodEventMap());
-            methodsRecordInfo2.start = 8;
+            methodsRecordInfo2.startMillis = 8;
+            methodsRecordInfo2.endMillis = 8;
             MethodsRecordInfo methodsRecordInfo3 = MethodCanaryConverterTest.mockMethodsRecordInfo(MethodCanaryConverterTest.mockMethodEventMap());
-            methodsRecordInfo3.start = 9;
+            methodsRecordInfo3.startMillis = 9;
+            methodsRecordInfo3.endMillis = 9;
 
             GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).produce(methodsRecordInfo0);
             GodEye.instance().<MethodCanary>getModule(GodEye.ModuleName.METHOD_CANARY).produce(methodsRecordInfo1);
@@ -55,19 +59,19 @@ public class MethodCanaryTest {
                 @Override
                 public boolean test(MethodsRecordInfo info) throws Exception {
                     Log4Test.d(info);
-                    return info.start == 7;
+                    return info.startMillis == 7 && info.endMillis == 7;
                 }
             }).assertValueAt(1, new Predicate<MethodsRecordInfo>() {
                 @Override
                 public boolean test(MethodsRecordInfo info) throws Exception {
                     Log4Test.d(info);
-                    return info.start == 8;
+                    return info.startMillis == 8 && info.endMillis == 8;
                 }
             }).assertValueAt(2, new Predicate<MethodsRecordInfo>() {
                 @Override
                 public boolean test(MethodsRecordInfo info) throws Exception {
                     Log4Test.d(info);
-                    return info.start == 9;
+                    return info.startMillis == 9 && info.endMillis == 9;
                 }
             });
         } catch (UninstallException e) {
