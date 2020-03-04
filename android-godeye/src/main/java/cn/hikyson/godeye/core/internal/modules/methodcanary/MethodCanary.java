@@ -63,9 +63,9 @@ public class MethodCanary extends ProduceableSubject<MethodsRecordInfo> implemen
                 return;
             }
             cn.hikyson.methodcanary.lib.MethodCanary.get().stopMethodTracing(tag
-                    , new cn.hikyson.methodcanary.lib.MethodCanaryConfig(this.mMethodCanaryContext.lowCostMethodThresholdMillis() * 1000000), (sessionTag, startNanoTime, stopNanoTime, methodEventMap) -> {
+                    , new cn.hikyson.methodcanary.lib.MethodCanaryConfig(this.mMethodCanaryContext.lowCostMethodThresholdMillis()), (sessionTag, startMillis, stopMillis, methodEventMap) -> {
                         long start0 = System.currentTimeMillis();
-                        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startNanoTime, stopNanoTime, methodEventMap);
+                        MethodsRecordInfo methodsRecordInfo = MethodCanaryConverter.convertToMethodsRecordInfo(startMillis, stopMillis, methodEventMap);
                         long start1 = System.currentTimeMillis();
                         MethodCanaryConverter.filter(methodsRecordInfo, this.mMethodCanaryContext);
                         long end = System.currentTimeMillis();

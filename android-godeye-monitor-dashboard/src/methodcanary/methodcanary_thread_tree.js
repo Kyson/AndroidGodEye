@@ -12,10 +12,10 @@ class MethodCanaryThreadTree extends Component {
         return realValue === 0 ? range : realValue;
     }
 
-    static buildTree(originStart, originEnd, start, end, methodInfos, parent, added, treeData) {
+    static buildTree(originStart, originEnd, startMillis, endMillis, methodInfos, parent, added, treeData) {
         for (let i = 0; i < methodInfos.length; i += 1) {
             const item = methodInfos[i];
-            if (!added.has(item) && (item.end >= start && item.start <= end)) {
+            if (!added.has(item) && (item.endMillis >= startMillis && item.startMillis <= endMillis)) {
                 if (parent) {
                     if (!parent.children) {
                         parent.children = [];
@@ -26,7 +26,7 @@ class MethodCanaryThreadTree extends Component {
                 }
                 added.add(item);
                 this.buildTree(originStart, originEnd,
-                    item.start > originStart ? item.start : originStart, item.end < originEnd ? item.end : originEnd,
+                    item.startMillis > originStart ? item.startMillis : originStart, item.endMillis < originEnd ? item.endMillis : originEnd,
                     methodInfos, item, added, treeData);
             }
         }
@@ -35,8 +35,8 @@ class MethodCanaryThreadTree extends Component {
     static cloneMethodCanaryMethodInfo(methodInfo) {
         return {
             stack: methodInfo.stack,
-            start: methodInfo.start,
-            end: methodInfo.end,
+            startMillis: methodInfo.startMillis,
+            endMillis: methodInfo.endMillis,
             className: methodInfo.className,
             methodAccessFlag: methodInfo.methodAccessFlag,
             methodName: methodInfo.methodName,
@@ -62,45 +62,45 @@ class MethodCanaryThreadTree extends Component {
         this.refresh = this.refresh.bind(this);
         this.state = {
             treeData: [],
-            start: 0,
-            end: 0
+            startMillis: 0,
+            endMillis: 0
         }
     }
 
     getMethodStartInRange(realStart) {
-        return realStart > this.state.start ? realStart : this.state.start;
+        return realStart > this.state.startMillis ? realStart : this.state.startMillis;
     }
 
     getMethodEndInRange(realEnd) {
-        return realEnd < this.state.end ? realEnd : this.state.end;
+        return realEnd < this.state.endMillis ? realEnd : this.state.endMillis;
     }
 
     clear() {
         this.setState({
             treeData: [],
-            start: 0,
-            end: 0
+            startMillis: 0,
+            endMillis: 0
         });
     }
 
-    refresh(start, end, methodInfos) {
+    refresh(startMillis, endMillis, methodInfos) {
         const treeData = [];
         const cloned = MethodCanaryThreadTree.cloneMethodCanaryMethodInfos(methodInfos);
         cloned.sort((a, b) => {
             if (a.stack === b.stack) {
-                return a.start - b.start;
+                return a.startMillis - b.startMillis;
             }
             return a.stack - b.stack;
         });
-        MethodCanaryThreadTree.buildTree(start, end, start, end, cloned, null, new Set(), treeData);
-        this.setState({ treeData, start, end })
+        MethodCanaryThreadTree.buildTree(startMillis, endMillis, startMillis, endMillis, cloned, null, new Set(), treeData);
+        this.setState({ treeData, startMillis, endMillis })
     }
 
     getNodeDetailContent(item) {
         return (<span>
-            Real cost {Util.getFormatDuration(item.end - item.start)}<br />
+            Real cost {Util.getFormatDuration(item.endMillis - item.startMillis)}<br />
             {item.className + "." + item.methodName}<br />
-            From {Util.getFormatMAndSAndMS(item.start)} to {Util.getFormatMAndSAndMS(item.end)}
+            From {Util.getFormatDuration(item.startMillis)} to {Util.getFormatDuration(item.endMillis)}
         </span>)
     }
 
@@ -109,9 +109,9 @@ class MethodCanaryThreadTree extends Component {
         return <Popover content={content}>
             <span>
                 [Cost and weight]&nbsp;
-            <strong>{Util.getFormatDuration((this.getMethodEndInRange(item.end) - this.getMethodStartInRange(item.start)))}</strong>
+            <strong>{Util.getFormatDuration((this.getMethodEndInRange(item.endMillis) - this.getMethodStartInRange(item.startMillis)))}</strong>
                 &nbsp;
-            <strong>{((this.getMethodEndInRange(item.end) - this.getMethodStartInRange(item.start)) * 100 / (this.state.end - this.state.start)).toFixed(1) + "%"}</strong>
+            <strong>{((this.getMethodEndInRange(item.endMillis) - this.getMethodStartInRange(item.startMillis)) * 100 / (this.state.endMillis - this.state.startMillis)).toFixed(1) + "%"}</strong>
                 &nbsp;&nbsp;
                 [Method]&nbsp;
                 <strong>{item.className.substring(item.className.lastIndexOf("/") + 1) + "." + item.methodName}</strong>
@@ -126,7 +126,7 @@ class MethodCanaryThreadTree extends Component {
                     this.getRenderNodeText(item)
                 }
                     selectable={false}
-                    key={`${item.stack}#${item.start}#${item.end}`}
+                    key={`${item.stack}#${item.startMillis}#${item.endMillis}`}
                     dataRef={item}>
                     {this.renderTreeNodes(item.children)}
                 </Tree.TreeNode>
@@ -135,7 +135,7 @@ class MethodCanaryThreadTree extends Component {
         return <Tree.TreeNode {...item} title={
             this.getRenderNodeText(item)
         } selectable={false}
-            key={`${item.stack}#${item.start}#${item.end}`} dataRef={item} isLeaf />;
+            key={`${item.stack}#${item.startMillis}#${item.endMillis}`} dataRef={item} isLeaf />;
     });
 
     render() {

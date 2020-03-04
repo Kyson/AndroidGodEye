@@ -131,10 +131,9 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
             return;
         }
         if (lifecycleMethodEvent.isEnter) {
-            // TODO KYSON IMPL eventNanoTime转millis
-            mPageLifecycleRecords.addMethodStartEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventNanoTime);
+            mPageLifecycleRecords.addMethodStartEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventTimeMillis);
         } else {
-            mPageLifecycleRecords.addMethodEndEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventNanoTime);
+            mPageLifecycleRecords.addMethodEndEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventTimeMillis);
         }
     }
 
@@ -190,6 +189,5 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
     public void shutdown() {
         GodEye.instance().getApplication().unregisterActivityLifecycleCallbacks(this);
         MethodCanary.get().removeOnPageLifecycleEventCallback(this);
-
     }
 }

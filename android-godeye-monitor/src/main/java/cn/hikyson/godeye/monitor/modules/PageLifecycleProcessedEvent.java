@@ -14,6 +14,7 @@ public class PageLifecycleProcessedEvent implements Serializable {
     public String pageClassName;
     public int pageHashCode;
     public LifecycleEvent lifecycleEvent;
-    public long eventTimeMillis;
+    public long startTimeMillis;
+    public long endTimeMillis;
     public Map<String, Object> processedInfo;
 }

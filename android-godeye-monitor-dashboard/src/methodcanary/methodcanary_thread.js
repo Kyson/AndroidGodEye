@@ -37,15 +37,15 @@ class MethodCanaryThread extends Component {
         this.methodInfos = [];
         this.afterSetExtremesTimerId = null;
         this.state = {
-            start: 0,
-            end: 0
+            startMillis: 0,
+            endMillis: 0
         }
     }
 
     afterSetExtremes(e) {
         this.setState({
-            start: e.min,
-            end: e.max
+            startMillis: e.min,
+            endMillis: e.max
         });
         clearTimeout(this.afterSetExtremesTimerId);
         this.afterSetExtremesTimerId = setTimeout(() => {
@@ -62,8 +62,8 @@ class MethodCanaryThread extends Component {
             this.chart = null;
         }
         this.setState({
-            start: 0,
-            end: 0,
+            startMillis: 0,
+            endMillis: 0,
         });
         if (this.refs.methodCanaryThreadTree) {
             this.refs.methodCanaryThreadTree.clear();
@@ -85,29 +85,29 @@ class MethodCanaryThread extends Component {
             }
         }
         methodInfos.sort((a, b) => {
-            if (a.start === b.start) {
-                if (a.end === b.end) {
+            if (a.startMillis === b.startMillis) {
+                if (a.endMillis === b.endMillis) {
                     return a.stack - b.stack;
                 }
-                return b.end - a.end;
+                return b.endMillis - a.endMillis;
             }
-            return a.start - b.start;
+            return a.startMillis - b.startMillis;
         });
-        const min = record.start;
-        const max = record.end;
-        this.setState({ start: min, end: max });
+        const min = record.startMillis;
+        const max = record.endMillis;
+        this.setState({ startMillis: min, endMillis: max });
         const datas = [];
         let maxStack = 0;
         for (let i = 0; i < methodInfos.length; i++) {
-            methodInfos[i].start = MethodCanaryThread.getMethodValueWithRange(methodInfos[i].start, min);
-            methodInfos[i].end = MethodCanaryThread.getMethodValueWithRange(methodInfos[i].end, max);
+            methodInfos[i].startMillis = MethodCanaryThread.getMethodValueWithRange(methodInfos[i].startMillis, min);
+            methodInfos[i].endMillis = MethodCanaryThread.getMethodValueWithRange(methodInfos[i].endMillis, max);
             let selected = false;
             if (searchText) {
                 selected = JSON.stringify(methodInfos[i]).toLowerCase().search(searchText) !== -1;
             }
             datas.push({
-                x: methodInfos[i].start,
-                x2: methodInfos[i].end,
+                x: methodInfos[i].startMillis,
+                x2: methodInfos[i].endMillis,
                 y: methodInfos[i].stack,
                 color: Util.getColorForMethod(methodInfos[i]),
                 methodEvent: methodInfos[i],
@@ -189,9 +189,9 @@ class MethodCanaryThread extends Component {
                     let s = "";
                     const e = this.point;
                     if (e.methodEvent) {
-                        s += "cost " + Util.getFormatDuration(e.methodEvent.end - e.methodEvent.start) + '<br/>';
+                        s += "cost " + Util.getFormatDuration(e.methodEvent.endMillis - e.methodEvent.startMillis) + '<br/>';
                         s += e.methodEvent.className + "." + e.methodEvent.methodName + '<br/>';
-                        s += 'From ' + Util.getFormatMAndSAndMS(e.methodEvent.start) + " to " + Util.getFormatMAndSAndMS(e.methodEvent.end);
+                        s += 'From ' + Util.getFormatMAndSAndMS(e.methodEvent.startMillis) + " to " + Util.getFormatMAndSAndMS(e.methodEvent.endMillis);
                     }
                     return s;
                 }
@@ -278,18 +278,18 @@ class MethodCanaryThread extends Component {
     }
 
     renderTimeRange() {
-        if (this.state.end !== 0 || this.state.start !== 0) {
+        if (this.state.endMillis !== 0 || this.state.startMillis !== 0) {
             return <span>Selected duration:&nbsp;
-                <strong>{Util.getFormatDuration(this.state.end - this.state.start)}</strong>
-                ,&nbsp;Range from&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.start)}</strong>
-                &nbsp;to&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.end)}</strong></span>
+                <strong>{Util.getFormatDuration(this.state.endMillis - this.state.startMillis)}</strong>
+                ,&nbsp;Range from&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.startMillis)}</strong>
+                &nbsp;to&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.endMillis)}</strong></span>
         } else {
             return <span>Empty...</span>
         }
     }
 
     renderExtra() {
-        if (this.state.end !== 0 || this.state.start !== 0) {
+        if (this.state.endMillis !== 0 || this.state.startMillis !== 0) {
             return (
                 <div style={{ textAlign: 'right' }}>
                     <Input.Search

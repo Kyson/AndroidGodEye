@@ -177,7 +177,8 @@ public class ModuleDriver {
             pageLifecycleProcessedEvent.pageHashCode = tPageLifecycleEventInfo.pageInfo.pageHashCode;
             pageLifecycleProcessedEvent.pageClassName = tPageLifecycleEventInfo.pageInfo.pageClassName;
             pageLifecycleProcessedEvent.lifecycleEvent = tPageLifecycleEventInfo.currentEvent.lifecycleEvent;
-            pageLifecycleProcessedEvent.eventTimeMillis = tPageLifecycleEventInfo.currentEvent.eventTimeMillis;
+            pageLifecycleProcessedEvent.startTimeMillis = tPageLifecycleEventInfo.currentEvent.startTimeMillis;
+            pageLifecycleProcessedEvent.endTimeMillis = tPageLifecycleEventInfo.currentEvent.endTimeMillis;
             pageLifecycleProcessedEvent.processedInfo = new HashMap<>();
             if ((pageLifecycleProcessedEvent.lifecycleEvent == ActivityLifecycleEvent.ON_DRAW
                     || pageLifecycleProcessedEvent.lifecycleEvent == FragmentLifecycleEvent.ON_DRAW)) {

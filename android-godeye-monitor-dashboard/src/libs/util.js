@@ -27,29 +27,18 @@ class Util {
         return "#cccccc";
     }
 
-    static getFormatDuration(timeNanos) {
-        if (timeNanos >= 1000000000 * 60) {
-            return Math.floor(timeNanos / (1000000000 * 60)) + "m" + Math.floor((timeNanos % (1000000000 * 60)) / 1000000000) + "s";
+    static getFormatDuration(timeMillis) {
+        if (timeMillis >= 1000 * 60) {
+            return Math.floor(timeMillis / (1000 * 60)) + "m" + Math.floor((timeMillis % (1000 * 60)) / 1000) + "s";
         }
-        if (timeNanos >= 1000000000) {
-            return (timeNanos / 1000000000).toFixed(3) + "s";
+        if (timeMillis >= 1000) {
+            return (Math.floor(timeMillis) / 1000).toFixed(3) + "s";
         }
-        if (timeNanos >= 1000000) {
-            return (timeNanos / 1000000).toFixed(3) + "ms";
-        }
-        if (timeNanos >= 1000) {
-            return (timeNanos / 1000).toFixed(3) + "us";
-        }
-        return Math.floor(timeNanos) + "ns";
+        return Math.floor(timeMillis) + "ms";
     }
 
-    static getFormatMAndSAndMS(timeNanos) {
-        if (timeNanos >= 1000000000 * 60) {
-            const nanoForMinute = Math.floor(timeNanos % (1000000000 * 60 * 60));
-            return Math.floor(nanoForMinute / (1000000000 * 60)) + "m" + ((nanoForMinute % (1000000000 * 60)) / 1000000000).toFixed(3) + "s";
-        } else {
-            return Util.getFormatDuration(timeNanos)
-        }
+    static getFormatMAndSAndMS(timeMillis) {
+        return new Date(timeMillis).toLocaleTimeString();
     }
 
     /**
