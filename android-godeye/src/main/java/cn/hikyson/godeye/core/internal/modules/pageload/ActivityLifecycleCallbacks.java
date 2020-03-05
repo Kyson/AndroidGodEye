@@ -133,7 +133,10 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
         if (lifecycleMethodEvent.isEnter) {
             mPageLifecycleRecords.addMethodStartEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventTimeMillis);
         } else {
-            mPageLifecycleRecords.addMethodEndEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventTimeMillis);
+            PageLifecycleEventWithTime<?> pageLifecycleEventWithTime = mPageLifecycleRecords.addMethodEndEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventTimeMillis);
+            if (pageLifecycleEventWithTime != null) {
+                mProducer.produce(new PageLifecycleEventInfo(pageInfo, pageLifecycleEventWithTime, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+            }
         }
     }
 
