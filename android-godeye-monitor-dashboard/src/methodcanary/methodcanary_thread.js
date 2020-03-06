@@ -191,7 +191,7 @@ class MethodCanaryThread extends Component {
                     if (e.methodEvent) {
                         s += "cost " + Util.getFormatDuration(e.methodEvent.endMillis - e.methodEvent.startMillis) + '<br/>';
                         s += e.methodEvent.className + "." + e.methodEvent.methodName + '<br/>';
-                        s += 'From ' + Util.getFormatMAndSAndMS(e.methodEvent.startMillis) + " to " + Util.getFormatMAndSAndMS(e.methodEvent.endMillis);
+                        s += 'From ' + Util.getDetailDate(e.methodEvent.startMillis) + " to " + Util.getDetailDate(e.methodEvent.endMillis);
                     }
                     return s;
                 }
@@ -281,8 +281,8 @@ class MethodCanaryThread extends Component {
         if (this.state.endMillis !== 0 || this.state.startMillis !== 0) {
             return <span>Selected duration:&nbsp;
                 <strong>{Util.getFormatDuration(this.state.endMillis - this.state.startMillis)}</strong>
-                ,&nbsp;Range from&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.startMillis)}</strong>
-                &nbsp;to&nbsp;<strong>{Util.getFormatMAndSAndMS(this.state.endMillis)}</strong></span>
+                ,&nbsp;Range from&nbsp;<strong>{Util.getDetailDate(this.state.startMillis)}</strong>
+                &nbsp;to&nbsp;<strong>{Util.getDetailDate(this.state.endMillis)}</strong></span>
         } else {
             return <span>Empty...</span>
         }

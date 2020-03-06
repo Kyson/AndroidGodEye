@@ -41,6 +41,10 @@ class Util {
         return new Date(timeMillis).toLocaleTimeString();
     }
 
+    static getDetailDate(timeMillis) {
+        return `${new Date(timeMillis).toLocaleTimeString()}.${Math.floor(timeMillis % 1000)}`;
+    }
+
     /**
      * @param methodInfo
      * @returns {*}

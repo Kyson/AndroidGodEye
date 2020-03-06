@@ -69,7 +69,7 @@ public class PageDrawMonitor {
                 }
             }, FRAME_CALLBACK_TOKEN);
         } catch (Throwable throwable) {
-            L.e(throwable.getMessage());
+            L.w(throwable.getMessage());
         }
     }
     private interface OnTraversalFinishListener{

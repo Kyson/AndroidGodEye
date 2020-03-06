@@ -2,9 +2,10 @@ package cn.hikyson.godeye.sample;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import android.view.View;
 
 import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.sample.fragmentlifecycle.BlankFragment1;
@@ -33,7 +34,7 @@ public class ThirdActivity extends FragmentActivity {
                         } catch (Throwable ignore) {
                         }
                     }
-                }, 2000);
+                }, 1000);
             }
         });
     }

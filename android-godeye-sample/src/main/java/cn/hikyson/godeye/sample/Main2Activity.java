@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,9 +33,15 @@ public class Main2Activity extends AppCompatActivity implements InstallFragment.
             }
 
             @Override
+            public void w(String msg) {
+                logView.log("WARN: " + msg);
+                Log.w(L.DEFAULT_TAG, "WARN: " + msg);
+            }
+
+            @Override
             public void e(String msg) {
                 logView.log("!ERROR: " + msg);
-                Log.e(L.DEFAULT_TAG, "!ERROR: " + msg);
+                Log.e(L.DEFAULT_TAG, "!ERROR: " + msg + "\n" + Arrays.toString(Thread.currentThread().getStackTrace()));
             }
 
             @Override

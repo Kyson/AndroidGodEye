@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import '../App.css';
 
-import { Card, Badge, Button, Tag, Input } from 'antd'
+import {Card, Badge, Button, Tag, Input} from 'antd'
 import Util from "../libs/util";
 
 /**
@@ -53,7 +53,7 @@ class Pageload extends Component {
         this.setState(function (prevState, props) {
             const allPageLifecycleProcessedEvents = prevState.allPageLifecycleProcessedEvents;
             allPageLifecycleProcessedEvents.unshift(pageLifecycleProcessedEvent);
-            return { allPageLifecycleProcessedEvents: allPageLifecycleProcessedEvents };
+            return {allPageLifecycleProcessedEvents: allPageLifecycleProcessedEvents};
         });
     }
 
@@ -65,26 +65,33 @@ class Pageload extends Component {
 
     renderItem(event, key) {
         return (
-            <Card style={{ margin: 4 }} size="small" key={key}>
+            <Card style={{margin: 4}} size="small" key={key}>
                 <Badge
-                    color={Util.getGreen()} /><span>{`${new Date(event.startTimeMillis).toLocaleString()}.${event.startTimeMillis % 1000}`}</span>
+                    color={Util.getGreen()}/><span>{`${new Date(event.startTimeMillis).toLocaleString()}.${event.startTimeMillis % 1000}`}</span>
                 <br />
                 <span>&nbsp;&nbsp;&nbsp;&nbsp;
                     <strong>{`${event.pageClassName}`}</strong>{`@${event.pageHashCode}`}</span>
                 <br />
                 <span>&nbsp;&nbsp;&nbsp;&nbsp;
                     <Tag color={"ACTIVITY" === event.pageType ? "cyan" : "green"}>{event.pageType}</Tag>
-                    <Tag color={('ON_LOAD' === event.lifecycleEvent || 'ON_DRAW' === event.lifecycleEvent) ? "red" : "orange"}>{event.lifecycleEvent}</Tag>
+                    <Tag
+                        color={('ON_LOAD' === event.lifecycleEvent || 'ON_DRAW' === event.lifecycleEvent) ? "red" : "orange"}>{event.lifecycleEvent}</Tag>
                     {(() => {
                         if (event.lifecycleEvent === 'ON_LOAD') {
-                            return <span>Cost <strong
-                                style={(event.processedInfo['loadTime'] > Pageload.BAD_LOAD_TIME) ? { color: Util.getRed() } : { color: Util.getGreen() }}>{event.processedInfo['loadTime']}</strong> ms</span>
+                            if (event.processedInfo['loadTime'] > 0) {
+                                return <span>Cost <strong
+                                    style={(event.processedInfo['loadTime'] > Pageload.BAD_LOAD_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['loadTime']}</strong> ms</span>
+                            }
                         } else if (event.lifecycleEvent === 'ON_DRAW') {
-                            return <span>Cost <strong
-                                style={(event.processedInfo['drawTime'] > Pageload.BAD_DRAW_TIME) ? { color: Util.getRed() } : { color: Util.getGreen() }}>{event.processedInfo['drawTime']}</strong> ms</span>
+                            if (event.processedInfo['drawTime'] > 0) {
+                                return <span>Cost <strong
+                                    style={(event.processedInfo['drawTime'] > Pageload.BAD_DRAW_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{event.processedInfo['drawTime']}</strong> ms</span>
+                            }
                         } else {
-                            return <span>Cost <strong
-                                style={((event.endTimeMillis - event.startTimeMillis) > Pageload.BAD_LIFECYCLE_TIME) ? { color: Util.getRed() } : { color: Util.getGreen() }}>{(event.endTimeMillis - event.startTimeMillis)}</strong> ms</span>
+                            if ((event.endTimeMillis - event.startTimeMillis) > 0) {
+                                return <span>Cost <strong
+                                    style={((event.endTimeMillis - event.startTimeMillis) > Pageload.BAD_LIFECYCLE_TIME) ? {color: Util.getRed()} : {color: Util.getGreen()}}>{(event.endTimeMillis - event.startTimeMillis)}</strong> ms</span>
+                            }
                         }
                     })()}
                 </span>
@@ -107,9 +114,9 @@ class Pageload extends Component {
     renderExtra() {
         return (<span>
             <Input.Search
-                style={{ width: 200 }}
+                style={{width: 200}}
                 placeholder="Input search text"
-                onSearch={value => this.setState({ searchText: value })}
+                onSearch={value => this.setState({searchText: value})}
             />
             &nbsp;&nbsp;
             <Button
@@ -121,7 +128,7 @@ class Pageload extends Component {
     render() {
         return (
             <Card title="Page Lifecycle(页面生命周期)" extra={this.renderExtra()}>
-                <div style={{ height: 600, overflow: 'auto' }}>
+                <div style={{height: 600, overflow: 'auto'}}>
                     {this.renderTimelines()}
                 </div>
             </Card>);

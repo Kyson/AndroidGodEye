@@ -6,6 +6,8 @@ public class L {
     public interface LogProxy {
         public void d(String msg);
 
+        public void w(String msg);
+
         public void e(String msg);
 
         void onRuntimeException(RuntimeException e);
@@ -36,6 +38,12 @@ public class L {
     public static void e(Object msg) {
         if (sLogProxy != null) {
             sLogProxy.e(o2String(msg));
+        }
+    }
+
+    public static void w(Object msg) {
+        if (sLogProxy != null) {
+            sLogProxy.w(o2String(msg));
         }
     }
 

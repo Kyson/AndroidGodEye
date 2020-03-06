@@ -115,29 +115,31 @@ public class ActivityLifecycleCallbacks implements Application.ActivityLifecycle
     // method canary callback for lifecycle method cost
     @Override
     public void onLifecycleEvent(MethodEvent lifecycleMethodEvent, Object page) {
-        LifecycleEvent lifecycleEvent = PageLifecycleMethodEventTypes.convert(lifecycleMethodEvent);
-        if (lifecycleEvent == null) {
-            return;
-        }
-        PageInfo<?> pageInfo = null;
-        if (page instanceof Activity) {
-            pageInfo = new PageInfo<>(page, mPageInfoProvider.getInfoByActivity((Activity) page));
-        } else if (page instanceof Fragment) {
-            pageInfo = new PageInfo<>(page, mPageInfoProvider.getInfoByV4Fragment((Fragment) page));
-        } else if (page instanceof android.app.Fragment) {
-            pageInfo = new PageInfo<>(page, mPageInfoProvider.getInfoByFragment((android.app.Fragment) page));
-        }
-        if (pageInfo == null) {
-            return;
-        }
-        if (lifecycleMethodEvent.isEnter) {
-            mPageLifecycleRecords.addMethodStartEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventTimeMillis);
-        } else {
-            PageLifecycleEventWithTime<?> pageLifecycleEventWithTime = mPageLifecycleRecords.addMethodEndEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventTimeMillis);
-            if (pageLifecycleEventWithTime != null) {
-                mProducer.produce(new PageLifecycleEventInfo(pageInfo, pageLifecycleEventWithTime, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+        mHandler.post(() -> {
+            LifecycleEvent lifecycleEvent = null;
+            PageInfo<?> pageInfo = null;
+            if (page instanceof Activity) {
+                pageInfo = new PageInfo<>(page, mPageInfoProvider.getInfoByActivity((Activity) page));
+                lifecycleEvent = PageLifecycleMethodEventTypes.convert(PageType.ACTIVITY, lifecycleMethodEvent);
+            } else if (page instanceof Fragment) {
+                pageInfo = new PageInfo<>(page, mPageInfoProvider.getInfoByV4Fragment((Fragment) page));
+                lifecycleEvent = PageLifecycleMethodEventTypes.convert(PageType.FRAGMENT, lifecycleMethodEvent);
+            } else if (page instanceof android.app.Fragment) {
+                pageInfo = new PageInfo<>(page, mPageInfoProvider.getInfoByFragment((android.app.Fragment) page));
+                lifecycleEvent = PageLifecycleMethodEventTypes.convert(PageType.FRAGMENT, lifecycleMethodEvent);
             }
-        }
+            if (pageInfo == null || lifecycleEvent == null) {
+                return;
+            }
+            if (lifecycleMethodEvent.isEnter) {
+                mPageLifecycleRecords.addMethodStartEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventTimeMillis);
+            } else {
+                PageLifecycleEventWithTime<?> pageLifecycleEventWithTime = mPageLifecycleRecords.addMethodEndEvent(pageInfo, lifecycleEvent, lifecycleMethodEvent.eventTimeMillis);
+                if (pageLifecycleEventWithTime != null) {
+                    mProducer.produce(new PageLifecycleEventInfo(pageInfo, pageLifecycleEventWithTime, mPageLifecycleRecords.getLifecycleEventsByPageInfo(pageInfo)));
+                }
+            }
+        });
     }
 
     private void onActivityLifecycleEvent(Activity activity, LifecycleEvent e, boolean canNotRepeat) {

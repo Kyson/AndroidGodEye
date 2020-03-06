@@ -1,11 +1,15 @@
 package cn.hikyson.godeye.core.internal.modules.pageload;
 
+import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.hikyson.godeye.core.utils.L;
 
 public class PageLifecycleRecords {
     // page with lifecycle event and time index list
@@ -70,10 +74,13 @@ public class PageLifecycleRecords {
     <T> PageLifecycleEventWithTime<T> addMethodEndEvent(PageInfo<T> pageInfo, LifecycleEvent lifecycleEvent, long time) {
         LifecycleMethodEventWithTime currentTop = mTopLifecycleMethodEventForPages.get(pageInfo);
         if (currentTop == null) {
-            throw new IllegalStateException(String.format("PageLifecycleRecords addMethodEndEvent currentTop == null: %s, %s", pageInfo, lifecycleEvent));
+            L.w(String.format("PageLifecycleRecords addMethodEndEvent currentTop == null: %s, %s", pageInfo, lifecycleEvent));
+            return null;
         }
         if (!PageLifecycleMethodEventTypes.isMatch(currentTop.lifecycleEvent, lifecycleEvent)) {
-            throw new IllegalStateException(String.format("PageLifecycleRecords addMethodEndEvent !PageLifecycleMethodEventTypes.isMatch(currentTop.lifecycleEvent, lifecycleEvent): %s, %s", pageInfo, lifecycleEvent));
+            L.w(String.format("PageLifecycleRecords addMethodEndEvent !PageLifecycleMethodEventTypes.isMatch(currentTop.lifecycleEvent, lifecycleEvent): %s, %s", pageInfo, lifecycleEvent));
+            mTopLifecycleMethodEventForPages.remove(pageInfo);
+            return null;
         }
         if (currentTop.methodStartTime > 0 && currentTop.lifecycleTime > 0) {
             mTopLifecycleMethodEventForPages.remove(pageInfo);
@@ -92,10 +99,6 @@ public class PageLifecycleRecords {
         mLifecycleEvents.add(pageLifecycleEventLine);
         List<Integer> pageEventIndexingList = mPageLifecycleEventIndexing.get(pageInfo);
         if (pageEventIndexingList == null) {
-            if (pageLifecycleEventLine.lifecycleEvent != ActivityLifecycleEvent.ON_CREATE
-                    && pageLifecycleEventLine.lifecycleEvent != FragmentLifecycleEvent.ON_ATTACH) {
-                throw new IllegalStateException(String.format("Page [%s] Lifecycle [%s] must start with ActivityLifecycleEvent.ON_CREATE or FragmentLifecycleEvent.ON_ATTACH", pageInfo, pageLifecycleEventLine.lifecycleEvent));
-            }
             pageEventIndexingList = new ArrayList<>();
             mPageLifecycleEventIndexing.put(pageInfo, pageEventIndexingList);
         }
@@ -115,7 +118,8 @@ public class PageLifecycleRecords {
         return pageLifecycleEventWithTimes;
     }
 
-    static class LifecycleMethodEventWithTime {
+    @Keep
+    static class LifecycleMethodEventWithTime implements Serializable {
         LifecycleEvent lifecycleEvent;
         long methodStartTime;
         long methodEndTime;

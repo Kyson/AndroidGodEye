@@ -30,6 +30,924 @@ class Mock {
             }
         });
 
+
+        // this.recvFun("methodCanary",{
+        //     "methodInfoOfThreadInfos":[
+        //         {
+        //             "methodInfos":[
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"lambda$makeInvocations$12",
+        //                     "methodAccessFlag":10,
+        //                     "endMillis":1583501823402,
+        //                     "startMillis":1583501818248,
+        //                     "stack":0
+        //                 }
+        //             ],
+        //             "threadInfo":{
+        //                 "name":"Thread-376",
+        //                 "priority":5,
+        //                 "id":376
+        //             }
+        //         },
+        //         {
+        //             "methodInfos":[
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"lambda$makeInvocations$13",
+        //                     "methodAccessFlag":10,
+        //                     "endMillis":0,
+        //                     "startMillis":1583501818250,
+        //                     "stack":0
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501818855,
+        //                     "startMillis":1583501818250,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501818855,
+        //                     "startMillis":1583501818250,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501818452,
+        //                     "startMillis":1583501818250,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501818653,
+        //                     "startMillis":1583501818452,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501818855,
+        //                     "startMillis":1583501818654,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501819459,
+        //                     "startMillis":1583501818855,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501819459,
+        //                     "startMillis":1583501818855,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501819056,
+        //                     "startMillis":1583501818855,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501819256,
+        //                     "startMillis":1583501819056,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501819458,
+        //                     "startMillis":1583501819257,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501820065,
+        //                     "startMillis":1583501819459,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501820065,
+        //                     "startMillis":1583501819459,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501819661,
+        //                     "startMillis":1583501819459,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501819862,
+        //                     "startMillis":1583501819661,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501820064,
+        //                     "startMillis":1583501819862,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501820673,
+        //                     "startMillis":1583501820065,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501820672,
+        //                     "startMillis":1583501820065,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501820267,
+        //                     "startMillis":1583501820065,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501820469,
+        //                     "startMillis":1583501820268,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501820672,
+        //                     "startMillis":1583501820469,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501821280,
+        //                     "startMillis":1583501820673,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501821280,
+        //                     "startMillis":1583501820673,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501820876,
+        //                     "startMillis":1583501820673,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501821077,
+        //                     "startMillis":1583501820876,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501821280,
+        //                     "startMillis":1583501821077,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501821885,
+        //                     "startMillis":1583501821280,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501821885,
+        //                     "startMillis":1583501821280,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501821481,
+        //                     "startMillis":1583501821280,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501821683,
+        //                     "startMillis":1583501821481,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501821884,
+        //                     "startMillis":1583501821683,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501822490,
+        //                     "startMillis":1583501821885,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501822490,
+        //                     "startMillis":1583501821885,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501822086,
+        //                     "startMillis":1583501821885,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501822288,
+        //                     "startMillis":1583501822086,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501822489,
+        //                     "startMillis":1583501822289,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501823096,
+        //                     "startMillis":1583501822490,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501823096,
+        //                     "startMillis":1583501822490,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501822691,
+        //                     "startMillis":1583501822490,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501822893,
+        //                     "startMillis":1583501822691,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501823095,
+        //                     "startMillis":1583501822893,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501823700,
+        //                     "startMillis":1583501823096,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501823700,
+        //                     "startMillis":1583501823096,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501823298,
+        //                     "startMillis":1583501823096,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501823499,
+        //                     "startMillis":1583501823298,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501823700,
+        //                     "startMillis":1583501823499,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501824305,
+        //                     "startMillis":1583501823701,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501824305,
+        //                     "startMillis":1583501823701,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501823902,
+        //                     "startMillis":1583501823701,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501824103,
+        //                     "startMillis":1583501823902,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501824304,
+        //                     "startMillis":1583501824103,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501824912,
+        //                     "startMillis":1583501824305,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501824912,
+        //                     "startMillis":1583501824305,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501824506,
+        //                     "startMillis":1583501824305,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501824708,
+        //                     "startMillis":1583501824506,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501824911,
+        //                     "startMillis":1583501824708,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501825517,
+        //                     "startMillis":1583501824912,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501825517,
+        //                     "startMillis":1583501824912,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501825114,
+        //                     "startMillis":1583501824912,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501825314,
+        //                     "startMillis":1583501825114,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501825516,
+        //                     "startMillis":1583501825314,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501826123,
+        //                     "startMillis":1583501825517,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501826123,
+        //                     "startMillis":1583501825517,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501825719,
+        //                     "startMillis":1583501825517,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501825921,
+        //                     "startMillis":1583501825720,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501826122,
+        //                     "startMillis":1583501825921,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501826731,
+        //                     "startMillis":1583501826123,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501826731,
+        //                     "startMillis":1583501826123,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501826325,
+        //                     "startMillis":1583501826123,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501826527,
+        //                     "startMillis":1583501826325,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501826730,
+        //                     "startMillis":1583501826527,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501827338,
+        //                     "startMillis":1583501826731,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501827338,
+        //                     "startMillis":1583501826731,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501826933,
+        //                     "startMillis":1583501826731,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501827134,
+        //                     "startMillis":1583501826933,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501827337,
+        //                     "startMillis":1583501827134,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501827943,
+        //                     "startMillis":1583501827338,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501827943,
+        //                     "startMillis":1583501827338,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501827540,
+        //                     "startMillis":1583501827338,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501827741,
+        //                     "startMillis":1583501827540,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501827942,
+        //                     "startMillis":1583501827741,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501828553,
+        //                     "startMillis":1583501827943,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501828553,
+        //                     "startMillis":1583501827943,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501828145,
+        //                     "startMillis":1583501827943,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501828347,
+        //                     "startMillis":1583501828145,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501828550,
+        //                     "startMillis":1583501828348,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":1583501829158,
+        //                     "startMillis":1583501828553,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501829158,
+        //                     "startMillis":1583501828553,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501828755,
+        //                     "startMillis":1583501828553,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501828956,
+        //                     "startMillis":1583501828755,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501829158,
+        //                     "startMillis":1583501828956,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"(Lcn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest;)V",
+        //                     "methodName":"access$200",
+        //                     "methodAccessFlag":8,
+        //                     "endMillis":0,
+        //                     "startMillis":1583501829158,
+        //                     "stack":1
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodA",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":0,
+        //                     "startMillis":1583501829158,
+        //                     "stack":2
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501829359,
+        //                     "startMillis":1583501829158,
+        //                     "stack":3
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment$MethodCanaryTest",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"methodB",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":0,
+        //                     "startMillis":1583501829359,
+        //                     "stack":3
+        //                 }
+        //             ],
+        //             "threadInfo":{
+        //                 "name":"Thread-377",
+        //                 "priority":5,
+        //                 "id":377
+        //             }
+        //         },
+        //         {
+        //             "methodInfos":[
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment",
+        //                     "methodDesc":"(Landroid/view/View;)V",
+        //                     "methodName":"lambda$onCreateView$4",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501818895,
+        //                     "startMillis":1583501818241,
+        //                     "stack":0
+        //                 },
+        //                 {
+        //                     "className":"cn/hikyson/godeye/sample/ToolsFragment",
+        //                     "methodDesc":"()V",
+        //                     "methodName":"makeInvocations",
+        //                     "methodAccessFlag":2,
+        //                     "endMillis":1583501818895,
+        //                     "startMillis":1583501818242,
+        //                     "stack":1
+        //                 }
+        //             ],
+        //             "threadInfo":{
+        //                 "name":"main",
+        //                 "priority":5,
+        //                 "id":1
+        //             }
+        //         }
+        //     ],
+        //     "endMillis":1583501829434,
+        //     "startMillis":1583501812776
+        // })
+
+
         this.recvFun("methodCanary", {
             startMillis: 10,
             endMillis: 790,
@@ -137,8 +1055,8 @@ class Mock {
         this.recvFun("appInfo", {
             appName: "I am Name",
             labels: [
-                { name: "lablel1", value: "value0000000", url: "http://www.ctrip.com" },
-                { name: "lablel2", value: "value1111111", url: "http://www.trip.com" },
+                {name: "lablel1", value: "value0000000", url: "http://www.ctrip.com"},
+                {name: "lablel2", value: "value1111111", url: "http://www.trip.com"},
                 {
                     name: "lablel3lablel3lablel3lablel3lablel3lablel3lablel3", value: "value2222222"
                 }, {
@@ -232,21 +1150,21 @@ class Mock {
                 "crashTime": "1990-12-11 12:21:33.SSSZ",
                 "crashMessage": "this is a message1",
                 "javaCrashStacktrace": "at xcrash.NativeHandler.nativeTestCrash(Native method)\n" +
-                    "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
-                    "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
-                    "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
-                    "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
-                    "at android.view.View.performClick(View.java:7352)\n" +
-                    "at android.widget.TextView.performClick(TextView.java:14177)\n" +
-                    "at android.view.View.performClickInternal(View.java:7318)\n" +
-                    "at android.view.View.access$3200(View.java:846)\n" +
-                    "at android.view.View$PerformClick.run(View.java:27807)\n" +
-                    "at android.os.Handler.handleCallback(Handler.java:873)\n" +
-                    "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
-                    "at android.os.Looper.loop(Looper.java:214)\n" +
-                    "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
-                    "at java.lang.reflect.Method.invoke(Native method)\n" +
-                    "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
+                "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
+                "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
+                "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
+                "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
+                "at android.view.View.performClick(View.java:7352)\n" +
+                "at android.widget.TextView.performClick(TextView.java:14177)\n" +
+                "at android.view.View.performClickInternal(View.java:7318)\n" +
+                "at android.view.View.access$3200(View.java:846)\n" +
+                "at android.view.View$PerformClick.run(View.java:27807)\n" +
+                "at android.os.Handler.handleCallback(Handler.java:873)\n" +
+                "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
+                "at android.os.Looper.loop(Looper.java:214)\n" +
+                "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
+                "at java.lang.reflect.Method.invoke(Native method)\n" +
+                "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
                 "nativeCrashCode": "1 (SEGV_MAPERR)",
                 "crashType": "native",
                 "extras": {
@@ -271,21 +1189,21 @@ class Mock {
                 "crashTime": "1990-12-11 12:21:33.SSSZ",
                 "crashMessage": "this is a message2",
                 "javaCrashStacktrace": "at xcrash.NativeHa2342342342method)\n" +
-                    "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
-                    "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
-                    "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
-                    "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
-                    "at android.view.View.performClick(View.java:7352)\n" +
-                    "at android.widget.TextView.performClick(TextView.java:14177)\n" +
-                    "at android.view.View.performClickInternal(View.java:7318)\n" +
-                    "at android.view.View.access$3200(View.java:846)\n" +
-                    "at android.view.View$PerformClick.run(View.java:27807)\n" +
-                    "at android.os.Handler.handleCallback(Handler.java:873)\n" +
-                    "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
-                    "at android.os.Looper.loop(Looper.java:214)\n" +
-                    "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
-                    "at java.lang.reflect.Method.invoke(Native method)\n" +
-                    "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
+                "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
+                "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
+                "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
+                "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
+                "at android.view.View.performClick(View.java:7352)\n" +
+                "at android.widget.TextView.performClick(TextView.java:14177)\n" +
+                "at android.view.View.performClickInternal(View.java:7318)\n" +
+                "at android.view.View.access$3200(View.java:846)\n" +
+                "at android.view.View$PerformClick.run(View.java:27807)\n" +
+                "at android.os.Handler.handleCallback(Handler.java:873)\n" +
+                "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
+                "at android.os.Looper.loop(Looper.java:214)\n" +
+                "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
+                "at java.lang.reflect.Method.invoke(Native method)\n" +
+                "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
                 "nativeCrashCode": "1 (SEGV_MAPERR)",
                 "crashType": "java",
                 "extras": {
@@ -310,21 +1228,21 @@ class Mock {
                 "crashTime": "1920-12-11 12:21:33.SSSZ",
                 "crashMessage": "this is a message3",
                 "javaCrashStacktrace": "at xcrash.4123f34334fveTestCrash(Native method)\n" +
-                    "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
-                    "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
-                    "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
-                    "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
-                    "at android.view.View.performClick(View.java:7352)\n" +
-                    "at android.widget.TextView.performClick(TextView.java:14177)\n" +
-                    "at android.view.View.performClickInternal(View.java:7318)\n" +
-                    "at android.view.View.access$3200(View.java:846)\n" +
-                    "at android.view.View$PerformClick.run(View.java:27807)\n" +
-                    "at android.os.Handler.handleCallback(Handler.java:873)\n" +
-                    "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
-                    "at android.os.Looper.loop(Looper.java:214)\n" +
-                    "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
-                    "at java.lang.reflect.Method.invoke(Native method)\n" +
-                    "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
+                "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
+                "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
+                "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
+                "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
+                "at android.view.View.performClick(View.java:7352)\n" +
+                "at android.widget.TextView.performClick(TextView.java:14177)\n" +
+                "at android.view.View.performClickInternal(View.java:7318)\n" +
+                "at android.view.View.access$3200(View.java:846)\n" +
+                "at android.view.View$PerformClick.run(View.java:27807)\n" +
+                "at android.os.Handler.handleCallback(Handler.java:873)\n" +
+                "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
+                "at android.os.Looper.loop(Looper.java:214)\n" +
+                "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
+                "at java.lang.reflect.Method.invoke(Native method)\n" +
+                "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
                 "nativeCrashCode": "1 (SEGV_MAPERR)",
                 "crashType": "java",
                 "extras": {
@@ -349,11 +1267,11 @@ class Mock {
         ]);
         this.recvFun("blockInfo", {
             blockTime: 200,
-            blockBaseinfo: { df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"] }
+            blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
         });
         this.recvFun("blockInfo", {
             blockTime: 300,
-            blockBaseinfo: { ss: "111", dd: "333", aa: ["11", "22"] }
+            blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
         });
         this.recvFun("blockConfig", {
             longBlockThresholdMillis: 100,
@@ -367,9 +1285,9 @@ class Mock {
             message: "OK",
             totalTime: 1200,
             networkTime: [
-                { name: "DNS", time: 200 },
-                { name: "RequestHeader", time: 300 },
-                { name: "ResponseBody", time: 500 },
+                {name: "DNS", time: 200},
+                {name: "RequestHeader", time: 300},
+                {name: "ResponseBody", time: 500},
 
             ],
             networkContent: {
@@ -409,14 +1327,14 @@ class Mock {
             "maxDepth": 4,
             "overDrawAreas": [{
                 "overDrawTimes": 2,
-                "rect": { "bottom": 508, "left": 0, "right": 963, "top": 332 }
+                "rect": {"bottom": 508, "left": 0, "right": 963, "top": 332}
             }, {
                 "overDrawTimes": 1,
-                "rect": { "bottom": 2340, "left": 0, "right": 1080, "top": 228 }
-            }, { "overDrawTimes": 1, "rect": { "bottom": 96, "left": 0, "right": 1080, "top": 0 } }, {
+                "rect": {"bottom": 2340, "left": 0, "right": 1080, "top": 228}
+            }, {"overDrawTimes": 1, "rect": {"bottom": 96, "left": 0, "right": 1080, "top": 0}}, {
                 "overDrawTimes": 2,
-                "rect": { "bottom": 206, "left": 33, "right": 121, "top": 118 }
-            }, { "overDrawTimes": 1, "rect": { "bottom": 228, "left": 0, "right": 1080, "top": 96 } }],
+                "rect": {"bottom": 206, "left": 33, "right": 121, "top": 118}
+            }, {"overDrawTimes": 1, "rect": {"bottom": 228, "left": 0, "right": 1080, "top": 96}}],
             "screenHeight": 2210,
             "screenWidth": 1080,
             "timestamp": 1572861420958,
@@ -426,7 +1344,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "2131230746",
                 "isViewGroup": false,
-                "rect": { "bottom": 332, "left": 0, "right": 1080, "top": 228 },
+                "rect": {"bottom": 332, "left": 0, "right": 1080, "top": 228},
                 "text": "Leak will happen when you finish this activity and wait for a moment.",
                 "textSize": 39.0
             }, {
@@ -435,7 +1353,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "2131230819",
                 "isViewGroup": false,
-                "rect": { "bottom": 508, "left": 0, "right": 963, "top": 332 },
+                "rect": {"bottom": 508, "left": 0, "right": 963, "top": 332},
                 "text": "Leak fragment (Android O and above)",
                 "textSize": 50.0
             }, {
@@ -444,7 +1362,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "16908688",
                 "isViewGroup": false,
-                "rect": { "bottom": 196, "left": 132, "right": 502, "top": 128 },
+                "rect": {"bottom": 196, "left": 132, "right": 502, "top": 128},
                 "text": "AndroidGodEye",
                 "textSize": 50.0
             }, {
@@ -453,7 +1371,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "16908332",
                 "isViewGroup": false,
-                "rect": { "bottom": 206, "left": 33, "right": 121, "top": 118 },
+                "rect": {"bottom": 206, "left": 33, "right": 121, "top": 118},
                 "textSize": 0.0
             }, {
                 "className": "android.widget.LinearLayout",
@@ -461,7 +1379,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "-1",
                 "isViewGroup": true,
-                "rect": { "bottom": 2340, "left": 0, "right": 1080, "top": 228 },
+                "rect": {"bottom": 2340, "left": 0, "right": 1080, "top": 228},
                 "textSize": 0.0
             }, {
                 "className": "android.view.View",
@@ -469,7 +1387,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "16908335",
                 "isViewGroup": false,
-                "rect": { "bottom": 96, "left": 0, "right": 1080, "top": 0 },
+                "rect": {"bottom": 96, "left": 0, "right": 1080, "top": 0},
                 "textSize": 0.0
             }, {
                 "className": "com.android.internal.widget.ActionBarContainer",
@@ -477,7 +1395,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "16908685",
                 "isViewGroup": true,
-                "rect": { "bottom": 228, "left": 0, "right": 1080, "top": 96 },
+                "rect": {"bottom": 228, "left": 0, "right": 1080, "top": 96},
                 "textSize": 0.0
             }]
         });
@@ -498,7 +1416,7 @@ class Mock {
                 isAlive: "isAlive",
                 isInterrupted: "isInterrupted",
                 threadTag: "UNKNOWN",
-                parent: { name: "system" }
+                parent: {name: "system"}
             },
             {
                 id: 1,

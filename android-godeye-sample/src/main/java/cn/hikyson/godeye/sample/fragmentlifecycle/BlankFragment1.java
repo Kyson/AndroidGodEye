@@ -5,14 +5,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.GodEyeHelper;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.sample.utils.ThreadUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +64,7 @@ public class BlankFragment1 extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        ThreadUtil.sleep(500);
     }
 
     @Override
@@ -76,7 +80,7 @@ public class BlankFragment1 extends Fragment {
                     e.printStackTrace();
                 }
             }
-        }, 3500);
+        }, 1000);
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -87,7 +91,14 @@ public class BlankFragment1 extends Fragment {
                 }
             }
         }, 4500);
+        ThreadUtil.sleep(2000);
         return inflater.inflate(R.layout.fragment_blank_fragment1, container, false);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ThreadUtil.sleep(300);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -97,6 +108,7 @@ public class BlankFragment1 extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        ThreadUtil.sleep(1000);
         try {
             GodEyeHelper.onFragmentPageVisibilityChange(BlankFragment1.this, !hidden);
         } catch (UninstallException e) {
