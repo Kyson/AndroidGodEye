@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 3.2.2
+
+### Changed
+
+- Upgrade method canary to 0.15.2
+- Add pageload lifecycle cost time to dashabord
+- Pageload time unit changed to millis
+- MethodCanary time unit changed to millis
+- Add page lifecycle methods cost time
+- Upgrade method canary
+- Optimize display of image canary
+- Upgrade method canary to 0.13.5, change 'MethodCanary.js' to 'AndroidGodEye-MethodCanary.js'
+- Sample package name changed
+- Build script changed for Github release
+
 ## 3.2.1
 
 ### Changed
@@ -39,7 +54,6 @@
 - Build error
 - Unit test failed
 - Crash failed unit test
-
 
 ## 3.2.0
 
