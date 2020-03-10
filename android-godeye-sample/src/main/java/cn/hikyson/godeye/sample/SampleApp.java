@@ -12,13 +12,7 @@ public class SampleApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        GodEye.instance().init(SampleApp.this);
         StartupTracer.get().onApplicationCreate();
-        //UPDATE 1.8+ 需要初始化
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                GodEye.instance().init(SampleApp.this);
-            }
-        }).start();
     }
 }
