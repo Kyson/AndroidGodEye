@@ -31,6 +31,9 @@ public class ReflectUtilTest {
         Object result2 = ReflectUtil.invokeStaticMethod(ReflectUtilTest.class.getName(), "testMethod2",
                 new Class<?>[]{String.class, int.class, boolean.class}, new Object[]{"AndroidGodEye-String", 10, false});
         Assert.assertNull(result2);
+        Object result25 = ReflectUtil.invokeStaticMethod(ReflectUtilTest.class, "testMethod",
+                new Class<?>[]{String.class, int.class, boolean.class}, new Object[]{"AndroidGodEye-String", "10", false});
+        Assert.assertNull(result25);
         try {
             Object result3 = ReflectUtil.invokeStaticMethodUnSafe(ReflectUtilTest.class.getName(), "testMethod",
                     new Class<?>[]{String.class, int.class, boolean.class}, new Object[]{"AndroidGodEye-String", 10, false});
@@ -44,5 +47,12 @@ public class ReflectUtilTest {
             Assert.fail();
         } catch (Exception ignore) {
         }
+        try {
+            Object result4 = ReflectUtil.invokeStaticMethodUnSafe("FakeClass", "testMethod",
+                    new Class<?>[]{String.class, int.class}, new Object[]{"AndroidGodEye-String", 10});
+            Assert.fail();
+        } catch (Exception ignore) {
+        }
+
     }
 }

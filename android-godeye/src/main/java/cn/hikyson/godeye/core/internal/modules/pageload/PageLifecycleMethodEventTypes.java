@@ -8,21 +8,21 @@ import java.util.Map;
 
 import cn.hikyson.methodcanary.lib.MethodEvent;
 
-public class PageLifecycleMethodEventTypes {
+class PageLifecycleMethodEventTypes {
 
     @Keep
-    public static class MethodInfoForLifecycle implements Serializable {
+    static class MethodInfoForLifecycle implements Serializable {
         PageType pageType;
         String methodName;
         String methodDesc;
 
-        public MethodInfoForLifecycle(PageType pageType, String methodName, String methodDesc) {
+        MethodInfoForLifecycle(PageType pageType, String methodName, String methodDesc) {
             this.pageType = pageType;
             this.methodName = methodName;
             this.methodDesc = methodDesc;
         }
 
-        public MethodInfoForLifecycle(PageType pageType, MethodEvent methodEvent) {
+        MethodInfoForLifecycle(PageType pageType, MethodEvent methodEvent) {
             this.pageType = pageType;
             this.methodName = methodEvent.methodName;
             this.methodDesc = methodEvent.methodDesc;
@@ -60,26 +60,26 @@ public class PageLifecycleMethodEventTypes {
     }
 
 
-    static MethodInfoForLifecycle ON_ACTIVITY_CREATE = new MethodInfoForLifecycle(PageType.ACTIVITY, "onCreate", "(Landroid/os/Bundle;)V");
-    static MethodInfoForLifecycle ON_ACTIVITY_START = new MethodInfoForLifecycle(PageType.ACTIVITY, "onStart", "()V");
-    static MethodInfoForLifecycle ON_ACTIVITY_RESUME = new MethodInfoForLifecycle(PageType.ACTIVITY, "onResume", "()V");
-    static MethodInfoForLifecycle ON_ACTIVITY_PAUSE = new MethodInfoForLifecycle(PageType.ACTIVITY, "onPause", "()V");
-    static MethodInfoForLifecycle ON_ACTIVITY_STOP = new MethodInfoForLifecycle(PageType.ACTIVITY, "onStop", "()V");
-    static MethodInfoForLifecycle ON_ACTIVITY_SAVE_INSTANCE_STATE = new MethodInfoForLifecycle(PageType.ACTIVITY, "onSaveInstanceState", "(Landroid/os/Bundle;)V");
-    static MethodInfoForLifecycle ON_ACTIVITY_DESTORY = new MethodInfoForLifecycle(PageType.ACTIVITY, "onDestroy", "()V");
-    static MethodInfoForLifecycle ON_FRAGMENT_ATTACH = new MethodInfoForLifecycle(PageType.FRAGMENT, "onAttach", "(Landroid/app/Activity;)V");
-    static MethodInfoForLifecycle ON_FRAGMENT_CREATE = new MethodInfoForLifecycle(PageType.FRAGMENT, "onCreate", "(Landroid/os/Bundle;)V");
-    static MethodInfoForLifecycle ON_FRAGMENT_VIEW_CREATE = new MethodInfoForLifecycle(PageType.FRAGMENT, "onCreateView", "(Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;");
-    static MethodInfoForLifecycle ON_FRAGMENT_START = new MethodInfoForLifecycle(PageType.FRAGMENT, "onStart", "()V");
-    static MethodInfoForLifecycle ON_FRAGMENT_RESUME = new MethodInfoForLifecycle(PageType.FRAGMENT, "onResume", "()V");
-    static MethodInfoForLifecycle ON_FRAGMENT_PAUSE = new MethodInfoForLifecycle(PageType.FRAGMENT, "onPause", "()V");
-    static MethodInfoForLifecycle ON_FRAGMENT_STOP = new MethodInfoForLifecycle(PageType.FRAGMENT, "onStop", "()V");
-    static MethodInfoForLifecycle ON_FRAGMENT_SAVE_INSTANCE_STATE = new MethodInfoForLifecycle(PageType.FRAGMENT, "onSaveInstanceState", "(Landroid/os/Bundle;)V");
-    static MethodInfoForLifecycle ON_FRAGMENT_VIEW_DESTROY = new MethodInfoForLifecycle(PageType.FRAGMENT, "onDestroyView", "()V");
-    static MethodInfoForLifecycle ON_FRAGMENT_DESTROY = new MethodInfoForLifecycle(PageType.FRAGMENT, "onDestory", "()V");
-    static MethodInfoForLifecycle ON_FRAGMENT_DETACH = new MethodInfoForLifecycle(PageType.FRAGMENT, "onDetach", "()V");
+    private static MethodInfoForLifecycle ON_ACTIVITY_CREATE = new MethodInfoForLifecycle(PageType.ACTIVITY, "onCreate", "(Landroid/os/Bundle;)V");
+    private static MethodInfoForLifecycle ON_ACTIVITY_START = new MethodInfoForLifecycle(PageType.ACTIVITY, "onStart", "()V");
+    private static MethodInfoForLifecycle ON_ACTIVITY_RESUME = new MethodInfoForLifecycle(PageType.ACTIVITY, "onResume", "()V");
+    private static MethodInfoForLifecycle ON_ACTIVITY_PAUSE = new MethodInfoForLifecycle(PageType.ACTIVITY, "onPause", "()V");
+    private static MethodInfoForLifecycle ON_ACTIVITY_STOP = new MethodInfoForLifecycle(PageType.ACTIVITY, "onStop", "()V");
+    private static MethodInfoForLifecycle ON_ACTIVITY_SAVE_INSTANCE_STATE = new MethodInfoForLifecycle(PageType.ACTIVITY, "onSaveInstanceState", "(Landroid/os/Bundle;)V");
+    private static MethodInfoForLifecycle ON_ACTIVITY_DESTORY = new MethodInfoForLifecycle(PageType.ACTIVITY, "onDestroy", "()V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_ATTACH = new MethodInfoForLifecycle(PageType.FRAGMENT, "onAttach", "(Landroid/app/Activity;)V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_CREATE = new MethodInfoForLifecycle(PageType.FRAGMENT, "onCreate", "(Landroid/os/Bundle;)V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_VIEW_CREATE = new MethodInfoForLifecycle(PageType.FRAGMENT, "onCreateView", "(Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Landroid/os/Bundle;)Landroid/view/View;");
+    private static MethodInfoForLifecycle ON_FRAGMENT_START = new MethodInfoForLifecycle(PageType.FRAGMENT, "onStart", "()V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_RESUME = new MethodInfoForLifecycle(PageType.FRAGMENT, "onResume", "()V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_PAUSE = new MethodInfoForLifecycle(PageType.FRAGMENT, "onPause", "()V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_STOP = new MethodInfoForLifecycle(PageType.FRAGMENT, "onStop", "()V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_SAVE_INSTANCE_STATE = new MethodInfoForLifecycle(PageType.FRAGMENT, "onSaveInstanceState", "(Landroid/os/Bundle;)V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_VIEW_DESTROY = new MethodInfoForLifecycle(PageType.FRAGMENT, "onDestroyView", "()V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_DESTROY = new MethodInfoForLifecycle(PageType.FRAGMENT, "onDestory", "()V");
+    private static MethodInfoForLifecycle ON_FRAGMENT_DETACH = new MethodInfoForLifecycle(PageType.FRAGMENT, "onDetach", "()V");
 
-    static Map<MethodInfoForLifecycle, LifecycleEvent> sPairsOfLifecycleAndMethods;
+    private static Map<MethodInfoForLifecycle, LifecycleEvent> sPairsOfLifecycleAndMethods;
 
     static {
         sPairsOfLifecycleAndMethods = new HashMap<>();
