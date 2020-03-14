@@ -1,14 +1,17 @@
-package cn.hikyson.godeye.monitor.server;
+package cn.hikyson.godeye.core.internal.notification;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeNotificationConfigImpl;
+import cn.hikyson.godeye.core.helper.PredicateConverterKt;
 import cn.hikyson.godeye.core.helper.RxModule;
 import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeInfo;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
-import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageIssue;
 import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
@@ -16,7 +19,6 @@ import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
 import cn.hikyson.godeye.core.internal.modules.methodcanary.MethodsRecordInfo;
-import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.ActivityLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.FragmentLifecycleEvent;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageLifecycleEventInfo;
@@ -26,54 +28,45 @@ import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewIssueInfo;
 import cn.hikyson.godeye.core.utils.L;
-import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
-import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
-import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
-import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
-import cn.hikyson.godeye.monitor.modules.crash.CrashStore;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 
-/**
- * monitor数据引擎，用于生产各项数据
- * Created by kysonchao on 2017/11/21.
- */
-public class ModuleDriver {
+public class ModuleObserverNotifier {
     private CompositeDisposable mCompositeDisposable;
-    private Messager mMessager;
+    private List<Notification> mNotifications = new ArrayList<>();
     private boolean mIsRunning;
 
-    private static class InstanceHolder {
-        private static ModuleDriver sInstance = new ModuleDriver();
+    public void addNotification(Notification notification) {
+        mNotifications.add(notification);
     }
 
-    public static ModuleDriver instance() {
-        return InstanceHolder.sInstance;
-    }
-
-    private ModuleDriver() {
+    public void removeNotification(Notification notification) {
+        mNotifications.remove(notification);
     }
 
     /**
      * 监听所有的数据
      */
-    public synchronized void start(Messager messager) {
+    public synchronized void start() {
         if (mIsRunning) {
             return;
         }
         mIsRunning = true;
+        NotificationConsumer notificationConsumer = new NotificationConsumer(this.mNotifications);
+        GodEyeNotificationConfigImpl godEyeNotificationConfig = new GodEyeNotificationConfigImpl();
+
         L.d("ModuleDriver start running.");
         mCompositeDisposable = new CompositeDisposable();
-        mMessager = messager;
         mCompositeDisposable.addAll(
+                // TODO KYSON IMPL
                 RxModule.<BatteryInfo>wrapThreadComputationObservable(GodEye.ModuleName.BATTERY)
                         .map(BatteryInfoFactory.converter())
                         .map(this.createConvertServerMessageFunction("batteryInfo"))
-                        .subscribe(this.createSendMessageConsumer()),
+                        .subscribe(notificationConsumer),
                 RxModule.<CpuInfo>wrapThreadComputationObservable(GodEye.ModuleName.CPU)
-                        .map(this.createConvertServerMessageFunction("cpuInfo"))
-                        .subscribe(this.createSendMessageConsumer()),
+                        .filter(PredicateConverterKt.convert(godEyeNotificationConfig.cpuPredicate()))
+                        .map(cpuInfoFunction())
+                        .subscribe(notificationConsumer),
                 RxModule.<TrafficInfo>wrapThreadComputationObservable(GodEye.ModuleName.TRAFFIC)
                         .map(this.createConvertServerMessageFunction("trafficInfo"))
                         .subscribe(this.createSendMessageConsumer()),
@@ -142,12 +135,13 @@ public class ModuleDriver {
         mMessager = null;
     }
 
-    private SendMessageConsumer createSendMessageConsumer() {
-        return new SendMessageConsumer(mMessager);
-    }
-
-    private <T> ConvertServerMessageFunction<T> createConvertServerMessageFunction(String module) {
-        return new ConvertServerMessageFunction<T>(module);
+    private Function<CpuInfo, NotificationContent> cpuInfoFunction() {
+        return new Function<CpuInfo, NotificationContent>() {
+            @Override
+            public NotificationContent apply(CpuInfo cpuInfo) throws Exception {
+                return new NotificationContent("Cpu too high", null);
+            }
+        };
     }
 
     private Function<PageLifecycleEventInfo, PageLifecycleProcessedEvent> pageLifecycleMap() {

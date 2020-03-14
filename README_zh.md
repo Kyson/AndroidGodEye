@@ -52,10 +52,10 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android性能数据指�
 |STARTUP|启动检测|
 |TRAFFIC|手机和App流量检测|
 |CRASH|Java、Native崩溃/ANR|
-|THREAD|App线程即堆栈Dump检测|
-|PAGELOAD|页面加载和生命周期检测|
+|THREAD|App线程和堆栈Dump|
+|PAGELOAD|页面加载生命周期监控和方法耗时|
 |METHOD_CANARY|方法耗时检测|
-|APP_SIZE|App大小，包括apk、存储和缓存|
+|APP_SIZE|App大小，包括apk、存储和缓存大小占用|
 |VIEW_CANARY|视图层级、过度绘制检测|
 |IMAGE_CANARY|图片不合理内存占用检测|
 

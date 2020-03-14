@@ -2,6 +2,7 @@ package cn.hikyson.godeye.core;
 
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.StringDef;
 
@@ -110,17 +111,6 @@ public class GodEye {
 
     public static GodEye instance() {
         return InstanceHolder.sInstance;
-    }
-
-    /**
-     * init
-     *
-     * @param application
-     */
-    public void init(Application application) {
-        mApplication = application;
-        ActivityStackUtil.register(application);
-        L.d("GodEye init.");
     }
 
     /**
@@ -275,7 +265,7 @@ public class GodEye {
             }
             ((ImageCanary) moduleObj).install(godEyeConfig.getImageCanaryConfig());
         }
-        L.d("GodEye install, godEyeConfig: %s, cost %s ms", godEyeConfig, (System.currentTimeMillis() - startTime));
+        Log.d(L.DEFAULT_TAG, String.format("GodEye modules installed, config: %s, cost %s ms", godEyeConfig, (System.currentTimeMillis() - startTime)));
         return this;
     }
 
@@ -292,7 +282,7 @@ public class GodEye {
             }
         }
         mModules.clear();
-        L.d("GodEye uninstall success, cost %s ms", (System.currentTimeMillis() - startTime));
+        Log.d(L.DEFAULT_TAG, String.format("GodEye modules uninstalled, cost %s ms", (System.currentTimeMillis() - startTime)));
         return this;
     }
 
@@ -351,5 +341,23 @@ public class GodEye {
 
     public Application getApplication() {
         return mApplication;
+    }
+
+    void internalInit(Application application) {
+        long startTime = System.currentTimeMillis();
+        mApplication = application;
+        ActivityStackUtil.register(application);
+        Log.d(L.DEFAULT_TAG, String.format("GodEye init, cost %s ms", (System.currentTimeMillis() - startTime)));
+    }
+
+    /**
+     * init
+     *
+     * @param application
+     * @deprecated you do not need to call this function
+     * AndroidGodEye will call this function automatically.
+     */
+    @Deprecated
+    public void init(Application application) {
     }
 }

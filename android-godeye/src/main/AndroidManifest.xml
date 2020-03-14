@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.hikyson.godeye.core">
 
@@ -5,6 +6,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application>
+        <provider
+            android:name=".GodEyeInitContentProvider"
+            android:authorities="${applicationId}.cn.hikyson.godeye.core.init"
+            android:enabled="true"
+            android:exported="false"
+            android:multiprocess="true">
+        </provider>
+
         <receiver
             android:name=".internal.modules.leakdetector.debug.LeakOutputReceiver"
             android:enabled="true"
@@ -16,9 +25,11 @@
                 <action android:name="com.ctrip.ibu.leakcanary.output.done" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".internal.modules.leakdetector.debug.DebugHeapAnalyzerService"
             android:enabled="false"
             android:process=":leakcanary" />
     </application>
+
 </manifest>

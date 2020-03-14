@@ -53,7 +53,7 @@ It is divided into 3 parts:
 |TRAFFIC|Traffic of device and app|
 |CRASH|Detect java、native crash and ANR|
 |THREAD|Thread dump of app|
-|PAGELOAD|Page(Activity and Fragment) lifecycle and load time metric|
+|PAGELOAD|Page(Activity and Fragment) lifecycle event and cost time|
 |METHOD_CANARY|Methods time cost metric|
 |APP_SIZE|App size of apk code、storage and cache|
 |VIEW_CANARY|Detect complex layout hierarchy and overdraw|
