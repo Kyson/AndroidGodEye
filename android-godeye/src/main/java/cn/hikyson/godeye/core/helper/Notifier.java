@@ -8,21 +8,25 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.SystemClock;
 
+import androidx.annotation.Keep;
+
+import java.io.Serializable;
+import java.util.Objects;
+
 import cn.hikyson.godeye.core.R;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class Notifier {
 
-    public static class Config {
+    @Keep
+    public static class Config implements Serializable {
         private String mTitle;
         private String mMessage;
-        private String mDetail;
 
-        public Config(String title, String message, String detail) {
+        public Config(String title, String message) {
             mTitle = title;
             mMessage = message;
-            mDetail = detail;
         }
 
         public Config() {
@@ -43,14 +47,6 @@ public class Notifier {
         public void setMessage(String message) {
             mMessage = message;
         }
-
-        public String getDetail() {
-            return mDetail;
-        }
-
-        public void setDetail(String detail) {
-            mDetail = detail;
-        }
     }
 
     public static Notification create(Context context, Config config) {
@@ -58,7 +54,7 @@ public class Notifier {
         Notification.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel =
-                    notificationManager.getNotificationChannel("AndroidGodEye");
+                    Objects.requireNonNull(notificationManager).getNotificationChannel("AndroidGodEye");
             if (notificationChannel == null) {
                 NotificationChannel channel = new NotificationChannel("AndroidGodEye", "AndroidGodEye", NotificationManager.IMPORTANCE_HIGH);
                 channel.setDescription("AndroidGodEye");
@@ -72,7 +68,7 @@ public class Notifier {
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.androidgodeye_ic_launcher))
                 .setContentTitle(config.getTitle())
                 .setContentText(config.getMessage())
-                .setStyle(new Notification.BigTextStyle().bigText(config.getDetail()))
+                .setStyle(new Notification.BigTextStyle().bigText(config.getMessage()))
                 .build();
     }
 

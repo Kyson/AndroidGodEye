@@ -30,10 +30,10 @@ public class WebSocketBizRouter implements WebSocketProcessor {
         if (TextUtils.isEmpty(moduleName)) {
             throw new UnhandledException("TextUtils.isEmpty(moduleName)");
         }
-        WebSocketProcessor webSocketProcessor2 = mRouterMap.get(moduleName);
-        if (webSocketProcessor2 == null) {
+        WebSocketProcessor webSocketProcessor = mRouterMap.get(moduleName);
+        if (webSocketProcessor == null) {
             throw new UnhandledException("can not find module to process [" + moduleName + "]");
         }
-        webSocketProcessor2.process(webSocket, msgJSONObject);
+        webSocketProcessor.process(webSocket, msgJSONObject);
     }
 }

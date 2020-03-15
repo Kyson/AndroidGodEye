@@ -37,6 +37,10 @@ public class BlockInfo implements Serializable {
         this.blockType = BlockType.SHORT;
     }
 
+    public long blockTime() {
+        return this.longBlockInfo == null ? (this.shortBlockInfo == null ? 0 : this.shortBlockInfo.blockTime) : this.longBlockInfo.blockTime;
+    }
+
     @Override
     public String toString() {
         return "BlockInfo{" +
@@ -45,4 +49,6 @@ public class BlockInfo implements Serializable {
                 ", blockType='" + blockType + '\'' +
                 '}';
     }
+
+
 }

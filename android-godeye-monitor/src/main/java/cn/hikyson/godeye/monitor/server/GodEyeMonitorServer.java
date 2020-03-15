@@ -90,12 +90,10 @@ public class GodEyeMonitorServer implements Messager {
     @Override
     public void sendMessage(String message) {
         Object[] wss = mWebSockets.toArray();
-        if (wss != null) {
-            for (Object s : wss) {
-                WebSocket webSocket = (WebSocket) s;
-                if (webSocket.isOpen()) {
-                    webSocket.send(message);
-                }
+        for (Object s : wss) {
+            WebSocket webSocket = (WebSocket) s;
+            if (webSocket.isOpen()) {
+                webSocket.send(message);
             }
         }
     }

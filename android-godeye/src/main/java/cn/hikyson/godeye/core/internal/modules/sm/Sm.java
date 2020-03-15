@@ -40,8 +40,7 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
         this.mInstalled = true;
         this.mSmConfig = config;
         this.mSmRealConfig = wrapRealConfig(config);
-        this.mBlockCore = new SmCore(GodEye.instance().getApplication(), this.mSmRealConfig.debugNotification(),
-                this.mSmRealConfig.longBlockThreshold(), this.mSmRealConfig.shortBlockThreshold(), this.mSmRealConfig.dumpInterval());
+        this.mBlockCore = new SmCore(GodEye.instance().getApplication(), this.mSmRealConfig.longBlockThreshold(), this.mSmRealConfig.shortBlockThreshold(), this.mSmRealConfig.dumpInterval());
         this.mBlockCore.setBlockListener(new BlockListener() {
             @Override
             public void onStart(Context context) {
@@ -125,7 +124,7 @@ public final class Sm extends ProduceableSubject<BlockInfo> implements Install<S
         sharedPreferences.edit().remove("SmConfig").apply();
     }
 
-    public @Nullable
+    @Nullable
     SmConfig getValidSmConfigCache() {
         SharedPreferences sharedPreferences = GodEye.instance().getApplication().getSharedPreferences("AndroidGodEye", 0);
         String cachedSmContextStr = sharedPreferences.getString("SmConfig", null);

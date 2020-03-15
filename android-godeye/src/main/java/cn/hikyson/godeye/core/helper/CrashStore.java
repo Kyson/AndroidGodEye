@@ -1,4 +1,4 @@
-package cn.hikyson.godeye.monitor.modules.crash;
+package cn.hikyson.godeye.core.helper;
 
 import android.Manifest;
 import android.content.Context;
@@ -28,22 +28,20 @@ import cn.hikyson.godeye.core.utils.JsonUtil;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
 
-/**
- * observe crash and store for godeye monitor
- */
+
 public class CrashStore {
-    public static Observable<List<CrashInfo>> observeCrashAndCache(Context context) {
+    public static Observable<List<CrashInfo>> observeCrashAndCache(Context context, String storeDirName) {
         return Observable.create(emitter -> {
             try {
                 GodEye.instance().observeModule(GodEye.ModuleName.CRASH, (List<CrashInfo> maps) -> {
                     if (!maps.isEmpty()) {
-                        storeCrash(context, maps);
+                        storeCrash(context, maps, storeDirName);
                     }
-                    emitter.onNext(restoreCrash(context));
+                    emitter.onNext(restoreCrash(context, storeDirName));
                     emitter.onComplete();
                 });
             } catch (UninstallException e) {
-                L.e(e);
+                L.d(GodEye.ModuleName.CRASH + " is not installed.");
             }
         });
     }
@@ -54,10 +52,10 @@ public class CrashStore {
     private static final String SUFFIX = ".crash";
     private static final FilenameFilter mCrashFilenameFilter = (dir, filename) -> filename.endsWith(SUFFIX);
 
-    private static synchronized void storeCrash(Context context, List<CrashInfo> crashInfos) {
+    private static synchronized void storeCrash(Context context, List<CrashInfo> crashInfos, String storeDirName) {
         List<File> crashFiles = null;
         try {
-            crashFiles = Arrays.asList(Objects.requireNonNull(makeSureCrashDir(context).listFiles(mCrashFilenameFilter)));
+            crashFiles = Arrays.asList(Objects.requireNonNull(makeSureCrashDir(context, storeDirName).listFiles(mCrashFilenameFilter)));
         } catch (Throwable e) {
             L.e(e);
         }
@@ -80,7 +78,7 @@ public class CrashStore {
         for (CrashInfo crashInfo : crashInfos) {
             File file = null;
             try {
-                file = getStoreFile(context, getStoreFileName(Objects.requireNonNull(FORMATTER_2.parse(crashInfo.crashTime)).getTime()));
+                file = getStoreFile(context, getStoreFileName(Objects.requireNonNull(FORMATTER_2.parse(crashInfo.crashTime)).getTime()), storeDirName);
             } catch (Throwable e) {
                 L.e(e);
             }
@@ -106,10 +104,10 @@ public class CrashStore {
         }
     }
 
-    private static synchronized List<CrashInfo> restoreCrash(Context context) {
+    private static synchronized List<CrashInfo> restoreCrash(Context context, String storeDirName) {
         File[] crashFiles = new File[0];
         try {
-            crashFiles = makeSureCrashDir(context).listFiles(mCrashFilenameFilter);
+            crashFiles = makeSureCrashDir(context, storeDirName).listFiles(mCrashFilenameFilter);
         } catch (IOException e) {
             L.e(e);
         }
@@ -145,24 +143,26 @@ public class CrashStore {
         return FORMATTER.format(new Date(crashTime)) + SUFFIX;
     }
 
-    private static File getStoreFile(Context context, String fileName) throws IOException {
-        File file = new File(makeSureCrashDir(context), fileName);
+    private static File getStoreFile(Context context, String fileName, String storeDirName) throws IOException {
+        File file = new File(makeSureCrashDir(context, storeDirName), fileName);
         if (file.exists() && !file.delete()) {
             throw new IOException(file.getAbsolutePath() + " already exist and delete failed");
         }
         return file;
     }
 
-    private static File makeSureCrashDir(Context context) throws IOException {
+    private static File makeSureCrashDir(Context context, String storeDirName) throws IOException {
         File crashDir;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)
                 && PermissionChecker.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PermissionChecker.PERMISSION_GRANTED) {
-            crashDir = new File(context.getExternalCacheDir(), "AndroidGodEyeCrash");
+            File crashTotalDir = new File(context.getExternalCacheDir(), "AndroidGodEye_Crash");
+            crashDir = new File(crashTotalDir, storeDirName);
         } else {
-            crashDir = new File(context.getCacheDir(), "AndroidGodEyeCrash");
+            File crashTotalDir = new File(context.getCacheDir(), "AndroidGodEye_Crash");
+            crashDir = new File(crashTotalDir, storeDirName);
         }
         if (!crashDir.exists() && !crashDir.mkdirs()) {
-            throw new IOException("can not get crash directory");
+            throw new IOException("Can not find crash directory.");
         }
         return crashDir;
     }

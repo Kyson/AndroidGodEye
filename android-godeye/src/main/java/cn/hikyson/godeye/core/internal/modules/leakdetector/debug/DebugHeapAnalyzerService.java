@@ -82,7 +82,7 @@ public class DebugHeapAnalyzerService extends IntentService implements AnalyzerP
     }
 
     private int showNotification() {
-        Notification notification = Notifier.create(this, new Notifier.Config("MemoryLeakAnalyzerService", "Analyzing...", "Install Android Studio plugin 'AndroidGodEye' to find the detail."));
+        Notification notification = Notifier.create(this, new Notifier.Config("MemoryLeakAnalyzerService", "Analyzing..."));
         int id = Notifier.createNoticeId();
         startForeground(id, notification);
         return id;

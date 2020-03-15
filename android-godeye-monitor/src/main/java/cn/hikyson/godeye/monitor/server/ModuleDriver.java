@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.helper.CrashStore;
 import cn.hikyson.godeye.core.helper.RxModule;
 import cn.hikyson.godeye.core.internal.modules.appsize.AppSizeInfo;
 import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
@@ -23,6 +24,7 @@ import cn.hikyson.godeye.core.internal.modules.pageload.PageLifecycleEventInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.PageloadUtil;
 import cn.hikyson.godeye.core.internal.modules.sm.BlockInfo;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
+import cn.hikyson.godeye.core.internal.modules.thread.ThreadInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewIssueInfo;
 import cn.hikyson.godeye.core.utils.L;
@@ -30,7 +32,6 @@ import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
-import cn.hikyson.godeye.monitor.modules.crash.CrashStore;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -103,7 +104,7 @@ public class ModuleDriver {
                 RxModule.<HeapInfo>wrapThreadComputationObservable(GodEye.ModuleName.HEAP)
                         .map(this.createConvertServerMessageFunction("heapInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                RxModule.<List<Thread>>wrapThreadComputationObservable(GodEye.ModuleName.THREAD)
+                RxModule.<List<ThreadInfo>>wrapThreadComputationObservable(GodEye.ModuleName.THREAD)
                         .map(this.createConvertServerMessageFunction("threadInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 RxModule.<PageLifecycleEventInfo>wrapThreadComputationObservable(GodEye.ModuleName.PAGELOAD)
@@ -122,7 +123,7 @@ public class ModuleDriver {
                 RxModule.<ImageIssue>wrapThreadComputationObservable(GodEye.ModuleName.IMAGE_CANARY)
                         .map(this.createConvertServerMessageFunction("imageIssue"))
                         .subscribe(this.createSendMessageConsumer()),
-                RxModule.wrapThreadComputationObservable(CrashStore.observeCrashAndCache(GodEye.instance().getApplication()))
+                RxModule.wrapThreadComputationObservable(CrashStore.observeCrashAndCache(GodEye.instance().getApplication(), "crash_of_debug_monitor"))
                         .filter(crashPredicate())
                         .map(this.createConvertServerMessageFunction("crashInfo"))
                         .subscribe(this.createSendMessageConsumer())

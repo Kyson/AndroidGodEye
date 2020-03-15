@@ -35,6 +35,8 @@ import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanary;
+import cn.hikyson.godeye.core.internal.notification.NotificationConfig;
+import cn.hikyson.godeye.core.internal.notification.NotificationObserver;
 import cn.hikyson.godeye.core.utils.ActivityStackUtil;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
@@ -50,9 +52,10 @@ import io.reactivex.schedulers.Schedulers;
 public class GodEye {
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
-            ModuleName.HEAP, ModuleName.PSS, ModuleName.TRAFFIC, ModuleName.CRASH,
-            ModuleName.THREAD, ModuleName.RAM, ModuleName.NETWORK, ModuleName.SM,
-            ModuleName.STARTUP, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY, ModuleName.APP_SIZE, ModuleName.VIEW_CANARY, ModuleName.IMAGE_CANARY
+            ModuleName.HEAP, ModuleName.PSS, ModuleName.RAM, ModuleName.NETWORK,
+            ModuleName.SM, ModuleName.STARTUP, ModuleName.TRAFFIC, ModuleName.CRASH,
+            ModuleName.THREAD, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY,
+            ModuleName.APP_SIZE, ModuleName.VIEW_CANARY, ModuleName.IMAGE_CANARY
     })
     public @interface ModuleName {
         public static final String CPU = "CPU";
@@ -99,7 +102,6 @@ public class GodEye {
     }
 
     private Application mApplication;
-
     private Map<String, Object> mModules = new HashMap<>();
 
     private GodEye() {
@@ -341,6 +343,34 @@ public class GodEye {
 
     public Application getApplication() {
         return mApplication;
+    }
+
+    /**
+     * install notification
+     *
+     * @param godEyeNotificationConfig
+     * @return
+     */
+    public GodEye installNotification(NotificationConfig godEyeNotificationConfig) {
+        long startTime = System.currentTimeMillis();
+        if (godEyeNotificationConfig != null) {
+            NotificationObserver.get().uninstall();
+            NotificationObserver.get().install(godEyeNotificationConfig);
+        }
+        Log.d(L.DEFAULT_TAG, String.format("GodEye notification installed, cost %s ms", (System.currentTimeMillis() - startTime)));
+        return this;
+    }
+
+    /**
+     * uninstall notification
+     *
+     * @return
+     */
+    public GodEye uninstallNotification() {
+        long startTime = System.currentTimeMillis();
+        NotificationObserver.get().uninstall();
+        Log.d(L.DEFAULT_TAG, String.format("GodEye notification uninstalled, cost %s ms", (System.currentTimeMillis() - startTime)));
+        return this;
     }
 
     void internalInit(Application application) {

@@ -21,6 +21,19 @@
             android:layout_height="wrap_content"
             android:text="Stop Debug Monitor" />
 
+        <Button
+            android:id="@+id/fragment_consume_install_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Install Notification" />
+
+        <Button
+            android:id="@+id/fragment_consume_uninstall_notification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Uninstall Notification" />
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

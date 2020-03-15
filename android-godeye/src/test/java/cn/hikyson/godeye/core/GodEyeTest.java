@@ -26,6 +26,7 @@ import cn.hikyson.godeye.core.helper.ThreadHelper;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupConfig;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
+import cn.hikyson.godeye.core.internal.notification.DefaultNotificationConfig;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.TestScheduler;
@@ -73,7 +74,6 @@ public class GodEyeTest {
 
     @Test
     public void installAndUninstallInAnyThread() {
-        GodEye.instance().init(ApplicationProvider.getApplicationContext());
         GodEye.instance().uninstall();
         GodEye.instance().install(GodEyeConfigHelper.createFromResource());
         // install twice
@@ -219,13 +219,49 @@ public class GodEyeTest {
 
     @Test
     public void getApplication() {
-        try {
-            GodEye.instance().init(null);
-            fail();
-        } catch (NullPointerException ignore) {
-        }
-        assertNull(GodEye.instance().getApplication());
-        GodEye.instance().init(ApplicationProvider.getApplicationContext());
         assertNotNull(GodEye.instance().getApplication());
     }
+
+    @Test
+    public void installNotificationMultiThread() {
+        GodEye.instance().installNotification(new DefaultNotificationConfig());
+        CountDownLatch countDownLatch = new CountDownLatch(2);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    GodEye.instance().installNotification(new DefaultNotificationConfig());
+                    GodEye.instance().uninstallNotification();
+                }
+                countDownLatch.countDown();
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    GodEye.instance().installNotification(new DefaultNotificationConfig());
+                    GodEye.instance().uninstallNotification();
+                }
+                countDownLatch.countDown();
+            }
+        }).start();
+        try {
+            countDownLatch.await(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        GodEye.instance().uninstallNotification();
+    }
+
+    @Test
+    public void installNotification() {
+        GodEye.instance().uninstall();
+        GodEye.instance().install(GodEyeConfigHelper.createFromResource());
+        GodEye.instance().installNotification(new DefaultNotificationConfig());
+        ((TestScheduler) ThreadUtil.computationScheduler()).advanceTimeBy(10, TimeUnit.SECONDS);
+        GodEye.instance().uninstallNotification();
+        GodEye.instance().uninstall();
+    }
+
 }

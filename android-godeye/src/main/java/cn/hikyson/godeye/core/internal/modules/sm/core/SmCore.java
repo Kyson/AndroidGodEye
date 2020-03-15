@@ -6,9 +6,7 @@ import android.os.Looper;
 import java.util.List;
 import java.util.Map;
 
-import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.helper.AndroidDebug;
-import cn.hikyson.godeye.core.helper.Notifier;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.MemoryUtil;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
@@ -24,7 +22,7 @@ public final class SmCore {
 
     private long mLongBlockThresholdMillis;
 
-    public SmCore(final Context context, final boolean debugNotify, long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
+    public SmCore(final Context context, long longBlockThresholdMillis, long shortBlockThresholdMillis, long dumpIntervalMillis) {
         this.mContext = context;
         this.mLongBlockThresholdMillis = longBlockThresholdMillis;
         this.stackSampler = new StackSampler(
@@ -47,10 +45,6 @@ public final class SmCore {
                 ThreadUtil.computationScheduler().scheduleDirect(() -> {
                     if (AndroidDebug.isDebugging()) {// if debugging, then ignore
                         return;
-                    }
-                    if (debugNotify) {
-                        ThreadUtil.sMain.execute(() -> Notifier.notice(GodEye.instance().getApplication()
-                                , new Notifier.Config("AndroidGodEye", "Block!", "Install Android Studio plugin 'AndroidGodEye' to find the detail.")));
                     }
                     if (longBlock) {
                         //如果是长卡顿，那么需要记录很多信息

@@ -6,4 +6,5 @@ import java.io.Serializable;
 
 @Keep
 public interface LifecycleEvent extends Serializable {
+    boolean isSystemLifecycle();
 }

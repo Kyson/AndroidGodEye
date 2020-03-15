@@ -19,6 +19,7 @@ import java.util.Set;
 import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
+import cn.hikyson.godeye.core.internal.notification.DefaultNotificationConfig;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.monitor.GodEyeMonitor;
 import io.reactivex.disposables.CompositeDisposable;
@@ -46,6 +47,18 @@ public class ConsumeFragment extends Fragment {
         });
         view.findViewById(R.id.fragment_consume_stop_debug_monitor).setOnClickListener(v -> {
             GodEyeMonitor.shutDown();
+        });
+        view.findViewById(R.id.fragment_consume_install_notification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GodEye.instance().installNotification(new DefaultNotificationConfig());
+            }
+        });
+        view.findViewById(R.id.fragment_consume_uninstall_notification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GodEye.instance().uninstallNotification();
+            }
         });
         Switch switchView = view.findViewById(R.id.fragment_consume_select_all);
         switchView.setOnCheckedChangeListener((buttonView, isChecked) -> toggleAllModule(isChecked));

@@ -112,7 +112,8 @@ public class GodEyeConfigTest {
     public void fromAssets() {
         Application originApplication = ApplicationProvider.getApplicationContext();
         Application application = Mockito.spy(originApplication);
-        GodEye.instance().init(application);
+        Application godeyeApplication = GodEye.instance().getApplication();
+        GodEye.instance().internalInit(application);
         AssetManager assetManager = Mockito.spy(application.getAssets());
         Mockito.doReturn(assetManager).when(application).getAssets();
         try {
@@ -129,6 +130,7 @@ public class GodEyeConfigTest {
         }
         GodEyeConfig config = GodEyeConfig.fromAssets("install.config");
         assertConfig(config);
+        GodEye.instance().internalInit(godeyeApplication);
     }
 
     private void assertConfig(GodEyeConfig config) {

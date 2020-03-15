@@ -5,8 +5,14 @@ import androidx.annotation.Keep;
 
 import java.io.Serializable;
 
+import cn.hikyson.godeye.core.internal.notification.NotificationConfig;
+
 @Keep
 public class SmConfig implements Serializable {
+    /**
+     * @deprecated use {@link cn.hikyson.godeye.core.GodEye#installNotification(NotificationConfig)}
+     */
+    @Deprecated
     public boolean debugNotification;
     public long longBlockThresholdMillis;
     public long shortBlockThresholdMillis;
@@ -33,6 +39,10 @@ public class SmConfig implements Serializable {
         this.dumpIntervalMillis = smConfig.dumpIntervalMillis;
     }
 
+    /**
+     * @deprecated use {@link cn.hikyson.godeye.core.GodEye#installNotification(NotificationConfig)}
+     */
+    @Deprecated
     public boolean debugNotification() {
         return debugNotification;
     }

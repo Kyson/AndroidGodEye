@@ -167,14 +167,10 @@ public class GodEyeConfig implements Serializable {
             // sm
             element = getFirstElementByTagInRoot(root, "sm");
             if (element != null) {
-                final String debugNotifyString = element.getAttribute("debugNotification");
                 final String longBlockThresholdMillisString = element.getAttribute("longBlockThresholdMillis");
                 final String shortBlockThresholdMillisString = element.getAttribute("shortBlockThresholdMillis");
                 final String dumpIntervalMillisString = element.getAttribute("dumpIntervalMillis");
                 SmConfig smConfig = new SmConfig();
-                if (!TextUtils.isEmpty(debugNotifyString)) {
-                    smConfig.debugNotification = Boolean.parseBoolean(debugNotifyString);
-                }
                 if (!TextUtils.isEmpty(longBlockThresholdMillisString)) {
                     smConfig.longBlockThresholdMillis = Long.parseLong(longBlockThresholdMillisString);
                 }

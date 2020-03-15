@@ -2,8 +2,6 @@ package cn.hikyson.godeye.core.internal.modules.imagecanary;
 
 import android.os.Build;
 
-import androidx.test.core.app.ApplicationProvider;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,7 +28,6 @@ public class ImageCanaryTest {
 
     @Before
     public void setUp() throws Exception {
-        GodEye.instance().init(ApplicationProvider.getApplicationContext());
         GodEye.instance().install(GodEyeConfig.noneConfigBuilder().withImageCanaryConfig(new ImageCanaryConfig()).build());
     }
 

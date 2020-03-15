@@ -6,13 +6,17 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application>
+        <service
+            android:name=".internal.notification.LocalNotificationListenerService"
+            android:enabled="true"
+            android:exported="false"></service>
+
         <provider
             android:name=".GodEyeInitContentProvider"
             android:authorities="${applicationId}.cn.hikyson.godeye.core.init"
             android:enabled="true"
             android:exported="false"
-            android:multiprocess="true">
-        </provider>
+            android:multiprocess="true"></provider>
 
         <receiver
             android:name=".internal.modules.leakdetector.debug.LeakOutputReceiver"
