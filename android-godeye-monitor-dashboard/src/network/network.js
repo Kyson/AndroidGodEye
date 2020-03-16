@@ -1,11 +1,11 @@
 /* eslint-disable react/no-string-refs */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../App.css';
 import JSONPretty from '../../node_modules/react-json-pretty';
 
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import Util from "../libs/util";
-import {Card, Modal, Table, Tabs, Badge, Button, Input, message} from 'antd'
+import { Card, Modal, Table, Tabs, Badge, Button, Input } from 'antd'
 
 /**
  * Network
@@ -51,12 +51,12 @@ class Network extends Component {
 
     handleShowDetail(networkInfo) {
         if (networkInfo) {
-            this.setState({networkInfo: networkInfo, show: true});
+            this.setState({ networkInfo: networkInfo, show: true });
         }
     }
 
     handleClose() {
-        this.setState({networkInfo: null, show: false});
+        this.setState({ networkInfo: null, show: false });
     }
 
     handleClear() {
@@ -74,9 +74,6 @@ class Network extends Component {
             this.setState({
                 networkInfos: networkInfos,
             });
-            if (!networkInfo.isSuccessful) {
-                message.error("Network error.(网络请求失败)")
-            }
         }
     }
 
@@ -166,12 +163,12 @@ class Network extends Component {
                             color={networkInfo.isSuccessful ? Util.getGreen() : Util.getRed()}
                             text={networkInfo.message}>
                         </Badge>
-                        <br/>
+                        <br />
                         TotalTime:&nbsp;&nbsp;{networkInfo.totalTime}ms
                     </strong>
                     <ReactHighcharts
                         ref="chartForTime"
-                        config={optionsForTime}/>
+                        config={optionsForTime} />
                     <Tabs defaultActiveKey="1">
                         <Tabs.TabPane tab={`Request(${networkInfo.networkContent.networkType})`} key="1">
                             <pre>{networkInfo.networkContent.requestContent}</pre>
@@ -180,13 +177,13 @@ class Network extends Component {
                             <pre>{networkInfo.networkContent.responseContent}</pre>
                         </Tabs.TabPane>
                         <Tabs.TabPane tab="ExtraInfo" key="3">
-                            <JSONPretty id="json-pretty" json={networkInfo.extraInfo}/>
+                            <JSONPretty id="json-pretty" json={networkInfo.extraInfo} />
                         </Tabs.TabPane>
                     </Tabs>
                 </div>
             )
         }
-        return <div/>
+        return <div />
     }
 
     renderTable() {
@@ -209,7 +206,7 @@ class Network extends Component {
                 key: 'message',
                 render: (text, record) => {
                     return (<div>
-                        <Badge color={record.networkInfo.isSuccessful ? Util.getGreen() : Util.getRed()}/>
+                        <Badge color={record.networkInfo.isSuccessful ? Util.getGreen() : Util.getRed()} />
                         <span>{record.networkInfo.message}</span>
                     </div>);
                 }
@@ -242,16 +239,16 @@ class Network extends Component {
             })
         }
         return (<Table dataSource={datas} columns={columns} size="middle"
-                       pagination={{pageSize: 10}}/>);
+            pagination={{ pageSize: 10 }} />);
     }
 
     renderExtra() {
         return (<span>
-          <Input.Search
-              style={{width: 200}}
-              placeholder="Input search text"
-              onSearch={value => this.setState({searchText: value})}
-          />
+            <Input.Search
+                style={{ width: 200 }}
+                placeholder="Input search text"
+                onSearch={value => this.setState({ searchText: value })}
+            />
             &nbsp;&nbsp;
             <Button
                 onClick={this.handleClear}>Clear</Button>
@@ -263,7 +260,7 @@ class Network extends Component {
             <Card title="Network(网络)" extra={this.renderExtra()}>
                 {this.renderTable()}
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Detail" closable={true} footer={null}
-                       onOk={this.handleClose} width={1000}>
+                    onOk={this.handleClose} width={1000}>
                     {this.renderModelContent()}
                 </Modal>
             </Card>);

@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../App.css';
 
 import Util from '../libs/util'
-import {Card, message, Statistic} from 'antd'
+import { Card, Statistic } from 'antd'
 
 /**
  * Fps
@@ -20,9 +20,6 @@ class Fps extends Component {
 
     refresh(fpsInfo) {
         const level = Fps._parseFpsLevel(fpsInfo);
-        if (level === 1) {
-            message.error("Low fps.(掉帧严重)");
-        }
         this.setState({
             fpsInfo: fpsInfo,
             level: level
@@ -46,11 +43,11 @@ class Fps extends Component {
         let fpsLevel = this.state.level;
         return (
             <Card>
-                <div style={{textAlign: "center"}}>
+                <div style={{ textAlign: "center" }}>
                     <Statistic title="FPS(帧率)"
-                               value={(this.state.fpsInfo && this.state.fpsInfo.currentFps && this.state.fpsInfo.currentFps > 0) ? this.state.fpsInfo.currentFps : "**"}
-                               suffix={"/" + ((this.state.fpsInfo && this.state.fpsInfo.systemFps && this.state.fpsInfo.systemFps > 0) ? this.state.fpsInfo.systemFps : "**")}
-                               valueStyle={{fontSize: 108, color: this.fpsLevelColor[fpsLevel], padding: 30}}/>
+                        value={(this.state.fpsInfo && this.state.fpsInfo.currentFps && this.state.fpsInfo.currentFps > 0) ? this.state.fpsInfo.currentFps : "**"}
+                        suffix={"/" + ((this.state.fpsInfo && this.state.fpsInfo.systemFps && this.state.fpsInfo.systemFps > 0) ? this.state.fpsInfo.systemFps : "**")}
+                        valueStyle={{ fontSize: 108, color: this.fpsLevelColor[fpsLevel], padding: 30 }} />
                 </div>
             </Card>);
     }

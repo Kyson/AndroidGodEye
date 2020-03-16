@@ -24,7 +24,9 @@ import MemoryLeak from "./memoryleak/memoryLeak";
 import RefreshStatus from "./refreshstatus/refreshStatus";
 import MethodCanary from "./methodcanary/methodcanary";
 import ImageCanary from "./imagecanary/imagecanary";
+import NotificationContainer from "./notification/notification_container";
 import Mock from "./MockData";
+
 
 class App extends Component {
 
@@ -88,6 +90,8 @@ class App extends Component {
             this.refs.methodCanary.refreshStatus(payload);
         } else if ("blockConfig" === moduleName) {
             this.refs.blockInfo.refreshConfig(payload);
+        } else if ("AndroidGodEyeNotification" === moduleName) {
+            this.refs.notification.refresh(moduleName, payload)
         } else {
             if (this._getModuleRef(moduleName)) {
                 this._getModuleRef(moduleName).refresh(payload);
@@ -168,6 +172,7 @@ class App extends Component {
                         <Col span={24}><Network ref="networkInfo" /></Col>
                     </Row>
                 </Layout.Content>
+                <NotificationContainer ref="notification" />
                 <Layout.Footer style={{ textAlign: "center" }}>
                     <span>Powered by <a href="https://github.com/Kyson/AndroidGodEye"
                         target="_blank" rel="noopener noreferrer">AndroidGodEye</a></span>

@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-string-refs */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../App.css';
 
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import JSONPretty from '../../node_modules/react-json-pretty';
 import ChangeBlockConfigFormInstance from "./changeBlockConfigForm.js"
 
-import {Card, Modal, Button, Popover, message} from 'antd'
+import { Card, Modal, Button, Popover } from 'antd'
 
 /**
  * Block
@@ -79,11 +79,11 @@ class Block extends Component {
     }
 
     handleClick(e) {
-        this.setState({blockInfo: e.point.blockInfo, show: true});
+        this.setState({ blockInfo: e.point.blockInfo, show: true });
     }
 
     handleClose() {
-        this.setState({show: false});
+        this.setState({ show: false });
     }
 
     static initSeries() {
@@ -117,9 +117,6 @@ class Block extends Component {
                 blockInfo: blockInfo
             }, false, true, true);
             this.refs.chart.getChart().redraw(true);
-            if (blockInfo.blockTime >= 2000) {
-                message.error("Block!(发生卡顿)");
-            }
         }
     }
 
@@ -131,39 +128,39 @@ class Block extends Component {
         this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"shortBlockThreshold":${time}}}`);
     }
 
-    resetBlockConfig(){
+    resetBlockConfig() {
         this.props.globalWs.sendMessage(`{"moduleName": "reinstallBlock","payload":{"type":"reset"}}`);
     }
 
     renderTitlebar() {
         return (<div>
-                Block(Jank) Threshold&nbsp;
-                <Popover
-                    content={
-                        <div>
-                            <ChangeBlockConfigFormInstance handleChange={this.changeLongBlockThreshold}/>
-                        </div>
-                    }
-                    title="Change Threshold"
-                    trigger="click"
-                >
-                    <Button>Long:{this.state.blockConfig ? this.state.blockConfig.longBlockThresholdMillis : "**"}ms</Button>
-                </Popover>
+            Block(Jank) Threshold&nbsp;
+            <Popover
+                content={
+                    <div>
+                        <ChangeBlockConfigFormInstance handleChange={this.changeLongBlockThreshold} />
+                    </div>
+                }
+                title="Change Threshold"
+                trigger="click"
+            >
+                <Button>Long:{this.state.blockConfig ? this.state.blockConfig.longBlockThresholdMillis : "**"}ms</Button>
+            </Popover>
                 &nbsp;
-                <Popover
-                    content={
-                        <div>
-                            <ChangeBlockConfigFormInstance handleChange={this.changeShortBlockThreshold}/>
-                        </div>
-                    }
-                    title="Change Threshold"
-                    trigger="click"
-                >
-                    <Button>Short:{this.state.blockConfig ? this.state.blockConfig.shortBlockThresholdMillis : "**"}ms</Button>
-                </Popover>
+            <Popover
+                content={
+                    <div>
+                        <ChangeBlockConfigFormInstance handleChange={this.changeShortBlockThreshold} />
+                    </div>
+                }
+                title="Change Threshold"
+                trigger="click"
+            >
+                <Button>Short:{this.state.blockConfig ? this.state.blockConfig.shortBlockThresholdMillis : "**"}ms</Button>
+            </Popover>
                 &nbsp;
-                <Button onClick={this.resetBlockConfig}>Reset(重置)</Button>
-            </div>
+            <Button onClick={this.resetBlockConfig}>Reset(重置)</Button>
+        </div>
         );
     }
 
@@ -175,9 +172,9 @@ class Block extends Component {
                     config={this.options}
                 />
                 <Modal visible={this.state.show} onCancel={this.handleClose} title="Block detail" closable={true}
-                       onOk={this.handleClose} width={1000} footer={null}>
+                    onOk={this.handleClose} width={1000} footer={null}>
                     <JSONPretty id="json-pretty"
-                                json={this.state.blockInfo.blockBaseinfo ? this.state.blockInfo.blockBaseinfo : "No detail found, maybe it is a short block."}/>
+                        json={this.state.blockInfo.blockBaseinfo ? this.state.blockInfo.blockBaseinfo : "No detail found, maybe it is a short block."} />
                 </Modal>
             </Card>);
     }

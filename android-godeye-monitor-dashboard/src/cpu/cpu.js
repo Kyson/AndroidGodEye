@@ -1,7 +1,7 @@
 /* eslint-disable react/no-string-refs */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../App.css';
-import {Card, message} from 'antd'
+import { Card } from 'antd'
 
 import ReactHighcharts from '../../node_modules/react-highcharts'
 import CpuInfo from "./cpu_info";
@@ -113,16 +113,13 @@ class Cpu extends Component {
             this.refs.chart.getChart().series[3].addPoint([axisData, cpuInfo.sysCpuRatio * 100], false, true, true);
             this.refs.chart.getChart().redraw(true);
         }
-        if (cpuInfo.appCpuRatio >= 0.9 || cpuInfo.totalUseRatio >= 0.9) {
-            message.error("CPU overload(CPU负载过重)!!!");
-        }
         this.refs.info.refresh(cpuInfo);
     }
 
     render() {
         return (
             <Card title="CPU">
-                <CpuInfo ref="info"/>
+                <CpuInfo ref="info" />
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}

@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../App.css';
 
 import ReactTable from "../../node_modules/react-table";
 import '../../node_modules/react-table/react-table.css'
 import JSONPretty from '../../node_modules/react-json-pretty';
 
-import {Card, Button, message} from 'antd'
+import { Card, Button } from 'antd'
 
 /**
  * MemoryLeak
@@ -32,10 +32,9 @@ class MemoryLeak extends Component {
         }
         if (!hasLeakBefore) {
             this.leakInfos.push(leakInfo);
-            message.error("Memory leak.(发生内存泄漏)")
         }
         if (this.state.isRefreshing) {
-            this.setState({dataList: this.leakInfos});
+            this.setState({ dataList: this.leakInfos });
         }
     }
 
@@ -73,13 +72,13 @@ class MemoryLeak extends Component {
                     ]}
                     SubComponent={row => {
                         return (
-                            <div style={{padding: "20px"}}>
-                                <JSONPretty id="json-pretty" json={row.original.pathToGcRoot}/>
+                            <div style={{ padding: "20px" }}>
+                                <JSONPretty id="json-pretty" json={row.original.pathToGcRoot} />
                             </div>
                         );
                     }}
                     defaultPageSize={8}
-                    className="-striped -highlight"/>
+                    className="-striped -highlight" />
             </Card>
         );
     }

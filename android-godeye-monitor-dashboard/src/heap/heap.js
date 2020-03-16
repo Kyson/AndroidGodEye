@@ -1,10 +1,10 @@
 /* eslint-disable react/no-string-refs */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../App.css';
 
 import ReactHighcharts from '../../node_modules/react-highcharts'
 
-import {Card, message} from 'antd'
+import { Card } from 'antd'
 import HeapInfo from "./heap_info";
 
 /**
@@ -98,9 +98,6 @@ class Heap extends Component {
             let axisData = this.generateIndex() + (new Date()).toLocaleTimeString();
             this.refs.chart.getChart().series[0].addPoint([axisData, heapInfo.allocatedKb / 1024], false, true, true);
             this.refs.chart.getChart().redraw(true);
-            if (heapInfo.allocatedKb > (heapInfo.maxMemKb * 0.9)) {
-                message.error("Heap memory is running out.(堆内存即将耗尽)")
-            }
         }
         this.refs.info.refresh(heapInfo);
     }
@@ -108,7 +105,7 @@ class Heap extends Component {
     render() {
         return (
             <Card title="Heap(堆内存)">
-                <HeapInfo ref="info"/>
+                <HeapInfo ref="info" />
                 <ReactHighcharts
                     ref="chart"
                     config={this.options}
