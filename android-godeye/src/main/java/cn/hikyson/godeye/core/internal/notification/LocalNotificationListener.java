@@ -4,7 +4,7 @@ public class LocalNotificationListener implements NotificationListener {
 
     @Override
     public void onNotificationReceive(NotificationContent notificationContent) {
-        LocalNotificationListenerService.start(notificationContent.message);
+        LocalNotificationListenerService.start(notificationContent.message, false);
     }
 
     void stop() {
@@ -12,6 +12,6 @@ public class LocalNotificationListener implements NotificationListener {
     }
 
     void start() {
-        LocalNotificationListenerService.start("AndroidGodEye is running...");
+        LocalNotificationListenerService.start("AndroidGodEye is running...", true);
     }
 }

@@ -28,7 +28,8 @@ public class LocalNotificationListenerServiceTest {
 
     @Test
     public void start() {
-        LocalNotificationListenerService.start("AndroidGodEye");
+        LocalNotificationListenerService.start("AndroidGodEye",false);
+        LocalNotificationListenerService.start("AndroidGodEye",true);
     }
 
     @Test
