@@ -1052,11 +1052,15 @@ class Mock {
 
     refreshMock() {
         this.index = this.index + 1;
+
+        this.recvFun("AndroidGodEyeNotification", {
+            message: "message of " + this.index
+        });
         this.recvFun("appInfo", {
             appName: "I am Name",
             labels: [
-                {name: "lablel1", value: "value0000000", url: "http://www.ctrip.com"},
-                {name: "lablel2", value: "value1111111", url: "http://www.trip.com"},
+                { name: "lablel1", value: "value0000000", url: "http://www.ctrip.com" },
+                { name: "lablel2", value: "value1111111", url: "http://www.trip.com" },
                 {
                     name: "lablel3lablel3lablel3lablel3lablel3lablel3lablel3", value: "value2222222"
                 }, {
@@ -1073,7 +1077,6 @@ class Mock {
         this.recvFun("methodCanaryMonitorState", {
             isRunning: this.index % 2 === 0
         });
-
         this.recvFun("startupInfo", {
             startupType: "cold",
             startupTime: 1003
@@ -1150,21 +1153,21 @@ class Mock {
                 "crashTime": "1990-12-11 12:21:33.SSSZ",
                 "crashMessage": "this is a message1",
                 "javaCrashStacktrace": "at xcrash.NativeHandler.nativeTestCrash(Native method)\n" +
-                "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
-                "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
-                "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
-                "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
-                "at android.view.View.performClick(View.java:7352)\n" +
-                "at android.widget.TextView.performClick(TextView.java:14177)\n" +
-                "at android.view.View.performClickInternal(View.java:7318)\n" +
-                "at android.view.View.access$3200(View.java:846)\n" +
-                "at android.view.View$PerformClick.run(View.java:27807)\n" +
-                "at android.os.Handler.handleCallback(Handler.java:873)\n" +
-                "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
-                "at android.os.Looper.loop(Looper.java:214)\n" +
-                "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
-                "at java.lang.reflect.Method.invoke(Native method)\n" +
-                "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
+                    "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
+                    "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
+                    "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
+                    "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
+                    "at android.view.View.performClick(View.java:7352)\n" +
+                    "at android.widget.TextView.performClick(TextView.java:14177)\n" +
+                    "at android.view.View.performClickInternal(View.java:7318)\n" +
+                    "at android.view.View.access$3200(View.java:846)\n" +
+                    "at android.view.View$PerformClick.run(View.java:27807)\n" +
+                    "at android.os.Handler.handleCallback(Handler.java:873)\n" +
+                    "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
+                    "at android.os.Looper.loop(Looper.java:214)\n" +
+                    "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
+                    "at java.lang.reflect.Method.invoke(Native method)\n" +
+                    "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
                 "nativeCrashCode": "1 (SEGV_MAPERR)",
                 "crashType": "native",
                 "extras": {
@@ -1189,21 +1192,21 @@ class Mock {
                 "crashTime": "1990-12-11 12:21:33.SSSZ",
                 "crashMessage": "this is a message2",
                 "javaCrashStacktrace": "at xcrash.NativeHa2342342342method)\n" +
-                "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
-                "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
-                "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
-                "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
-                "at android.view.View.performClick(View.java:7352)\n" +
-                "at android.widget.TextView.performClick(TextView.java:14177)\n" +
-                "at android.view.View.performClickInternal(View.java:7318)\n" +
-                "at android.view.View.access$3200(View.java:846)\n" +
-                "at android.view.View$PerformClick.run(View.java:27807)\n" +
-                "at android.os.Handler.handleCallback(Handler.java:873)\n" +
-                "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
-                "at android.os.Looper.loop(Looper.java:214)\n" +
-                "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
-                "at java.lang.reflect.Method.invoke(Native method)\n" +
-                "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
+                    "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
+                    "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
+                    "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
+                    "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
+                    "at android.view.View.performClick(View.java:7352)\n" +
+                    "at android.widget.TextView.performClick(TextView.java:14177)\n" +
+                    "at android.view.View.performClickInternal(View.java:7318)\n" +
+                    "at android.view.View.access$3200(View.java:846)\n" +
+                    "at android.view.View$PerformClick.run(View.java:27807)\n" +
+                    "at android.os.Handler.handleCallback(Handler.java:873)\n" +
+                    "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
+                    "at android.os.Looper.loop(Looper.java:214)\n" +
+                    "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
+                    "at java.lang.reflect.Method.invoke(Native method)\n" +
+                    "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
                 "nativeCrashCode": "1 (SEGV_MAPERR)",
                 "crashType": "java",
                 "extras": {
@@ -1228,21 +1231,21 @@ class Mock {
                 "crashTime": "1920-12-11 12:21:33.SSSZ",
                 "crashMessage": "this is a message3",
                 "javaCrashStacktrace": "at xcrash.4123f34334fveTestCrash(Native method)\n" +
-                "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
-                "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
-                "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
-                "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
-                "at android.view.View.performClick(View.java:7352)\n" +
-                "at android.widget.TextView.performClick(TextView.java:14177)\n" +
-                "at android.view.View.performClickInternal(View.java:7318)\n" +
-                "at android.view.View.access$3200(View.java:846)\n" +
-                "at android.view.View$PerformClick.run(View.java:27807)\n" +
-                "at android.os.Handler.handleCallback(Handler.java:873)\n" +
-                "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
-                "at android.os.Looper.loop(Looper.java:214)\n" +
-                "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
-                "at java.lang.reflect.Method.invoke(Native method)\n" +
-                "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
+                    "at xcrash.NativeHandler.testNativeCrash(NativeHandler.java:156)\n" +
+                    "at xcrash.XCrash.testNativeCrash(XCrash.java:860)\n" +
+                    "at cn.hikyson.android.godeye.sample.ToolsFragment.lambda$onCreateView$6(ToolsFragment.java:71)\n" +
+                    "at cn.hikyson.android.godeye.sample.-$$Lambda$ToolsFragment$nyitYGrD0T4yinuvC2G7kCsG5II.onClick(lambda:-1)\n" +
+                    "at android.view.View.performClick(View.java:7352)\n" +
+                    "at android.widget.TextView.performClick(TextView.java:14177)\n" +
+                    "at android.view.View.performClickInternal(View.java:7318)\n" +
+                    "at android.view.View.access$3200(View.java:846)\n" +
+                    "at android.view.View$PerformClick.run(View.java:27807)\n" +
+                    "at android.os.Handler.handleCallback(Handler.java:873)\n" +
+                    "at android.os.Handler.dispatchMessage(Handler.java:99)\n" +
+                    "at android.os.Looper.loop(Looper.java:214)\n" +
+                    "at android.app.ActivityThread.main(ActivityThread.java:7037)\n" +
+                    "at java.lang.reflect.Method.invoke(Native method)\n" +
+                    "at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:494)",
                 "nativeCrashCode": "1 (SEGV_MAPERR)",
                 "crashType": "java",
                 "extras": {
@@ -1267,11 +1270,11 @@ class Mock {
         ]);
         this.recvFun("blockInfo", {
             blockTime: 200,
-            blockBaseinfo: {df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"]}
+            blockBaseinfo: { df: "sdf", vvv: "1312", bb: ["fewefwf", "fwewfe"] }
         });
         this.recvFun("blockInfo", {
             blockTime: 300,
-            blockBaseinfo: {ss: "111", dd: "333", aa: ["11", "22"]}
+            blockBaseinfo: { ss: "111", dd: "333", aa: ["11", "22"] }
         });
         this.recvFun("blockConfig", {
             longBlockThresholdMillis: 100,
@@ -1285,9 +1288,9 @@ class Mock {
             message: "OK",
             totalTime: 1200,
             networkTime: [
-                {name: "DNS", time: 200},
-                {name: "RequestHeader", time: 300},
-                {name: "ResponseBody", time: 500},
+                { name: "DNS", time: 200 },
+                { name: "RequestHeader", time: 300 },
+                { name: "ResponseBody", time: 500 },
 
             ],
             networkContent: {
@@ -1327,14 +1330,14 @@ class Mock {
             "maxDepth": 4,
             "overDrawAreas": [{
                 "overDrawTimes": 2,
-                "rect": {"bottom": 508, "left": 0, "right": 963, "top": 332}
+                "rect": { "bottom": 508, "left": 0, "right": 963, "top": 332 }
             }, {
                 "overDrawTimes": 1,
-                "rect": {"bottom": 2340, "left": 0, "right": 1080, "top": 228}
-            }, {"overDrawTimes": 1, "rect": {"bottom": 96, "left": 0, "right": 1080, "top": 0}}, {
+                "rect": { "bottom": 2340, "left": 0, "right": 1080, "top": 228 }
+            }, { "overDrawTimes": 1, "rect": { "bottom": 96, "left": 0, "right": 1080, "top": 0 } }, {
                 "overDrawTimes": 2,
-                "rect": {"bottom": 206, "left": 33, "right": 121, "top": 118}
-            }, {"overDrawTimes": 1, "rect": {"bottom": 228, "left": 0, "right": 1080, "top": 96}}],
+                "rect": { "bottom": 206, "left": 33, "right": 121, "top": 118 }
+            }, { "overDrawTimes": 1, "rect": { "bottom": 228, "left": 0, "right": 1080, "top": 96 } }],
             "screenHeight": 2210,
             "screenWidth": 1080,
             "timestamp": 1572861420958,
@@ -1344,7 +1347,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "2131230746",
                 "isViewGroup": false,
-                "rect": {"bottom": 332, "left": 0, "right": 1080, "top": 228},
+                "rect": { "bottom": 332, "left": 0, "right": 1080, "top": 228 },
                 "text": "Leak will happen when you finish this activity and wait for a moment.",
                 "textSize": 39.0
             }, {
@@ -1353,7 +1356,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "2131230819",
                 "isViewGroup": false,
-                "rect": {"bottom": 508, "left": 0, "right": 963, "top": 332},
+                "rect": { "bottom": 508, "left": 0, "right": 963, "top": 332 },
                 "text": "Leak fragment (Android O and above)",
                 "textSize": 50.0
             }, {
@@ -1362,7 +1365,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "16908688",
                 "isViewGroup": false,
-                "rect": {"bottom": 196, "left": 132, "right": 502, "top": 128},
+                "rect": { "bottom": 196, "left": 132, "right": 502, "top": 128 },
                 "text": "AndroidGodEye",
                 "textSize": 50.0
             }, {
@@ -1371,7 +1374,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "16908332",
                 "isViewGroup": false,
-                "rect": {"bottom": 206, "left": 33, "right": 121, "top": 118},
+                "rect": { "bottom": 206, "left": 33, "right": 121, "top": 118 },
                 "textSize": 0.0
             }, {
                 "className": "android.widget.LinearLayout",
@@ -1379,7 +1382,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "-1",
                 "isViewGroup": true,
-                "rect": {"bottom": 2340, "left": 0, "right": 1080, "top": 228},
+                "rect": { "bottom": 2340, "left": 0, "right": 1080, "top": 228 },
                 "textSize": 0.0
             }, {
                 "className": "android.view.View",
@@ -1387,7 +1390,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "16908335",
                 "isViewGroup": false,
-                "rect": {"bottom": 96, "left": 0, "right": 1080, "top": 0},
+                "rect": { "bottom": 96, "left": 0, "right": 1080, "top": 0 },
                 "textSize": 0.0
             }, {
                 "className": "com.android.internal.widget.ActionBarContainer",
@@ -1395,7 +1398,7 @@ class Mock {
                 "hasBackground": true,
                 "id": "16908685",
                 "isViewGroup": true,
-                "rect": {"bottom": 228, "left": 0, "right": 1080, "top": 96},
+                "rect": { "bottom": 228, "left": 0, "right": 1080, "top": 96 },
                 "textSize": 0.0
             }]
         });
@@ -1416,7 +1419,7 @@ class Mock {
                 isAlive: "isAlive",
                 isInterrupted: "isInterrupted",
                 threadTag: "UNKNOWN",
-                parent: {name: "system"}
+                parent: { name: "system" }
             },
             {
                 id: 1,

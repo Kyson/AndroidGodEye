@@ -3,10 +3,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 
-import { Drawer, Row, Col, Typography, Affix, Badge, Button, Icon } from 'antd'
-import { DownloadOutlined } from '@ant-design/icons';
-
-import Notification from "./notification";
+import { Drawer, Row, Col, Typography, Affix, Badge, Button, notification, Divider } from 'antd'
 
 
 /**
@@ -21,11 +18,12 @@ class NotificationContainer extends Component {
             for (let i = 0; i < labels.length; i++) {
                 items.push(
                     <Row key={"notification" + i} type="flex" justify="center" align="middle" style={{ marginTop: 8 }}>
-                        <Col span={24} style={{ textAlign: "right" }}>
+                        <Col span={24} style={{ textAlign: "left" }}>
                             <Typography.Text>
                                 {labels[i]}
                             </Typography.Text>
                         </Col>
+                        <Divider />
                     </Row>);
             }
             return items;
@@ -43,8 +41,16 @@ class NotificationContainer extends Component {
     }
 
     refresh(moduleName, payload) {
-        Notification.handleMessage(moduleName, payload)
-        this.setState({ messages: [...this.state.messages, payload.message] })
+        if ("AndroidGodEyeNotification" === moduleName) {
+            notification.info({
+                message: "Warning",
+                description: payload.message,
+                placement: 'bottomRight',
+                duration: 3,
+                bottom: 96
+            });
+        }
+        this.setState({ messages: [payload.message, ...this.state.messages] })
     }
 
     showDrawer() {
@@ -61,10 +67,10 @@ class NotificationContainer extends Component {
 
     render() {
         return (
-            <div style={{ textAlign: "right", margin: 32 }}>
+            <div style={{ textAlign: "right" }}>
                 <Affix offsetBottom={32}>
-                    <Badge count={1} onClick={this.showDrawer}>
-                        <Button shape="circle" icon={<DownloadOutlined />} />
+                    <Badge count={this.state.messages.length} onClick={this.showDrawer}>
+                        <Button shape="circle" icon="info" size="large" type="primary" onClick={this.showDrawer} ></Button>
                     </Badge>
                 </Affix>
                 <Drawer
@@ -80,11 +86,10 @@ class NotificationContainer extends Component {
                         textAlign: "center"
                     }}>{NotificationContainer.renderLabel(this.state.messages ? this.state.messages : [])}</div>
                 </Drawer>
-            </div >
+            </div>
         );
     }
 
 }
 
 export default NotificationContainer;
-

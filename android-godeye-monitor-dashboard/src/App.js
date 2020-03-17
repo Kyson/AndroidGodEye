@@ -172,10 +172,14 @@ class App extends Component {
                         <Col span={24}><Network ref="networkInfo" /></Col>
                     </Row>
                 </Layout.Content>
-                <NotificationContainer ref="notification" />
                 <Layout.Footer style={{ textAlign: "center" }}>
-                    <span>Powered by <a href="https://github.com/Kyson/AndroidGodEye"
-                        target="_blank" rel="noopener noreferrer">AndroidGodEye</a></span>
+                    <Col span={16} offset={4} style={{ textAlign: "center" }}>
+                        <span>Powered by <a href="https://github.com/Kyson/AndroidGodEye"
+                            target="_blank" rel="noopener noreferrer">AndroidGodEye</a></span>
+                    </Col>
+                    <Col span={4}>
+                        <NotificationContainer ref="notification" />
+                    </Col>
                 </Layout.Footer>
             </Layout>
         );
