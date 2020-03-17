@@ -14,4 +14,12 @@ public class NotificationContent implements Serializable {
         this.message = message;
         this.extras = extras;
     }
+
+    @Override
+    public String toString() {
+        return "NotificationContent{" +
+                "message='" + message + '\'' +
+                ", extras=" + extras +
+                '}';
+    }
 }

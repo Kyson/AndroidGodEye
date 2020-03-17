@@ -1,6 +1,5 @@
 package cn.hikyson.godeye.core.internal.notification;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.hikyson.godeye.core.GodEye;
@@ -27,37 +26,17 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class NotificationObserver {
     private CompositeDisposable mCompositeDisposable;
-    private LocalNotificationListener mLocalNotificationListener;
-    private final List<NotificationListener> mNotificationListeners = new ArrayList<>();
+    private NotificationListener mNotificationListener;
 
-    private NotificationObserver() {
-    }
-
-    private static class InstanceHolder {
-        private static NotificationObserver sInstance = new NotificationObserver();
-    }
-
-    public static NotificationObserver get() {
-        return InstanceHolder.sInstance;
-    }
-
-    public void addNotificationListener(NotificationListener notification) {
-        synchronized (mNotificationListeners) {
-            mNotificationListeners.add(notification);
-        }
-    }
-
-    public void removeNotificationListener(NotificationListener notification) {
-        synchronized (mNotificationListeners) {
-            mNotificationListeners.remove(notification);
-        }
+    NotificationObserver(NotificationListener notificationListener) {
+        mNotificationListener = notificationListener;
     }
 
     public synchronized void install(NotificationConfig godEyeNotificationConfig) {
-        mLocalNotificationListener = new LocalNotificationListener();
-        addNotificationListener(mLocalNotificationListener);
-        mLocalNotificationListener.start();
-        NotificationConsumer notificationConsumer = new NotificationConsumer(this.mNotificationListeners);
+        if (this.mNotificationListener == null) {
+            return;
+        }
+        NotificationConsumer notificationConsumer = new NotificationConsumer(this.mNotificationListener);
         mCompositeDisposable = new CompositeDisposable();
         mCompositeDisposable.addAll(
                 RxModule.<BatteryInfo>wrapThreadComputationObservable(GodEye.ModuleName.BATTERY)
@@ -133,6 +112,7 @@ public class NotificationObserver {
                         .map(godEyeNotificationConfig.crashConverter())
                         .subscribe(notificationConsumer)
         );
+        this.mNotificationListener.onInstalled();
     }
 
     public synchronized void uninstall() {
@@ -140,10 +120,13 @@ public class NotificationObserver {
             mCompositeDisposable.dispose();
             mCompositeDisposable = null;
         }
-        if (mLocalNotificationListener != null) {
-            removeNotificationListener(mLocalNotificationListener);
-            mLocalNotificationListener.stop();
-            mLocalNotificationListener = null;
+        if (mNotificationListener != null) {
+            mNotificationListener.onUninstalled();
         }
+        mNotificationListener = null;
+    }
+
+    public synchronized boolean isInstalled() {
+        return mCompositeDisposable != null;
     }
 }

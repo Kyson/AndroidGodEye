@@ -12,7 +12,7 @@ import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import java.util.List;
 import java.util.Locale;
 
-import cn.hikyson.godeye.core.internal.notification.NotificationObserver;
+import cn.hikyson.godeye.core.internal.notification.NotificationObserverManager;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
 import cn.hikyson.godeye.monitor.modules.appinfo.AppInfo;
@@ -34,7 +34,6 @@ public class GodEyeMonitor {
     private static GodEyeMonitorServer sGodEyeMonitorServer;
     @SuppressLint("StaticFieldLeak")
     private static Context sContext;
-    private static MonitorNotificationListener sMonitorNotificationListener;
 
     public interface AppInfoConext {
         List<AppInfoLabel> getAppInfo();
@@ -72,12 +71,14 @@ public class GodEyeMonitor {
             @Override
             public void onClientAdded(List<WebSocket> webSockets, WebSocket added) {
                 ModuleDriver.instance().start(sGodEyeMonitorServer);
+                NotificationObserverManager.installNotificationListener("MONITOR", new MonitorNotificationListener(sGodEyeMonitorServer));
             }
 
             @Override
             public void onClientRemoved(List<WebSocket> webSockets, WebSocket removed) {
                 if (webSockets == null || webSockets.isEmpty()) {
                     ModuleDriver.instance().stop();
+                    NotificationObserverManager.uninstallNotificationListener("MONITOR");
                 }
             }
 
@@ -97,8 +98,6 @@ public class GodEyeMonitor {
                 webSocketBizProcessor.process(webSocket, messageFromClient);
             }
         });
-        sMonitorNotificationListener = new MonitorNotificationListener(sGodEyeMonitorServer);
-        NotificationObserver.get().addNotificationListener(sMonitorNotificationListener);
         sGodEyeMonitorServer.start();
         Log.d(L.DEFAULT_TAG, String.format(MONITOR_LOGCAT, port));
         L.d(getAddressLog(context, port));
@@ -113,10 +112,7 @@ public class GodEyeMonitor {
             sGodEyeMonitorServer = null;
         }
         ModuleDriver.instance().stop();
-        if (sMonitorNotificationListener != null) {
-            NotificationObserver.get().removeNotificationListener(sMonitorNotificationListener);
-            sMonitorNotificationListener = null;
-        }
+        NotificationObserverManager.uninstallNotificationListener("MONITOR");
         sIsWorking = false;
         L.d("GodEye monitor stopped.");
     }

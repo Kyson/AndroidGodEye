@@ -41,7 +41,7 @@ public class NotificationConsumerTest {
             final NotificationContent[] notificationContent0 = new NotificationContent[1];
             new NotificationConsumer(Arrays.asList(new NotificationListener() {
                 @Override
-                public void onNotificationReceive(NotificationContent notificationContent) {
+                public void onNotificationReceive(long timeMillis, NotificationContent notificationContent) {
                     notificationContent0[0] = notificationContent;
                     countDownLatch.countDown();
                 }

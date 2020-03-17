@@ -36,7 +36,7 @@ import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanary;
 import cn.hikyson.godeye.core.internal.notification.NotificationConfig;
-import cn.hikyson.godeye.core.internal.notification.NotificationObserver;
+import cn.hikyson.godeye.core.internal.notification.NotificationObserverManager;
 import cn.hikyson.godeye.core.utils.ActivityStackUtil;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.Observable;
@@ -353,10 +353,7 @@ public class GodEye {
      */
     public GodEye installNotification(NotificationConfig godEyeNotificationConfig) {
         long startTime = System.currentTimeMillis();
-        if (godEyeNotificationConfig != null) {
-            NotificationObserver.get().uninstall();
-            NotificationObserver.get().install(godEyeNotificationConfig);
-        }
+        NotificationObserverManager.installNotification(godEyeNotificationConfig);
         Log.d(L.DEFAULT_TAG, String.format("GodEye notification installed, cost %s ms", (System.currentTimeMillis() - startTime)));
         return this;
     }
@@ -368,7 +365,7 @@ public class GodEye {
      */
     public GodEye uninstallNotification() {
         long startTime = System.currentTimeMillis();
-        NotificationObserver.get().uninstall();
+        NotificationObserverManager.uninstallNotification();
         Log.d(L.DEFAULT_TAG, String.format("GodEye notification uninstalled, cost %s ms", (System.currentTimeMillis() - startTime)));
         return this;
     }

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 
-import { Drawer, Row, Col, Typography, Affix, Badge, Button, notification, Divider } from 'antd'
+import { Drawer, Row, Affix, Badge, Button, notification, Divider } from 'antd'
 
 
 /**
@@ -12,17 +12,18 @@ import { Drawer, Row, Col, Typography, Affix, Badge, Button, notification, Divid
 class NotificationContainer extends Component {
 
 
-    static renderLabel(labels) {
-        if (labels) {
+    static renderLabel(messages) {
+        if (messages) {
             let items = [];
-            for (let i = 0; i < labels.length; i++) {
+            for (let i = 0; i < messages.length; i++) {
                 items.push(
-                    <Row key={"notification" + i} type="flex" justify="center" align="middle" style={{ marginTop: 8 }}>
-                        <Col span={24} style={{ textAlign: "left" }}>
-                            <Typography.Text>
-                                {labels[i]}
-                            </Typography.Text>
-                        </Col>
+                    <Row key={"notification" + i} type="flex" justify="left" style={{ textAlign: "left" }}>
+                        <span>
+                            {new Date(messages[i].timeMillis).toLocaleTimeString()}
+                        </span>
+                        <span>
+                            {messages[i].message}
+                        </span>
                         <Divider />
                     </Row>);
             }
@@ -43,14 +44,14 @@ class NotificationContainer extends Component {
     refresh(moduleName, payload) {
         if ("AndroidGodEyeNotification" === moduleName) {
             notification.info({
-                message: "Warning",
+                message: new Date(payload.timeMillis).toLocaleTimeString(),
                 description: payload.message,
                 placement: 'bottomRight',
                 duration: 3,
                 bottom: 96
             });
         }
-        this.setState({ messages: [payload.message, ...this.state.messages] })
+        this.setState({ messages: [payload, ...this.state.messages] })
     }
 
     showDrawer() {
@@ -74,22 +75,17 @@ class NotificationContainer extends Component {
                     </Badge>
                 </Affix>
                 <Drawer
-                    title="Notification"
+                    title="Notifications"
                     placement="right"
                     width="500"
                     onClose={this.onClose}
                     visible={this.state.visible}
                     closable={true}>
-                    <div style={{
-                        paddingTop: 8,
-                        paddingBottom: 8,
-                        textAlign: "center"
-                    }}>{NotificationContainer.renderLabel(this.state.messages ? this.state.messages : [])}</div>
+                    <div>{NotificationContainer.renderLabel(this.state.messages ? this.state.messages : [])}</div>
                 </Drawer>
             </div>
         );
     }
-
 }
 
 export default NotificationContainer;
