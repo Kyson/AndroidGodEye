@@ -58,6 +58,25 @@ public class GodEyeConfigTest {
 
     @Test
     public void noneConfig() {
+        GodEyeConfig config0 = GodEyeConfig.noneConfig();
+        assertNull(config0.getAppSizeConfig());
+        assertNull(config0.getBatteryConfig());
+        assertNull(config0.getCpuConfig());
+        assertNull(config0.getCrashConfig());
+        assertNull(config0.getFpsConfig());
+        assertNull(config0.getHeapConfig());
+        assertNull(config0.getImageCanaryConfig());
+        assertNull(config0.getLeakConfig());
+        assertNull(config0.getMethodCanaryConfig());
+        assertNull(config0.getNetworkConfig());
+        assertNull(config0.getPageloadConfig());
+        assertNull(config0.getPssConfig());
+        assertNull(config0.getRamConfig());
+        assertNull(config0.getSmConfig());
+        assertNull(config0.getStartupConfig());
+        assertNull(config0.getThreadConfig());
+        assertNull(config0.getTrafficConfig());
+        assertNull(config0.getViewCanaryConfig());
         GodEyeConfig config = GodEyeConfig.noneConfigBuilder().build();
         assertNull(config.getAppSizeConfig());
         assertNull(config.getBatteryConfig());
@@ -81,6 +100,26 @@ public class GodEyeConfigTest {
 
     @Test
     public void defaultConfig() {
+        GodEyeConfig config0 = GodEyeConfig.defaultConfig();
+        assertEquals(JsonUtil.toJson(new AppSizeConfig()), JsonUtil.toJson(config0.getAppSizeConfig()));
+        assertEquals(JsonUtil.toJson(new BatteryConfig()), JsonUtil.toJson(config0.getBatteryConfig()));
+        assertEquals(JsonUtil.toJson(new CpuConfig()), JsonUtil.toJson(config0.getCpuConfig()));
+        assertEquals(JsonUtil.toJson(new CrashConfig()), JsonUtil.toJson(config0.getCrashConfig()));
+        assertEquals(JsonUtil.toJson(new FpsConfig()), JsonUtil.toJson(config0.getFpsConfig()));
+        assertEquals(JsonUtil.toJson(new HeapConfig()), JsonUtil.toJson(config0.getHeapConfig()));
+        assertEquals(JsonUtil.toJson(new ImageCanaryConfig()), JsonUtil.toJson(config0.getImageCanaryConfig()));
+        assertEquals(JsonUtil.toJson(new LeakConfig()), JsonUtil.toJson(config0.getLeakConfig()));
+        assertEquals(JsonUtil.toJson(new MethodCanaryConfig()), JsonUtil.toJson(config0.getMethodCanaryConfig()));
+        assertEquals(JsonUtil.toJson(new NetworkConfig()), JsonUtil.toJson(config0.getNetworkConfig()));
+        assertEquals(JsonUtil.toJson(new PageloadConfig()), JsonUtil.toJson(config0.getPageloadConfig()));
+        assertEquals(JsonUtil.toJson(new PssConfig()), JsonUtil.toJson(config0.getPssConfig()));
+        assertEquals(JsonUtil.toJson(new RamConfig()), JsonUtil.toJson(config0.getRamConfig()));
+        assertEquals(JsonUtil.toJson(new SmConfig()), JsonUtil.toJson(config0.getSmConfig()));
+        assertEquals(JsonUtil.toJson(new StartupConfig()), JsonUtil.toJson(config0.getStartupConfig()));
+        assertEquals(JsonUtil.toJson(new ThreadConfig()), JsonUtil.toJson(config0.getThreadConfig()));
+        assertEquals(JsonUtil.toJson(new TrafficConfig()), JsonUtil.toJson(config0.getTrafficConfig()));
+        assertEquals(JsonUtil.toJson(new ViewCanaryConfig()), JsonUtil.toJson(config0.getViewCanaryConfig()));
+
         GodEyeConfig config = GodEyeConfig.defaultConfigBuilder().build();
         assertEquals(JsonUtil.toJson(new AppSizeConfig()), JsonUtil.toJson(config.getAppSizeConfig()));
         assertEquals(JsonUtil.toJson(new BatteryConfig()), JsonUtil.toJson(config.getBatteryConfig()));
@@ -106,6 +145,11 @@ public class GodEyeConfigTest {
     public void fromInputStream() {
         GodEyeConfig config = GodEyeConfigHelper.createFromResource();
         assertConfig(config);
+        try {
+            GodEyeConfig.fromInputStream(null);
+            fail();
+        } catch (IllegalStateException ignore) {
+        }
     }
 
     @Test

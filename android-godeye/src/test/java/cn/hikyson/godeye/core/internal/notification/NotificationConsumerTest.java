@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -39,13 +38,23 @@ public class NotificationConsumerTest {
             new NotificationConsumer(null).accept(new NotificationContent("AndroidGodEye_message", null));
             CountDownLatch countDownLatch = new CountDownLatch(1);
             final NotificationContent[] notificationContent0 = new NotificationContent[1];
-            new NotificationConsumer(Arrays.asList(new NotificationListener() {
+            new NotificationConsumer(new NotificationListener() {
+                @Override
+                public void onInstalled() {
+
+                }
+
+                @Override
+                public void onUninstalled() {
+
+                }
+
                 @Override
                 public void onNotificationReceive(long timeMillis, NotificationContent notificationContent) {
                     notificationContent0[0] = notificationContent;
                     countDownLatch.countDown();
                 }
-            })).accept(new NotificationContent("AndroidGodEye_message", null));
+            }).accept(new NotificationContent("AndroidGodEye_message", null));
             countDownLatch.await(1, TimeUnit.SECONDS);
             assertEquals("AndroidGodEye_message", notificationContent0[0].message);
         } catch (Exception e) {

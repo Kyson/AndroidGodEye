@@ -35,6 +35,7 @@ import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadDump;
 import cn.hikyson.godeye.core.internal.modules.traffic.Traffic;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewCanary;
+import cn.hikyson.godeye.core.internal.notification.DefaultNotificationConfig;
 import cn.hikyson.godeye.core.internal.notification.NotificationConfig;
 import cn.hikyson.godeye.core.internal.notification.NotificationObserverManager;
 import cn.hikyson.godeye.core.utils.ActivityStackUtil;
@@ -119,9 +120,10 @@ public class GodEye {
      * install modules
      *
      * @param godEyeConfig
+     * @param notificationConfig
      * @return
      */
-    public synchronized GodEye install(final GodEyeConfig godEyeConfig) {
+    public synchronized GodEye install(final GodEyeConfig godEyeConfig, NotificationConfig notificationConfig) {
         long startTime = System.currentTimeMillis();
         if (godEyeConfig.getCpuConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.CPU);
@@ -267,8 +269,27 @@ public class GodEye {
             }
             ((ImageCanary) moduleObj).install(godEyeConfig.getImageCanaryConfig());
         }
+        if (notificationConfig == null) {
+            NotificationObserverManager.uninstallNotification();
+        } else {
+            NotificationObserverManager.installNotification(notificationConfig);
+        }
         Log.d(L.DEFAULT_TAG, String.format("GodEye modules installed, config: %s, cost %s ms", godEyeConfig, (System.currentTimeMillis() - startTime)));
         return this;
+    }
+
+    /**
+     * install modules
+     *
+     * @param godEyeConfig
+     * @return
+     */
+    public GodEye install(final GodEyeConfig godEyeConfig) {
+        return install(godEyeConfig, new DefaultNotificationConfig());
+    }
+
+    public GodEye install(final GodEyeConfig godEyeConfig, boolean enableNotification) {
+        return install(godEyeConfig, enableNotification ? new DefaultNotificationConfig() : null);
     }
 
     /**
@@ -284,6 +305,7 @@ public class GodEye {
             }
         }
         mModules.clear();
+        NotificationObserverManager.uninstallNotification();
         Log.d(L.DEFAULT_TAG, String.format("GodEye modules uninstalled, cost %s ms", (System.currentTimeMillis() - startTime)));
         return this;
     }
@@ -343,31 +365,6 @@ public class GodEye {
 
     public Application getApplication() {
         return mApplication;
-    }
-
-    /**
-     * install notification
-     *
-     * @param godEyeNotificationConfig
-     * @return
-     */
-    public GodEye installNotification(NotificationConfig godEyeNotificationConfig) {
-        long startTime = System.currentTimeMillis();
-        NotificationObserverManager.installNotification(godEyeNotificationConfig);
-        Log.d(L.DEFAULT_TAG, String.format("GodEye notification installed, cost %s ms", (System.currentTimeMillis() - startTime)));
-        return this;
-    }
-
-    /**
-     * uninstall notification
-     *
-     * @return
-     */
-    public GodEye uninstallNotification() {
-        long startTime = System.currentTimeMillis();
-        NotificationObserverManager.uninstallNotification();
-        Log.d(L.DEFAULT_TAG, String.format("GodEye notification uninstalled, cost %s ms", (System.currentTimeMillis() - startTime)));
-        return this;
     }
 
     void internalInit(Application application) {

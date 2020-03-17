@@ -22,7 +22,7 @@ public class ThreadConfig implements Serializable {
     public ThreadConfig() {
         this.intervalMillis = 2000;
         this.threadFilter = ExcludeSystemThreadFilter.class.getName();
-        this.threadTagger = ExcludeSystemThreadFilter.class.getName();
+        this.threadTagger = DefaultThreadTagger.class.getName();
     }
 
     @Override

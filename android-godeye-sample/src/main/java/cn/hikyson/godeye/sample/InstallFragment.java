@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -55,20 +56,23 @@ public class InstallFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_install, container, false);
+        ((Switch) view.findViewById(R.id.fragment_install_enable_notification)).setChecked(true);
         view.findViewById(R.id.fragment_install_default).setOnClickListener(v -> {
+            boolean enableNotification = ((Switch) view.findViewById(R.id.fragment_install_enable_notification)).isChecked();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    GodEye.instance().install(GodEyeConfig.defaultConfig());
+                    GodEye.instance().install(GodEyeConfig.defaultConfig(), enableNotification);
                     mListener.onInstallModuleChanged();
                 }
             }).start();
         });
         view.findViewById(R.id.fragment_install_local_stream).setOnClickListener(v -> {
+            boolean enableNotification = ((Switch) view.findViewById(R.id.fragment_install_enable_notification)).isChecked();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"));
+                    GodEye.instance().install(GodEyeConfig.fromAssets("android-godeye-config/install.config"), enableNotification);
                     mListener.onInstallModuleChanged();
                 }
             }).start();
@@ -78,6 +82,8 @@ public class InstallFragment extends Fragment {
             OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
             Request request = new Request.Builder().url("https://raw.githubusercontent.com/Kyson/AndroidGodEye/master/android-godeye-sample/src/main/assets/android-godeye-config/install.config")
                     .get().build();
+            boolean enableNotification = ((Switch) view.findViewById(R.id.fragment_install_enable_notification)).isChecked();
+
             okHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -93,7 +99,7 @@ public class InstallFragment extends Fragment {
                     L.d("--------------Config START--------------");
                     L.d(contentStr);
                     L.d("--------------Config END--------------");
-                    GodEye.instance().install(GodEyeConfig.fromInputStream(new ByteArrayInputStream(contentStr.getBytes(Charset.forName("utf-8")))));
+                    GodEye.instance().install(GodEyeConfig.fromInputStream(new ByteArrayInputStream(contentStr.getBytes(Charset.forName("utf-8")))), enableNotification);
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         ((TextView) v).setText("Install(InputStream Config)");
                         mListener.onInstallModuleChanged();
@@ -105,7 +111,6 @@ public class InstallFragment extends Fragment {
             GodEye.instance().uninstall();
             mListener.onInstallModuleChanged();
         });
-
         return view;
     }
 

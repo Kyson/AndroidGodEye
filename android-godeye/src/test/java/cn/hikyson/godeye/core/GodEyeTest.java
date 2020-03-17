@@ -24,6 +24,7 @@ import cn.hikyson.godeye.core.helper.Log4Test;
 import cn.hikyson.godeye.core.helper.RoboTestApplication;
 import cn.hikyson.godeye.core.helper.ThreadHelper;
 import cn.hikyson.godeye.core.internal.Install;
+import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupConfig;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.notification.DefaultNotificationConfig;
@@ -33,7 +34,6 @@ import io.reactivex.schedulers.TestScheduler;
 
 import static android.os.Looper.getMainLooper;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.robolectric.Shadows.shadowOf;
@@ -121,7 +121,6 @@ public class GodEyeTest {
 
     @Test
     public void getModule() {
-        GodEye.instance().init(ApplicationProvider.getApplicationContext());
         GodEye.instance().uninstall();
         try {
             GodEye.instance().getModule(null);
@@ -144,11 +143,18 @@ public class GodEyeTest {
         } catch (UninstallException e) {
             fail();
         }
+
+        try {
+            GodEye.instance().<Cpu>getModule(GodEye.ModuleName.STARTUP).config();
+            fail();
+        } catch (UninstallException e) {
+            fail();
+        } catch (ClassCastException ignore) {
+        }
     }
 
     @Test
     public void moduleObservable() {
-        GodEye.instance().init(ApplicationProvider.getApplicationContext());
         GodEye.instance().uninstall();
         try {
             GodEye.instance().moduleObservable(null);
@@ -224,14 +230,19 @@ public class GodEyeTest {
 
     @Test
     public void installNotificationMultiThread() {
-        GodEye.instance().installNotification(new DefaultNotificationConfig());
+        GodEye.instance().install(GodEyeConfigHelper.createFromResource(), new DefaultNotificationConfig());
+        GodEye.instance().uninstall();
+        GodEye.instance().install(GodEyeConfigHelper.createFromResource());
+        GodEye.instance().uninstall();
+        GodEye.instance().install(GodEyeConfigHelper.createFromResource(), false);
+        GodEye.instance().uninstall();
         CountDownLatch countDownLatch = new CountDownLatch(2);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0; i < 100; i++) {
-                    GodEye.instance().installNotification(new DefaultNotificationConfig());
-                    GodEye.instance().uninstallNotification();
+                    GodEye.instance().install(GodEyeConfigHelper.createFromResource(), new DefaultNotificationConfig());
+                    GodEye.instance().uninstall();
                 }
                 countDownLatch.countDown();
             }
@@ -240,8 +251,8 @@ public class GodEyeTest {
             @Override
             public void run() {
                 for (int i = 0; i < 100; i++) {
-                    GodEye.instance().installNotification(new DefaultNotificationConfig());
-                    GodEye.instance().uninstallNotification();
+                    GodEye.instance().install(GodEyeConfigHelper.createFromResource(), new DefaultNotificationConfig());
+                    GodEye.instance().uninstall();
                 }
                 countDownLatch.countDown();
             }
@@ -251,16 +262,6 @@ public class GodEyeTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        GodEye.instance().uninstallNotification();
-    }
-
-    @Test
-    public void installNotification() {
-        GodEye.instance().uninstall();
-        GodEye.instance().install(GodEyeConfigHelper.createFromResource());
-        GodEye.instance().installNotification(new DefaultNotificationConfig());
-        ((TestScheduler) ThreadUtil.computationScheduler()).advanceTimeBy(10, TimeUnit.SECONDS);
-        GodEye.instance().uninstallNotification();
         GodEye.instance().uninstall();
     }
 

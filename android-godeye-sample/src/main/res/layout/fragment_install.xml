@@ -10,6 +10,12 @@
         android:orientation="vertical"
         tools:context="cn.hikyson.godeye.sample.InstallFragment">
 
+        <Switch
+            android:id="@+id/fragment_install_enable_notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enable notification" />
+
         <Button
             android:id="@+id/fragment_install_default"
             android:layout_width="match_parent"

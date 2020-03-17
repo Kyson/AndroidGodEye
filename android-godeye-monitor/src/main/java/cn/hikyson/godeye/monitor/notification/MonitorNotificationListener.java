@@ -19,14 +19,14 @@ public class MonitorNotificationListener implements NotificationListener {
     @Override
     public void onInstalled() {
         if (this.mMessager != null) {
-            this.mMessager.sendMessage(new ServerMessage("AndroidGodEyeNotification", new MonitorNotificationContent(timeMillis, notificationContent)).toString());
+            this.mMessager.sendMessage(new ServerMessage("AndroidGodEyeNotificationAction", new MonitorNotificationAction(true)).toString());
         }
     }
 
     @Override
     public void onUninstalled() {
         if (this.mMessager != null) {
-            this.mMessager.sendMessage(new ServerMessage("AndroidGodEyeNotification", new MonitorNotificationContent(timeMillis, notificationContent)).toString());
+            this.mMessager.sendMessage(new ServerMessage("AndroidGodEyeNotificationAction", new MonitorNotificationAction(false)).toString());
         }
     }
 
@@ -52,6 +52,22 @@ public class MonitorNotificationListener implements NotificationListener {
                     "timeMillis=" + timeMillis +
                     ", message='" + message + '\'' +
                     ", extras=" + extras +
+                    '}';
+        }
+    }
+
+    @Keep
+    private static class MonitorNotificationAction implements Serializable {
+        boolean isInstall;
+
+        public MonitorNotificationAction(boolean isInstall) {
+            this.isInstall = isInstall;
+        }
+
+        @Override
+        public String toString() {
+            return "MonitorNotificationAction{" +
+                    "isInstall=" + isInstall +
                     '}';
         }
     }

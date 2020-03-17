@@ -29,8 +29,6 @@ class Mock {
                 debugNotify: true
             }
         });
-
-
         // this.recvFun("methodCanary",{
         //     "methodInfoOfThreadInfos":[
         //         {
@@ -1056,6 +1054,9 @@ class Mock {
         this.recvFun("AndroidGodEyeNotification", {
             message: "message of message of message of message of message of message of message of message of message of message of " + this.index,
             timeMillis: 1469433907836
+        });
+        this.recvFun("AndroidGodEyeNotificationAction", {
+            isInstall: this.index % 2 === 0
         });
         this.recvFun("appInfo", {
             appName: "I am Name",

@@ -90,7 +90,8 @@ class App extends Component {
             this.refs.methodCanary.refreshStatus(payload);
         } else if ("blockConfig" === moduleName) {
             this.refs.blockInfo.refreshConfig(payload);
-        } else if ("AndroidGodEyeNotification" === moduleName) {
+        } else if ("AndroidGodEyeNotification" === moduleName
+            || "AndroidGodEyeNotificationAction" === moduleName) {
             this.refs.notification.refresh(moduleName, payload)
         } else {
             if (this._getModuleRef(moduleName)) {

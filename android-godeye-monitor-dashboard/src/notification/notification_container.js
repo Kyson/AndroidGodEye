@@ -18,12 +18,12 @@ class NotificationContainer extends Component {
             for (let i = 0; i < messages.length; i++) {
                 items.push(
                     <Row key={"notification" + i} type="flex" justify="left" style={{ textAlign: "left" }}>
-                        <span>
+                        <p>
                             {new Date(messages[i].timeMillis).toLocaleTimeString()}
-                        </span>
-                        <span>
+                        </p>
+                        <p>
                             {messages[i].message}
-                        </span>
+                        </p>
                         <Divider />
                     </Row>);
             }
@@ -37,7 +37,8 @@ class NotificationContainer extends Component {
         this.onClose = this.onClose.bind(this);
         this.state = {
             messages: [],
-            visible: false
+            visible: false,
+            enable: false
         }
     }
 
@@ -50,8 +51,10 @@ class NotificationContainer extends Component {
                 duration: 3,
                 bottom: 96
             });
+            this.setState({ messages: [payload, ...this.state.messages] })
+        } else if ("AndroidGodEyeNotificationAction" === moduleName) {
+            this.setState({ enable: payload.isInstall })
         }
-        this.setState({ messages: [payload, ...this.state.messages] })
     }
 
     showDrawer() {
@@ -67,24 +70,28 @@ class NotificationContainer extends Component {
     }
 
     render() {
-        return (
-            <div style={{ textAlign: "right" }}>
-                <Affix offsetBottom={32}>
-                    <Badge count={this.state.messages.length} onClick={this.showDrawer}>
-                        <Button shape="circle" icon="info" size="large" type="primary" onClick={this.showDrawer} ></Button>
-                    </Badge>
-                </Affix>
-                <Drawer
-                    title="Notifications"
-                    placement="right"
-                    width="500"
-                    onClose={this.onClose}
-                    visible={this.state.visible}
-                    closable={true}>
-                    <div>{NotificationContainer.renderLabel(this.state.messages ? this.state.messages : [])}</div>
-                </Drawer>
-            </div>
-        );
+        if (this.state.enable) {
+            return (
+                <div style={{ textAlign: "right" }}>
+                    <Affix offsetBottom={32}>
+                        <Badge count={this.state.messages.length} onClick={this.showDrawer}>
+                            <Button shape="circle" icon="info" size="large" type="primary" onClick={this.showDrawer} ></Button>
+                        </Badge>
+                    </Affix>
+                    <Drawer
+                        title="Notifications"
+                        placement="right"
+                        width="500"
+                        onClose={this.onClose}
+                        visible={this.state.visible}
+                        closable={true}>
+                        <div>{NotificationContainer.renderLabel(this.state.messages ? this.state.messages : [])}</div>
+                    </Drawer>
+                </div>
+            );
+        } else {
+            return <div></div>
+        }
     }
 }
 
