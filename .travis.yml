@@ -28,6 +28,7 @@ install:
     - sdkmanager --list || true
 
 script:
+    - sh gradle/enable_alirepo.sh false
     - ./gradlew clean build jacocoTestReport
 
 notifications:
