@@ -147,8 +147,8 @@ public class GodEyeConfigTest {
         assertConfig(config);
         try {
             GodEyeConfig.fromInputStream(null);
+        } catch (Throwable ignore) {
             fail();
-        } catch (IllegalStateException ignore) {
         }
     }
 

@@ -25,7 +25,7 @@ public class GodEyeInitContentProviderTest {
         } catch (UnsupportedOperationException ignore) {
         }
         try {
-            godEyeInitContentProvider.query(null, null, null, null);
+            godEyeInitContentProvider.query(null, null, null, null, null);
             fail();
         } catch (UnsupportedOperationException ignore) {
         }
