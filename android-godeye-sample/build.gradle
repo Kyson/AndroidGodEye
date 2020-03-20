@@ -59,8 +59,8 @@ dependencies {
 apply plugin: 'cn.hikyson.methodcanary.plugin'
 
 AndroidGodEye {
-    enableLifecycleTracer = true
-    enableMethodTracer = true
-    instrumentationRuleFilePath = "AndroidGodEye-MethodCanary.js"
-    instrumentationRuleIncludeClassNamePrefix = ["cn/hikyson/godeye/sample"]
+    enableLifecycleTracer true
+    enableMethodTracer true
+    instrumentationRuleFilePath "AndroidGodEye-MethodCanary.js"
+    instrumentationRuleIncludeClassNamePrefix(["cn/hikyson/godeye/sample"])
 }
