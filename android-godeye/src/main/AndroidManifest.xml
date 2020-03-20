@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.hikyson.godeye.core">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application>
         <provider
@@ -11,8 +11,13 @@
             android:authorities="${applicationId}.cn.hikyson.godeye.core.init"
             android:enabled="true"
             android:exported="false"
-            android:multiprocess="true">
-        </provider>
+            android:multiprocess="true" />
+
+        <provider
+            android:name="leakcanary.internal.AppWatcherInstaller"
+            android:authorities="${applicationId}.cn.hikyson.godeye.core.leak"
+            android:enabled="false"
+            android:exported="false" />
 
         <receiver
             android:name=".internal.modules.leakdetector.debug.LeakOutputReceiver"
@@ -27,16 +32,17 @@
         </receiver>
 
         <service
-            android:name=".internal.notification.LocalNotificationListenerService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":android_god_eye">
-        </service>
-
-        <service
             android:name=".internal.modules.leakdetector.debug.DebugHeapAnalyzerService"
             android:enabled="false"
             android:process=":leakcanary" />
+
+        <service
+            android:name=".internal.notification.LocalNotificationListenerService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":android_god_eye" />
+
+
     </application>
 
 </manifest>
