@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TAG:FOR LEAKCANARY begin -->
+    <bool name="leak_canary_add_dynamic_shortcut">false</bool>
+    <bool name="leak_canary_add_launcher_icon">false</bool>
+    <!-- TAG:FOR LEAKCANARY end -->
+</resources>
