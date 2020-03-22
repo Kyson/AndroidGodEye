@@ -34,6 +34,11 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation "cn.hikyson.methodcanary:lib:${VERSION_METHOD_CANARY}"
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'
     testImplementation 'org.mockito:mockito-core:2.8.9'
@@ -46,16 +51,6 @@ dependencies {
     androidTestImplementation 'androidx.test:core:1.2.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-//    implementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
-//    implementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
-    implementation 'com.squareup.leakcanary:leakcanary-android:2.2'
-//    implementation 'com.squareup.leakcanary:leakcanary-object-watcher-android:2.2'
-    implementation "cn.hikyson.methodcanary:lib:${VERSION_METHOD_CANARY}"
 }
 
 apply from: rootProject.file('gradle/gradle-jcenter-push.gradle')

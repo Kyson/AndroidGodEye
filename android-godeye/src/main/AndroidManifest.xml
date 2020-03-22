@@ -36,26 +36,6 @@
             android:exported="false"
             android:process=":android_god_eye" />
 
-        <!-- TAG:FOR LEAKCANARY begin -->
-        <provider
-            android:name="leakcanary.internal.AppWatcherInstaller$MainProcess"
-            android:authorities="${applicationId}.cn.hikyson.godeye.core.leak"
-            android:enabled="false"
-            android:exported="false" />
-
-        <activity
-            android:name="leakcanary.internal.RequestStoragePermissionActivity"
-            android:enabled="false"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:taskAffinity="${applicationId}.cn.hikyson.godeye.core.leak" />
-        <activity
-            android:name="leakcanary.internal.activity.LeakActivity"
-            android:enabled="false"
-            android:exported="false"
-            android:taskAffinity="${applicationId}.cn.hikyson.godeye.core.leak" />
-        <!-- TAG:FOR LEAKCANARY end -->
-
     </application>
 
 </manifest>
