@@ -6,6 +6,10 @@ import androidx.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Map;
 
+/**
+ * @deprecated use {@link Leak } instead
+ */
+@Deprecated
 @Keep
 public class LeakRefInfo implements Serializable {
 

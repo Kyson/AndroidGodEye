@@ -23,7 +23,7 @@ import cn.hikyson.godeye.core.internal.modules.cpu.Cpu;
 import cn.hikyson.godeye.core.internal.modules.crash.Crash;
 import cn.hikyson.godeye.core.internal.modules.fps.Fps;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageCanary;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakDetector;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.Leak;
 import cn.hikyson.godeye.core.internal.modules.memory.Heap;
 import cn.hikyson.godeye.core.internal.modules.memory.Pss;
 import cn.hikyson.godeye.core.internal.modules.memory.Ram;
@@ -52,7 +52,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class GodEye {
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK,
+    @StringDef({ModuleName.CPU, ModuleName.BATTERY, ModuleName.FPS, ModuleName.LEAK, ModuleName.LEAK_CANARY,
             ModuleName.HEAP, ModuleName.PSS, ModuleName.RAM, ModuleName.NETWORK,
             ModuleName.SM, ModuleName.STARTUP, ModuleName.TRAFFIC, ModuleName.CRASH,
             ModuleName.THREAD, ModuleName.PAGELOAD, ModuleName.METHOD_CANARY,
@@ -62,7 +62,12 @@ public class GodEye {
         public static final String CPU = "CPU";
         public static final String BATTERY = "BATTERY";
         public static final String FPS = "FPS";
+        /**
+         * @deprecated use {@link #LEAK_CANARY}
+         */
+        @Deprecated
         public static final String LEAK = "LEAK";
+        public static final String LEAK_CANARY = "LEAK_CANARY";
         public static final String HEAP = "HEAP";
         public static final String PSS = "PSS";
         public static final String RAM = "RAM";
@@ -85,7 +90,7 @@ public class GodEye {
         ALL_MODULE_NAMES.add(GodEye.ModuleName.CPU);
         ALL_MODULE_NAMES.add(GodEye.ModuleName.BATTERY);
         ALL_MODULE_NAMES.add(GodEye.ModuleName.FPS);
-        ALL_MODULE_NAMES.add(GodEye.ModuleName.LEAK);
+        ALL_MODULE_NAMES.add(ModuleName.LEAK_CANARY);
         ALL_MODULE_NAMES.add(GodEye.ModuleName.HEAP);
         ALL_MODULE_NAMES.add(GodEye.ModuleName.PSS);
         ALL_MODULE_NAMES.add(GodEye.ModuleName.RAM);
@@ -129,145 +134,163 @@ public class GodEye {
             Object moduleObj = mModules.get(ModuleName.CPU);
             if (moduleObj == null) {
                 moduleObj = new Cpu();
+            }
+            if (((Cpu) moduleObj).install(godEyeConfig.getCpuConfig())) {
                 mModules.put(ModuleName.CPU, moduleObj);
             }
-            ((Cpu) moduleObj).install(godEyeConfig.getCpuConfig());
         }
         if (godEyeConfig.getBatteryConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.BATTERY);
             if (moduleObj == null) {
                 moduleObj = new Battery();
+            }
+            if (((Battery) moduleObj).install(godEyeConfig.getBatteryConfig())) {
                 mModules.put(ModuleName.BATTERY, moduleObj);
             }
-            ((Battery) moduleObj).install(godEyeConfig.getBatteryConfig());
         }
         if (godEyeConfig.getFpsConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.FPS);
             if (moduleObj == null) {
                 moduleObj = new Fps();
+            }
+            if (((Fps) moduleObj).install(godEyeConfig.getFpsConfig())) {
                 mModules.put(ModuleName.FPS, moduleObj);
             }
-            ((Fps) moduleObj).install(godEyeConfig.getFpsConfig());
         }
         if (godEyeConfig.getLeakConfig() != null) {
-            Object moduleObj = mModules.get(ModuleName.LEAK);
+            Object moduleObj = mModules.get(ModuleName.LEAK_CANARY);
             if (moduleObj == null) {
-                moduleObj = LeakDetector.instance();
-                mModules.put(ModuleName.LEAK, moduleObj);
+                moduleObj = new Leak();
             }
-            ((LeakDetector) moduleObj).install(godEyeConfig.getLeakConfig());
+            if (((Leak) moduleObj).install(godEyeConfig.getLeakConfig())) {
+                mModules.put(ModuleName.LEAK_CANARY, moduleObj);
+            }
         }
         if (godEyeConfig.getHeapConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.HEAP);
             if (moduleObj == null) {
                 moduleObj = new Heap();
+            }
+            if (((Heap) moduleObj).install(godEyeConfig.getHeapConfig())) {
                 mModules.put(ModuleName.HEAP, moduleObj);
             }
-            ((Heap) moduleObj).install(godEyeConfig.getHeapConfig());
         }
         if (godEyeConfig.getPssConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.PSS);
             if (moduleObj == null) {
                 moduleObj = new Pss();
+            }
+            if (((Pss) moduleObj).install(godEyeConfig.getPssConfig())) {
                 mModules.put(ModuleName.PSS, moduleObj);
             }
-            ((Pss) moduleObj).install(godEyeConfig.getPssConfig());
         }
         if (godEyeConfig.getRamConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.RAM);
             if (moduleObj == null) {
                 moduleObj = new Ram();
+            }
+            if (((Ram) moduleObj).install(godEyeConfig.getRamConfig())) {
                 mModules.put(ModuleName.RAM, moduleObj);
             }
-            ((Ram) moduleObj).install(godEyeConfig.getRamConfig());
         }
         if (godEyeConfig.getNetworkConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.NETWORK);
             if (moduleObj == null) {
                 moduleObj = new Network();
+            }
+            if (((Network) moduleObj).install(godEyeConfig.getNetworkConfig())) {
                 mModules.put(ModuleName.NETWORK, moduleObj);
             }
-            ((Network) moduleObj).install(godEyeConfig.getNetworkConfig());
         }
         if (godEyeConfig.getSmConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.SM);
             if (moduleObj == null) {
                 moduleObj = new Sm();
+            }
+            if (((Sm) moduleObj).install(godEyeConfig.getSmConfig())) {
                 mModules.put(ModuleName.SM, moduleObj);
             }
-            ((Sm) moduleObj).install(godEyeConfig.getSmConfig());
         }
         if (godEyeConfig.getStartupConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.STARTUP);
             if (moduleObj == null) {
                 moduleObj = new Startup();
+            }
+            if (((Startup) moduleObj).install(godEyeConfig.getStartupConfig())) {
                 mModules.put(ModuleName.STARTUP, moduleObj);
             }
-            ((Startup) moduleObj).install(godEyeConfig.getStartupConfig());
         }
         if (godEyeConfig.getTrafficConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.TRAFFIC);
             if (moduleObj == null) {
                 moduleObj = new Traffic();
+            }
+            if (((Traffic) moduleObj).install(godEyeConfig.getTrafficConfig())) {
                 mModules.put(ModuleName.TRAFFIC, moduleObj);
             }
-            ((Traffic) moduleObj).install(godEyeConfig.getTrafficConfig());
         }
         if (godEyeConfig.getCrashConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.CRASH);
             if (moduleObj == null) {
                 moduleObj = new Crash();
+            }
+            if (((Crash) moduleObj).install(godEyeConfig.getCrashConfig())) {
                 mModules.put(ModuleName.CRASH, moduleObj);
             }
-            ((Crash) moduleObj).install(godEyeConfig.getCrashConfig());
         }
         if (godEyeConfig.getThreadConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.THREAD);
             if (moduleObj == null) {
                 moduleObj = new ThreadDump();
+            }
+            if (((ThreadDump) moduleObj).install(godEyeConfig.getThreadConfig())) {
                 mModules.put(ModuleName.THREAD, moduleObj);
             }
-            ((ThreadDump) moduleObj).install(godEyeConfig.getThreadConfig());
         }
         if (godEyeConfig.getPageloadConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.PAGELOAD);
             if (moduleObj == null) {
                 moduleObj = new Pageload();
+            }
+            if (((Pageload) moduleObj).install(godEyeConfig.getPageloadConfig())) {
                 mModules.put(ModuleName.PAGELOAD, moduleObj);
             }
-            ((Pageload) moduleObj).install(godEyeConfig.getPageloadConfig());
         }
         if (godEyeConfig.getMethodCanaryConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.METHOD_CANARY);
             if (moduleObj == null) {
                 moduleObj = new MethodCanary();
+            }
+            if (((MethodCanary) moduleObj).install(godEyeConfig.getMethodCanaryConfig())) {
                 mModules.put(ModuleName.METHOD_CANARY, moduleObj);
             }
-            ((MethodCanary) moduleObj).install(godEyeConfig.getMethodCanaryConfig());
         }
         if (godEyeConfig.getAppSizeConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.APP_SIZE);
             if (moduleObj == null) {
                 moduleObj = new AppSize();
+            }
+            if (((AppSize) moduleObj).install(godEyeConfig.getAppSizeConfig())) {
                 mModules.put(ModuleName.APP_SIZE, moduleObj);
             }
-            ((AppSize) moduleObj).install(godEyeConfig.getAppSizeConfig());
         }
         if (godEyeConfig.getViewCanaryConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.VIEW_CANARY);
             if (moduleObj == null) {
                 moduleObj = new ViewCanary();
+            }
+            if (((ViewCanary) moduleObj).install(godEyeConfig.getViewCanaryConfig())) {
                 mModules.put(ModuleName.VIEW_CANARY, moduleObj);
             }
-            ((ViewCanary) moduleObj).install(godEyeConfig.getViewCanaryConfig());
         }
         if (godEyeConfig.getImageCanaryConfig() != null) {
             Object moduleObj = mModules.get(ModuleName.IMAGE_CANARY);
             if (moduleObj == null) {
                 moduleObj = new ImageCanary();
+            }
+            if (((ImageCanary) moduleObj).install(godEyeConfig.getImageCanaryConfig())) {
                 mModules.put(ModuleName.IMAGE_CANARY, moduleObj);
             }
-            ((ImageCanary) moduleObj).install(godEyeConfig.getImageCanaryConfig());
         }
         if (notificationConfig == null) {
             NotificationObserverManager.uninstallNotification();

@@ -3,9 +3,10 @@ package cn.hikyson.godeye.monitor.modules.appinfo;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
+
 import androidx.annotation.Keep;
 import androidx.core.content.PermissionChecker;
-import android.text.TextUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -82,11 +83,9 @@ public class AppInfo implements Serializable {
                     sInternalLabels.add(new AppInfoLabel("Model", easyDeviceMod.getModel(), null));
                     sInternalLabels.add(new AppInfoLabel("OSCodename", easyDeviceMod.getOSCodename(), null));
                     sInternalLabels.add(new AppInfoLabel("OSVersion", easyDeviceMod.getOSVersion(), null));
-
                     if (PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PermissionChecker.PERMISSION_GRANTED) {
                         sInternalLabels.add(new AppInfoLabel("PhoneNo", easyDeviceMod.getPhoneNo(), null));
                     }
-
                     sInternalLabels.add(new AppInfoLabel("Product", easyDeviceMod.getProduct(), null));
                     sInternalLabels.add(new AppInfoLabel("RadioVer", easyDeviceMod.getRadioVer(), null));
                     sInternalLabels.add(new AppInfoLabel("ScreenDisplayID", easyDeviceMod.getScreenDisplayID(), null));

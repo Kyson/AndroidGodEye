@@ -10,7 +10,7 @@ import cn.hikyson.godeye.core.internal.modules.battery.BatteryInfo;
 import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageIssue;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
@@ -55,7 +55,7 @@ public class NotificationObserver {
                         .filter(godEyeNotificationConfig.fpsPredicate())
                         .map(godEyeNotificationConfig.fpsConverter())
                         .subscribe(notificationConsumer),
-                RxModule.<LeakQueue.LeakMemoryInfo>wrapThreadComputationObservable(GodEye.ModuleName.LEAK)
+                RxModule.<LeakInfo>wrapThreadComputationObservable(GodEye.ModuleName.LEAK_CANARY)
                         .filter(godEyeNotificationConfig.leakPredicate())
                         .map(godEyeNotificationConfig.leakConverter())
                         .subscribe(notificationConsumer),

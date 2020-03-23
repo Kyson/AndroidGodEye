@@ -41,11 +41,10 @@ public class FpsEngine implements Engine {
                 .subscribeOn(ThreadUtil.computationScheduler())
                 .subscribe(aLong -> {
                     ThreadUtil.ensureWorkThread("FpsEngine accept");
-                    int fps = -1;
                     if (!AndroidDebug.isDebugging()) {// if debugging, then ignore
-                        fps = mFpsMonitor.exportThenReset();
+                        int fps = mFpsMonitor.exportThenReset();
+                        mProducer.produce(new FpsInfo(fps, mSystemRate));
                     }
-                    mProducer.produce(new FpsInfo(fps, mSystemRate));
                 }));
     }
 

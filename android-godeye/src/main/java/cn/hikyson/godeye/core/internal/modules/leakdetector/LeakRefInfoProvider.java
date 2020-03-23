@@ -5,6 +5,10 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+/**
+ * @deprecated use {@link Leak } instead
+ */
+@Deprecated
 @Keep
 public interface LeakRefInfoProvider {
     @NonNull

@@ -36,9 +36,12 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation project(':android-godeye')
+    implementation 'com.squareup.leakcanary:shark:2.2'
     implementation 'com.koushikdutta.async:androidasync:2.2.1'
     implementation "com.github.nisrulz:easydeviceinfo-base:2.4.1"
-    implementation 'com.iqiyi.xcrash:xcrash-android-lib:2.4.6'
+    implementation "androidx.collection:collection:1.1.0"
+    implementation "androidx.core:core:1.1.0"
+//    implementation 'com.iqiyi.xcrash:xcrash-android-lib:2.4.6'
 }
 
 apply from: rootProject.file('gradle/gradle-jcenter-push.gradle')

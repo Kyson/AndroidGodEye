@@ -12,7 +12,7 @@ import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageIssue;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
@@ -103,22 +103,23 @@ public class DefaultNotificationConfig implements NotificationConfig {
 
     @Override
     public @NonNull
-    Predicate<LeakQueue.LeakMemoryInfo> leakPredicate() {
-        return new Predicate<LeakQueue.LeakMemoryInfo>() {
+    Predicate<LeakInfo> leakPredicate() {
+        return new Predicate<LeakInfo>() {
             @Override
-            public boolean test(LeakQueue.LeakMemoryInfo info) throws Exception {
-                return info.status == LeakQueue.LeakMemoryInfo.Status.STATUS_DETECT;
+            public boolean test(LeakInfo info) throws Exception {
+                return true;
             }
         };
     }
 
     @NonNull
     @Override
-    public Function<LeakQueue.LeakMemoryInfo, NotificationContent> leakConverter() {
-        return new Function<LeakQueue.LeakMemoryInfo, NotificationContent>() {
+    public Function<LeakInfo, NotificationContent> leakConverter() {
+        return new Function<LeakInfo, NotificationContent>() {
             @Override
-            public NotificationContent apply(LeakQueue.LeakMemoryInfo info) {
-                return new NotificationContent("Memory leak detected(检测到内存泄漏)", null);
+            public NotificationContent apply(LeakInfo info) {
+                int leakSize = info.info.getTotalRetainedHeapByteSize() == null ? 0 : info.info.getTotalRetainedHeapByteSize();
+                return new NotificationContent(String.format("Memory leak %s, %s bytes", info.info.getLeakTraces().get(0).getLeakingObject().getClassSimpleName(), leakSize), null);
             }
         };
     }

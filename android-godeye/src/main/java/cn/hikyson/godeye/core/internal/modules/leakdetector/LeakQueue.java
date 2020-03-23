@@ -18,10 +18,15 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Created by kysonchao on 2017/11/23.
+ * @deprecated use {@link Leak } instead
  */
+@Deprecated
 public class LeakQueue{
 
+    /**
+     * @deprecated use {@link Leak } instead
+     */
+    @Deprecated
     @Keep
     public static class LeakMemoryInfo implements Serializable, Comparable<LeakMemoryInfo> {
         public static final SimpleDateFormat DF = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
@@ -124,36 +129,6 @@ public class LeakQueue{
 
     public static LeakQueue instance() {
         return InstanceHolder.sINSTANCE;
-    }
-
-
-    public synchronized void createOrUpdateIfExsist(String refKey, Map<String, Object> map) {
-        Map<String, Object> curMap = mLeakMemoryInfoArrayMap.get(refKey);
-        if (curMap == null) {
-            curMap = new ArrayMap<>();
-        }
-        curMap.putAll(map);
-        mLeakMemoryInfoArrayMap.put(refKey, curMap);
-    }
-
-    public synchronized LeakMemoryInfo generateLeakMemoryInfo(String refKey, String leakRefInfo) {
-        LeakMemoryInfo leakMemoryInfo = new LeakMemoryInfo(refKey);
-        leakMemoryInfo.leakRefInfo = LeakUtil.deserialize(leakRefInfo);
-        Map<String, Object> detailMap = mLeakMemoryInfoArrayMap.get(refKey);
-        leakMemoryInfo.referenceKey = refKey;
-        Object leakTimeObj = detailMap.get(LeakMemoryInfo.Fields.LEAK_TIME);
-        leakMemoryInfo.leakTime = leakTimeObj == null ? "" : String.valueOf(leakTimeObj);
-        Object statusSummaryObj = detailMap.get(LeakMemoryInfo.Fields.STATUS_SUMMARY);
-        leakMemoryInfo.statusSummary = statusSummaryObj == null ? "" : String.valueOf(statusSummaryObj);
-        Object statusObj = detailMap.get(LeakMemoryInfo.Fields.STATUS);
-        leakMemoryInfo.status = statusObj == null ? LeakMemoryInfo.Status.STATUS_INVALID : (int) statusObj;
-        Object leakObjName = detailMap.get(LeakMemoryInfo.Fields.LEAK_OBJ_NAME);
-        leakMemoryInfo.leakObjectName = leakObjName == null ? "" : String.valueOf(leakObjName);
-        Object pathToRoot = detailMap.get(LeakMemoryInfo.Fields.PATH_TO_ROOT);
-        leakMemoryInfo.pathToGcRoot = pathToRoot == null ? new ArrayList<String>() : (List) pathToRoot;
-        Object leakMemoryBytes = detailMap.get(LeakMemoryInfo.Fields.LEAK_MEMORY_BYTES);
-        leakMemoryInfo.leakMemoryBytes = leakMemoryBytes == null ? 0L : (long) leakMemoryBytes;
-        return leakMemoryInfo;
     }
 
 }

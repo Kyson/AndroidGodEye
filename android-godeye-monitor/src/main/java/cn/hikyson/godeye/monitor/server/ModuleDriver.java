@@ -12,7 +12,7 @@ import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageIssue;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
@@ -32,6 +32,7 @@ import cn.hikyson.godeye.monitor.modules.BlockSimpleInfo;
 import cn.hikyson.godeye.monitor.modules.NetworkSummaryInfo;
 import cn.hikyson.godeye.monitor.modules.PageLifecycleProcessedEvent;
 import cn.hikyson.godeye.monitor.modules.battery.BatteryInfoFactory;
+import cn.hikyson.godeye.monitor.modules.leak.LeakConverter;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -81,7 +82,8 @@ public class ModuleDriver {
                 RxModule.<FpsInfo>wrapThreadComputationObservable(GodEye.ModuleName.FPS)
                         .map(this.createConvertServerMessageFunction("fpsInfo"))
                         .subscribe(this.createSendMessageConsumer()),
-                RxModule.<LeakQueue.LeakMemoryInfo>wrapThreadComputationObservable(GodEye.ModuleName.LEAK)
+                RxModule.<LeakInfo>wrapThreadComputationObservable(GodEye.ModuleName.LEAK_CANARY)
+                        .map(LeakConverter.leakConverter())
                         .map(this.createConvertServerMessageFunction("leakInfo"))
                         .subscribe(this.createSendMessageConsumer()),
                 RxModule.<BlockInfo>wrapThreadComputationObservable(GodEye.ModuleName.SM)

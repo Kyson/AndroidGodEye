@@ -1,59 +1,51 @@
 package cn.hikyson.godeye.core.internal.modules.leakdetector;
 
-import org.jetbrains.annotations.NotNull;
+import android.app.Application;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.internal.Install;
 import cn.hikyson.godeye.core.internal.ProduceableSubject;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ReflectUtil;
 import io.reactivex.subjects.ReplaySubject;
 import io.reactivex.subjects.Subject;
-import leakcanary.AppWatcher;
-import leakcanary.LeakCanary;
-import leakcanary.OnHeapAnalyzedListener;
-import leakcanary.OnObjectRetainedListener;
-import shark.HeapAnalysis;
 
-public class Leak extends ProduceableSubject<HeapAnalysis> implements Install<LeakConfig> {
+public class Leak extends ProduceableSubject<LeakInfo> implements Install<LeakConfig> {
     private boolean mInstalled;
     private LeakConfig mConfig;
 
     @Override
-    public boolean install(LeakConfig config) {
+    public synchronized boolean install(LeakConfig config) {
         if (mInstalled) {
             L.d("Leak already installed, ignore.");
             return true;
         }
         mConfig = config;
-        LeakCanary.setConfig(new LeakCanary.Config().newBuilder()
-                .requestWriteExternalStoragePermission(false)
-                .dumpHeap(config.debug())
-                .onHeapAnalyzedListener(new OnHeapAnalyzedListener() {
-                    @Override
-                    public void onHeapAnalyzed(@NotNull HeapAnalysis heapAnalysis) {
-                        produce(heapAnalysis);
-                    }
-                }).build());
-        AppWatcher.setConfig(new AppWatcher.Config().newBuilder().enabled(true).build());
-        AppWatcher.INSTANCE.manualInstall(GodEye.instance().getApplication());
-        AppWatcher.INSTANCE.getObjectWatcher().addOnObjectRetainedListener(new OnObjectRetainedListener() {
-            @Override
-            public void onObjectRetained() {
-
-            }
-        });
+        try {
+            ReflectUtil.invokeStaticMethodUnSafe("cn.hikyson.android.godeye.leakcanary.GodEyePluginLeakCanary", "install",
+                    new Class<?>[]{Application.class, Leak.class}, new Object[]{GodEye.instance().getApplication(), this});
+        } catch (Exception e) {
+            L.d("Leak can not be installed, please add android-godeye-leakcanary dependency first:", e);
+            return false;
+        }
         mInstalled = true;
         L.d("Leak installed.");
         return true;
     }
 
     @Override
-    public void uninstall() {
+    public synchronized void uninstall() {
         if (!mInstalled) {
             L.d("Leak already uninstalled, ignore.");
             return;
         }
-        AppWatcher.setConfig(new AppWatcher.Config().newBuilder().enabled(false).build());
+        try {
+            ReflectUtil.invokeStaticMethodUnSafe("cn.hikyson.android.godeye.leakcanary.GodEyePluginLeakCanary", "uninstall",
+                    new Class<?>[]{}, new Object[]{});
+        } catch (Exception e) {
+            L.d("Leak can not be uninstalled, please add android-godeye-leakcanary dependency first:", e);
+            return;
+        }
         mConfig = null;
         mInstalled = false;
         L.d("Leak uninstalled.");
@@ -70,7 +62,7 @@ public class Leak extends ProduceableSubject<HeapAnalysis> implements Install<Le
     }
 
     @Override
-    protected Subject<HeapAnalysis> createSubject() {
+    protected Subject<LeakInfo> createSubject() {
         return ReplaySubject.create();
     }
 }

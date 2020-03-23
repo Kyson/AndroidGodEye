@@ -11,7 +11,7 @@ import cn.hikyson.godeye.core.internal.modules.cpu.CpuInfo;
 import cn.hikyson.godeye.core.internal.modules.crash.CrashInfo;
 import cn.hikyson.godeye.core.internal.modules.fps.FpsInfo;
 import cn.hikyson.godeye.core.internal.modules.imagecanary.ImageIssue;
-import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakQueue;
+import cn.hikyson.godeye.core.internal.modules.leakdetector.LeakInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.HeapInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.PssInfo;
 import cn.hikyson.godeye.core.internal.modules.memory.RamInfo;
@@ -23,7 +23,6 @@ import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
 import cn.hikyson.godeye.core.internal.modules.thread.ThreadInfo;
 import cn.hikyson.godeye.core.internal.modules.traffic.TrafficInfo;
 import cn.hikyson.godeye.core.internal.modules.viewcanary.ViewIssueInfo;
-
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
@@ -47,10 +46,10 @@ public interface NotificationConfig {
     Function<FpsInfo, NotificationContent> fpsConverter();
 
     @NonNull
-    Predicate<LeakQueue.LeakMemoryInfo> leakPredicate();
+    Predicate<LeakInfo> leakPredicate();
 
     @NonNull
-    Function<LeakQueue.LeakMemoryInfo, NotificationContent> leakConverter();
+    Function<LeakInfo, NotificationContent> leakConverter();
 
     @NonNull
     Predicate<HeapInfo> heapPredicate();

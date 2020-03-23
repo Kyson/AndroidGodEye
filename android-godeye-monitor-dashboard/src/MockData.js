@@ -1405,11 +1405,13 @@ class Mock {
             }]
         });
         this.recvFun("leakInfo", {
-            referenceKey: "referenceKey",
-            leakTime: "leakTime",
-            leakObjectName: "leakObjectName",
-            statusSummary: "statusSummary",
-            pathToGcRoot: ["leakStack", "leakStack", "leakStack", "leakStack", "leakStack"]
+            createdTimeMillis: 1583501829434,
+            durationTimeMillis: 234241,
+            leakSignature: "leakSignature",
+            leakObject: "leakObject",
+            leakSizeByte: 2132,
+            leakTrace: ["leakStack", "leakStack", "leakStack", "leakStack", "leakStack"],
+            detail: "this is detail\nthis is detail\nthis is detail\nthis is detail\nthis is detail\nthis is detail\nthis is detail\n"
         });
         this.recvFun("threadInfo", [
             {

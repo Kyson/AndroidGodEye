@@ -51,6 +51,7 @@ dependencies {
     implementation project(':android-godeye')
     implementation project(':android-godeye-toolboxes:android-godeye-okhttp')
     implementation project(':android-godeye-toolboxes:android-godeye-xcrash')
+    implementation project(':android-godeye-toolboxes:android-godeye-leakcanary')
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
 }

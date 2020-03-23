@@ -186,8 +186,6 @@ public class GodEyeConfigTest {
         assertEquals(2000, config.getHeapConfig().intervalMillis());
         assertEquals("cn.hikyson.godeye.core.internal.modules.imagecanary.DefaultImageCanaryConfigProvider", config.getImageCanaryConfig().getImageCanaryConfigProvider());
         assertEquals(true, config.getLeakConfig().debug());
-        assertEquals(true, config.getLeakConfig().debugNotification());
-        assertEquals("cn.hikyson.godeye.core.internal.modules.leakdetector.DefaultLeakRefInfoProvider", config.getLeakConfig().leakRefInfoProvider());
         assertEquals(10, config.getMethodCanaryConfig().lowCostMethodThresholdMillis());
         assertEquals(300, config.getMethodCanaryConfig().maxMethodCountSingleThreadByCost());
         assertEquals(JsonUtil.toJson(new NetworkConfig()), JsonUtil.toJson(config.getNetworkConfig()));
