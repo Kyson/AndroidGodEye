@@ -1,0 +1,2 @@
+-dontwarn leakcanary.**
+-keep class leakcanary.**
