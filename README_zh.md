@@ -43,7 +43,7 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android性能数据指�
 |CPU|手机和App Cpu检测|
 |BATTERY|电池检测|
 |FPS|帧率检测|
-|LEAK|内存泄漏检测|
+|LEAK_CANARY|基于LeakCanary和shark的内存泄漏检测|
 |HEAP|运行堆内存占用检测|
 |PSS|实际物理共享内存占用检测|
 |RAM|手机内存|

@@ -43,7 +43,7 @@ It is divided into 3 parts:
 |CPU|Cpu info of device and app|
 |BATTERY|Battery info|
 |FPS|Fps info|
-|LEAK|Detect memory leak|
+|LEAK_CANARY|Memory leak detector base on LeakCanary and Shark|
 |HEAP|Heap memory|
 |PSS|Pss|
 |RAM|Ram|
