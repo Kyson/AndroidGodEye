@@ -1055,8 +1055,13 @@ class Mock {
             message: "message of message of message of message of message of message of message of message of message of message of " + this.index,
             timeMillis: 1469433907836
         });
+        this.recvFun("AndroidGodEyeNotification", {
+            message: "message of" + this.index,
+            timeMillis: 1469433907836
+        });
         this.recvFun("AndroidGodEyeNotificationAction", {
-            isInstall: this.index % 2 === 0
+            // isInstall: this.index % 2 === 0
+            isInstall: true
         });
         this.recvFun("appInfo", {
             appName: "I am Name",

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 
-import { Drawer, Row, Affix, Badge, Button, notification, Divider } from 'antd'
+import { Drawer, Affix, Badge, Button, notification, Divider, Typography } from 'antd'
 
 
 /**
@@ -17,15 +17,12 @@ class NotificationContainer extends Component {
             let items = [];
             for (let i = 0; i < messages.length; i++) {
                 items.push(
-                    <Row key={"notification" + i} type="flex" justify="left" style={{ textAlign: "left" }}>
-                        <p>
-                            {new Date(messages[i].timeMillis).toLocaleTimeString()}
-                        </p>
-                        <p>
-                            {messages[i].message}
-                        </p>
+                    <div key={"notification" + i} type="flex" justify="left" style={{ textAlign: "left" }}>
+                        <Typography.Text type="secondary">{new Date(messages[i].timeMillis).toLocaleTimeString()}</Typography.Text>
+                        <br />
+                        <Typography.Text>{messages[i].message}</Typography.Text>
                         <Divider />
-                    </Row>);
+                    </div>);
             }
             return items;
         }
