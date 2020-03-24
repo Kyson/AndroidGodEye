@@ -22,12 +22,20 @@ public class LeakConfig implements Serializable {
     @Deprecated
     public String leakRefInfoProvider;
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public LeakConfig(boolean debug, boolean debugNotification, String leakRefInfoProvider) {
         this.debug = debug;
     }
 
     public LeakConfig() {
         this.debug = true;
+    }
+
+    public LeakConfig(boolean debug) {
+        this.debug = debug;
     }
 
     public boolean debug() {
@@ -43,6 +51,7 @@ public class LeakConfig implements Serializable {
     }
 
     // LeakRefInfoProvider
+
     /**
      * @deprecated
      */
