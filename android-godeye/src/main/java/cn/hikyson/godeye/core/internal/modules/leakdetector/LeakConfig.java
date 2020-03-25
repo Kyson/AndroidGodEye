@@ -9,6 +9,10 @@ import java.io.Serializable;
 @Keep
 public class LeakConfig implements Serializable {
     // if you want leak module work in production,set debug false
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public boolean debug;
     /**
      * @deprecated
@@ -31,13 +35,20 @@ public class LeakConfig implements Serializable {
     }
 
     public LeakConfig() {
-        this.debug = true;
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public LeakConfig(boolean debug) {
         this.debug = debug;
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public boolean debug() {
         return debug;
     }
@@ -63,8 +74,6 @@ public class LeakConfig implements Serializable {
 
     @Override
     public String toString() {
-        return "LeakConfig{" +
-                "debug=" + debug +
-                '}';
+        return "LeakConfig{}";
     }
 }

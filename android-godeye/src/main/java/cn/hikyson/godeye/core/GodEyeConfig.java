@@ -112,14 +112,7 @@ public class GodEyeConfig implements Serializable {
             // leak
             element = getFirstElementByTagInRoot(root, "leakCanary");
             if (element != null) {
-                final String debug = element.getAttribute("debug");
-                LeakConfig leakConfig = new LeakConfig();
-                if (!TextUtils.isEmpty(debug)) {
-                    leakConfig.debug = Boolean.parseBoolean(debug);
-                } else {
-                    leakConfig.debug = true;
-                }
-                builder.withLeakConfig(leakConfig);
+                builder.withLeakConfig(new LeakConfig());
             }
             // heap
             element = getFirstElementByTagInRoot(root, "heap");

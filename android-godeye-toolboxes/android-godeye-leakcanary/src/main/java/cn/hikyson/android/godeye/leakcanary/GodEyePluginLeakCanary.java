@@ -30,7 +30,7 @@ public class GodEyePluginLeakCanary {
                 LeakCanary.INSTANCE.showLeakDisplayActivityLauncherIcon(false);
                 LeakCanary.setConfig(new LeakCanary.Config().newBuilder()
                         .requestWriteExternalStoragePermission(false)
-                        .dumpHeap(leakModule.config().debug())
+                        .dumpHeap(true)
                         .onHeapAnalyzedListener(new OnHeapAnalyzedListener() {
                             @Override
                             public void onHeapAnalyzed(@NotNull HeapAnalysis heapAnalysis) {
