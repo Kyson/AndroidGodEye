@@ -1,0 +1,3 @@
+-dontwarn leakcanary.**
+-dontwarn okio.**
+-keep class leakcanary.**
