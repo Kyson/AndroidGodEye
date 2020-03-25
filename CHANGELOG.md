@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.3.1
+
+### Deprecated
+
+- Changed <leakCanary debug="true" /> to <leakCanary /> and LeakConfig.debug is deprecated
+
 ## 3.3.0
 
 ### Changed
