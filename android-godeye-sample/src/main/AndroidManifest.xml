@@ -10,10 +10,11 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="cn.hikyson.godeye.sample.ImageActivity"></activity>
+        <activity android:name="cn.hikyson.godeye.sample.ImageActivity" />
+
         <activity
             android:name="cn.hikyson.godeye.sample.Main2Activity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name="cn.hikyson.godeye.sample.LeakActivity" />
         <activity android:name="cn.hikyson.godeye.sample.ComplexLayoutActivity" />
         <activity android:name="cn.hikyson.godeye.sample.LeakActivityV4" />
@@ -28,13 +29,17 @@
         </activity>
         <activity android:name="cn.hikyson.godeye.sample.SecondActivity" />
         <activity android:name="cn.hikyson.godeye.sample.ThirdActivity" />
+        <service
+            android:process=":godeyetest"
+            android:name="cn.hikyson.godeye.sample.SubProcessIntentService"
+            android:exported="false"></service>
     </application>
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
