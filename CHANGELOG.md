@@ -4,7 +4,7 @@
 
 ### Deprecated
 
-- Changed <leakCanary debug="true" /> to <leakCanary /> and LeakConfig.debug is deprecated
+- Changed `<leakCanary debug="true" />` to `<leakCanary />` and `LeakConfig.debug` is deprecated
 
 ## 3.3.0
 
