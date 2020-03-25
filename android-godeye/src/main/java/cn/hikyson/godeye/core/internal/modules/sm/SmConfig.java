@@ -5,12 +5,12 @@ import androidx.annotation.Keep;
 
 import java.io.Serializable;
 
-import cn.hikyson.godeye.core.internal.notification.NotificationConfig;
+import cn.hikyson.godeye.core.GodEyeConfig;
 
 @Keep
 public class SmConfig implements Serializable {
     /**
-     * @deprecated use {@link cn.hikyson.godeye.core.GodEye#installNotification(NotificationConfig)}
+     * @deprecated use {@link cn.hikyson.godeye.core.GodEye#install(GodEyeConfig, boolean)}
      */
     @Deprecated
     public boolean debugNotification;
@@ -40,7 +40,7 @@ public class SmConfig implements Serializable {
     }
 
     /**
-     * @deprecated use {@link cn.hikyson.godeye.core.GodEye#installNotification(NotificationConfig)}
+     * @deprecated use {@link cn.hikyson.godeye.core.GodEye#install(GodEyeConfig, boolean)}
      */
     @Deprecated
     public boolean debugNotification() {
