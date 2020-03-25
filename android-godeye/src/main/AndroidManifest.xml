@@ -16,8 +16,7 @@
         <service
             android:name=".internal.notification.LocalNotificationListenerService"
             android:enabled="true"
-            android:exported="false"
-            android:process=":android_god_eye" />
+            android:exported="false" />
 
     </application>
 
