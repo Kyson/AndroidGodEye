@@ -63,6 +63,8 @@ It is divided into 3 parts:
 
 [Quickstart Wiki](https://github.com/Kyson/AndroidGodEye/wiki/0x00-QuickStart_en)
 
+[Changelog](CHANGELOG.md)
+
 [More detail Wiki](https://github.com/Kyson/AndroidGodEye/wiki#english)
 
 [Sample APK](https://github.com/Kyson/AndroidGodEye/releases)

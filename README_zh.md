@@ -63,6 +63,8 @@ AndroidGodEye是一个可以在PC浏览器中实时监控Android性能数据指�
 
 [快速开始Wiki](https://github.com/Kyson/AndroidGodEye/wiki/0x00-QuickStart_zh)
 
+[Changelog](CHANGELOG.md)
+
 [更多信息Wiki](https://github.com/Kyson/AndroidGodEye/wiki#%E4%B8%AD%E6%96%87)
 
 [Sample APK](https://github.com/Kyson/AndroidGodEye/releases)
