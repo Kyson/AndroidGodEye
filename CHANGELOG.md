@@ -11,19 +11,10 @@
 ### Changed
 
 - Upgrade methodcanary to 0.15.4, support gradle DSL setting
-```
-apply plugin: 'cn.hikyson.methodcanary.plugin'
-AndroidGodEye {
--    enableLifecycleTracer = true
--    enableMethodTracer = true
--    instrumentationRuleFilePath = "AndroidGodEye-MethodCanary.js"
--    instrumentationRuleIncludeClassNamePrefix = ["cn/hikyson/godeye/sample"]
-+    enableLifecycleTracer true
-+    enableMethodTracer true
-+    instrumentationRuleFilePath "AndroidGodEye-MethodCanary.js"
-+    instrumentationRuleIncludeClassNamePrefix(["cn/hikyson/godeye/sample"])
-}
-```
+- `AndroidGodEye{ enableLifecycleTracer true }` of apply plugin: 'cn.hikyson.methodcanary.plugin'
+- `AndroidGodEye{ enableMethodTracer true }` of apply plugin: 'cn.hikyson.methodcanary.plugin'
+- `AndroidGodEye{ instrumentationRuleFilePath "AndroidGodEye-MethodCanary.js" }` of apply plugin: 'cn.hikyson.methodcanary.plugin'
+- `AndroidGodEye{ instrumentationRuleIncludeClassNamePrefix(["cn/hikyson/godeye/sample"]) }` of apply plugin: 'cn.hikyson.methodcanary.plugin'
 - Optimize notification content
 
 ### Added
