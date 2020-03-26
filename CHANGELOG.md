@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 3.4.0
+
+### Changed
+
+- You do not need to call `GodEye.instance().install` , AndroidGodEye will  install automatically, change this behavior by add resource `<bool name="android_god_eye_manual_install">true</bool>`
+- You do not need to call `GodEyeHelper.startMonitor`, AndroidGodEye will  install automatically, change this behavior by add resource `<bool name="android_god_eye_manual_install">true</bool>`
+- You can custom Monitor port by add resource `<integer name="android_god_eye_monitor_port">5390</integer>`
+
+### Removed
+
+- android-godeye-monitor-noop removed, only  `debugImplementation 'cn.hikyson.godeye:godeye-monitor:VERSION_NAME'` needed.
+- You can not call api in `GodEyeMonitor` directly, apis have been transfered to `GodEyeHelper`
+
 ## 3.3.1
 
 ### Deprecated
