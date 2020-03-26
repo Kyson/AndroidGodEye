@@ -3,6 +3,7 @@ package cn.hikyson.godeye.core;
 import android.app.Application;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -13,15 +14,14 @@ public class GodEyeInitContentProvider extends ContentProvider {
     public GodEyeInitContentProvider() {
     }
 
-    private static final String DEFAULT_ASSETS_INSTALL_CONFIG = "android-godeye-config/install.config";
-
     @Override
     public boolean onCreate() {
         Application application = (Application) Objects.requireNonNull(this.getContext()).getApplicationContext();
+        Resources resources = application.getResources();
         GodEye.instance().internalInit(application);
-        if (!application.getResources().getBoolean(R.bool.android_god_eye_manual_install)) {
-            GodEye.instance().install(GodEyeConfig.fromAssets(DEFAULT_ASSETS_INSTALL_CONFIG));
-            GodEyeHelper.startMonitor(application.getResources().getInteger(R.integer.android_god_eye_monitor_port));
+        if (!resources.getBoolean(R.bool.android_god_eye_manual_install)) {
+            GodEye.instance().install(GodEyeConfig.fromAssets(resources.getString(R.string.android_god_eye_install_assets_path)), resources.getBoolean(R.bool.android_god_eye_need_notification));
+            GodEyeHelper.startMonitor(resources.getInteger(R.integer.android_god_eye_monitor_port));
         }
         return false;
     }

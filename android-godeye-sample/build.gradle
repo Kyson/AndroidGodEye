@@ -29,10 +29,18 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            resValue("bool", "android_god_eye_manual_install", "false")
+            resValue("bool", "android_god_eye_need_notification", "false")
+            resValue("integer", "android_god_eye_monitor_port", "5390")
+            resValue("string", "android_god_eye_install_assets_path", "android-godeye-config/install_release.config")
         }
         debug {
             minifyEnabled false
             signingConfig signingConfigs.debug
+            resValue("bool", "android_god_eye_manual_install", "false")
+            resValue("bool", "android_god_eye_need_notification", "true")
+            resValue("integer", "android_god_eye_monitor_port", "5390")
+            resValue("string", "android_god_eye_install_assets_path", "android-godeye-config/install.config")
         }
     }
 }

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 是否需要手动安装 -->
     <bool name="android_god_eye_manual_install">false</bool>
+    <!-- 是否需要展示通知栏-->
+    <bool name="android_god_eye_need_notification">true</bool>
+    <!-- 监控面板端口 -->
     <integer name="android_god_eye_monitor_port">5390</integer>
+    <!-- 安装assets的配置路径 -->
+    <string name="android_god_eye_install_assets_path">android-godeye-config/install.config</string>
 </resources>
