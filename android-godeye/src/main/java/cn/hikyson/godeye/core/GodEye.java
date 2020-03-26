@@ -123,6 +123,7 @@ public class GodEye {
 
     /**
      * install modules
+     * please run this in main process
      *
      * @param godEyeConfig
      * @param notificationConfig
@@ -297,12 +298,13 @@ public class GodEye {
         } else {
             NotificationObserverManager.installNotification(notificationConfig);
         }
-        Log.d(L.DEFAULT_TAG, String.format("GodEye modules installed, config: %s, cost %s ms", godEyeConfig, (System.currentTimeMillis() - startTime)));
+        Log.d(L.DEFAULT_TAG, String.format("GodEye modules installed, cost %s ms, config: %s", (System.currentTimeMillis() - startTime), godEyeConfig));
         return this;
     }
 
     /**
      * install modules
+     * please run this in main process
      *
      * @param godEyeConfig
      * @return
@@ -311,6 +313,13 @@ public class GodEye {
         return install(godEyeConfig, new DefaultNotificationConfig());
     }
 
+    /**
+     * please run this in main process
+     *
+     * @param godEyeConfig
+     * @param enableNotification
+     * @return
+     */
     public GodEye install(final GodEyeConfig godEyeConfig, boolean enableNotification) {
         return install(godEyeConfig, enableNotification ? new DefaultNotificationConfig() : null);
     }
@@ -394,7 +403,7 @@ public class GodEye {
         long startTime = System.currentTimeMillis();
         mApplication = application;
         ActivityStackUtil.register(application);
-        Log.d(L.DEFAULT_TAG, String.format("GodEye init, cost %s ms", (System.currentTimeMillis() - startTime)));
+        Log.d(L.DEFAULT_TAG, String.format("GodEye init, cost %sms.", (System.currentTimeMillis() - startTime)));
     }
 
     /**

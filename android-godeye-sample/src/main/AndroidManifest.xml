@@ -32,7 +32,7 @@
         <service
             android:process=":godeyetest"
             android:name="cn.hikyson.godeye.sample.SubProcessIntentService"
-            android:exported="false"></service>
+            android:exported="false"/>
     </application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />

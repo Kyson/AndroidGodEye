@@ -1,13 +1,9 @@
-package cn.hikyson.godeye.monitor.modules.appinfo;
+package cn.hikyson.godeye.core.monitor;
 
 import androidx.annotation.Keep;
 
 import java.io.Serializable;
 
-/**
- * @deprecated
- */
-@Deprecated
 @Keep
 public class AppInfoLabel implements Serializable {
     public String name;
@@ -18,5 +14,14 @@ public class AppInfoLabel implements Serializable {
         this.name = name;
         this.value = value;
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "AppInfoLabel{" +
+                "name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="android_god_eye_manual_install">false</bool>
+    <integer name="android_god_eye_monitor_port">5390</integer>
+</resources>

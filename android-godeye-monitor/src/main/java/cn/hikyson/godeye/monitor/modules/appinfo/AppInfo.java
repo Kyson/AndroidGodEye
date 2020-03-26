@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cn.hikyson.godeye.monitor.GodEyeMonitor;
+import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.monitor.AppInfoLabel;
 import github.nisrulz.easydeviceinfo.base.EasyAppMod;
 import github.nisrulz.easydeviceinfo.base.EasyCpuMod;
 import github.nisrulz.easydeviceinfo.base.EasyDeviceMod;
@@ -24,9 +25,10 @@ import github.nisrulz.easydeviceinfo.base.EasySimMod;
 
 @Keep
 public class AppInfo implements Serializable {
-    private static GodEyeMonitor.AppInfoConext sAppInfoConext;
+    private static cn.hikyson.godeye.core.monitor.AppInfoConext sAppInfoConext;
 
-    public static void injectAppInfoConext(GodEyeMonitor.AppInfoConext appInfoConext) {
+    @Keep
+    public static void injectAppInfoConext(cn.hikyson.godeye.core.monitor.AppInfoConext appInfoConext) {
         sAppInfoConext = appInfoConext;
     }
 
@@ -40,7 +42,7 @@ public class AppInfo implements Serializable {
 
         public static AppInfo create() {
             AppInfo appInfo = new AppInfo();
-            Context context = GodEyeMonitor.getContext();
+            Context context = GodEye.instance().getApplication();
             if (context == null) {
                 return appInfo;
             }

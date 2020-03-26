@@ -1,6 +1,8 @@
 package cn.hikyson.godeye.core;
 
 import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
@@ -12,7 +14,9 @@ import cn.hikyson.godeye.core.internal.modules.network.NetworkInfo;
 import cn.hikyson.godeye.core.internal.modules.pageload.Pageload;
 import cn.hikyson.godeye.core.internal.modules.startup.Startup;
 import cn.hikyson.godeye.core.internal.modules.startup.StartupInfo;
+import cn.hikyson.godeye.core.monitor.AppInfoConext;
 import cn.hikyson.godeye.core.utils.L;
+import cn.hikyson.godeye.core.utils.ReflectUtil;
 
 /**
  * core extension helper
@@ -93,8 +97,6 @@ public class GodEyeHelper {
      */
     @Deprecated
     public static void inspectView() throws UninstallException {
-//        final ViewCanary viewCanary = GodEye.instance().getModule(GodEye.ModuleName.VIEW_CANARY);
-//        viewCanary.inspect();
     }
 
     /**
@@ -131,4 +133,52 @@ public class GodEyeHelper {
         return methodCanary.isRunning(tag);
     }
 
+    /**
+     * set appinfo show in monitor dashboard
+     * please run this in main process
+     *
+     * @param appInfoConext
+     */
+    public static void setMonitorAppInfoConext(AppInfoConext appInfoConext) {
+        ReflectUtil.invokeStaticMethod("cn.hikyson.godeye.monitor.modules.appinfo.AppInfo", "injectAppInfoConext", new Class[]{AppInfoConext.class}, new Object[]{appInfoConext});
+    }
+
+    /**
+     * start monitor
+     * please run this in main process
+     *
+     * @param port
+     */
+    public static void startMonitor(int port) {
+        long startTime = System.currentTimeMillis();
+        try {
+            ReflectUtil.invokeStaticMethodUnSafe("cn.hikyson.godeye.monitor.GodEyeMonitor", "work", new Class[]{Context.class, int.class}, new Object[]{GodEye.instance().getApplication(), port});
+        } catch (Exception e) {
+            Log.w(L.DEFAULT_TAG, "You should add dependency 'implementation project(':android-godeye-monitor')' if you want to start GodEyeMonitor.");
+        }
+        Log.d(L.DEFAULT_TAG, String.format("GodEye start monitor cost %sms.", (System.currentTimeMillis() - startTime)));
+    }
+
+    private static final int DEFAULT_PORT = 5390;
+
+    /**
+     * please run this in main process
+     */
+    public static void startMonitor() {
+        startMonitor(DEFAULT_PORT);
+    }
+
+    /**
+     * shutdown monitor
+     * please run this in main process
+     */
+    public static void shutdownMonitor() {
+        long startTime = System.currentTimeMillis();
+        try {
+            ReflectUtil.invokeStaticMethodUnSafe("cn.hikyson.godeye.monitor.GodEyeMonitor", "shutDown", new Class[]{}, new Object[]{});
+        } catch (Exception e) {
+            Log.w(L.DEFAULT_TAG, "You should add dependency 'implementation project(':android-godeye-monitor')' if you want to shutdown GodEyeMonitor.");
+        }
+        Log.d(L.DEFAULT_TAG, String.format("GodEye shutdown monitor cost %sms.", (System.currentTimeMillis() - startTime)));
+    }
 }

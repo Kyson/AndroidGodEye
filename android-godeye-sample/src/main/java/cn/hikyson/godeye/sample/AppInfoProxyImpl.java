@@ -3,13 +3,13 @@ package cn.hikyson.godeye.sample;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.hikyson.godeye.monitor.GodEyeMonitor;
-import cn.hikyson.godeye.monitor.modules.appinfo.AppInfoLabel;
+import cn.hikyson.godeye.core.monitor.AppInfoConext;
+import cn.hikyson.godeye.core.monitor.AppInfoLabel;
 
 /**
  * Created by kysonchao on 2017/12/9.
  */
-public class AppInfoProxyImpl implements GodEyeMonitor.AppInfoConext {
+public class AppInfoProxyImpl implements AppInfoConext {
 
     @Override
     public List<AppInfoLabel> getAppInfo() {

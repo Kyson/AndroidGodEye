@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- custom this to install manual-->
+    <bool name="android_god_eye_manual_install">true</bool>
+    <!-- custom port -->
+    <integer name="android_god_eye_monitor_port">5390</integer>
+</resources>

@@ -20,7 +20,7 @@ public class ImageUtil {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         thumbnail.compress(Bitmap.CompressFormat.PNG, 100, baos);
         String result = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-        L.d("ImageUtil.convertToBase64 cost %s ms", (System.currentTimeMillis() - startTime));
+//        L.d("ImageUtil.convertToBase64 cost %s ms", (System.currentTimeMillis() - startTime));
         return result;
     }
 

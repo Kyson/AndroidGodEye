@@ -11,16 +11,15 @@ import android.widget.Switch;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.fragment.app.Fragment;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.GodEye;
+import cn.hikyson.godeye.core.GodEyeHelper;
 import cn.hikyson.godeye.core.exceptions.UninstallException;
 import cn.hikyson.godeye.core.utils.L;
-import cn.hikyson.godeye.monitor.GodEyeMonitor;
 import io.reactivex.disposables.CompositeDisposable;
 
 
@@ -40,12 +39,11 @@ public class ConsumeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_consume, container, false);
         mCbGroup = view.findViewById(R.id.fragment_consume_cb_group);
         view.findViewById(R.id.fragment_consume_start_debug_monitor).setOnClickListener(v -> {
-            GodEyeMonitor.injectAppInfoConext(new AppInfoProxyImpl());
-            GodEyeMonitor.setClassPrefixOfAppProcess(Collections.singletonList("cn.hikyson.android.godeye.sample"));
-            GodEyeMonitor.work(ConsumeFragment.this.getActivity(), 5390);
+            GodEyeHelper.setMonitorAppInfoConext(new AppInfoProxyImpl());
+            GodEyeHelper.startMonitor();
         });
         view.findViewById(R.id.fragment_consume_stop_debug_monitor).setOnClickListener(v -> {
-            GodEyeMonitor.shutDown();
+            GodEyeHelper.shutdownMonitor();
         });
         Switch switchView = view.findViewById(R.id.fragment_consume_select_all);
         switchView.setOnCheckedChangeListener((buttonView, isChecked) -> toggleAllModule(isChecked));

@@ -122,7 +122,7 @@ class ViewCanaryInternal {
         List<ViewIdWithSize> layoutEigenvalue = getLayoutEigenvalue(root, allViews);
         boolean allNotSimilar = allNotSimilarByMeasureDistanceLayoutEigenvalueWithRecords(records, layoutEigenvalue);
         if (!allNotSimilar) {// layout is similar to before, only produce view issue when layout changed a lot and not similar to recent
-            L.d("ViewCanary interrupt because %s's layout is similar to someone in records, cost %sms.", activity.getClass().getSimpleName(), (System.currentTimeMillis() - startTime));
+//            L.d("ViewCanary interrupt because %s's layout is similar to someone in records, cost %sms.", activity.getClass().getSimpleName(), (System.currentTimeMillis() - startTime));
             return;
         }
         // layout is changed, then check view issues

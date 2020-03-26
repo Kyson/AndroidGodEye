@@ -5,6 +5,8 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import androidx.annotation.Keep;
+
 import com.koushikdutta.async.http.WebSocket;
 import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
@@ -15,9 +17,6 @@ import java.util.Locale;
 import cn.hikyson.godeye.core.internal.notification.NotificationObserverManager;
 import cn.hikyson.godeye.core.utils.L;
 import cn.hikyson.godeye.core.utils.ThreadUtil;
-import cn.hikyson.godeye.monitor.modules.appinfo.AppInfo;
-import cn.hikyson.godeye.monitor.modules.appinfo.AppInfoLabel;
-import cn.hikyson.godeye.monitor.modules.thread.ThreadRunningProcessClassifier;
 import cn.hikyson.godeye.monitor.notification.MonitorNotificationListener;
 import cn.hikyson.godeye.monitor.server.GodEyeMonitorServer;
 import cn.hikyson.godeye.monitor.server.HttpStaticProcessor;
@@ -27,35 +26,17 @@ import cn.hikyson.godeye.monitor.server.WebSocketBizProcessor;
 /**
  * Created by kysonchao on 2017/11/27.
  */
+@Keep
 public class GodEyeMonitor {
     private static boolean sIsWorking = false;
-    private static final int DEFAULT_PORT = 5390;
     private static final String MONITOR_LOGCAT = "AndroidGodEye monitor is running at port [%s]";
     private static GodEyeMonitorServer sGodEyeMonitorServer;
-    @SuppressLint("StaticFieldLeak")
-    private static Context sContext;
-
-    public interface AppInfoConext {
-        List<AppInfoLabel> getAppInfo();
-    }
-
-    /**
-     * set app informations,it will show on the top of dashboard
-     *
-     * @param appInfoConext
-     */
-    public static void injectAppInfoConext(AppInfoConext appInfoConext) {
-        AppInfo.injectAppInfoConext(appInfoConext);
-    }
-
-    public static synchronized void work(Context context) {
-        work(context, DEFAULT_PORT);
-    }
 
     /**
      * monitor start work
      */
-    public static synchronized void work(Context context, int port) {
+    @Keep
+    static synchronized void work(Context context, int port) {
         if (sIsWorking) {
             return;
         }
@@ -63,9 +44,9 @@ public class GodEyeMonitor {
         if (context == null) {
             throw new IllegalStateException("context can not be null.");
         }
-        sContext = context.getApplicationContext();
+        Context applicationContext = context.getApplicationContext();
         sGodEyeMonitorServer = new GodEyeMonitorServer(port);
-        final HttpStaticProcessor httpStaticProcessor = new HttpStaticProcessor(sContext);
+        final HttpStaticProcessor httpStaticProcessor = new HttpStaticProcessor(applicationContext);
         final WebSocketBizProcessor webSocketBizProcessor = new WebSocketBizProcessor();
         sGodEyeMonitorServer.setMonitorServerCallback(new GodEyeMonitorServer.MonitorServerCallback() {
             @Override
@@ -106,7 +87,8 @@ public class GodEyeMonitor {
     /**
      * monitor stop work
      */
-    public static synchronized void shutDown() {
+    @Keep
+    static synchronized void shutDown() {
         if (sGodEyeMonitorServer != null) {
             sGodEyeMonitorServer.stop();
             sGodEyeMonitorServer = null;
@@ -127,31 +109,5 @@ public class GodEyeMonitor {
                 (ipAddress >> 16 & 0xff),
                 (ipAddress >> 24 & 0xff));
         return "Open AndroidGodEye dashboard [ http://localhost:" + port + "/index.html ] or [ http://" + formattedIpAddress + ":" + port + "/index.html ] in your browser";
-    }
-
-    public static Context getContext() {
-        return sContext;
-    }
-
-    /**
-     * set the class path of app process, indicate whether code is running in app process or system process
-     * it will show in thread info list module of AndroidGodEye dashboard
-     *
-     * @param classPathPrefixes
-     * @deprecated use {@link cn.hikyson.godeye.core.internal.modules.thread.ThreadTagger} to {@link cn.hikyson.godeye.core.internal.modules.thread.ThreadConfig#threadTagger}
-     */
-    @Deprecated
-    public static void setClassPrefixOfAppProcess(List<String> classPathPrefixes) {
-    }
-
-    /**
-     * set the ThreadRunningProcessClassifier of app process, indicate whether code is running in app process or system process
-     * it will show in thread info list module of AndroidGodEye dashboard
-     *
-     * @param threadRunningProcessClassifier
-     * @deprecated use {@link cn.hikyson.godeye.core.internal.modules.thread.ThreadTagger} to {@link cn.hikyson.godeye.core.internal.modules.thread.ThreadConfig#threadTagger}
-     */
-    @Deprecated
-    public static void setThreadRunningProcessClassifier(ThreadRunningProcessClassifier threadRunningProcessClassifier) {
     }
 }
