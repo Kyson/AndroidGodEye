@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.4.1
+
+### Added
+
+- Add config `<bool name="android_god_eye_need_notification">true</bool>`  and `<string name="android_god_eye_install_assets_path">android-godeye-config/install.config</string>`
+
 ## 3.4.0
 
 ### Changed
