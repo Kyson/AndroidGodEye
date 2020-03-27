@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.4.2
+
+### Changed
+
+- Module obj will still be cached in GodEye even it installed failed
+
 ## 3.4.1
 
 ### Added
