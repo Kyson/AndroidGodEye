@@ -26,6 +26,7 @@ android {
     }
     buildTypes {
         release {
+            resValue("string", "android_god_eye_sample_name", "AndroidGodEye")
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
@@ -35,8 +36,10 @@ android {
             resValue("string", "android_god_eye_install_assets_path", "android-godeye-config/install_release.config")
         }
         debug {
+            applicationIdSuffix ".debug"
+            resValue("string", "android_god_eye_sample_name", "AndroidGodEye-debug")
             minifyEnabled false
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             resValue("bool", "android_god_eye_manual_install", "true")
             resValue("bool", "android_god_eye_need_notification", "true")
             resValue("integer", "android_god_eye_monitor_port", "5390")
