@@ -36,7 +36,7 @@ notifications:
         - tech@hikyson.cn
 
 before_deploy:
-    - ./gradlew prepareForRelease
+    - sh gradle/github_release_support.sh
 
 deploy:
     - provider: script

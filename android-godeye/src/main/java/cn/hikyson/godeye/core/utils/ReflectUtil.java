@@ -20,7 +20,7 @@ public class ReflectUtil {
         try {
             return Class.forName(clsName);
         } catch (ClassNotFoundException e) {
-            L.e("ReflectUtil: " + e.toString());
+            L.w("ReflectUtil: " + e.toString());
             return null;
         }
     }
@@ -42,7 +42,7 @@ public class ReflectUtil {
             }
             return method;
         } catch (Exception e) {
-            L.e("ReflectUtil: " + e.toString());
+            L.w("ReflectUtil: " + e.toString());
             return null;
         }
     }
@@ -87,7 +87,7 @@ public class ReflectUtil {
                 return (T) method.invoke(null, args);
             }
         } catch (Exception e) {
-            L.e("ReflectUtil: " + e.toString());
+            L.w("ReflectUtil: " + e.toString());
         }
         return null;
     }

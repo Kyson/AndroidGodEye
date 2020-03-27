@@ -10,19 +10,19 @@ task generateChangelog() {
 
 generateChangelog.onlyIf { project.hasProperty('changelogVersion') }
 
-/**
- * generate CHANGELOG_3_2_1.md
- */
-task generateChangelogOfNewVersion() {
-    doLast {
-        ChangelogMDFile changelogMDFile = new ChangelogMDFile()
-        changelogMDFile.parseFromMD(rootProject.file("CHANGELOG.md"))
-        Version newVersionName = changelogMDFile.getNewVersionName()
-        String changelogOfNewVersion = changelogMDFile.getChangelogOfNewVersion()
-        def changelogFile = rootProject.file("CHANGELOG_" + newVersionName.toStringOfFileName() + ".md")
-        changelogFile.write(changelogOfNewVersion, "utf-8")
-    }
-}
+///**
+// * generate CHANGELOG_3_2_1.md
+// */
+//task generateChangelogOfNewVersion() {
+//    doLast {
+//        ChangelogMDFile changelogMDFile = new ChangelogMDFile()
+//        changelogMDFile.parseFromMD(rootProject.file("CHANGELOG.md"))
+//        Version newVersionName = changelogMDFile.getNewVersionName()
+//        String changelogOfNewVersion = changelogMDFile.getChangelogOfNewVersion()
+//        def changelogFile = rootProject.file("CHANGELOG_" + newVersionName.toStringOfFileName() + ".md")
+//        changelogFile.write(changelogOfNewVersion, "utf-8")
+//    }
+//}
 
 def static getLastTagCommitSha() {
     def lastTagSha = 'git rev-list --tags --max-count=1'.execute().text.trim()

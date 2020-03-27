@@ -33,7 +33,7 @@ public class Crash extends ProduceableSubject<List<CrashInfo>> implements Instal
             ReflectUtil.invokeStaticMethodUnSafe("cn.hikyson.android.godeye.xcrash.GodEyePluginXCrash", "init",
                     new Class<?>[]{CrashConfig.class, Consumer.class}, new Object[]{crashContext, consumer});
         } catch (Exception e) {
-            L.d("Crash can not be installed:", e);
+            L.d("Crash can not be installed:", e.getLocalizedMessage());
             return false;
         }
         mConfig = crashContext;
