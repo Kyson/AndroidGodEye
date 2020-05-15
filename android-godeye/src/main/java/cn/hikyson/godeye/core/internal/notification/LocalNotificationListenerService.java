@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import java.util.LinkedList;
 
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.helper.Notifier;
+import cn.hikyson.godeye.core.utils.L;
 
 public class LocalNotificationListenerService extends Service {
     private int mNotificationId;
@@ -23,7 +23,9 @@ public class LocalNotificationListenerService extends Service {
         intent.putExtra("message", message);
         intent.putExtra("isStartup", isStartup);
         intent.setAction("START_FOREGROUND_ACTION");
-        ContextCompat.startForegroundService(GodEye.instance().getApplication(), intent);
+        // TODO KYSON DEL
+//        ContextCompat.startForegroundService(GodEye.instance().getApplication(), intent);
+        GodEye.instance().getApplication().startService(intent);
     }
 
     public static void stop() {
@@ -43,12 +45,13 @@ public class LocalNotificationListenerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if ("START_FOREGROUND_ACTION".equals(intent.getAction())) {
-            startForeground(mNotificationId, updateNotification(intent));
+            // TODO KYSON DEL
+//            startForeground(mNotificationId, updateNotification(intent));
         } else if ("STOP_FOREGROUND_ACTION".equals(intent.getAction())) {
             stopForeground(true);
             stopSelf();
         }
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     private Notification updateNotification(Intent intent) {
@@ -80,6 +83,7 @@ public class LocalNotificationListenerService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        L.d("LocalNotificationListenerService onDestroy");
     }
 
     @Nullable
