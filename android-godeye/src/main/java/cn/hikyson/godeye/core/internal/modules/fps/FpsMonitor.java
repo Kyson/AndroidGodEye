@@ -29,6 +29,7 @@ public class FpsMonitor implements Choreographer.FrameCallback {
         mCurrentFrameTimeNanos = 0;
     }
 
+    // callback every 16ms
     @Override
     public void doFrame(long frameTimeNanos) {
         mCurrentFrameCount++;
