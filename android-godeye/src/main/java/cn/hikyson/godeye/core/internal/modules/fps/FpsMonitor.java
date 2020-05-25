@@ -5,7 +5,6 @@ import android.view.Choreographer;
 import androidx.annotation.UiThread;
 
 import cn.hikyson.godeye.core.helper.ChoreographerInjecor;
-import cn.hikyson.godeye.core.utils.L;
 
 public class FpsMonitor implements Choreographer.FrameCallback {
     private Choreographer mChoreographer;
@@ -13,14 +12,11 @@ public class FpsMonitor implements Choreographer.FrameCallback {
     private long mStartFrameTimeNanos;
     private long mCurrentFrameTimeNanos;
 
-    private long currentMillis;
-
     @UiThread
     public void start() {
         mChoreographer = ChoreographerInjecor.getChoreographerProvider().getChoreographer();
         mCurrentFrameCount = 0;
         mCurrentFrameTimeNanos = mStartFrameTimeNanos;
-        currentMillis = System.currentTimeMillis();
         mChoreographer.postFrameCallback(this);
     }
 
@@ -41,7 +37,6 @@ public class FpsMonitor implements Choreographer.FrameCallback {
             mStartFrameTimeNanos = frameTimeNanos;
         }
         mCurrentFrameTimeNanos = frameTimeNanos;
-        L.d("FpsMonitor doFrame, frameTimeNanos:%s , time cost:%s ms",frameTimeNanos,( System.currentTimeMillis() - currentMillis));
         mChoreographer.postFrameCallback(this);
     }
 
