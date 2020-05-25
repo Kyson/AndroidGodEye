@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.4.3
+
+### Fixed
+
+- NullPointerException in LocalNotificationListenerService: https://github.com/Kyson/AndroidGodEye/issues/73
+
 ## 3.4.2
 
 ### Changed
