@@ -18,6 +18,7 @@ import java.nio.charset.Charset;
 import cn.hikyson.android.godeye.sample.R;
 import cn.hikyson.godeye.core.GodEye;
 import cn.hikyson.godeye.core.GodEyeConfig;
+import cn.hikyson.godeye.core.internal.modules.thread.deadlock.DeadLockDetecter;
 import cn.hikyson.godeye.core.utils.L;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Call;
@@ -110,6 +111,9 @@ public class InstallFragment extends Fragment {
         view.findViewById(R.id.fragment_install_uninstall).setOnClickListener(v -> {
             GodEye.instance().uninstall();
             mListener.onInstallModuleChanged();
+        });
+        view.findViewById(R.id.fragment_install_test).setOnClickListener(v -> {
+            L.d(DeadLockDetecter.stringFromJNI());
         });
         return view;
     }

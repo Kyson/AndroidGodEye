@@ -68,11 +68,12 @@ dependencies {
     debugImplementation project(':android-godeye-toolboxes:android-godeye-leakcanary')
 }
 
-apply plugin: 'cn.hikyson.methodcanary.plugin'
-
-AndroidGodEye {
-    enableLifecycleTracer true
-    enableMethodTracer true
-    instrumentationRuleFilePath "AndroidGodEye-MethodCanary.js"
-    instrumentationRuleIncludeClassNamePrefix(["cn/hikyson/godeye/sample"])
-}
+// TODO KYSON IMPL
+//apply plugin: 'cn.hikyson.methodcanary.plugin'
+//
+//AndroidGodEye {
+//    enableLifecycleTracer true
+//    enableMethodTracer true
+//    instrumentationRuleFilePath "AndroidGodEye-MethodCanary.js"
+//    instrumentationRuleIncludeClassNamePrefix(["cn/hikyson/godeye/sample"])
+//}
