@@ -2,6 +2,8 @@ package cn.hikyson.godeye.sample;
 
 import android.app.Application;
 
+import com.qiyi.xhook.NativeHandler;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -14,6 +16,8 @@ public class SampleApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        NativeHandler.getInstance().enableDebug(true);
+
         StartupTracer.get().onApplicationCreate();
         SubProcessIntentService.startActionFoo(this);
     }
