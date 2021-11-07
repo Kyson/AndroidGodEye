@@ -24,6 +24,10 @@ buildscript {
 }
 
 allprojects {
+    tasks.withType(Test).configureEach {
+        forkEvery = 100
+    }
+
     repositories {
         if (Boolean.parseBoolean(USE_ALIYUN_REPO)) {
             // Replacement of google()
