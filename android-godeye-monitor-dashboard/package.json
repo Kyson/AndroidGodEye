@@ -12,7 +12,7 @@
     "react-highcharts": "^16.0.2",
     "react-json-pretty": "^1.7.6",
     "react-page-visibility": "^3.3.0",
-    "react-scripts": "1.1.4",
+    "react-scripts": "5.0.1",
     "react-table": "^6.8.5",
     "sockette": "^2.0.0"
   },
